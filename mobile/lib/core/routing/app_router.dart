@@ -1,118 +1,225 @@
 import 'package:go_router/go_router.dart';
-import '../../features/auth/role_selection_screen.dart';
-import '../../features/auth/phone_auth_screen.dart';
-import '../../features/auth/otp_verification_screen.dart';
-import '../../features/customer_home/customer_shell_screen.dart';
-import '../../features/wizard/wizard_flow_screen.dart';
-import '../../features/offers/offers_list_screen.dart';
-import '../../features/offers/escrow_checkout_screen.dart';
-import '../../features/offers/payment_success_screen.dart';
-import '../../features/tracking/job_tracking_screen.dart';
-import '../../features/tracking/chat_screen.dart';
-import '../../features/tracking/escrow_completion_screen.dart';
-import '../../features/pro_home/pro_shell_screen.dart';
-import '../../features/pro_job_detail/pro_job_detail_screen.dart';
+import '../../features/screens/s01_welcome_role_screen.dart';
+import '../../features/screens/s02_phone_auth_screen.dart';
+import '../../features/screens/s03_otp_verification_screen.dart';
+import '../../features/screens/s04_customer_home_screen.dart';
+import '../../features/screens/s05_wizard_category_screen.dart';
+import '../../features/screens/s06_wizard_location_screen.dart';
+import '../../features/screens/s07_wizard_photos_screen.dart';
+import '../../features/screens/s08_wizard_review_screen.dart';
+import '../../features/screens/s09_wizard_published_screen.dart';
+import '../../features/screens/s10_my_requests_screen.dart';
+import '../../features/screens/s11_offers_list_screen.dart';
+import '../../features/screens/s12_offer_detail_screen.dart';
+import '../../features/screens/s13_offers_compare_matrix_screen.dart';
+import '../../features/screens/s14_pro_profile_screen.dart';
+import '../../features/screens/s15_escrow_checkout_screen.dart';
+import '../../features/screens/s16_appointment_time_screen.dart';
+import '../../features/screens/s17_appointment_sent_screen.dart';
+import '../../features/screens/s18_job_workspace_screen.dart';
+import '../../features/screens/s19_in_app_chat_screen.dart';
+import '../../features/screens/s20_live_tracking_screen.dart';
+import '../../features/screens/s21_reschedule_cancel_screen.dart';
+import '../../features/screens/s22_completion_pin_screen.dart';
+import '../../features/screens/s23_rating_review_screen.dart';
+import '../../features/screens/s24_dispute_report_screen.dart';
+import '../../features/screens/s25_dispute_tracking_screen.dart';
+import '../../features/screens/s26_customer_profile_screen.dart';
+import '../../features/screens/s27_pro_onboarding_docs_screen.dart';
+import '../../features/screens/s28_pro_job_feed_screen.dart';
+import '../../features/screens/s29_pro_bid_creation_screen.dart';
+import '../../features/screens/s30_pro_bid_sent_screen.dart';
+import '../../features/screens/s31_pro_schedule_profile_screen.dart';
+import '../../features/screens/s32_pro_execution_work_screen.dart';
+import '../../features/screens/s33_pro_delivery_done_screen.dart';
 
+/// BiTadilat Authoritative Router
+/// Covers all 33 Mobile Screens mapped 1:1 to Steps 01 through 33
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    // Auth Routes
+    // Root default
     GoRoute(
       path: '/',
-      builder: (context, state) => const RoleSelectionScreen(),
+      builder: (context, state) => const S01WelcomeRoleScreen(),
+    ),
+
+    // Flow 1: Müşteri Giriş & Onboarding (Steps 01-03)
+    GoRoute(
+      path: '/step/1',
+      builder: (context, state) => const S01WelcomeRoleScreen(),
+    ),
+    GoRoute(
+      path: '/step/2',
+      builder: (context, state) => const S02PhoneAuthScreen(),
+    ),
+    GoRoute(
+      path: '/step/3',
+      builder: (context, state) => const S03OtpVerificationScreen(),
+    ),
+
+    // Flow 2: Müşteri Talep Sihirbazı (Steps 04-10)
+    GoRoute(
+      path: '/step/4',
+      builder: (context, state) => const S04CustomerHomeScreen(),
+    ),
+    GoRoute(
+      path: '/step/5',
+      builder: (context, state) => const S05WizardCategoryScreen(),
+    ),
+    GoRoute(
+      path: '/step/6',
+      builder: (context, state) => const S06WizardLocationScreen(),
+    ),
+    GoRoute(
+      path: '/step/7',
+      builder: (context, state) => const S07WizardPhotosScreen(),
+    ),
+    GoRoute(
+      path: '/step/8',
+      builder: (context, state) => const S08WizardReviewScreen(),
+    ),
+    GoRoute(
+      path: '/step/9',
+      builder: (context, state) => const S09WizardPublishedScreen(),
+    ),
+    GoRoute(
+      path: '/step/10',
+      builder: (context, state) => const S10MyRequestsScreen(),
+    ),
+
+    // Flow 3: Teklif Karşılaştırma & Randevu (Steps 11-17)
+    GoRoute(
+      path: '/step/11',
+      builder: (context, state) => const S11OffersListScreen(),
+    ),
+    GoRoute(
+      path: '/step/12',
+      builder: (context, state) => const S12OfferDetailScreen(),
+    ),
+    GoRoute(
+      path: '/step/13',
+      builder: (context, state) => const S13OffersCompareMatrixScreen(),
+    ),
+    GoRoute(
+      path: '/step/14',
+      builder: (context, state) => const S14ProProfileScreen(),
+    ),
+    GoRoute(
+      path: '/step/15',
+      builder: (context, state) => const S15EscrowCheckoutScreen(),
+    ),
+    GoRoute(
+      path: '/step/16',
+      builder: (context, state) => const S16AppointmentTimeScreen(),
+    ),
+    GoRoute(
+      path: '/step/17',
+      builder: (context, state) => const S17AppointmentSentScreen(),
+    ),
+
+    // Flow 4: Aktif İş, Mesajlaşma & Teslim (Steps 18-25)
+    GoRoute(
+      path: '/step/18',
+      builder: (context, state) => const S18JobWorkspaceScreen(),
+    ),
+    GoRoute(
+      path: '/step/19',
+      builder: (context, state) => const S19InAppChatScreen(),
+    ),
+    GoRoute(
+      path: '/step/20',
+      builder: (context, state) => const S20LiveTrackingScreen(),
+    ),
+    GoRoute(
+      path: '/step/21',
+      builder: (context, state) => const S21RescheduleCancelScreen(),
+    ),
+    GoRoute(
+      path: '/step/22',
+      builder: (context, state) => const S22CompletionPinScreen(),
+    ),
+    GoRoute(
+      path: '/step/23',
+      builder: (context, state) => const S23RatingReviewScreen(),
+    ),
+    GoRoute(
+      path: '/step/24',
+      builder: (context, state) => const S24DisputeReportScreen(),
+    ),
+    GoRoute(
+      path: '/step/25',
+      builder: (context, state) => const S25DisputeTrackingScreen(),
+    ),
+
+    // Flow 5: Müşteri Profil & Ayarlar (Step 26)
+    GoRoute(
+      path: '/step/26',
+      builder: (context, state) => const S26CustomerProfileScreen(),
+    ),
+
+    // Flow 6: Hizmet Profesyoneli (Usta) (Steps 27-33)
+    GoRoute(
+      path: '/step/27',
+      builder: (context, state) => const S27ProOnboardingDocsScreen(),
+    ),
+    GoRoute(
+      path: '/step/28',
+      builder: (context, state) => const S28ProJobFeedScreen(),
+    ),
+    GoRoute(
+      path: '/step/29',
+      builder: (context, state) => const S29ProBidCreationScreen(),
+    ),
+    GoRoute(
+      path: '/step/30',
+      builder: (context, state) => const S30ProBidSentScreen(),
+    ),
+    GoRoute(
+      path: '/step/31',
+      builder: (context, state) => const S31ProScheduleProfileScreen(),
+    ),
+    GoRoute(
+      path: '/step/32',
+      builder: (context, state) => const S32ProExecutionWorkScreen(),
+    ),
+    GoRoute(
+      path: '/step/33',
+      builder: (context, state) => const S33ProDeliveryDoneScreen(),
+    ),
+
+    // Named convenience aliases
+    GoRoute(
+      path: '/welcome',
+      builder: (context, state) => const S01WelcomeRoleScreen(),
     ),
     GoRoute(
       path: '/phone-auth',
-      builder: (context, state) => const PhoneAuthScreen(),
+      builder: (context, state) => const S02PhoneAuthScreen(),
     ),
     GoRoute(
       path: '/otp-verify',
-      builder: (context, state) => const OtpVerificationScreen(),
+      builder: (context, state) => const S03OtpVerificationScreen(),
     ),
-
-    // Customer Routes
     GoRoute(
       path: '/customer/home',
-      builder: (context, state) => const CustomerShellScreen(initialTab: 0),
+      builder: (context, state) => const S04CustomerHomeScreen(),
     ),
     GoRoute(
       path: '/customer/my-jobs',
-      builder: (context, state) => const CustomerShellScreen(initialTab: 1),
+      builder: (context, state) => const S10MyRequestsScreen(),
     ),
     GoRoute(
       path: '/customer/profile',
-      builder: (context, state) => const CustomerShellScreen(initialTab: 2),
+      builder: (context, state) => const S26CustomerProfileScreen(),
     ),
-    GoRoute(
-      path: '/customer/wizard',
-      builder: (context, state) {
-        final cat = state.uri.queryParameters['category'];
-        return WizardFlowScreen(initialCategoryId: cat);
-      },
-    ),
-    GoRoute(
-      path: '/customer/offers/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return OffersListScreen(jobId: jobId);
-      },
-    ),
-    GoRoute(
-      path: '/customer/checkout/:jobId/:offerId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        final offerId = state.pathParameters['offerId'] ?? 'off-01';
-        return EscrowCheckoutScreen(jobId: jobId, offerId: offerId);
-      },
-    ),
-    GoRoute(
-      path: '/customer/payment-success/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return PaymentSuccessScreen(jobId: jobId);
-      },
-    ),
-    GoRoute(
-      path: '/customer/active-job/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return JobTrackingScreen(jobId: jobId);
-      },
-    ),
-    GoRoute(
-      path: '/customer/chat/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return ChatScreen(jobId: jobId);
-      },
-    ),
-    GoRoute(
-      path: '/customer/complete/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return EscrowCompletionScreen(jobId: jobId);
-      },
-    ),
-
-    // Pro (Usta) Routes
     GoRoute(
       path: '/pro/home',
-      builder: (context, state) => const ProShellScreen(initialTab: 0),
-    ),
-    GoRoute(
-      path: '/pro/jobs/:jobId',
-      builder: (context, state) {
-        final jobId = state.pathParameters['jobId'] ?? 'job-84920';
-        return ProJobDetailScreen(jobId: jobId);
-      },
-    ),
-    GoRoute(
-      path: '/pro/active-job',
-      builder: (context, state) => const ProShellScreen(initialTab: 1),
+      builder: (context, state) => const S28ProJobFeedScreen(),
     ),
     GoRoute(
       path: '/pro/profile',
-      builder: (context, state) => const ProShellScreen(initialTab: 2),
+      builder: (context, state) => const S31ProScheduleProfileScreen(),
     ),
   ],
 );

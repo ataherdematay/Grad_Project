@@ -9,8 +9,8 @@ void main() {
 
     // Verify that the title and role selection options are rendered.
     expect(find.text('BiTadilat'), findsWidgets);
-    expect(find.text('Hoş Geldiniz'), findsOneWidget);
-    expect(find.text('Hizmet Almak İstiyorum'), findsOneWidget);
-    expect(find.text('Ustayım & Hizmet Veriyorum'), findsOneWidget);
+    expect(find.text('Evin için doğru ustayı güvenle bul.'), findsOneWidget);
+    expect(find.text('Ev sahibi / Müşteri'), findsOneWidget);
+    expect(find.text('Hizmet Veren / Usta'), findsOneWidget);
   });
 }

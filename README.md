@@ -187,9 +187,10 @@ Kapsamlı PM & QA denetiminde tespit edilip bu sürümde tamamen çözülen krit
 
 Projenin gerçek mobil istemcisi **Flutter (Dart 3.x / Flutter 3.27+)** ile Clean Architecture & BLoC prensipleri gözetilerek hem iOS hem de Android için sıfırdan geliştirilmiştir:
 
+- **1:1 Piksel & Ekran Eşleşmesi:** Stitch prototipindeki 33 mobil ekranın tamamı (`mobile/lib/features/screens/s01_...` ile `s33_...`) bağımsız ve eksiksiz ekranlar olarak kodlanmıştır.
+- **Kesintisiz Yönlendirme:** `go_router` ile `/step/1` ile `/step/33` arasındaki tüm rota akışları birbirine bağlanmıştır.
 - **State Management:** `flutter_bloc` (AuthBloc, JobBloc)
-- **Yönlendirme & Derin Bağlantı (Routing):** `go_router`
-- **Tasarım Sistemi:** Google Fonts `Manrope`, `#0F4C5C` (Teal), `#107A5B` (Trust Green), `#E87525` (Urgency Orange)
+- **Tasarım Sistemi & Tokenlar:** Google Fonts `Manrope`, `#0F4C5C` (Teal), `#107A5B` (Trust Green), `#E87525` (Urgency Orange), `#F7F8F6` (Canvas)
 - **Çift Katmanlı Veri Mimarisi (Dual-Mode Repository):**
   - `MockJobRepository`: Backend henüz hazır değilken bile jüri sunumunda offline/canlı çalışabilen Kadıköy / Moda senaryosu
   - `JobRepository`: REST API sözleşmesine (`docs/API_CONTRACT.md`) birebir uyan soyut arayüz
@@ -197,8 +198,9 @@ Projenin gerçek mobil istemcisi **Flutter (Dart 3.x / Flutter 3.27+)** ile Clea
   ```bash
   cd mobile
   flutter pub get
-  flutter test    # Birim testleri çalıştırır
-  flutter run     # iOS Simülatör veya Android Emülatörde başlatır
+  flutter test        # Birim testleri çalıştırır
+  flutter run         # iOS Simülatör veya Android Emülatörde başlatır
+  flutter run -d chrome # Web tarayıcısında anında önizleme
   ```
 
 ---
