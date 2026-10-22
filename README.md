@@ -183,17 +183,53 @@ Kapsamlı PM & QA denetiminde tespit edilip bu sürümde tamamen çözülen krit
 
 ---
 
+## 📱 Flutter Çapraz Platform Mobil Uygulama (`mobile/`)
+
+Projenin gerçek mobil istemcisi **Flutter (Dart 3.x / Flutter 3.27+)** ile Clean Architecture & BLoC prensipleri gözetilerek hem iOS hem de Android için sıfırdan geliştirilmiştir:
+
+- **State Management:** `flutter_bloc` (AuthBloc, JobBloc)
+- **Yönlendirme & Derin Bağlantı (Routing):** `go_router`
+- **Tasarım Sistemi:** Google Fonts `Manrope`, `#0F4C5C` (Teal), `#107A5B` (Trust Green), `#E87525` (Urgency Orange)
+- **Çift Katmanlı Veri Mimarisi (Dual-Mode Repository):**
+  - `MockJobRepository`: Backend henüz hazır değilken bile jüri sunumunda offline/canlı çalışabilen Kadıköy / Moda senaryosu
+  - `JobRepository`: REST API sözleşmesine (`docs/API_CONTRACT.md`) birebir uyan soyut arayüz
+- **Uygulamayı Çalıştırma:**
+  ```bash
+  cd mobile
+  flutter pub get
+  flutter test    # Birim testleri çalıştırır
+  flutter run     # iOS Simülatör veya Android Emülatörde başlatır
+  ```
+
+---
+
+## 🔌 Backend & Veritabanı API Sözleşmesi (`docs/API_CONTRACT.md`)
+
+Backend ekibinin PostgreSQL şemalarını kurması ve REST uç noktalarını geliştirmesi için hazırlanan sözleşme:
+- **PostgreSQL Tabloları:** `users`, `pro_profiles`, `service_categories`, `job_requests`, `offers`, `escrow_transactions`, `chat_messages`, `reviews`
+- **Uç Noktalar:** SMS OTP (`/auth`), Talep Sihirbazı (`/jobs`), Escrow Ödeme & PIN Doğrulama (`/escrow`), Usta Feed & Teklif Verme (`/pro`)
+- **Güvenlik:** Rol Tabanlı Yetkilendirme (`CUSTOMER` vs `PRO`), Maskeli Telefon & Adres Gizliliği, BDDK uyumlu Escrow Kilitleme/Çözme
+
+---
+
 ## 📁 Proje Dizin Yapısı (Project Directory)
 
 ```text
 Grad_Project/
+├── mobile/                        # 📱 Flutter Çapraz Platform Mobil Uygulama
+│   ├── lib/
+│   │   ├── core/                  # Tema, Renkler, Tipografi, BLoC, Modeller, Repository
+│   │   └── features/              # Auth, Customer Home, Wizard, Offers, Tracking, Pro Paneli
+│   ├── test/                      # Birim ve Widget Testleri
+│   └── pubspec.yaml               # Flutter Bağımlılıkları (bloc, go_router, google_fonts)
+├── docs/
+│   ├── API_CONTRACT.md            # 🔌 Backend & DB Geliştiricileri İçin API ve ERD Şartnamesi
+│   ├── QA_AUDIT_REPORT.md         # Detaylı 33 Ekran QA ve PM Denetim Raporu
+│   └── QA_REMEDIATION_WALKTHROUGH.md # Tamamlanan İyileştirmeler ve Teslim Raporu
 ├── preview/
 │   ├── index.html                 # 37 Ekran Bağlantılı Ana Mobil Simülatör
 │   └── screens/                   # 37 Adet Bağımsız Ekran HTML Dosyaları (Canlı Kod)
 ├── screenshots/                   # 37 Ekranın Yüksek Çözünürlüklü Stitch PNG Görselleri
-├── docs/
-│   ├── QA_AUDIT_REPORT.md         # Detaylı 33 Ekran QA ve PM Denetim Raporu
-│   └── QA_REMEDIATION_WALKTHROUGH.md # Tamamlanan İyileştirmeler ve Teslim Raporu
 ├── screens_map.json               # 37 Ekranın Rol, Başlık ve Cihaz Metadata Haritası
 ├── BI_TADILAT_AI_HANDOFF.md       # Ürün Tasarım & Handoff Kararları Dokümanı
 ├── BiTadilatDESIGN.md             # Kurumsal Tasarım Sistemi Şartnamesi
