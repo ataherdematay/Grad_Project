@@ -122,7 +122,7 @@ class _S01WelcomeRoleScreenState extends State<S01WelcomeRoleScreen> {
 
               // Trust Badges Bar (Quiet Assurance)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(14),
@@ -135,29 +135,34 @@ class _S01WelcomeRoleScreenState extends State<S01WelcomeRoleScreen> {
                   ],
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _TrustBadgeItem(
-                      icon: Icons.verified_user_rounded,
-                      label: 'Onaylı Ustalar',
+                    const Expanded(
+                      child: _TrustBadgeItem(
+                        icon: Icons.verified_user_rounded,
+                        label: 'Onaylı Ustalar',
+                      ),
                     ),
                     Container(
                       width: 1.5,
                       height: 16,
                       color: AppColors.borderSubtle,
                     ),
-                    _TrustBadgeItem(
-                      icon: Icons.receipt_long_rounded,
-                      label: 'Sabit Fiyat',
+                    const Expanded(
+                      child: _TrustBadgeItem(
+                        icon: Icons.receipt_long_rounded,
+                        label: 'Sabit Fiyat',
+                      ),
                     ),
                     Container(
                       width: 1.5,
                       height: 16,
                       color: AppColors.borderSubtle,
                     ),
-                    _TrustBadgeItem(
-                      icon: Icons.security_rounded,
-                      label: 'İş Garantisi',
+                    const Expanded(
+                      child: _TrustBadgeItem(
+                        icon: Icons.security_rounded,
+                        label: 'İş Garantisi',
+                      ),
                     ),
                   ],
                 ),
@@ -187,15 +192,15 @@ class _S01WelcomeRoleScreenState extends State<S01WelcomeRoleScreen> {
 
               // Role 2: Pro (Usta)
               _RoleSelectTile(
-                title: 'Hizmet Veren / Usta',
-                subtitle: 'İş fırsatlarını gör, teklif ver ve kazan.',
-                icon: Icons.engineering_rounded,
+                title: 'Hizmet profesyoneli',
+                subtitle: 'Yeni iş fırsatları arıyorum.',
+                icon: Icons.construction,
                 isSelected: _selectedRole == 'pro',
                 onTap: () => setState(() => _selectedRole = 'pro'),
               ),
               const SizedBox(height: 36),
 
-              // Action Button: Devam Et
+              // Action Button: Telefon numarasıyla devam et
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -217,26 +222,61 @@ class _S01WelcomeRoleScreenState extends State<S01WelcomeRoleScreen> {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Devam Et',
-                        style: AppTypography.bodyLgMedium.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                      const Icon(Icons.smartphone, size: 20, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          'Telefon numarasıyla devam et',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodyLgMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward_rounded, size: 20),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 14),
-              Center(
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Zaten bir hesabın var mı?',
+                    style: AppTypography.bodyMd.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  InkWell(
+                    onTap: () {
+                      context.push('/step/2');
+                    },
+                    child: Text(
+                      'Giriş yap',
+                      style: AppTypography.bodyMdMedium.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  'Devam ederek BiTadilat Şartlarını kabul etmiş olursun.',
+                  'Devam ederek Kullanım Koşulları ve Gizlilik Politikası\'nı kabul etmiş olursun.',
+                  textAlign: TextAlign.center,
                   style: AppTypography.labelSm.copyWith(
                     color: AppColors.textSecondary,
+                    height: 1.3,
                   ),
                 ),
               ),
@@ -292,22 +332,27 @@ class _TrustBadgeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 28,
-          height: 28,
+          width: 24,
+          height: 24,
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(icon, color: AppColors.primary, size: 18),
+          child: Icon(icon, color: AppColors.primary, size: 15),
         ),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: AppTypography.labelMd.copyWith(
-            color: AppColors.onSurface,
-            fontWeight: FontWeight.w600,
+        const SizedBox(width: 4),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSm.copyWith(
+              color: AppColors.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],

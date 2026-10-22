@@ -11,6 +11,7 @@ void main() {
     expect(find.text('BiTadilat'), findsWidgets);
     expect(find.text('Evin için doğru ustayı güvenle bul.'), findsOneWidget);
     expect(find.text('Ev sahibi / Müşteri'), findsOneWidget);
-    expect(find.text('Hizmet Veren / Usta'), findsOneWidget);
+    expect(find.text('Hizmet profesyoneli'), findsOneWidget);
+    expect(find.text('Telefon numarasıyla devam et'), findsOneWidget);
   });
 }

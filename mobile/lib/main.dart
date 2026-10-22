@@ -36,6 +36,32 @@ class BiTadilatApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           routerConfig: appRouter,
+          builder: (context, child) {
+            // Emulates standard 390px mobile viewport on wide screens
+            return Container(
+              color: const Color(0xFF111C24),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 390),
+                  child: ClipRect(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF7F8F6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x33000000),
+                            blurRadius: 24,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: child,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
