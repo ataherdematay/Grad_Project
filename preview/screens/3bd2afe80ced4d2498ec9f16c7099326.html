@@ -1,0 +1,721 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#F7F8F6;}body{overscroll-behavior:none;font-family:'Manrope',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed": "#331200", "error": "#ba1a1a", "secondary-fixed-dim": "#ffb68d", "surface-container-highest": "#cce7f4", "canvas": "#F7F8F6", "on-tertiary": "#ffffff", "on-tertiary-container": "#6ac4a1", "primary-container": "#0f4c5c", "text-secondary": "#5F6F73", "on-primary-fixed": "#001f28", "on-tertiary-fixed": "#002116", "on-primary-container": "#87bbce", "surface-disabled": "#E9EEEB", "secondary-fixed": "#ffdbc9", "on-error-container": "#93000a", "error-container": "#ffdad6", "tertiary-fixed": "#99f5ce", "on-background": "#031e28", "surface-container": "#d8f2ff", "on-secondary-fixed-variant": "#763300", "on-secondary-container": "#642b00", "surface-bright": "#f3faff", "on-tertiary-fixed-variant": "#00513b", "tertiary-container": "#00503a", "dark-teal": "#0A3945", "surface-container-high": "#d2ecfa", "secondary": "#9b4500", "on-primary-fixed-variant": "#114d5d", "on-surface-variant": "#40484b", "tertiary": "#003727", "primary-fixed": "#b6ebfe", "tertiary-fixed-dim": "#7dd8b3", "surface-dim": "#c4deeb", "background": "#f3faff", "secondary-container": "#fd8535", "inverse-primary": "#9acee1", "info-blue": "#247BA0", "primary": "#003441", "inverse-surface": "#1a343e", "surface": "#FFFFFF", "primary-fixed-dim": "#9acee1", "on-primary": "#ffffff", "outline": "#70787c", "surface-variant": "#cce7f4", "on-surface": "#031e28", "inverse-on-surface": "#dff4ff", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "outline-variant": "#c0c8cb", "surface-container-low": "#e6f6ff", "border-subtle": "#D9E1DD", "surface-tint": "#306576", "alert-red": "#B9382C", "on-error": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "margin": "1rem", "space-xs": "0.25rem", "space-lg": "1rem", "space-xl": "1.5rem", "space-md": "0.75rem", "gutter": "0.75rem" }, "fontFamily": { "label-sm": ["Manrope"], "headline-md": ["Manrope"], "body-lg-medium": ["Manrope"], "body-md": ["Manrope"], "headline-lg": ["Manrope"], "body-lg": ["Manrope"], "headline-sm": ["Manrope"], "body-md-medium": ["Manrope"], "label-md": ["Manrope"], "headline-lg-mobile": ["Manrope"] }, "fontSize": { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-lg-medium": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "body-md-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "700" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-canvas text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-canvas/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-margin flex items-center justify-between relative"><button aria-label="Geri" class="w-11 h-11 flex items-center justify-center text-primary rounded-xl active:bg-surface-disabled transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[24px]">arrow_back</span></button><div class="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none"><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">BiTadilat</h1></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="flex-1 flex flex-col relative w-full px-margin pt-16 pb-safe bg-canvas"><div class="flex flex-col w-full pb-8">
+<!-- Top Visual Graphic: Calm Pending State -->
+<div class="flex justify-center items-center pt-2 pb-5">
+<div class="relative w-28 h-28 flex items-center justify-center">
+<!-- Ambient gentle glow -->
+<div class="absolute inset-0 rounded-full bg-surface-container-highest/60 blur-xl"></div>
+<!-- Vector Illustration (Calm, modern pending appointment graphic) -->
+<svg class="w-24 h-24 relative z-10" fill="none" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+<!-- Calendar Base Backplate -->
+<rect class="shadow-sm" fill="#FFFFFF" height="56" rx="14" width="60" x="18" y="24"></rect>
+<rect fill="#CCE7F4" height="18" rx="14" width="60" x="18" y="24"></rect>
+<rect fill="#CCE7F4" height="10" width="60" x="18" y="32"></rect>
+<!-- Calendar Rings -->
+<rect fill="#0F4C5C" height="12" rx="2.5" width="5" x="32" y="18"></rect>
+<rect fill="#0F4C5C" height="12" rx="2.5" width="5" x="59" y="18"></rect>
+<!-- Grid Dots / Indicators inside calendar -->
+<circle cx="32" cy="50" fill="#E9EEEB" r="3"></circle>
+<circle cx="48" cy="50" fill="#E9EEEB" r="3"></circle>
+<circle cx="64" cy="50" fill="#E9EEEB" r="3"></circle>
+<circle cx="32" cy="64" fill="#E9EEEB" r="3"></circle>
+<circle cx="48" cy="64" fill="#247BA0" fill-opacity="0.35" r="3"></circle>
+<circle cx="64" cy="64" fill="#E9EEEB" r="3"></circle>
+<!-- Floating Clock/Pending Badge Overlay -->
+<g filter="url(#filter0_d)">
+<circle cx="66" cy="68" fill="#0F4C5C" r="16"></circle>
+<!-- Subtle pulsing ring around status -->
+<circle cx="66" cy="68" r="18" stroke="#87BBCE" stroke-opacity="0.6" stroke-width="1.5"></circle>
+<!-- Clock Hands -->
+<path d="M66 61V68L71 71" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</g>
+<!-- Defs for soft elevation -->
+<defs>
+<filter color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="40" id="filter0_d" width="40" x="46" y="50">
+<feDropShadow dx="0" dy="2" flood-color="#001F28" flood-opacity="0.18" stdDeviation="2.5"></feDropShadow>
+</filter>
+</defs>
+</svg>
+</div>
+</div>
+<!-- Header & Copy Block -->
+<div class="text-center px-space-md mb-6">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2 tracking-tight">
+      Randevu talebin iletildi
+    </h1>
+<p class="font-body-md text-body-md text-text-secondary max-w-xs mx-auto">
+      Mavi Hat Tesisat seçtiğin zaman aralığı için bilgilendirildi.
+    </p>
+<!-- Status Chip -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 mt-4 rounded-full bg-surface-container-high text-dark-teal">
+<span class="material-symbols-outlined text-[18px] text-info-blue animate-spin" style="animation-duration: 9s;">
+        schedule
+      </span>
+<span class="font-label-md text-label-md font-semibold">
+        Ustanın onayı bekleniyor
+      </span>
+</div>
+</div>
+<!-- Summary Card -->
+<section class="bg-surface rounded-2xl p-space-lg mb-space-xl shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-body-lg-medium text-body-lg-medium text-on-surface">Mavi Hat Tesisat</span>
+<span class="material-symbols-outlined text-[17px] text-[#107A5B]" style="font-variation-settings: 'FILL' 1;">
+            verified
+          </span>
+</div>
+<p class="font-body-md text-body-md text-text-secondary mt-0.5">Kadıköy • Tesisat</p>
+</div>
+<span class="px-2.5 py-1 rounded-md bg-secondary-fixed/50 text-secondary font-label-sm text-label-sm">
+        Acil Onarım
+      </span>
+</div>
+<!-- Soft Horizontal Divider via subtle background surface strip -->
+<div class="w-full h-px bg-surface-disabled my-space-md"></div>
+<!-- Metadata Rows -->
+<div class="space-y-2.5">
+<div class="flex items-center justify-between text-left">
+<span class="font-body-md text-body-md text-text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-text-secondary">calendar_today</span>
+          Seçilen zaman
+        </span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface">
+          Bugün • 14:00 – 16:00
+        </span>
+</div>
+<div class="flex items-center justify-between text-left">
+<span class="font-body-md text-body-md text-text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-text-secondary">receipt_long</span>
+          Toplam teklif
+        </span>
+<span class="font-body-lg-medium text-body-lg-medium text-primary-container">
+          ₺2.450 <span class="text-label-sm font-normal text-text-secondary font-label-sm">(KDV dahil)</span>
+</span>
+</div>
+</div>
+</section>
+<!-- Process Timeline: Süreç Takibi -->
+<section class="bg-surface rounded-2xl p-space-lg mb-space-xl shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">
+        Süreç Takibi
+      </h2>
+<span class="font-label-sm text-label-sm text-text-secondary tracking-wide uppercase">
+        Adım 3 / 4
+      </span>
+</div>
+<div class="relative pl-1">
+<!-- Step 1: Completed -->
+<div class="flex items-start gap-3 relative pb-6">
+<!-- Connecting Line -->
+<div class="absolute left-3.5 top-6 bottom-0 w-[2px] bg-[#107A5B]"></div>
+<div class="w-7 h-7 rounded-full bg-[#E7F3EF] flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-[16px] text-[#107A5B] font-bold">check</span>
+</div>
+<div class="pt-0.5">
+<p class="font-body-md-medium text-body-md-medium text-on-surface">Teklif kabul edildi</p>
+<p class="font-label-sm text-label-sm text-text-secondary">İşçilik ve malzeme onaylandı</p>
+</div>
+</div>
+<!-- Step 2: Completed -->
+<div class="flex items-start gap-3 relative pb-6">
+<!-- Connecting Line -->
+<div class="absolute left-3.5 top-6 bottom-0 w-[2px] bg-[#107A5B]"></div>
+<div class="w-7 h-7 rounded-full bg-[#E7F3EF] flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-[16px] text-[#107A5B] font-bold">check</span>
+</div>
+<div class="pt-0.5">
+<p class="font-body-md-medium text-body-md-medium text-on-surface">Randevu talebi iletildi</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Zaman aralığı ustaya yönlendirildi</p>
+</div>
+</div>
+<!-- Step 3: Active / Pending Confirmation -->
+<div class="flex items-start gap-3 relative pb-6">
+<!-- Dashed Connecting Line -->
+<div class="absolute left-3.5 top-7 bottom-0 w-[2px] border-l-2 border-dashed border-outline-variant"></div>
+<div class="relative w-7 h-7 flex items-center justify-center shrink-0 z-10">
+<span class="absolute inset-0 rounded-full bg-primary/10 animate-ping" style="animation-duration: 2.2s;"></span>
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-primary">schedule</span>
+</div>
+</div>
+<div class="pt-0.5">
+<div class="flex items-center gap-2">
+<p class="font-body-lg-medium text-body-lg-medium text-on-surface">Usta onayı bekleniyor</p>
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+</div>
+<p class="font-label-md text-label-md text-primary-container font-semibold mt-0.5">Usta yanıtı bekleniyor</p>
+</div>
+</div>
+<!-- Step 4: Pending Next -->
+<div class="flex items-start gap-3 relative">
+<div class="w-7 h-7 rounded-full bg-surface-disabled flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-[16px] text-text-secondary">handyman</span>
+</div>
+<div class="pt-0.5">
+<p class="font-body-md text-body-md text-text-secondary">İş başlangıcı</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Usta belirtilen adrese gelir</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Informative Notice Card -->
+<div class="rounded-2xl p-4 bg-surface-container-low mb-6 flex items-start gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-info-blue">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+</div>
+<div class="space-y-0.5">
+<h3 class="font-body-md-medium text-body-md-medium text-on-surface">
+        Onay geldiğinde bildirim alacaksın
+      </h3>
+<p class="font-body-md text-body-md text-text-secondary">
+        Randevu kesinleşmeden önce tarih veya saat değişikliği talebinde bulunabilirsin.
+      </p>
+</div>
+</div>
+<!-- Action CTA Area -->
+<div class="mt-auto space-y-2 pt-2">
+<!-- Primary CTA: 52px height, 14px radius, font-semibold -->
+<button class="w-full h-[52px] rounded-[14px] bg-primary-container text-on-primary font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm active:bg-dark-teal transition-colors" type="button">
+<span class="">Talep detayına git</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<!-- Secondary Text Link -->
+<button class="w-full py-2.5 flex items-center justify-center font-body-md-medium text-body-md-medium text-text-secondary active:text-on-surface transition-colors" onclick="history.back()" type="button">
+      Ana sayfaya dön
+    </button>
+</div>
+</div></main>
+
+
+<!-- BiTadilat Authoritative Navigation Controller -->
+<script>
+(function() {
+  const SPEC = {"id": "3bd2afe80ced4d2498ec9f16c7099326", "step_num": 17, "title": "Randevu Talebi İletildi", "flow": "3. Teklif Karşılaştırma & Randevu", "role": "CUSTOMER", "device": "MOBILE", "back_sid": "cc1f55661a1a4036a890b43d9f15596a", "next_sid": "f3e7de808fdb49c18e3c5d430cb72528"};
+  const CURRENT_SID = "3bd2afe80ced4d2498ec9f16c7099326";
+
+  window.bitadilatNav = function(targetSid, label) {
+    if (!targetSid) return;
+    console.log('[BiTadilat Router] Navigating:', CURRENT_SID, '->', targetSid, '(', label || '', ')');
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'NAVIGATE',
+        from: CURRENT_SID,
+        to: targetSid,
+        label: label || ''
+      }, '*');
+    } else {
+      window.location.href = './' + targetSid + '.html';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Remove all disabled locks on interactive prototype triggers
+    document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
+      btn.style.cursor = 'pointer';
+    });
+
+    // 2. Prevent default forms from blocking navigation
+    document.querySelectorAll('form').forEach(form => {
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        if (SPEC.next_sid) window.bitadilatNav(SPEC.next_sid, 'Form Submitted');
+        return false;
+      };
+    });
+
+    // 3. Bind Universal Header Back Buttons
+    if (SPEC.back_sid) {
+      document.querySelectorAll('button, a').forEach(el => {
+        const text = (el.innerText || '').toLowerCase();
+        const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+        const html = el.innerHTML || '';
+        if (aria.includes('geri') || text.includes('geri') || text.includes('dön') || 
+            html.includes('arrow_back') || html.includes('chevron_left') || html.includes('arrow_back_ios')) {
+          el.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.back_sid, 'Back Target');
+          };
+        }
+      });
+    }
+
+    // 4. Bind Explicit data-nav-target elements
+    document.querySelectorAll('[data-nav-target]').forEach(el => {
+      el.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.bitadilatNav(el.getAttribute('data-nav-target'), 'Direct Data Nav');
+      };
+    });
+
+    // 5. Screen-Specific Deterministic Handlers
+    if (CURRENT_SID === '0c06b06e422b40daacbc0b8e6e8fb7bf') {
+      let chosenRole = 'homeowner';
+      const cHome = document.getElementById('role-homeowner');
+      const cPro = document.getElementById('role-professional');
+      const btnCont = document.getElementById('btn-continue');
+      
+      function activateRole(role) {
+        chosenRole = role;
+        if (btnCont) {
+          btnCont.removeAttribute('disabled');
+          btnCont.style.backgroundColor = '#0F4C5C';
+          btnCont.style.color = '#FFFFFF';
+          btnCont.style.cursor = 'pointer';
+        }
+      }
+
+      if (cHome) cHome.addEventListener('click', () => activateRole('homeowner'));
+      if (cPro) cPro.addEventListener('click', () => activateRole('pro'));
+
+      if (btnCont) {
+        btnCont.onclick = function(e) {
+          e.preventDefault();
+          if (chosenRole === 'pro') {
+            window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
+          } else {
+            window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
+          }
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'fbbe0f405e1f4531a14dcdd6b1c5736a') {
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        submitBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'Telefon Doğrulandı -> SMS');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === '42c148a1fb25400ca549481fa6abe01f') {
+      const verifyBtn = document.getElementById('verify-submit-btn');
+      if (verifyBtn) {
+        verifyBtn.removeAttribute('disabled');
+        verifyBtn.classList.remove('opacity-60', 'pointer-events-none');
+        verifyBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'SMS Onaylandı -> Müşteri Ana Sayfa');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {
+      // CTA button
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talep') || t.includes('başla') || t.includes('oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); };
+        }
+      });
+      // Category Cards
+      document.querySelectorAll('.grid > div, .grid > button').forEach(c => {
+        c.style.cursor = 'pointer';
+        c.onclick = () => window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi -> Adım 1');
+      });
+      // Bottom Navigation
+      const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Müşteri Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '44c003fee81d4a188f187608554efdd5') {
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+      }
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('2. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('3. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 2 -> Adım 3'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '585d649f4ea046ffa70e4cb481ddd030') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('4. adıma') || t.includes('devam et') || t.includes('gözden geçir')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 3 -> Adım 4'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('yayınla') || t.includes('onayla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talebi Yayınla'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '94a730cef5374f2ab9632d9acf0d7e19') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.see_offers_sid || SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {
+      // Customer Requests List
+      document.querySelectorAll('button, [data-card]').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('gör') || t.includes('incele')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('yeni') || t.includes('başlat') || t.includes('talep oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('44c003fee81d4a188f187608554efdd5', 'Yeni Talep'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '994e3b4ffce942ce8778f7a6cfaa42c0') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('karşılaştır')) {
+          b.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.bitadilatNav(SPEC.compare_sid, 'Karşılaştır'); };
+        } else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Kaya')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); };
+        }
+        if (t.includes('soru sor') || t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
+        }
+        if (t.includes('profil') || t.includes('hakkında')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '1fc70722168942c4a1933cd9c641ad68') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('incele') || t.includes('seç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '98cd20d6ab4e4f8fbc29bc462ce55cca') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklife dön') || t.includes('teklif')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklife Dön'); };
+        }
+        if (t.includes('soru sor')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Mesaj'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '58f9993b5f444ff3a9f9361cb8d3b731') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et') || t.includes('onayla') || t.includes('randevu')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu Seçimi'); };
+        }
+        if (t.includes('vazgeç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklif Detayına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '7c6ec3a02d3347a997a3fc5b1a2c91d0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('randevu') && (t.includes('gönder') || t.includes('onayla') || t.includes('talebi'))) {
+          b.removeAttribute('disabled');
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu İletildi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bd2afe80ced4d2498ec9f16c7099326') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('iş alanı') || t.includes('detayına git') || t.includes('talep')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Git'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'f3e7de808fdb49c18e3c5d430cb72528') {
+      document.querySelectorAll('button, a, div.cursor-pointer').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaşma'); };
+        }
+        if (t.includes('ilerlemesi') || t.includes('aşama')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.milestones_sid, 'Aşama Takibi'); };
+        }
+        if (t.includes('değiştir') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reschedule_sid, 'Randevu İptal'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {
+      const sendBtn = document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
+      const inp = document.querySelector('input[type="text"]');
+      if (sendBtn && inp) {
+        sendBtn.onclick = (e) => { e.preventDefault(); if (inp.value) inp.value = ''; };
+      }
+    }
+
+    else if (CURRENT_SID === 'b89d998c02d34e67b8e8f34334f87f02') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaş'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('koru') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'd485263b3ae244a9b35500665b5c759b') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('değerlendirme')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Puanlama'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'db8a1b368a7749cbb5fd6cf497f34de6') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder') || t.includes('tamamla') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '488f3698f93c454099ca2382585aeb66') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('şikayet') && (t.includes('oluştur') || t.includes('ilet') || t.includes('gönder'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Şikayet Durumu'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bb4b954e5224b0097b2bee12be9bcbf') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('ana sayfa') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfa'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlar'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '20de80b8dc984e86be873761409a2396') {
+      // Customer Profile
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('usta') && (t.includes('moduna geç') || t.includes('profesyoneli'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç'); };
+        }
+        if (t.includes('çıkış') || t.includes('oturumu kapat')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    // FLOW 6: USTA HANDLERS
+    else if (CURRENT_SID === 'a512d0928f11b9cb02877746d580c548') {
+      const submitBtn = document.getElementById('btn-submit-pro');
+      if (submitBtn) {
+        submitBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); };
+      }
+    }
+
+    else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teklif Hazırlama'); };
+        }
+      });
+      const tabs = document.querySelectorAll('nav a, footer a');
+      if (tabs.length >= 4) {
+        tabs[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Talepler'); };
+        tabs[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_active_jobs, 'İşlerim'); };
+        tabs[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        tabs[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      }
+    }
+
+    else if (CURRENT_SID === 'b9086f1030784def8eb267fd9110addd') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Gönderildi Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '82f9d783b88b40ec8ca6260566c0f5cb') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('akışına dön') || t.includes('taleplere dön') || t.includes('close')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Taleplere Dön'); };
+        }
+        if (t.includes('müsaitlik')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talepler') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Akışı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '8ba8c346d11c46f39163fd6ebf06dae1') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteriye Mesaj'); };
+        }
+        if (t.includes('bitirdim') || t.includes('teslim')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teslim Bildirimi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c6ebf06dae18ba8c346d11c46f39163f') {
+      const btnReturn = document.getElementById('btn-return-feed');
+      const btnAvail = document.getElementById('btn-goto-availability');
+      const btnClose = document.getElementById('btn-close');
+      if (btnReturn) btnReturn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Feed'); };
+      if (btnAvail) btnAvail.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      if (btnClose) btnClose.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Kapat'); };
+    }
+
+    // FLOW 7: ADMIN & WEB
+    else if (CURRENT_SID === '612429fdea1b42a1bf9e628883f7e58f') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === 'cb00d67723e34ec990786a82d25c77ca') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '5ce8968e2703443ca129c0e7c9e9d145') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('usta çağır') || t.includes('başla') || t.includes('talep')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_customer, 'Müşteri Başlat'); };
+        }
+        if (t.includes('usta ol') || t.includes('usta olarak') || t.includes('katıl')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_pro, 'Usta Başlat'); };
+        }
+      });
+    }
+
+  });
+})();
+</script>
+
+</body></html>

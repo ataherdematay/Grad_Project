@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-canvas" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BiTadilat Yönetici Web Portalı — Usta Profil ve Belge İnceleme</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#763300",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c0c8cb",
+            "surface": "#FFFFFF",
+            "on-background": "#031e28",
+            "on-secondary-fixed": "#331200",
+            "on-tertiary-fixed-variant": "#00513b",
+            "surface-container-low": "#e6f6ff",
+            "primary-container": "#0f4c5c",
+            "on-secondary": "#ffffff",
+            "surface-container-highest": "#cce7f4",
+            "surface-dim": "#c4deeb",
+            "inverse-primary": "#9acee1",
+            "tertiary-fixed-dim": "#7dd8b3",
+            "inverse-surface": "#1a343e",
+            "primary-fixed": "#b6ebfe",
+            "surface-variant": "#cce7f4",
+            "surface-container": "#d8f2ff",
+            "surface-container-high": "#d2ecfa",
+            "dark-teal": "#0A3945",
+            "secondary-fixed": "#ffdbc9",
+            "tertiary-fixed": "#99f5ce",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#40484b",
+            "on-secondary-container": "#642b00",
+            "surface-bright": "#f3faff",
+            "tertiary": "#003727",
+            "text-secondary": "#5F6F73",
+            "canvas": "#F7F8F6",
+            "on-tertiary-container": "#6ac4a1",
+            "alert-red": "#B9382C",
+            "primary-fixed-dim": "#9acee1",
+            "on-primary-fixed": "#001f28",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "inverse-on-surface": "#dff4ff",
+            "on-primary-container": "#87bbce",
+            "border-subtle": "#D9E1DD",
+            "surface-disabled": "#E9EEEB",
+            "secondary-container": "#fd8535",
+            "background": "#f3faff",
+            "surface-tint": "#306576",
+            "on-surface": "#031e28",
+            "primary": "#003441",
+            "on-primary-fixed-variant": "#114d5d",
+            "tertiary-container": "#00503a",
+            "secondary": "#9b4500",
+            "secondary-fixed-dim": "#ffb68d",
+            "on-tertiary-fixed": "#002116",
+            "outline": "#70787c",
+            "info-blue": "#247BA0",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-lg": "1rem",
+            "gutter": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem",
+            "space-md": "0.75rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Manrope"],
+            "body-lg": ["Manrope"],
+            "headline-md": ["Manrope"],
+            "body-lg-medium": ["Manrope"],
+            "label-sm": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "label-md": ["Manrope"],
+            "headline-sm": ["Manrope"],
+            "body-md-medium": ["Manrope"],
+            "body-md": ["Manrope"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-lg-medium": ["16px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "body-md-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full bg-canvas text-on-surface font-body-md antialiased flex flex-col selection:bg-surface-container selection:text-primary">
+<!-- Desktop Top Navigation Bar (Fixed 64px, bg #0F4C5C) -->
+<header class="h-16 bg-primary-container border-b border-dark-teal sticky top-0 z-50 px-6 flex items-center justify-between shadow-sm">
+<div class="flex items-center space-x-8">
+<!-- Brand Logo & Badge -->
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-lg bg-surface flex items-center justify-center text-primary-container shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">build</span>
+</div>
+<div class="flex items-baseline space-x-2">
+<span class="font-headline-sm text-headline-sm tracking-tight text-white font-bold">BiTadilat</span>
+<span class="bg-surface-container-low text-primary-container text-label-sm font-label-sm px-2 py-0.5 rounded font-semibold tracking-wide">Yönetici Portalı</span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="hidden md:flex items-center h-16 space-x-1">
+<!-- Active Tab: Profil İnceleme Sırası -->
+<a class="h-full flex items-center px-4 border-b-2 border-white text-white font-body-md-medium text-body-md-medium space-x-2 transition-colors" href="#">
+<span>Profil İnceleme Sırası</span>
+<span class="bg-secondary-container text-white text-label-sm font-label-sm px-1.5 py-0.2 rounded-full font-bold">3</span>
+</a>
+<!-- Tab 2: Uyuşmazlık ve Şikayetler -->
+<a class="h-full flex items-center px-4 border-b-2 border-transparent text-white/80 hover:text-white font-body-md-medium text-body-md-medium space-x-2 transition-colors" href="#">
+<span>Uyuşmazlık ve Şikayetler</span>
+<span class="bg-white/20 text-white text-label-sm font-label-sm px-1.5 py-0.2 rounded-full font-medium">1</span>
+</a>
+<!-- Tab 3: Kullanıcı ve Usta Hesapları -->
+<a class="h-full flex items-center px-4 border-b-2 border-transparent text-white/80 hover:text-white font-body-md-medium text-body-md-medium transition-colors" href="#">
+<span>Kullanıcı ve Usta Hesapları</span>
+</a>
+</nav>
+</div>
+<!-- Right Admin Info & Actions -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2.5 bg-dark-teal/60 border border-white/10 px-3 py-1.5 rounded-full">
+<div class="w-6 h-6 rounded-full bg-primary-fixed-dim text-on-primary-fixed flex items-center justify-center font-bold text-label-sm">
+          HT
+        </div>
+<span class="text-white text-body-md-medium font-body-md-medium">Admin: Hakan T.</span>
+</div>
+<button class="flex items-center space-x-1.5 text-white/80 hover:text-white text-body-md-medium font-body-md-medium px-3 py-1.5 rounded-lg hover:bg-dark-teal transition-all">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Çıkış Yap</span>
+</button>
+</div>
+</header>
+<!-- Main Content Layout (Split-screen 2-column, max-w-7xl) -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6 flex flex-col md:flex-row gap-6">
+<!-- LEFT COLUMN: Review Queue List (35% width) -->
+<section class="w-full md:w-[35%] flex flex-col space-y-4">
+<!-- Queue Header Card -->
+<div class="bg-surface rounded-xl border border-border-subtle p-4 shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2">
+<h1 class="font-headline-sm text-headline-sm text-on-surface">İnceleme Bekleyenler</h1>
+<span class="bg-surface-container-low text-primary-container px-2 py-0.5 rounded text-label-sm font-label-sm font-bold">3 Başvuru</span>
+</div>
+<button class="text-text-secondary hover:text-primary transition-colors" title="Yenile">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+</button>
+</div>
+<!-- Search Input -->
+<div class="relative mb-3">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-secondary text-[20px]">search</span>
+<input class="w-full h-10 pl-9 pr-3 text-body-md font-body-md bg-canvas border border-border-subtle rounded-lg focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container placeholder:text-text-secondary" placeholder="Usta veya işletme ara..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex items-center space-x-2">
+<button class="bg-primary-container text-white px-3 py-1 rounded-md text-label-sm font-label-sm transition-all shadow-xs">
+            Tümü (3)
+          </button>
+<button class="bg-surface border border-border-subtle text-text-secondary hover:text-on-surface hover:bg-canvas px-3 py-1 rounded-md text-label-sm font-label-sm transition-colors">
+            Acil Tesisat
+          </button>
+<button class="bg-surface border border-border-subtle text-text-secondary hover:text-on-surface hover:bg-canvas px-3 py-1 rounded-md text-label-sm font-label-sm transition-colors">
+            Elektrik
+          </button>
+</div>
+</div>
+<!-- Queue List Items Container -->
+<div class="flex flex-col space-y-2.5">
+<!-- Queue Item 1 (Selected / Active) -->
+<div class="bg-surface-container-low/40 rounded-xl border-l-4 border-l-primary-container border-y border-r border-border-subtle p-4 shadow-xs cursor-pointer transition-all">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center space-x-1.5">
+<h2 class="font-body-lg-medium text-body-lg-medium text-on-surface">Mehmet Demir</h2>
+<span class="material-symbols-outlined text-primary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-body-md-medium font-body-md-medium text-primary-container">Mavi Hat Tesisat</p>
+</div>
+<!-- Status Badge: Amber Warning -->
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#FFF8E1] text-[#B78103] border border-[#FFE082]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E87525] animate-pulse"></span>
+              İnceleme Bekliyor
+            </span>
+</div>
+<div class="mt-3 pt-3 border-t border-border-subtle/80 flex items-center justify-between text-label-md font-label-md text-text-secondary">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">handyman</span>
+<span>Tesisat &amp; Kalorifer</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">location_on</span>
+<span>Kadıköy, Üsküdar</span>
+</div>
+</div>
+<div class="mt-1.5 flex items-center justify-end text-label-sm font-label-sm text-text-secondary/80">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+<span>2 saat önce</span>
+</div>
+</div>
+<!-- Queue Item 2 (Default State) -->
+<div class="bg-surface rounded-xl border border-border-subtle p-4 hover:bg-slate-50 cursor-pointer transition-all shadow-xs group">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="font-body-lg-medium text-body-lg-medium text-on-surface group-hover:text-primary-container transition-colors">Hasan Yıldız</h2>
+<p class="text-body-md font-body-md text-text-secondary">Yıldız Elektrik</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-disabled text-text-secondary">
+              Sırada
+            </span>
+</div>
+<div class="mt-3 pt-3 border-t border-border-subtle flex items-center justify-between text-label-md font-label-md text-text-secondary">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+<span>Elektrik Tesisatı</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">location_on</span>
+<span>Ümraniye</span>
+</div>
+</div>
+<div class="mt-1.5 flex items-center justify-end text-label-sm font-label-sm text-text-secondary/80">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+<span>5 saat önce</span>
+</div>
+</div>
+<!-- Queue Item 3 (Default State) -->
+<div class="bg-surface rounded-xl border border-border-subtle p-4 hover:bg-slate-50 cursor-pointer transition-all shadow-xs group">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="font-body-lg-medium text-body-lg-medium text-on-surface group-hover:text-primary-container transition-colors">Selim Aksoy</h2>
+<p class="text-body-md font-body-md text-text-secondary">Aksoy Boya &amp; Badana</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-disabled text-text-secondary">
+              Sırada
+            </span>
+</div>
+<div class="mt-3 pt-3 border-t border-border-subtle flex items-center justify-between text-label-md font-label-md text-text-secondary">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">format_paint</span>
+<span>Boya &amp; Badana</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[15px]">location_on</span>
+<span>Beşiktaş</span>
+</div>
+</div>
+<div class="mt-1.5 flex items-center justify-end text-label-sm font-label-sm text-text-secondary/80">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+<span>Dün</span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Application Detail & Document Inspection (65% width) -->
+<section class="w-full md:w-[65%] flex flex-col space-y-4">
+<div class="bg-surface rounded-xl border border-border-subtle p-6 shadow-sm flex flex-col h-full">
+<!-- Header Row -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-border-subtle">
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-label-sm font-label-sm font-bold uppercase tracking-wider text-primary-container bg-surface-container-low px-2 py-0.5 rounded">SCR-19</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Usta Başvuru Detayı — Mehmet Demir (Mavi Hat Tesisat)</h2>
+</div>
+<p class="text-body-md font-body-md text-text-secondary mt-0.5">Tesisat kategorisinde ustalık doğrulama ve operasyonel onay süreci.</p>
+</div>
+<span class="self-start sm:self-auto bg-[#FDF1E9] text-[#E87525] border border-[#ffdac2] text-label-md font-label-md px-3 py-1 rounded-full font-semibold flex items-center gap-1.5 whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-[#E87525]"></span>
+            Bekleyen Başvuru #APP-402
+          </span>
+</div>
+<!-- Quick Summary Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-5 border-b border-border-subtle">
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">Adı Soyadı</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface mt-0.5 block">Mehmet Demir</span>
+</div>
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">İşletme Ünvanı</span>
+<span class="font-body-md-medium text-body-md-medium text-primary-container font-semibold mt-0.5 block">Mavi Hat Tesisat</span>
+</div>
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">Meslek Alanı</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface mt-0.5 block">Sıhhi Tesisat &amp; Isıtma Sistemleri</span>
+</div>
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">Hizmet İlçeleri</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface mt-0.5 block">Kadıköy, Üsküdar, Ataşehir, Maltepe</span>
+</div>
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">Beyan Edilen Deneyim</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface mt-0.5 block">12 yıl konut ve ticari tesisat</span>
+</div>
+<div class="p-3 bg-canvas rounded-lg border border-border-subtle">
+<span class="text-label-sm font-label-sm text-text-secondary block">İletişim (Gizlilik Korumalı)</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface mt-0.5 block">+90 532 *** ** 14 · mehmet.demir@...</span>
+</div>
+</div>
+<!-- Document Inspection Section -->
+<div class="pt-5 flex-1 flex flex-col">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">badge</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Yüklenen Yeterlilik / Ustalık Belgesi Örneği</h3>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-label-sm font-label-sm bg-surface-disabled text-text-secondary px-2.5 py-1 rounded-md">
+                plumbing_trade_certificate_sample.jpg • 1.4 MB
+              </span>
+<button class="flex items-center space-x-1 text-primary-container hover:text-dark-teal bg-surface-container-low px-2.5 py-1 rounded-md text-label-sm font-label-sm font-semibold transition-colors">
+<span class="material-symbols-outlined text-[16px]">zoom_in</span>
+<span>Tam Ekran</span>
+</button>
+</div>
+</div>
+<!-- Document Preview Canvas (Realistic Vocational Certificate Simulation) -->
+<div class="relative bg-canvas border border-border-subtle rounded-xl p-4 flex items-center justify-center overflow-hidden">
+<!-- Simulated Official Document -->
+<div class="w-full max-w-xl bg-white border-2 border-stone-300 rounded-lg shadow-sm p-6 relative">
+<!-- Subtle decorative official guilloche background line representation -->
+<div class="absolute inset-2 border border-stone-200 pointer-events-none"></div>
+<!-- Certificate Top Header -->
+<div class="text-center pb-4 border-b border-stone-200 relative">
+<div class="w-12 h-12 mx-auto mb-2 rounded-full border border-primary-container/30 bg-surface-container-low flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[26px]">apartment</span>
+</div>
+<h4 class="text-label-sm font-label-sm uppercase tracking-widest text-text-secondary font-bold">T.C. MESLEKİ EĞİTİM VE YETERLİLİK KURUMU</h4>
+<p class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight mt-0.5">USTALIK BELGESİ</p>
+<p class="text-label-sm font-label-sm text-text-secondary mt-0.5">3308 Sayılı Mesleki Eğitim Kanunu Uyarınca Tanzim Edilmiştir</p>
+</div>
+<!-- Certificate Body Details -->
+<div class="grid grid-cols-2 gap-y-3 gap-x-4 py-4 text-body-md font-body-md">
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Belge Sahibi:</span>
+<span class="font-body-md-medium text-body-md-medium text-on-surface font-semibold">MEHMET DEMİR</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">T.C. Kimlik No:</span>
+<span class="font-body-md text-body-md text-on-surface tracking-wider">284*****102</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Meslek Dalı:</span>
+<span class="font-body-md-medium text-body-md-medium text-primary-container font-semibold">Sıhhi Tesisatçılık (Seviye 4)</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Belge No:</span>
+<span class="font-body-md text-body-md text-on-surface font-mono font-medium text-label-md">TR-MYK-88219</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Düzenleme Tarihi:</span>
+<span class="font-body-md text-body-md text-on-surface">14.05.2018</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-text-secondary block">Geçerlilik Durumu:</span>
+<span class="inline-flex items-center text-label-sm font-label-sm text-[#107A5B] font-semibold bg-[#E7F3EF] px-1.5 py-0.5 rounded">
+                    Süresiz / Aktif
+                  </span>
+</div>
+</div>
+<!-- Certificate Seal & Stamp Footer -->
+<div class="pt-4 border-t border-stone-200 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<div class="w-14 h-14 rounded-full border-2 border-red-800/60 flex items-center justify-center p-1 rotate-[-12deg] opacity-80">
+<div class="text-[9px] text-center font-bold text-red-800 uppercase leading-tight">
+                      RESMİ ONAY<br/>★ 2018 ★<br/>KADIKÖY
+                    </div>
+</div>
+<div class="text-label-sm font-label-sm text-text-secondary">
+<p class="font-semibold text-on-surface">Kadıköy Mesleki Eğitim Mrk.</p>
+<p>Onaylayan: İlçe Komisyon Bşk.</p>
+</div>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-stone-400 text-[36px]">qr_code_2</span>
+<p class="text-[10px] text-text-secondary mt-[-4px]">Doğrulama Kodu: MYK-882</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Verification Guidance Box -->
+<div class="mt-4 p-3 bg-surface-container-low/60 rounded-lg border border-surface-container-highest flex items-start space-x-2.5">
+<span class="material-symbols-outlined text-info-blue text-[20px] mt-0.5">info</span>
+<p class="text-body-md font-body-md text-on-surface">
+<strong class="font-body-md-medium text-body-md-medium text-primary">Yönetici Denetim Notu:</strong> 
+              Yönetici, yüklenen mesleki yeterlilik belgesi örneğini görsel olarak denetler. Belge üzerindeki kimlik ve uzmanlık bilgileri sistem başvurusuyla uyuşmalıdır. Uyuşmayan veya bulanık belgeler için eksik belge talebi oluşturulmalıdır.
+            </p>
+</div>
+<!-- Administrator Decision Action Bar -->
+<div class="mt-6 pt-5 border-t border-border-subtle flex flex-wrap items-center gap-3">
+<!-- Approve Button (Trust Green) -->
+<button class="h-12 px-6 bg-[#107A5B] hover:bg-[#0c6148] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-lg shadow-sm flex items-center space-x-2 transition-all">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Profili Onayla ve Yayına Al</span>
+</button>
+<!-- Reject Button (Alert Red) -->
+<button class="h-12 px-6 bg-alert-red hover:bg-[#962c22] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-lg shadow-sm flex items-center space-x-2 transition-all">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+<span>Başvuruyu Reddet</span>
+</button>
+<!-- Request Missing Documents (Outlined/Text Action) -->
+<button class="ml-auto px-4 py-2.5 text-primary-container hover:bg-surface-container-low border border-transparent hover:border-border-subtle font-body-md-medium text-body-md-medium rounded-lg flex items-center space-x-1.5 transition-all">
+<span class="material-symbols-outlined text-[18px]">history_edu</span>
+<span>Eksik Belge Talebi İlet</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Interactive script for administrative actions feedback -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const approveBtn = document.querySelector('button:has(span:contains("Profili Onayla"))') || document.querySelectorAll('button')[6];
+      const rejectBtn = document.querySelectorAll('button')[7];
+      const requestDocsBtn = document.querySelectorAll('button')[8];
+
+      if (approveBtn) {
+        approveBtn.addEventListener('click', () => {
+          alert('Mehmet Demir (Mavi Hat Tesisat) profili onaylandı ve platformda yayına alındı.');
+        });
+      }
+
+      if (rejectBtn) {
+        rejectBtn.addEventListener('click', () => {
+          const reason = prompt('Lütfen usta başvurusunu reddetme gerekçesini belirtiniz:', 'Belge geçerlilik süresi veya doğruluğu teyit edilemedi.');
+          if (reason) {
+            alert('Başvuru reddedildi ve ustaya SMS/E-posta bilgilendirmesi iletildi.');
+          }
+        });
+      }
+
+      if (requestDocsBtn) {
+        requestDocsBtn.addEventListener('click', () => {
+          alert('Ustaya ek belge talebi (Eksik Belge Bildirimi) başarıyla iletildi.');
+        });
+      }
+    });
+  </script>
+
+
+<!-- BiTadilat Authoritative Navigation Controller -->
+<script>
+(function() {
+  const SPEC = {"id": "612429fdea1b42a1bf9e628883f7e58f", "step_num": 34, "title": "Yönetici Web: Belge İnceleme (SCR-19)", "flow": "7. Yönetici Portalı & Web", "role": "ADMIN", "device": "DESKTOP", "back_sid": "cc1f55661a1a4036a890b43d9f15596a", "next_sid": "cb00d67723e34ec990786a82d25c77ca", "disputes_sid": "cb00d67723e34ec990786a82d25c77ca", "accounts_sid": "5ce8968e2703443ca129c0e7c9e9d145"};
+  const CURRENT_SID = "612429fdea1b42a1bf9e628883f7e58f";
+
+  window.bitadilatNav = function(targetSid, label) {
+    if (!targetSid) return;
+    console.log('[BiTadilat Router] Navigating:', CURRENT_SID, '->', targetSid, '(', label || '', ')');
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'NAVIGATE',
+        from: CURRENT_SID,
+        to: targetSid,
+        label: label || ''
+      }, '*');
+    } else {
+      window.location.href = './' + targetSid + '.html';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Remove all disabled locks on interactive prototype triggers
+    document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
+      btn.style.cursor = 'pointer';
+    });
+
+    // 2. Prevent default forms from blocking navigation
+    document.querySelectorAll('form').forEach(form => {
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        if (SPEC.next_sid) window.bitadilatNav(SPEC.next_sid, 'Form Submitted');
+        return false;
+      };
+    });
+
+    // 3. Bind Universal Header Back Buttons
+    if (SPEC.back_sid) {
+      document.querySelectorAll('button, a').forEach(el => {
+        const text = (el.innerText || '').toLowerCase();
+        const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+        const html = el.innerHTML || '';
+        if (aria.includes('geri') || text.includes('geri') || text.includes('dön') || 
+            html.includes('arrow_back') || html.includes('chevron_left') || html.includes('arrow_back_ios')) {
+          el.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.back_sid, 'Back Target');
+          };
+        }
+      });
+    }
+
+    // 4. Bind Explicit data-nav-target elements
+    document.querySelectorAll('[data-nav-target]').forEach(el => {
+      el.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.bitadilatNav(el.getAttribute('data-nav-target'), 'Direct Data Nav');
+      };
+    });
+
+    // 5. Screen-Specific Deterministic Handlers
+    if (CURRENT_SID === '0c06b06e422b40daacbc0b8e6e8fb7bf') {
+      let chosenRole = 'homeowner';
+      const cHome = document.getElementById('role-homeowner');
+      const cPro = document.getElementById('role-professional');
+      const btnCont = document.getElementById('btn-continue');
+      
+      function activateRole(role) {
+        chosenRole = role;
+        if (btnCont) {
+          btnCont.removeAttribute('disabled');
+          btnCont.style.backgroundColor = '#0F4C5C';
+          btnCont.style.color = '#FFFFFF';
+          btnCont.style.cursor = 'pointer';
+        }
+      }
+
+      if (cHome) cHome.addEventListener('click', () => activateRole('homeowner'));
+      if (cPro) cPro.addEventListener('click', () => activateRole('pro'));
+
+      if (btnCont) {
+        btnCont.onclick = function(e) {
+          e.preventDefault();
+          if (chosenRole === 'pro') {
+            window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
+          } else {
+            window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
+          }
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'fbbe0f405e1f4531a14dcdd6b1c5736a') {
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        submitBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'Telefon Doğrulandı -> SMS');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === '42c148a1fb25400ca549481fa6abe01f') {
+      const verifyBtn = document.getElementById('verify-submit-btn');
+      if (verifyBtn) {
+        verifyBtn.removeAttribute('disabled');
+        verifyBtn.classList.remove('opacity-60', 'pointer-events-none');
+        verifyBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'SMS Onaylandı -> Müşteri Ana Sayfa');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {
+      // CTA button
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talep') || t.includes('başla') || t.includes('oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); };
+        }
+      });
+      // Category Cards
+      document.querySelectorAll('.grid > div, .grid > button').forEach(c => {
+        c.style.cursor = 'pointer';
+        c.onclick = () => window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi -> Adım 1');
+      });
+      // Bottom Navigation
+      const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Müşteri Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '44c003fee81d4a188f187608554efdd5') {
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+      }
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('2. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('3. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 2 -> Adım 3'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '585d649f4ea046ffa70e4cb481ddd030') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('4. adıma') || t.includes('devam et') || t.includes('gözden geçir')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 3 -> Adım 4'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('yayınla') || t.includes('onayla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talebi Yayınla'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '94a730cef5374f2ab9632d9acf0d7e19') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.see_offers_sid || SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {
+      // Customer Requests List
+      document.querySelectorAll('button, [data-card]').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('gör') || t.includes('incele')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('yeni') || t.includes('başlat') || t.includes('talep oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('44c003fee81d4a188f187608554efdd5', 'Yeni Talep'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '994e3b4ffce942ce8778f7a6cfaa42c0') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('karşılaştır')) {
+          b.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.bitadilatNav(SPEC.compare_sid, 'Karşılaştır'); };
+        } else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Kaya')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); };
+        }
+        if (t.includes('soru sor') || t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
+        }
+        if (t.includes('profil') || t.includes('hakkında')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '1fc70722168942c4a1933cd9c641ad68') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('incele') || t.includes('seç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '98cd20d6ab4e4f8fbc29bc462ce55cca') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklife dön') || t.includes('teklif')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklife Dön'); };
+        }
+        if (t.includes('soru sor')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Mesaj'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '58f9993b5f444ff3a9f9361cb8d3b731') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et') || t.includes('onayla') || t.includes('randevu')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu Seçimi'); };
+        }
+        if (t.includes('vazgeç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklif Detayına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '7c6ec3a02d3347a997a3fc5b1a2c91d0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('randevu') && (t.includes('gönder') || t.includes('onayla') || t.includes('talebi'))) {
+          b.removeAttribute('disabled');
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu İletildi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bd2afe80ced4d2498ec9f16c7099326') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('iş alanı') || t.includes('detayına git') || t.includes('talep')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Git'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'f3e7de808fdb49c18e3c5d430cb72528') {
+      document.querySelectorAll('button, a, div.cursor-pointer').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaşma'); };
+        }
+        if (t.includes('ilerlemesi') || t.includes('aşama')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.milestones_sid, 'Aşama Takibi'); };
+        }
+        if (t.includes('değiştir') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reschedule_sid, 'Randevu İptal'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {
+      const sendBtn = document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
+      const inp = document.querySelector('input[type="text"]');
+      if (sendBtn && inp) {
+        sendBtn.onclick = (e) => { e.preventDefault(); if (inp.value) inp.value = ''; };
+      }
+    }
+
+    else if (CURRENT_SID === 'b89d998c02d34e67b8e8f34334f87f02') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaş'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('koru') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'd485263b3ae244a9b35500665b5c759b') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('değerlendirme')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Puanlama'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'db8a1b368a7749cbb5fd6cf497f34de6') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder') || t.includes('tamamla') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '488f3698f93c454099ca2382585aeb66') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('şikayet') && (t.includes('oluştur') || t.includes('ilet') || t.includes('gönder'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Şikayet Durumu'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bb4b954e5224b0097b2bee12be9bcbf') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('ana sayfa') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfa'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlar'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '20de80b8dc984e86be873761409a2396') {
+      // Customer Profile
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('usta') && (t.includes('moduna geç') || t.includes('profesyoneli'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç'); };
+        }
+        if (t.includes('çıkış') || t.includes('oturumu kapat')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    // FLOW 6: USTA HANDLERS
+    else if (CURRENT_SID === 'a512d0928f11b9cb02877746d580c548') {
+      const submitBtn = document.getElementById('btn-submit-pro');
+      if (submitBtn) {
+        submitBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); };
+      }
+    }
+
+    else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teklif Hazırlama'); };
+        }
+      });
+      const tabs = document.querySelectorAll('nav a, footer a');
+      if (tabs.length >= 4) {
+        tabs[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Talepler'); };
+        tabs[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_active_jobs, 'İşlerim'); };
+        tabs[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        tabs[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      }
+    }
+
+    else if (CURRENT_SID === 'b9086f1030784def8eb267fd9110addd') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Gönderildi Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '82f9d783b88b40ec8ca6260566c0f5cb') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('akışına dön') || t.includes('taleplere dön') || t.includes('close')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Taleplere Dön'); };
+        }
+        if (t.includes('müsaitlik')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talepler') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Akışı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '8ba8c346d11c46f39163fd6ebf06dae1') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteriye Mesaj'); };
+        }
+        if (t.includes('bitirdim') || t.includes('teslim')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teslim Bildirimi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c6ebf06dae18ba8c346d11c46f39163f') {
+      const btnReturn = document.getElementById('btn-return-feed');
+      const btnAvail = document.getElementById('btn-goto-availability');
+      const btnClose = document.getElementById('btn-close');
+      if (btnReturn) btnReturn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Feed'); };
+      if (btnAvail) btnAvail.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      if (btnClose) btnClose.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Kapat'); };
+    }
+
+    // FLOW 7: ADMIN & WEB
+    else if (CURRENT_SID === '612429fdea1b42a1bf9e628883f7e58f') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === 'cb00d67723e34ec990786a82d25c77ca') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '5ce8968e2703443ca129c0e7c9e9d145') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('usta çağır') || t.includes('başla') || t.includes('talep')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_customer, 'Müşteri Başlat'); };
+        }
+        if (t.includes('usta ol') || t.includes('usta olarak') || t.includes('katıl')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_pro, 'Usta Başlat'); };
+        }
+      });
+    }
+
+  });
+})();
+</script>
+
+</body></html>

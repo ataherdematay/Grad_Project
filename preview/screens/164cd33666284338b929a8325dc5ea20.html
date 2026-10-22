@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiTadilat Tanıtım ve Karşılama Web Sitesi (SCR-22)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Manrope', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#F7F8F6',
+            surface: '#FFFFFF',
+            primary: '#0F4C5C',
+            'primary-dark': '#0A3945',
+            urgent: '#E87525',
+            trust: '#107A5B',
+            alert: '#B9382C',
+            info: '#247BA0',
+            textPrimary: '#102A34',
+            textSecondary: '#5F6F73',
+            borderSubtle: '#D9E1DD',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-[#F7F8F6] text-[#102A34] font-sans antialiased min-h-screen selection:bg-[#0F4C5C] selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#D9E1DD] h-[72px] px-8 lg:px-12">
+    <div class="max-w-7xl mx-auto h-full flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-[#0F4C5C] flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+          <span class="material-symbols-outlined text-[24px]">home_repair_service</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="text-2xl font-extrabold tracking-tight text-[#0F4C5C]">BiTadilat</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#107A5B]/10 text-[#107A5B]">PRO</span>
+          </div>
+          <span class="text-[11px] font-semibold text-[#5F6F73] -mt-1 tracking-wide">GÜVENİLİR USTA AĞI</span>
+        </div>
+      </a>
+
+      <!-- Center Links -->
+      <nav class="hidden md:flex items-center gap-8 text-[15px] font-semibold text-[#5F6F73]">
+        <a href="#ozellikler" class="hover:text-[#0F4C5C] transition-colors">Özellikler</a>
+        <a href="#nasil-calisir" class="hover:text-[#0F4C5C] transition-colors">Nasıl Çalışır?</a>
+        <a href="#usta-ol" class="hover:text-[#0F4C5C] transition-colors">Usta Ol / Başvur</a>
+        <a href="#sss" class="hover:text-[#0F4C5C] transition-colors">Sıkça Sorulan Sorular (SSS)</a>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-5">
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-[#F7F8F6] p-1 rounded-lg border border-[#D9E1DD] text-[13px] font-bold">
+          <button class="px-2.5 py-1 bg-white text-[#0F4C5C] rounded-md shadow-xs">TR</button>
+          <button class="px-2.5 py-1 text-[#5F6F73] hover:text-[#102A34] transition-colors">EN</button>
+        </div>
+
+        <!-- Download CTA Button -->
+        <a href="#indir" class="inline-flex items-center gap-2 bg-[#0F4C5C] hover:bg-[#0A3945] text-white text-[14px] font-bold px-5 h-[42px] rounded-xl shadow-sm transition-all hover:shadow active:scale-98">
+          <span class="material-symbols-outlined text-[20px]">download</span>
+          <span>Uygulamayı İndir</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-12 lg:py-20 px-8 lg:px-12 max-w-7xl mx-auto overflow-hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      
+      <!-- Left Column: Copy & CTAs -->
+      <div class="lg:col-span-7 flex flex-col items-start pr-0 lg:pr-6">
+        
+        <!-- Region Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#D9E1DD] text-[13px] font-semibold text-[#0F4C5C] mb-6 shadow-2xs">
+          <span class="text-[16px]">🏠</span>
+          <span>İstanbul Geneli Güvenilir Ev Bakım & Onarım Platformu</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-4xl lg:text-[46px] font-extrabold text-[#102A34] leading-[1.18] tracking-tight mb-5">
+          Evinizdeki Onarımı Şansa Bırakmayın. <br class="hidden sm:inline" />
+          <span class="text-[#0F4C5C]">Doğrulanmış Ustalar,</span> Şeffaf Teklifler.
+        </h1>
+
+        <!-- Paragraph -->
+        <p class="text-lg text-[#5F6F73] leading-relaxed mb-8 max-w-2xl font-normal">
+          Tesisattan elektriğe, boyadan banyo yenilemeye; doğrulanmış yerel uzmanlardan işçilik ve malzeme ayrımı net yapılandırılmış teklifler alın. Güvenle randevulaşın.
+        </p>
+
+        <!-- App Store Download Buttons -->
+        <div class="flex flex-wrap items-center gap-4 mb-8" id="indir">
+          <!-- iOS App Store Button -->
+          <a href="#" class="flex items-center gap-3 bg-[#102A34] hover:bg-black text-white px-5 py-3 rounded-xl shadow transition-transform hover:-translate-y-0.5 min-w-[190px]">
+            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.67 1.38-.56.65-1.05 1.71-.92 2.74 1.04.08 2.06-.5 2.67-1.25z"/>
+            </svg>
+            <div class="text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-300 leading-tight">App Store'dan</div>
+              <div class="text-[15px] font-extrabold leading-tight">İndirin (iOS)</div>
+            </div>
+          </a>
+
+          <!-- Google Play Button -->
+          <a href="#" class="flex items-center gap-3 bg-[#102A34] hover:bg-black text-white px-5 py-3 rounded-xl shadow transition-transform hover:-translate-y-0.5 min-w-[190px]">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+              <path d="M3.609 1.814L13.792 12 3.61 22.186c-.365-.353-.61-.88-.61-1.554V3.368c0-.674.245-1.201.61-1.554zm11.233 11.233l2.25 2.25-10.9 6.223 8.65-8.473zm0-2.094L6.192 2.48l10.9 6.223-2.25 2.25zm1.536 1.047l3.69-2.108c.732-.418.732-1.1 0-1.518l-3.69-2.108-2.31 2.31 2.31 2.31z"/>
+            </svg>
+            <div class="text-left">
+              <div class="text-[10px] uppercase font-bold text-slate-300 leading-tight">Google Play'den</div>
+              <div class="text-[15px] font-extrabold leading-tight">Alın (Android)</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Trust Mini Badges -->
+        <div class="flex items-center gap-6 pt-2 border-t border-[#D9E1DD] w-full max-w-xl text-[13px] font-semibold text-[#5F6F73]">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#107A5B] text-[20px]">verified</span>
+            <span>%100 Doğrulanmış Esnaf</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#0F4C5C] text-[20px]">account_balance_wallet</span>
+            <span>Güvenli Havuz Hesap</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#E87525] text-[20px]">schedule</span>
+            <span>Net Randevu Saatleri</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Realistic Mobile Phone Mockup Container -->
+      <div class="lg:col-span-5 flex justify-center items-center relative">
+        <!-- Ambient Glow -->
+        <div class="absolute -inset-4 bg-gradient-to-tr from-[#0F4C5C]/15 to-[#107A5B]/10 rounded-full blur-2xl -z-10"></div>
+        
+        <!-- Phone Device Mockup -->
+        <div class="w-[340px] sm:w-[360px] bg-white rounded-[44px] p-3 shadow-2xl border-[6px] border-[#102A34] ring-1 ring-black/5 relative">
+          
+          <!-- Speaker & Dynamic Island Pill -->
+          <div class="w-28 h-5 bg-[#102A34] rounded-full mx-auto mb-2 flex items-center justify-center">
+            <div class="w-3 h-3 rounded-full bg-[#1b3d4a] mr-2"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-[#247BA0]"></div>
+          </div>
+
+          <!-- Inside Screen Content -->
+          <div class="bg-[#F7F8F6] rounded-[34px] overflow-hidden p-3 border border-[#D9E1DD] text-left">
+            
+            <!-- Mobile App Top Bar -->
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-[#D9E1DD] px-1">
+              <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded-md bg-[#0F4C5C] flex items-center justify-center text-white text-[12px] font-bold">B</div>
+                <span class="text-xs font-bold text-[#102A34]">BiTadilat</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#107A5B]/15 text-[#107A5B]">
+                ● Aktif Randevu
+              </span>
+            </div>
+
+            <!-- Active Job Card -->
+            <div class="bg-white rounded-xl p-3 border border-[#D9E1DD] shadow-2xs mb-2.5">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[11px] font-extrabold text-[#0F4C5C]">İŞ #501 · SIHHİ TESİSAT</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E87525]/15 text-[#E87525]">Acil Onarım</span>
+              </div>
+              <h4 class="text-xs font-bold text-[#102A34] mb-1">Mavi Hat Tesisat</h4>
+              <div class="flex items-center gap-2 text-[11px] text-[#5F6F73] mb-2">
+                <span class="flex items-center text-[#107A5B] font-bold">
+                  <span class="material-symbols-outlined text-[13px] mr-0.5 filled">verified</span>
+                  Doğrulanmış
+                </span>
+                <span>•</span>
+                <span>Kadıköy</span>
+                <span>•</span>
+                <span class="text-amber-500 font-bold">★ 4.8</span>
+              </div>
+              
+              <!-- Offer Breakdown Snapshot -->
+              <div class="bg-[#F7F8F6] rounded-lg p-2 border border-[#D9E1DD] grid grid-cols-3 gap-1 text-center">
+                <div>
+                  <div class="text-[9px] text-[#5F6F73]">İşçilik</div>
+                  <div class="text-[11px] font-bold text-[#102A34]">₺1.650</div>
+                </div>
+                <div>
+                  <div class="text-[9px] text-[#5F6F73]">Malzeme</div>
+                  <div class="text-[11px] font-bold text-[#102A34]">₺800</div>
+                </div>
+                <div>
+                  <div class="text-[9px] text-[#0F4C5C] font-semibold">Toplam</div>
+                  <div class="text-[11px] font-extrabold text-[#0F4C5C]">₺2.450</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Timeline Tracker Mini -->
+            <div class="bg-white rounded-xl p-3 border border-[#D9E1DD] shadow-2xs">
+              <div class="text-[11px] font-bold text-[#102A34] mb-2">Canlı Süreç Durumu</div>
+              <div class="space-y-2 text-[10px]">
+                <div class="flex items-center gap-2 text-[#107A5B] font-semibold">
+                  <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  <span>Yapılandırılmış Teklif Kabul Edildi</span>
+                </div>
+                <div class="flex items-center gap-2 text-[#107A5B] font-semibold">
+                  <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  <span>Randevu Onaylandı (Bugün 14:00)</span>
+                </div>
+                <div class="flex items-center gap-2 text-[#0F4C5C] font-bold">
+                  <span class="w-3.5 h-3.5 rounded-full border-2 border-[#0F4C5C] flex items-center justify-center text-[8px] animate-pulse">●</span>
+                  <span>Usta Adreste: Onarım Sürüyor</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 pt-2 border-t border-[#D9E1DD] flex items-center justify-between text-[10px]">
+                <span class="text-[#5F6F73]">BiTadilat Güvence Havuzu</span>
+                <span class="font-bold text-[#107A5B]">Korumalı Tutar</span>
+              </div>
+            </div>
+
+            <!-- Bottom Floating Action -->
+            <div class="mt-2 text-center">
+              <div class="w-full py-1.5 bg-[#0F4C5C] text-white text-[11px] font-bold rounded-lg shadow-2xs">
+                Müşteri Deneyiminde Kıyasla & Seç
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Home Indicator -->
+          <div class="w-32 h-1 bg-[#102A34] rounded-full mx-auto mt-2.5"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Core Pillars Section (3 Grid Cards) -->
+  <section class="py-16 px-8 lg:px-12 bg-white border-y border-[#D9E1DD]" id="ozellikler">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-bold uppercase tracking-wider text-[#0F4C5C] bg-[#0F4C5C]/10 px-3 py-1 rounded-md">BiTadilat Temel Prensipleri</span>
+        <h2 class="text-3xl font-extrabold text-[#102A34] mt-3">Ev Hizmetlerinde Güveni Yeniden Tanımlıyoruz</h2>
+        <p class="text-[16px] text-[#5F6F73] mt-2">Belirsiz fiyatlar, gelmeyen ustalar ve sürpriz masraflar geride kaldı.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Pillar Card 1 -->
+        <div class="bg-[#F7F8F6] p-7 rounded-2xl border border-[#D9E1DD] transition-all hover:shadow-md hover:border-[#E87525]/40 flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-[#E87525]/10 border border-[#E87525]/20 flex items-center justify-center text-[#E87525] mb-5">
+              <span class="material-symbols-outlined text-[30px]">bolt</span>
+            </div>
+            <h3 class="text-xl font-bold text-[#102A34] mb-3">Acil Onarım & Planlı Yenileme</h3>
+            <p class="text-[15px] text-[#5F6F73] leading-relaxed">
+              Gece patlayan borudan haftaya planlanan boya işine kadar doğru usta dakikalar içinde hazır. İster anlık acil müdahale, ister detaylı keşif randevusu.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#D9E1DD] flex items-center gap-2 text-xs font-bold text-[#E87525]">
+            <span class="material-symbols-outlined text-[18px]">alarm_on</span>
+            <span>Hızlı Usta Eşleşmesi</span>
+          </div>
+        </div>
+
+        <!-- Pillar Card 2 -->
+        <div class="bg-[#F7F8F6] p-7 rounded-2xl border border-[#D9E1DD] transition-all hover:shadow-md hover:border-[#0F4C5C]/40 flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-[#0F4C5C]/10 border border-[#0F4C5C]/20 flex items-center justify-center text-[#0F4C5C] mb-5">
+              <span class="material-symbols-outlined text-[30px]">receipt_long</span>
+            </div>
+            <h3 class="text-xl font-bold text-[#102A34] mb-3">Şeffaf Yapılandırılmış Teklifler</h3>
+            <p class="text-[15px] text-[#5F6F73] leading-relaxed">
+              İşçilik ve malzeme ayrımı baştan bellidir. Sürpriz ek maliyetler veya belirsiz fiyatlar olmaz. Her ustanın garanti taahhüdü sözleşmelidir.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#D9E1DD] flex items-center gap-2 text-xs font-bold text-[#0F4C5C]">
+            <span class="material-symbols-outlined text-[18px]">shield</span>
+            <span>Havuz Hesap & Fiyat Güvencesi</span>
+          </div>
+        </div>
+
+        <!-- Pillar Card 3 -->
+        <div class="bg-[#F7F8F6] p-7 rounded-2xl border border-[#D9E1DD] transition-all hover:shadow-md hover:border-[#107A5B]/40 flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-xl bg-[#107A5B]/10 border border-[#107A5B]/20 flex items-center justify-center text-[#107A5B] mb-5">
+              <span class="material-symbols-outlined text-[30px]">handshake</span>
+            </div>
+            <h3 class="text-xl font-bold text-[#102A34] mb-3">Yerel Esnafı Güçlendirme (SDG 8)</h3>
+            <p class="text-[15px] text-[#5F6F73] leading-relaxed">
+              İstanbul’un mahalle ustalarına adil pazar erişimi ve şeffaf müşteri ağı sağlar. Zanaatkarlar mesleki belgeleriyle güven kazanır ve emeğinin tam karşılığını alır.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#D9E1DD] flex items-center gap-2 text-xs font-bold text-[#107A5B]">
+            <span class="material-symbols-outlined text-[18px]">verified_user</span>
+            <span>Mesleki Yeterlilik Onaylı</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (3 Steps Horizontal Cards) -->
+  <section class="py-16 lg:py-20 px-8 lg:px-12 max-w-7xl mx-auto" id="nasil-calisir">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#107A5B] bg-[#107A5B]/10 px-3 py-1 rounded-md">Kolay ve Net 3 Adım</span>
+      <h2 class="text-3xl font-extrabold text-[#102A34] mt-3">Nasıl Çalışır?</h2>
+      <p class="text-[16px] text-[#5F6F73] mt-2">Müşteri ve usta arasında şeffaf, güvenli ve aşama odaklı hizmet süreci.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+      
+      <!-- Step 1 -->
+      <div class="bg-white p-7 rounded-2xl border border-[#D9E1DD] shadow-2xs relative">
+        <div class="w-10 h-10 rounded-full bg-[#0F4C5C] text-white font-extrabold text-base flex items-center justify-center mb-5">1</div>
+        <h3 class="text-xl font-bold text-[#102A34] mb-2.5">Talebini Oluştur</h3>
+        <p class="text-[15px] text-[#5F6F73] leading-relaxed mb-4">
+          Sorunu tarif et, ilçeni seç, fotoğraf ekle. Aciliyet seviyeni ve uygun olduğun zaman dilimini kolayca belirle.
+        </p>
+        <div class="bg-[#F7F8F6] p-3 rounded-xl border border-[#D9E1DD] text-xs font-medium text-[#102A34] flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#0F4C5C] text-[18px]">tune</span>
+          <span>4 adımlı basit talep sihirbazı</span>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="bg-white p-7 rounded-2xl border border-[#D9E1DD] shadow-2xs relative">
+        <div class="w-10 h-10 rounded-full bg-[#0F4C5C] text-white font-extrabold text-base flex items-center justify-center mb-5">2</div>
+        <h3 class="text-xl font-bold text-[#102A34] mb-2.5">Teklifleri Karşılaştır</h3>
+        <p class="text-[15px] text-[#5F6F73] leading-relaxed mb-4">
+          Gelen şeffaf teklifleri, garanti sürelerini ve usta puanlarını tarafsız incele. İşçilik ve parça fiyatlarını yan yana kıyasla.
+        </p>
+        <div class="bg-[#F7F8F6] p-3 rounded-xl border border-[#D9E1DD] text-xs font-medium text-[#102A34] flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#0F4C5C] text-[18px]">compare_arrows</span>
+          <span>Eşit şartlarda 1:1 teklif karşılaştırma</span>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="bg-white p-7 rounded-2xl border border-[#D9E1DD] shadow-2xs relative">
+        <div class="w-10 h-10 rounded-full bg-[#107A5B] text-white font-extrabold text-base flex items-center justify-center mb-5">3</div>
+        <h3 class="text-xl font-bold text-[#102A34] mb-2.5">Güvenle Teslim Al</h3>
+        <p class="text-[15px] text-[#5F6F73] leading-relaxed mb-4">
+          Yapılan işi yerinde kontrol et ve teslim aldığında onayla. Hizmet bedeli yalnızca sen onay verdiğinde ustaya aktarılır.
+        </p>
+        <div class="bg-[#F7F8F6] p-3 rounded-xl border border-[#D9E1DD] text-xs font-medium text-[#102A34] flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#107A5B] text-[18px]">lock_clock</span>
+          <span>BiTadilat Güvence Havuzu koruması</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Usta Başvuru Çağrısı (CTA Banner) -->
+  <section class="py-10 px-8 lg:px-12 max-w-7xl mx-auto" id="usta-ol">
+    <div class="bg-[#0F4C5C] rounded-2xl p-8 lg:p-12 text-white shadow-xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+      
+      <!-- Background Graphic Pattern -->
+      <div class="absolute -right-12 -bottom-12 opacity-10 pointer-events-none">
+        <span class="material-symbols-outlined text-[240px]">handyman</span>
+      </div>
+
+      <div class="max-w-2xl text-left z-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-3">
+          <span class="material-symbols-outlined text-[16px]">engineering</span>
+          <span>Usta ve Zanaatkarlara Özel</span>
+        </div>
+        <h2 class="text-2xl lg:text-3xl font-extrabold leading-snug mb-3">
+          İstanbul Genelinde Hizmet Veren Bir Usta Mısınız?
+        </h2>
+        <p class="text-white/85 text-[16px] leading-relaxed font-normal">
+          BiTadilat usta ağına katılın, bölgenizdeki gerçek iş fırsatlarına komisyonsuz ve şeffaf biçimde ulaşın. Mesleki belgenizle öne çıkın, randevularınızı profesyonelce yönetin.
+        </p>
+      </div>
+
+      <div class="shrink-0 z-10 w-full lg:w-auto">
+        <a href="#usta-basvuru" class="inline-flex items-center justify-center gap-2 bg-white text-[#0F4C5C] hover:bg-[#F7F8F6] text-base font-extrabold h-[52px] px-8 rounded-xl shadow-md transition-all hover:scale-102 active:scale-98 w-full lg:w-auto">
+          <span>Usta Olarak Başvur</span>
+          <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ Preview Minimal (SSS) -->
+  <section class="py-14 px-8 lg:px-12 max-w-7xl mx-auto" id="sss">
+    <div class="max-w-3xl mx-auto">
+      <h3 class="text-2xl font-extrabold text-[#102A34] text-center mb-8">Sıkça Sorulan Sorular</h3>
+      <div class="space-y-4 text-left">
+        <div class="bg-white p-5 rounded-xl border border-[#D9E1DD]">
+          <h4 class="text-base font-bold text-[#102A34] mb-1">BiTadilat havuz hesap sistemi nasıl çalışır?</h4>
+          <p class="text-sm text-[#5F6F73]">Teklifi kabul ettiğinizde tutar tarafsız güvenli havuz hesabına aktarılır. Usta adresinize gelip işi tamamlayıp siz onay verene kadar ustaya aktarılmaz.</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-[#D9E1DD]">
+          <h4 class="text-base font-bold text-[#102A34] mb-1">Ustalar nasıl denetlenmektedir?</h4>
+          <p class="text-sm text-[#5F6F73]">Tüm hizmet sağlayıcıların T.C. kimlik, adli sicil ve mesleki yeterlilik belgeleri yönetici moderasyon ekibimiz tarafından titizlikle doğrulanır.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-[#D9E1DD] py-10 px-8 lg:px-12 text-center">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[#5F6F73]">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded bg-[#0F4C5C] flex items-center justify-center text-white text-[12px] font-bold">B</div>
+        <span class="font-bold text-[#102A34]">BiTadilat</span>
+        <span>— Ev Bakım & Onarım Platformu</span>
+      </div>
+      <p class="text-xs text-[#5F6F73]">
+        © 2026 BiTadilat · Işık Üniversitesi Yazılım Mühendisliği Bitirme Projesi · Tüm hakları saklıdır.
+      </p>
+    </div>
+  </footer>
+
+
+<!-- BiTadilat Authoritative Navigation Controller -->
+<script>
+(function() {
+  const SPEC = {"id": "164cd33666284338b929a8325dc5ea20", "step_num": 37, "title": "BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)", "flow": "7. Yönetici Portalı & Web", "role": "WEB", "device": "DESKTOP", "back_sid": "cc1f55661a1a4036a890b43d9f15596a", "next_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf", "start_customer": "0c06b06e422b40daacbc0b8e6e8fb7bf", "start_pro": "a512d0928f11b9cb02877746d580c548"};
+  const CURRENT_SID = "164cd33666284338b929a8325dc5ea20";
+
+  window.bitadilatNav = function(targetSid, label) {
+    if (!targetSid) return;
+    console.log('[BiTadilat Router] Navigating:', CURRENT_SID, '->', targetSid, '(', label || '', ')');
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'NAVIGATE',
+        from: CURRENT_SID,
+        to: targetSid,
+        label: label || ''
+      }, '*');
+    } else {
+      window.location.href = './' + targetSid + '.html';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Remove all disabled locks on interactive prototype triggers
+    document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
+      btn.style.cursor = 'pointer';
+    });
+
+    // 2. Prevent default forms from blocking navigation
+    document.querySelectorAll('form').forEach(form => {
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        if (SPEC.next_sid) window.bitadilatNav(SPEC.next_sid, 'Form Submitted');
+        return false;
+      };
+    });
+
+    // 3. Bind Universal Header Back Buttons
+    if (SPEC.back_sid) {
+      document.querySelectorAll('button, a').forEach(el => {
+        const text = (el.innerText || '').toLowerCase();
+        const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+        const html = el.innerHTML || '';
+        if (aria.includes('geri') || text.includes('geri') || text.includes('dön') || 
+            html.includes('arrow_back') || html.includes('chevron_left') || html.includes('arrow_back_ios')) {
+          el.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.back_sid, 'Back Target');
+          };
+        }
+      });
+    }
+
+    // 4. Bind Explicit data-nav-target elements
+    document.querySelectorAll('[data-nav-target]').forEach(el => {
+      el.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.bitadilatNav(el.getAttribute('data-nav-target'), 'Direct Data Nav');
+      };
+    });
+
+    // 5. Screen-Specific Deterministic Handlers
+    if (CURRENT_SID === '0c06b06e422b40daacbc0b8e6e8fb7bf') {
+      let chosenRole = 'homeowner';
+      const cHome = document.getElementById('role-homeowner');
+      const cPro = document.getElementById('role-professional');
+      const btnCont = document.getElementById('btn-continue');
+      
+      function activateRole(role) {
+        chosenRole = role;
+        if (btnCont) {
+          btnCont.removeAttribute('disabled');
+          btnCont.style.backgroundColor = '#0F4C5C';
+          btnCont.style.color = '#FFFFFF';
+          btnCont.style.cursor = 'pointer';
+        }
+      }
+
+      if (cHome) cHome.addEventListener('click', () => activateRole('homeowner'));
+      if (cPro) cPro.addEventListener('click', () => activateRole('pro'));
+
+      if (btnCont) {
+        btnCont.onclick = function(e) {
+          e.preventDefault();
+          if (chosenRole === 'pro') {
+            window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
+          } else {
+            window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
+          }
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'fbbe0f405e1f4531a14dcdd6b1c5736a') {
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        submitBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'Telefon Doğrulandı -> SMS');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === '42c148a1fb25400ca549481fa6abe01f') {
+      const verifyBtn = document.getElementById('verify-submit-btn');
+      if (verifyBtn) {
+        verifyBtn.removeAttribute('disabled');
+        verifyBtn.classList.remove('opacity-60', 'pointer-events-none');
+        verifyBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatNav(SPEC.next_sid, 'SMS Onaylandı -> Müşteri Ana Sayfa');
+        };
+      }
+    }
+
+    else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {
+      // CTA button
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talep') || t.includes('başla') || t.includes('oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); };
+        }
+      });
+      // Category Cards
+      document.querySelectorAll('.grid > div, .grid > button').forEach(c => {
+        c.style.cursor = 'pointer';
+        c.onclick = () => window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi -> Adım 1');
+      });
+      // Bottom Navigation
+      const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Müşteri Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '44c003fee81d4a188f187608554efdd5') {
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+      }
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('2. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('3. adıma') || t.includes('devam et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 2 -> Adım 3'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '585d649f4ea046ffa70e4cb481ddd030') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('4. adıma') || t.includes('devam et') || t.includes('gözden geçir')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 3 -> Adım 4'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('yayınla') || t.includes('onayla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talebi Yayınla'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '94a730cef5374f2ab9632d9acf0d7e19') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.see_offers_sid || SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {
+      // Customer Requests List
+      document.querySelectorAll('button, [data-card]').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('gör') || t.includes('incele')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('yeni') || t.includes('başlat') || t.includes('talep oluştur')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('44c003fee81d4a188f187608554efdd5', 'Yeni Talep'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    else if (CURRENT_SID === '994e3b4ffce942ce8778f7a6cfaa42c0') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('karşılaştır')) {
+          b.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.bitadilatNav(SPEC.compare_sid, 'Karşılaştır'); };
+        } else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Kaya')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); };
+        }
+        if (t.includes('soru sor') || t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
+        }
+        if (t.includes('profil') || t.includes('hakkında')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '1fc70722168942c4a1933cd9c641ad68') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('incele') || t.includes('seç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '98cd20d6ab4e4f8fbc29bc462ce55cca') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklife dön') || t.includes('teklif')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklife Dön'); };
+        }
+        if (t.includes('soru sor')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Mesaj'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '58f9993b5f444ff3a9f9361cb8d3b731') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('kabul et') || t.includes('onayla') || t.includes('randevu')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu Seçimi'); };
+        }
+        if (t.includes('vazgeç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklif Detayına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '7c6ec3a02d3347a997a3fc5b1a2c91d0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('randevu') && (t.includes('gönder') || t.includes('onayla') || t.includes('talebi'))) {
+          b.removeAttribute('disabled');
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Randevu İletildi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bd2afe80ced4d2498ec9f16c7099326') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('iş alanı') || t.includes('detayına git') || t.includes('talep')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Git'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'f3e7de808fdb49c18e3c5d430cb72528') {
+      document.querySelectorAll('button, a, div.cursor-pointer').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaşma'); };
+        }
+        if (t.includes('ilerlemesi') || t.includes('aşama')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.milestones_sid, 'Aşama Takibi'); };
+        }
+        if (t.includes('değiştir') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reschedule_sid, 'Randevu İptal'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {
+      const sendBtn = document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
+      const inp = document.querySelector('input[type="text"]');
+      if (sendBtn && inp) {
+        sendBtn.onclick = (e) => { e.preventDefault(); if (inp.value) inp.value = ''; };
+      }
+    }
+
+    else if (CURRENT_SID === 'b89d998c02d34e67b8e8f34334f87f02') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaş'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('koru') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'd485263b3ae244a9b35500665b5c759b') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('onayla') || t.includes('değerlendirme')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Puanlama'); };
+        }
+        if (t.includes('sorun') || t.includes('destek') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildir'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'db8a1b368a7749cbb5fd6cf497f34de6') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder') || t.includes('tamamla') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '488f3698f93c454099ca2382585aeb66') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('şikayet') && (t.includes('oluştur') || t.includes('ilet') || t.includes('gönder'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Şikayet Durumu'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '3bb4b954e5224b0097b2bee12be9bcbf') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('ana sayfa') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfa'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlar'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '20de80b8dc984e86be873761409a2396') {
+      // Customer Profile
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('usta') && (t.includes('moduna geç') || t.includes('profesyoneli'))) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç'); };
+        }
+        if (t.includes('çıkış') || t.includes('oturumu kapat')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap'); };
+        }
+      });
+      const navLinks = document.querySelectorAll('footer a, nav a');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    // FLOW 6: USTA HANDLERS
+    else if (CURRENT_SID === 'a512d0928f11b9cb02877746d580c548') {
+      const submitBtn = document.getElementById('btn-submit-pro');
+      if (submitBtn) {
+        submitBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); };
+      }
+    }
+
+    else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {
+      document.querySelectorAll('button, .bg-surface').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teklif Hazırlama'); };
+        }
+      });
+      const tabs = document.querySelectorAll('nav a, footer a');
+      if (tabs.length >= 4) {
+        tabs[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Talepler'); };
+        tabs[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_active_jobs, 'İşlerim'); };
+        tabs[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        tabs[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      }
+    }
+
+    else if (CURRENT_SID === 'b9086f1030784def8eb267fd9110addd') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('gönder')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Gönderildi Onayı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '82f9d783b88b40ec8ca6260566c0f5cb') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('akışına dön') || t.includes('taleplere dön') || t.includes('close')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Taleplere Dön'); };
+        }
+        if (t.includes('müsaitlik')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('talepler') || t.includes('kaydet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Akışı'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '8ba8c346d11c46f39163fd6ebf06dae1') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteriye Mesaj'); };
+        }
+        if (t.includes('bitirdim') || t.includes('teslim')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teslim Bildirimi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'c6ebf06dae18ba8c346d11c46f39163f') {
+      const btnReturn = document.getElementById('btn-return-feed');
+      const btnAvail = document.getElementById('btn-goto-availability');
+      const btnClose = document.getElementById('btn-close');
+      if (btnReturn) btnReturn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Feed'); };
+      if (btnAvail) btnAvail.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      if (btnClose) btnClose.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Kapat'); };
+    }
+
+    // FLOW 7: ADMIN & WEB
+    else if (CURRENT_SID === '612429fdea1b42a1bf9e628883f7e58f') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === 'cb00d67723e34ec990786a82d25c77ca') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '5ce8968e2703443ca129c0e7c9e9d145') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+      });
+    }
+
+    else if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = (el.innerText || '').toLowerCase();
+        if (t.includes('usta çağır') || t.includes('başla') || t.includes('talep')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_customer, 'Müşteri Başlat'); };
+        }
+        if (t.includes('usta ol') || t.includes('usta olarak') || t.includes('katıl')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_pro, 'Usta Başlat'); };
+        }
+      });
+    }
+
+  });
+})();
+</script>
+
+</body>
+</html>
