@@ -142,6 +142,12 @@
         <span class="material-symbols-outlined text-[20px]">refresh</span>
       </button>
 
+      <!-- Language Switcher Pill -->
+      <div class="flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700 shadow-inner h-11">
+        <button id="sim-btn-tr" onclick="setSimulatorLang('TR')" title="Türkçe" class="h-9 px-3 rounded-lg text-xs font-bold transition-all bg-[#0F4C5C] text-white shadow-sm">TR</button>
+        <button id="sim-btn-en" onclick="setSimulatorLang('EN')" title="English" class="h-9 px-3 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">EN</button>
+      </div>
+
       <!-- Toggle Drawer -->
       <button id="btn-toggle-drawer" class="h-11 px-3.5 rounded-xl bg-[#0F4C5C] hover:bg-[#145d70] text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm">
         <span class="material-symbols-outlined text-[18px]">menu</span>
@@ -845,6 +851,37 @@
       }
     });
 
+    function updateSimLangUI(lang) {
+      const isEn = (lang === 'EN');
+      const btnTr = document.getElementById('sim-btn-tr');
+      const btnEn = document.getElementById('sim-btn-en');
+      if (btnTr && btnEn) {
+        if (isEn) {
+          btnEn.className = 'h-9 px-3 rounded-lg text-xs font-bold transition-all bg-[#0F4C5C] text-white shadow-sm';
+          btnTr.className = 'h-9 px-3 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white';
+        } else {
+          btnTr.className = 'h-9 px-3 rounded-lg text-xs font-bold transition-all bg-[#0F4C5C] text-white shadow-sm';
+          btnEn.className = 'h-9 px-3 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white';
+        }
+      }
+    }
+
+    function setSimulatorLang(lang) {
+      sessionStorage.setItem('bitadilat_lang', lang);
+      updateSimLangUI(lang);
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ type: 'SET_LANG', lang: lang }, '*');
+      }
+    }
+
+    frame.addEventListener('load', () => {
+      const curLang = sessionStorage.getItem('bitadilat_lang') || 'TR';
+      updateSimLangUI(curLang);
+      if (curLang === 'EN' && frame.contentWindow) {
+        frame.contentWindow.postMessage({ type: 'SET_LANG', lang: 'EN' }, '*');
+      }
+    });
+
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'NAVIGATE') {
         const targetSid = event.data.to;
@@ -852,6 +889,10 @@
           console.log('[Parent Simulator] Transitioning to:', targetSid, event.data.label);
           updateView(targetSid);
         }
+      } else if (event.data && event.data.type === 'LANG_CHANGED') {
+        const lang = event.data.lang;
+        sessionStorage.setItem('bitadilat_lang', lang);
+        updateSimLangUI(lang);
       }
     });
 
@@ -864,6 +905,7 @@
     });
 
     updateView(flowOrder[0]);
+    updateSimLangUI(sessionStorage.getItem('bitadilat_lang') || 'TR');
   </script>
 </body>
 </html>
