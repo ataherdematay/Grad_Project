@@ -869,8 +869,16 @@
     function setSimulatorLang(lang) {
       sessionStorage.setItem('bitadilat_lang', lang);
       updateSimLangUI(lang);
-      if (frame && frame.contentWindow) {
-        frame.contentWindow.postMessage({ type: 'SET_LANG', lang: lang }, '*');
+      try {
+        if (frame && frame.contentWindow && typeof frame.contentWindow.bitadilatSetLang === 'function') {
+          frame.contentWindow.bitadilatSetLang(lang);
+        } else if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage({ type: 'SET_LANG', lang: lang }, '*');
+        }
+      } catch (err) {
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage({ type: 'SET_LANG', lang: lang }, '*');
+        }
       }
     }
 

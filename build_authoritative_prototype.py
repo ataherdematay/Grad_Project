@@ -577,6 +577,13 @@ I18N_DICT_DATA = {
   "Telefon numarasıyla devam et": "Continue with phone number",
   "Zaten bir hesabın var mı?": "Already have an account?",
   "Ev & Usta Ağı": "Home & Pro Network",
+  "Ev &amp; Usta Ağı": "Home & Pro Network",
+  "Devam ederek": "By continuing, you agree to our",
+  " ve ": " and ",
+  "ve": "and",
+  "'nı kabul etmiş olursun.": ".",
+  "'nı kabul etmiş olursun": ".",
+  "kabul etmiş olursun.": ".",
   "Devam ederek Kullanım Koşulları ve Gizlilik Politikası'nı kabul etmiş olursun.": "By continuing, you agree to our Terms of Use and Privacy Policy.",
   "Kullanım Koşulları": "Terms of Use",
   "Gizlilik Politikası": "Privacy Policy",
@@ -790,29 +797,53 @@ def inject_clean_controller(s):
 
   function updateToggleButtons(lang) {
     const isEn = (lang === 'EN');
-    document.querySelectorAll('button').forEach(btn => {
-      const txt = (btn.innerText || '').trim().toUpperCase();
-      if (txt === 'TR') {
+    const allBtns = document.querySelectorAll('button, [data-lang]');
+    allBtns.forEach(btn => {
+      const txt = (btn.textContent || btn.innerText || '').trim().toUpperCase();
+      const isTrBtn = (txt === 'TR' || btn.getAttribute('data-lang') === 'TR' || btn.id === 'btn-lang-tr' || btn.id === 'btn-lang-tr-web');
+      const isEnBtn = (txt === 'EN' || btn.getAttribute('data-lang') === 'EN' || btn.id === 'btn-lang-en' || btn.id === 'btn-lang-en-web');
+
+      if (isTrBtn) {
         if (isEn) {
-          btn.classList.remove('bg-primary-container', 'text-on-primary', 'bg-white', 'text-[#0F4C5C]', 'shadow-xs', 'shadow-sm');
-          btn.classList.add('text-text-secondary', 'text-[#5F6F73]');
+          btn.style.backgroundColor = 'transparent';
+          btn.style.color = '#5F6F73';
+          btn.style.fontWeight = '500';
+          btn.style.boxShadow = 'none';
+          btn.classList.remove('bg-primary-container', 'text-on-primary', 'bg-white', 'text-[#0F4C5C]', 'shadow-xs', 'shadow-sm', 'text-white');
+          btn.classList.add('text-text-secondary');
         } else {
           if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
-            btn.className = 'px-2.5 py-1 bg-white text-[#0F4C5C] rounded-md shadow-xs font-bold';
+            btn.style.backgroundColor = '#FFFFFF';
+            btn.style.color = '#0F4C5C';
+            btn.style.fontWeight = '700';
+            btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
           } else {
-            btn.className = 'px-3 py-1 text-label-sm font-label-sm bg-primary-container text-on-primary rounded-full transition-all font-semibold';
+            btn.style.backgroundColor = '#0F4C5C';
+            btn.style.color = '#FFFFFF';
+            btn.style.fontWeight = '700';
+            btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
           }
         }
-      } else if (txt === 'EN') {
+      } else if (isEnBtn) {
         if (isEn) {
           if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
-            btn.className = 'px-2.5 py-1 bg-white text-[#0F4C5C] rounded-md shadow-xs font-bold';
+            btn.style.backgroundColor = '#FFFFFF';
+            btn.style.color = '#0F4C5C';
+            btn.style.fontWeight = '700';
+            btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
           } else {
-            btn.className = 'px-3 py-1 text-label-sm font-label-sm bg-primary-container text-on-primary rounded-full transition-all font-semibold';
+            btn.style.backgroundColor = '#0F4C5C';
+            btn.style.color = '#FFFFFF';
+            btn.style.fontWeight = '700';
+            btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
           }
         } else {
-          btn.classList.remove('bg-primary-container', 'text-on-primary', 'bg-white', 'text-[#0F4C5C]', 'shadow-xs', 'shadow-sm');
-          btn.classList.add('text-text-secondary', 'text-[#5F6F73]');
+          btn.style.backgroundColor = 'transparent';
+          btn.style.color = '#5F6F73';
+          btn.style.fontWeight = '500';
+          btn.style.boxShadow = 'none';
+          btn.classList.remove('bg-primary-container', 'text-on-primary', 'bg-white', 'text-[#0F4C5C]', 'shadow-xs', 'shadow-sm', 'text-white');
+          btn.classList.add('text-text-secondary');
         }
       }
     });
@@ -834,7 +865,7 @@ def inject_clean_controller(s):
     let node;
     while (node = walker.nextNode()) {
       const pTag = node.parentElement.tagName.toLowerCase();
-      const txt = node.nodeValue.trim().toUpperCase();
+      const txt = (node.nodeValue || '').trim().toUpperCase();
       if (pTag === 'button' && (txt === 'TR' || txt === 'EN')) continue;
 
       if (node._origTr === undefined) {
@@ -881,6 +912,32 @@ def inject_clean_controller(s):
     }
   };
 
+  window.bitadilatSetLang = function(lang) {
+    console.log('[BiTadilat i18n] Switch to:', lang);
+    sessionStorage.setItem('bitadilat_lang', lang);
+    window.applyBitadilatLanguage(lang);
+    try {
+      if (window.parent && window.parent !== window) {
+        if (typeof window.parent.updateSimLangUI === 'function') {
+          window.parent.updateSimLangUI(lang);
+        }
+        window.parent.postMessage({
+          type: 'LANG_CHANGED',
+          lang: lang
+        }, '*');
+      }
+    } catch (e) {}
+  };
+
+  // Immediate message listener for parent frame
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SET_LANG') {
+      const lang = event.data.lang;
+      sessionStorage.setItem('bitadilat_lang', lang);
+      window.applyBitadilatLanguage(lang);
+    }
+  });
+
   window.bitadilatNav = function(targetSid, label) {
     if (!targetSid) return;
     console.log('[BiTadilat Router] Navigating:', CURRENT_SID, '->', targetSid, '(', label || '', ')');
@@ -896,7 +953,7 @@ def inject_clean_controller(s):
     }
   };
 
-  document.addEventListener('DOMContentLoaded', function() {
+  function bindInteractiveElements() {
     // 1. Remove all disabled locks on interactive prototype triggers
     document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
       btn.style.cursor = 'pointer';
@@ -914,42 +971,24 @@ def inject_clean_controller(s):
     });
 
     // 3. Bind TR / EN Language Toggle Buttons
-    document.querySelectorAll('button').forEach(btn => {
-      const txt = (btn.innerText || '').trim().toUpperCase();
-      if (txt === 'TR' || txt === 'EN') {
+    document.querySelectorAll('button, [data-lang]').forEach(btn => {
+      const txt = (btn.textContent || btn.innerText || '').trim().toUpperCase();
+      const isTr = (txt === 'TR' || btn.getAttribute('data-lang') === 'TR' || btn.id === 'btn-lang-tr' || btn.id === 'btn-lang-tr-web');
+      const isEn = (txt === 'EN' || btn.getAttribute('data-lang') === 'EN' || btn.id === 'btn-lang-en' || btn.id === 'btn-lang-en-web');
+      if (isTr || isEn) {
         btn.style.cursor = 'pointer';
+        const targetLang = isEn ? 'EN' : 'TR';
         btn.onclick = function(e) {
           e.preventDefault();
           e.stopPropagation();
-          const targetLang = txt;
-          sessionStorage.setItem('bitadilat_lang', targetLang);
-          window.applyBitadilatLanguage(targetLang);
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({
-              type: 'LANG_CHANGED',
-              lang: targetLang
-            }, '*');
-          }
+          window.bitadilatSetLang(targetLang);
         };
       }
     });
 
-    // 4. Listen for language changes from parent simulator frame
-    window.addEventListener('message', function(event) {
-      if (event.data && event.data.type === 'SET_LANG') {
-        const lang = event.data.lang;
-        sessionStorage.setItem('bitadilat_lang', lang);
-        window.applyBitadilatLanguage(lang);
-      }
-    });
-
-    // 5. Check stored language and apply on load
+    // 4. Apply initial language immediately
     const savedLang = sessionStorage.getItem('bitadilat_lang') || 'TR';
-    if (savedLang === 'EN') {
-      window.applyBitadilatLanguage('EN');
-    } else {
-      updateToggleButtons('TR');
-    }
+    window.applyBitadilatLanguage(savedLang);
 
     // Helper: Normalize Turkish characters and casing for deterministic button matching
     function normText(el) {
@@ -1578,10 +1617,40 @@ def inject_clean_controller(s):
       });
     }
 
-  });
+  }
+
+  // Robust readyState check: run immediately if DOM is ready, or wait for DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindInteractiveElements);
+  } else {
+    bindInteractiveElements();
+  }
 })();
 </script>
 '''
+
+    # Ensure Step 01 and Step 41 have explicit, authoritative button IDs & click handlers
+    if sid == '0c06b06e422b40daacbc0b8e6e8fb7bf':
+        html = re.sub(
+            r'<div class="inline-flex items-center bg-surface p-1 rounded-full shadow-sm.*?">.*?</div>\s*</div>',
+            '''<div class="inline-flex items-center bg-surface p-1 rounded-full shadow-sm border border-[#D9E1DD]/60">
+    <button id="btn-lang-tr" data-lang="TR" onclick="window.bitadilatSetLang && window.bitadilatSetLang('TR')" class="px-3 py-1 text-label-sm font-label-sm bg-primary-container text-white rounded-full transition-all cursor-pointer font-bold select-none" type="button">TR</button>
+    <button id="btn-lang-en" data-lang="EN" onclick="window.bitadilatSetLang && window.bitadilatSetLang('EN')" class="px-3 py-1 text-label-sm font-label-sm text-[#5F6F73] rounded-full hover:text-on-surface transition-all cursor-pointer font-bold select-none" type="button">EN</button>
+  </div>
+</div>''',
+            html,
+            flags=re.DOTALL
+        )
+    elif sid == '164cd33666284338b929a8325dc5ea20':
+        html = re.sub(
+            r'<div class="flex items-center bg-\[#F7F8F6\] p-1 rounded-lg border border-\[#D9E1DD\] text-\[13px\] font-bold">.*?</div>',
+            '''<div class="flex items-center bg-[#F7F8F6] p-1 rounded-lg border border-[#D9E1DD] text-[13px] font-bold">
+          <button id="btn-lang-tr-web" data-lang="TR" onclick="window.bitadilatSetLang && window.bitadilatSetLang('TR')" class="px-2.5 py-1 bg-white text-[#0F4C5C] rounded-md shadow-xs cursor-pointer select-none">TR</button>
+          <button id="btn-lang-en-web" data-lang="EN" onclick="window.bitadilatSetLang && window.bitadilatSetLang('EN')" class="px-2.5 py-1 text-[#5F6F73] hover:text-[#102A34] transition-colors cursor-pointer select-none">EN</button>
+        </div>''',
+            html,
+            flags=re.DOTALL
+        )
 
     controller_code = controller_template.replace('__SPEC_JSON__', spec_json).replace('__SID__', sid).replace('__I18N_DICT_JSON__', I18N_DICT_JSON)
 
