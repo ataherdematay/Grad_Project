@@ -838,7 +838,7 @@
     });
 
     btnToggleDrawer.addEventListener('click', () => {
-      if (drawer.style.display === 'none') {
+      if (window.getComputedStyle(drawer).display === 'none') {
         drawer.style.display = 'flex';
       } else {
         drawer.style.display = 'none';
