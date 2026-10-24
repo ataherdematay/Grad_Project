@@ -1,57 +1,5 @@
 import json
-
-screens_spec = [
-    # FLOW 1
-    {'id': '0c06b06e422b40daacbc0b8e6e8fb7bf', 'step_num': 1, 'title': 'Hoş Geldiniz & Rol Seçimi (SCR-01)', 'flow': '1. Müşteri Giriş & Onboarding', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'fbbe0f405e1f4531a14dcdd6b1c5736a', 'step_num': 2, 'title': 'Telefon Doğrulama', 'flow': '1. Müşteri Giriş & Onboarding', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '42c148a1fb25400ca549481fa6abe01f', 'step_num': 3, 'title': 'SMS Doğrulama Kodu', 'flow': '1. Müşteri Giriş & Onboarding', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-
-    # FLOW 2
-    {'id': 'cc1f55661a1a4036a890b43d9f15596a', 'step_num': 4, 'title': 'Müşteri Ana Sayfası (SCR-03)', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '44c003fee81d4a188f187608554efdd5', 'step_num': 5, 'title': 'Talep Adım 1/4: Hizmet & Öncelik (SCR-02)', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'b3c3c2845017451fb1b85b89f04fd4b8', 'step_num': 6, 'title': 'Talep Adım 2/4: Konum & İş Detayı', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '585d649f4ea046ffa70e4cb481ddd030', 'step_num': 7, 'title': 'Talep Adım 3/4: Fotoğraflar & Ek Bilgi', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'a0949c91cbe34557b16273c8e91d067a', 'step_num': 8, 'title': 'Talep Adım 4/4: Talebi Gözden Geçir', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '94a730cef5374f2ab9632d9acf0d7e19', 'step_num': 9, 'title': 'Talep Yayınlandı — Teklif Bekleniyor', 'flow': '2. Müşteri Talep Sihirbazı', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-
-    # FLOW 3
-    {'id': '86fe79e681034183a8681bb0d2893e29', 'step_num': 10, 'title': 'Müşteri Taleplerim Listesi (SCR-C-REQ)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '994e3b4ffce942ce8778f7a6cfaa42c0', 'step_num': 11, 'title': 'Gelen Teklifler Listesi (SCR-04)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'ea7af2d7298b4b6cb24e4603935503f0', 'step_num': 12, 'title': 'Teklif Detayı & Kapsam', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '1fc70722168942c4a1933cd9c641ad68', 'step_num': 13, 'title': 'Teklifleri Karşılaştır (Matris)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '98cd20d6ab4e4f8fbc29bc462ce55cca', 'step_num': 14, 'title': 'Hizmet Profesyoneli Profili (SCR-05)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '58f9993b5f444ff3a9f9361cb8d3b731', 'step_num': 15, 'title': 'Teklif Kabul Onayı (Güvence Havuzu)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '7c6ec3a02d3347a997a3fc5b1a2c91d0', 'step_num': 16, 'title': 'Randevu Zamanı Seç (SCR-06)', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '3bd2afe80ced4d2498ec9f16c7099326', 'step_num': 17, 'title': 'Randevu Talebi İletildi', 'flow': '3. Teklif Karşılaştırma & Randevu', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-
-    # FLOW 4
-    {'id': 'f3e7de808fdb49c18e3c5d430cb72528', 'step_num': 18, 'title': 'İş Alanı — Randevu Onaylandı', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'c9aa92f5a4e04897952d05f30c2aef10', 'step_num': 19, 'title': 'Usta ile Mesajlaşma (SCR-07)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'b89d998c02d34e67b8e8f34334f87f02', 'step_num': 20, 'title': 'İş Aşamaları ve İlerleme Takibi (SCR-08)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '6acc9307352f497ca6bd878d628c6a1a', 'step_num': 21, 'title': 'Randevu İptal / Değişiklik Talebi (SCR-09)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'd485263b3ae244a9b35500665b5c759b', 'step_num': 22, 'title': 'İş Tamamlama ve Teslim Onayı (SCR-10)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': 'db8a1b368a7749cbb5fd6cf497f34de6', 'step_num': 23, 'title': 'Hizmet Değerlendirme ve Puanlama (SCR-11)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '488f3698f93c454099ca2382585aeb66', 'step_num': 24, 'title': 'Şikayet ve Uyuşmazlık Bildirimi (SCR-12)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-    {'id': '3bb4b954e5224b0097b2bee12be9bcbf', 'step_num': 25, 'title': 'Şikayet İletildi ve Durum Takibi (SCR-13)', 'flow': '4. Aktif İş, Mesajlaşma & Teslim', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-
-    # FLOW 5
-    {'id': '20de80b8dc984e86be873761409a2396', 'step_num': 26, 'title': 'Müşteri Profil & Ayarlar (SCR-C-PROF)', 'flow': '5. Müşteri Profil & Ayarlar', 'role': 'CUSTOMER', 'device': 'MOBILE'},
-
-    # FLOW 6
-    {'id': 'a512d0928f11b9cb02877746d580c548', 'step_num': 27, 'title': 'Usta Kayıt & Belge Yükleme (SCR-P-ONB)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': '11b9cb02877746d580c5484512d0928f', 'step_num': 28, 'title': 'Usta Eşleşen Talepler Akışı (SCR-14)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': 'b9086f1030784def8eb267fd9110addd', 'step_num': 29, 'title': 'Usta Teklif Hazırlama (SCR-15)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': '82f9d783b88b40ec8ca6260566c0f5cb', 'step_num': 30, 'title': 'Usta Teklif Gönderildi Onayı (SCR-16)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': 'fc6f0f8e9b724365a5a0f124617dbe7a', 'step_num': 31, 'title': 'Usta Profil & Müsaitlik Yönetimi (SCR-17)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': '8ba8c346d11c46f39163fd6ebf06dae1', 'step_num': 32, 'title': 'Usta İş Yürütme & Aşama Yönetimi (SCR-18)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-    {'id': 'c6ebf06dae18ba8c346d11c46f39163f', 'step_num': 33, 'title': 'Usta Teslim Bildirimi İletildi (SCR-P-DONE)', 'flow': '6. Hizmet Profesyoneli (Usta)', 'role': 'PRO', 'device': 'MOBILE'},
-
-    # FLOW 7
-    {'id': '612429fdea1b42a1bf9e628883f7e58f', 'step_num': 34, 'title': 'Yönetici Web: Belge İnceleme (SCR-19)', 'flow': '7. Yönetici Portalı & Web', 'role': 'ADMIN', 'device': 'DESKTOP'},
-    {'id': 'cb00d67723e34ec990786a82d25c77ca', 'step_num': 35, 'title': 'Yönetici Web: Şikayet Merkezi (SCR-20)', 'flow': '7. Yönetici Portalı & Web', 'role': 'ADMIN', 'device': 'DESKTOP'},
-    {'id': '5ce8968e2703443ca129c0e7c9e9d145', 'step_num': 36, 'title': 'Yönetici Web: Hesap Yönetimi (SCR-21)', 'flow': '7. Yönetici Portalı & Web', 'role': 'ADMIN', 'device': 'DESKTOP'},
-    {'id': '164cd33666284338b929a8325dc5ea20', 'step_num': 37, 'title': 'BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)', 'flow': '7. Yönetici Portalı & Web', 'role': 'WEB', 'device': 'DESKTOP'}
-]
+from build_authoritative_prototype import screens_spec
 
 # Build Drawer HTML Items
 drawer_items_html = []
@@ -59,10 +7,11 @@ current_group = ""
 for s in screens_spec:
     if s['flow'] != current_group:
         current_group = s['flow']
+        role_label = 'MÜŞTERİ' if s['role']=='CUSTOMER' else ('USTA' if s['role']=='PRO' else 'WEB')
         drawer_items_html.append(f'''
         <div class="pt-3 pb-1 px-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between border-t border-slate-800/80 mt-2 first:mt-0 first:border-0">
           <span>{current_group}</span>
-          <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">{'MÜŞTERİ' if s['role']=='CUSTOMER' else ('USTA' if s['role']=='PRO' else 'WEB')}</span>
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">{role_label}</span>
         </div>''')
 
     role_badge = ''
@@ -90,17 +39,22 @@ for s in screens_spec:
 options_html = []
 for s in screens_spec:
     role_prefix = '🏠 Müşteri' if s['role'] == 'CUSTOMER' else ('🛠️ Usta' if s['role'] == 'PRO' else '💻 Web')
-    options_html.append(f'<option value="{s['id']}">Adım {s['step_num']:02d}: [{role_prefix}] {s['title']}</option>')
+    options_html.append(f'<option value="{s["id"]}">Adım {s["step_num"]:02d}: [{role_prefix}] {s["title"]}</option>')
 
 specs_json = json.dumps({s['id']: s for s in screens_spec}, ensure_ascii=False)
 order_json = json.dumps([s['id'] for s in screens_spec])
+
+total_screens = len(screens_spec)
+cust_count = sum(1 for s in screens_spec if s['role'] == 'CUSTOMER')
+pro_count = sum(1 for s in screens_spec if s['role'] == 'PRO')
+web_count = sum(1 for s in screens_spec if s['role'] in ('ADMIN', 'WEB'))
 
 html_template = f'''<!DOCTYPE html>
 <html lang="tr" class="h-full bg-[#071318]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BiTadilat — 37 Ekran Bağlantılı Mobil Prototip Simülatörü</title>
+  <title>BiTadilat — {total_screens} Ekran Bağlantılı Mobil Prototip Simülatörü</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
@@ -149,7 +103,7 @@ html_template = f'''<!DOCTYPE html>
       <div>
         <div class="flex items-center gap-2">
           <span class="font-bold tracking-tight text-[17px] text-white">BiTadilat</span>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#107A5B]/30 text-[#4ADE80] border border-[#107A5B]/50">37 Ekran Bağlantılı</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#107A5B]/30 text-[#4ADE80] border border-[#107A5B]/50">{total_screens} Ekran Bağlantılı</span>
         </div>
         <p class="text-[11px] text-slate-400 font-medium">Doğrulanmış Rol Ayrımı &amp; Canlı Prototip</p>
       </div>
@@ -159,15 +113,15 @@ html_template = f'''<!DOCTYPE html>
     <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-700/80 shadow-inner">
       <button onclick="filterRole('CUSTOMER')" id="tab-role-customer" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all bg-[#0F4C5C] text-white shadow-sm">
         <span class="material-symbols-outlined text-[16px]">home</span>
-        <span>Müşteri Akışı (26)</span>
+        <span>Müşteri Akışı ({cust_count})</span>
       </button>
       <button onclick="filterRole('PRO')" id="tab-role-pro" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
         <span class="material-symbols-outlined text-[16px]">construction</span>
-        <span>Usta Akışı (7)</span>
+        <span>Usta Akışı ({pro_count})</span>
       </button>
       <button onclick="filterRole('WEB')" id="tab-role-web" class="px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all text-slate-400 hover:text-white hover:bg-slate-800">
         <span class="material-symbols-outlined text-[16px]">desktop_windows</span>
-        <span>Yönetici &amp; Web (4)</span>
+        <span>Yönetici &amp; Web ({web_count})</span>
       </button>
     </div>
 
@@ -202,7 +156,7 @@ html_template = f'''<!DOCTYPE html>
       <!-- Toggle Drawer -->
       <button id="btn-toggle-drawer" class="h-11 px-3.5 rounded-xl bg-[#0F4C5C] hover:bg-[#145d70] text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm">
         <span class="material-symbols-outlined text-[18px]">menu</span>
-        <span>Ekranlar (37)</span>
+        <span>Ekranlar ({total_screens})</span>
       </button>
     </div>
   </header>
@@ -210,13 +164,13 @@ html_template = f'''<!DOCTYPE html>
   <!-- WORKSPACE BODY (DRAWER + VIEWER) -->
   <div class="flex-1 flex overflow-hidden relative">
 
-    <!-- LEFT DRAWER: 37 SCREENS ORDERED LIST -->
+    <!-- LEFT DRAWER: 41 SCREENS ORDERED LIST -->
     <aside id="flow-drawer" class="w-80 bg-[#0B1E26] border-r border-slate-800 flex flex-col shrink-0 z-20 transition-all duration-300">
       <div class="p-3.5 border-b border-slate-800 flex items-center justify-between">
         <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#107A5B]"></span> Akış &amp; Ekran Haritası
         </span>
-        <span class="text-[11px] font-mono text-slate-400">37 Ekran</span>
+        <span class="text-[11px] font-mono text-slate-400">{total_screens} Ekran</span>
       </div>
 
       <div class="flex-1 overflow-y-auto p-2 space-y-1" id="drawer-list">
@@ -229,7 +183,7 @@ html_template = f'''<!DOCTYPE html>
 
       <!-- Breadcrumb Bar above Phone -->
       <div class="mb-3 px-4 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 flex items-center gap-2 shadow-md">
-        <span id="active-step-badge" class="px-2 py-0.5 rounded-full bg-[#0F4C5C] text-white text-[11px] font-bold">Adım 1 / 37</span>
+        <span id="active-step-badge" class="px-2 py-0.5 rounded-full bg-[#0F4C5C] text-white text-[11px] font-bold">Adım 1 / {total_screens}</span>
         <span id="active-role-badge" class="px-2 py-0.5 rounded-full bg-slate-800 text-[#4ADE80] text-[10px] font-bold border border-slate-700">MÜŞTERİ</span>
         <span id="active-step-title" class="text-white truncate max-w-md">Hoş Geldiniz &amp; Rol Seçimi</span>
         <span class="text-slate-500">•</span>
@@ -350,7 +304,7 @@ html_template = f'''<!DOCTYPE html>
 
       // Update selectors & labels
       selector.value = sid;
-      badge.textContent = `Adım ${{spec.step_num}} / 37`;
+      badge.textContent = `Adım ${{spec.step_num}} / {total_screens}`;
       titleEl.textContent = spec.title;
       flowEl.textContent = spec.flow;
 
@@ -450,4 +404,4 @@ html_template = f'''<!DOCTYPE html>
 with open('/Users/ata/Documents/antigravity/BiTadilat/preview/index.html', 'w', encoding='utf-8') as f:
     f.write(html_template)
 
-print('Generated polished preview/index.html with all 37 screens and role tabs!')
+print(f'Generated authoritative preview/index.html with all {total_screens} screens!')

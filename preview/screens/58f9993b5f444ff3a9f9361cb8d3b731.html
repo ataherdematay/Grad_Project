@@ -81,11 +81,11 @@
 <div class="space-y-space-sm pt-space-xs">
 <div class="flex items-center justify-between text-body-md font-body-md">
 <span class="text-text-secondary">İşçilik bedeli</span>
-<span class="font-body-md-medium text-on-surface">₺1.500</span>
+<span class="font-body-md-medium text-on-surface">₺1.650</span>
 </div>
 <div class="flex items-center justify-between text-body-md font-body-md">
 <span class="text-text-secondary">Malzeme ve sarf parçalar</span>
-<span class="font-body-md-medium text-on-surface">₺950</span>
+<span class="font-body-md-medium text-on-surface">₺800</span>
 </div>
 <div class="flex items-center justify-between text-body-md font-body-md">
 <span class="text-text-secondary">Ek işlem veya servis ücreti</span>
@@ -267,11 +267,30 @@
 </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- BiTadilat Authoritative Navigation Controller -->
 <script>
 (function() {
-  const SPEC = {"id": "58f9993b5f444ff3a9f9361cb8d3b731", "step_num": 15, "title": "Teklif Kabul Onayı (Güvence Havuzu)", "flow": "3. Teklif Karşılaştırma & Randevu", "role": "CUSTOMER", "device": "MOBILE", "back_sid": "ea7af2d7298b4b6cb24e4603935503f0", "next_sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0"};
+  const SPEC = {"id": "58f9993b5f444ff3a9f9361cb8d3b731", "step_num": 16, "title": "Teklif Kabul Onayı (Güvence Havuzu)", "flow": "3. Teklif Karşılaştırma & Randevu", "role": "CUSTOMER", "device": "MOBILE", "back_sid": "ea7af2d7298b4b6cb24e4603935503f0", "next_sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0", "pay_error_sid": "1476367258dd4a7aa4b9cbda6b0091c0"};
   const CURRENT_SID = "58f9993b5f444ff3a9f9361cb8d3b731";
+
+  // Save current role in session storage
+  if (SPEC.role === 'PRO') {
+    sessionStorage.setItem('bitadilat_active_role', 'PRO');
+  } else if (SPEC.role === 'CUSTOMER') {
+    sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+  }
 
   window.bitadilatNav = function(targetSid, label) {
     if (!targetSid) return;
@@ -353,8 +372,10 @@
         btnCont.onclick = function(e) {
           e.preventDefault();
           if (chosenRole === 'pro') {
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
             window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
           } else {
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
             window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
           }
         };
@@ -384,19 +405,16 @@
     }
 
     else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {
-      // CTA button
       document.querySelectorAll('button').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('talep') || t.includes('başla') || t.includes('oluştur')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); };
         }
       });
-      // Category Cards
       document.querySelectorAll('.grid > div, .grid > button').forEach(c => {
         c.style.cursor = 'pointer';
         c.onclick = () => window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi -> Adım 1');
       });
-      // Bottom Navigation
       const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a');
       if (navLinks.length >= 4) {
         navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
@@ -421,6 +439,22 @@
     }
 
     else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {
+      // Enliven prompt chips
+      const taskDesc = document.getElementById('task-description');
+      const counter = document.getElementById('char-counter');
+      document.querySelectorAll('.prompt-chip').forEach(chip => {
+        chip.style.cursor = 'pointer';
+        chip.onclick = function(e) {
+          e.preventDefault();
+          const p = chip.getAttribute('data-prompt') || chip.innerText.trim();
+          if (taskDesc) {
+            taskDesc.value = (taskDesc.value ? taskDesc.value + ' ' : '') + p;
+            if (counter) counter.innerText = taskDesc.value.length + ' / 500';
+            chip.classList.add('bg-primary-container', 'text-white');
+          }
+        };
+      });
+
       document.querySelectorAll('button').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('3. adıma') || t.includes('devam et')) {
@@ -439,6 +473,14 @@
     }
 
     else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {
+      // Bind Edit Buttons
+      const editBtns = document.querySelectorAll('button.cursor-pointer');
+      if (editBtns.length >= 4) {
+        editBtns[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.edit_step1, 'Düzenle: Hizmet'); };
+        editBtns[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.edit_step2, 'Düzenle: Konum'); };
+        editBtns[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.edit_step2, 'Düzenle: Detay'); };
+        editBtns[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.edit_step3, 'Düzenle: Fotoğraflar'); };
+      }
       document.querySelectorAll('button').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('yayınla') || t.includes('onayla')) {
@@ -460,7 +502,6 @@
     }
 
     else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {
-      // Customer Requests List
       document.querySelectorAll('button, [data-card]').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('teklif') || t.includes('gör') || t.includes('incele')) {
@@ -484,7 +525,7 @@
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('karşılaştır')) {
           b.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.bitadilatNav(SPEC.compare_sid, 'Karşılaştır'); };
-        } else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Kaya')) {
+        } else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Mavi Hat')) {
           b.style.cursor = 'pointer';
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
         }
@@ -492,16 +533,39 @@
     }
 
     else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {
+      const acceptBtn = document.getElementById('acceptOfferBtn') || document.querySelector('button.bg-primary-container');
+      const rejectBtn = document.getElementById('rejectOfferBtn');
+      const askBtn = document.getElementById('askQuestionBtn');
+
+      if (acceptBtn) {
+        acceptBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); };
+      }
+      if (rejectBtn) {
+        rejectBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reject_sid, 'Teklif Reddetme'); };
+      }
+      if (askBtn) {
+        askBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
+      }
       document.querySelectorAll('button, a').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('kabul et')) {
-          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); };
-        }
         if (t.includes('soru sor') || t.includes('mesaj')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
         }
         if (t.includes('profil') || t.includes('hakkında')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '45350ca7f3de4ee6bedcde20b5a1b385') {
+      // SCR-C-OFFER-REJ Handlers
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('reddet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Reddedildi -> Teklifler'); };
+        }
+        if (t.includes('vazgeç') || t.includes('teklife dön')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Vazgeç -> Teklife Dön'); };
         }
       });
     }
@@ -535,6 +599,19 @@
         }
         if (t.includes('vazgeç')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklif Detayına Dön'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === '1476367258dd4a7aa4b9cbda6b0091c0') {
+      // SCR-C-PAY-ERR Handlers
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('tekrar dene') || t.includes('farklı bir kart')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.retry_sid, 'Ödemeyi Tekrar Dene'); };
+        }
+        if (t.includes('teklif detayına')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.offer_sid, 'Teklif Detayına Dön'); };
         }
       });
     }
@@ -580,10 +657,63 @@
     }
 
     else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {
-      const sendBtn = document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
+      // Chat Dynamic Persona & Message Submission
+      const isPro = sessionStorage.getItem('bitadilat_active_role') === 'PRO';
+      if (isPro) {
+        // Switch Header to Client: Ali Yılmaz
+        const titleEl = document.querySelector('h1');
+        if (titleEl) titleEl.innerText = 'Ali Yılmaz (Müşteri)';
+        const avatarEl = document.querySelector('.bg-primary-container span');
+        if (avatarEl) avatarEl.innerText = 'AY';
+        const backBtn = document.querySelector('header button');
+        if (backBtn) {
+          backBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.pro_back_sid, 'Usta İş Alanına Geri Dön');
+          };
+        }
+      }
+
+      const sendBtn = document.querySelector('button[aria-label="Gönder"]') || document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
       const inp = document.querySelector('input[type="text"]');
-      if (sendBtn && inp) {
-        sendBtn.onclick = (e) => { e.preventDefault(); if (inp.value) inp.value = ''; };
+      const chatStream = document.querySelector('section.flex-1');
+
+      function sendMessage() {
+        if (!inp || !inp.value.trim() || !chatStream) return;
+        const msgText = inp.value.trim();
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'flex flex-col items-end max-w-[85%] ml-auto animate-fade-in';
+        bubble.innerHTML = `
+          <div class="bg-primary-container rounded-2xl rounded-tr-sm p-3.5 text-white shadow-none">
+            <p class="font-body-md text-body-md text-white leading-relaxed">${msgText}</p>
+            <div class="flex justify-end items-center gap-1 mt-1.5 pt-0.5 text-on-primary-container">
+              <span class="font-label-sm text-label-sm text-surface-variant">${timeStr}</span>
+              <span class="material-symbols-outlined text-[15px] text-surface-variant">done</span>
+            </div>
+          </div>
+        `;
+        chatStream.appendChild(bubble);
+        inp.value = '';
+        chatStream.scrollTop = chatStream.scrollHeight;
+      }
+
+      if (sendBtn) {
+        sendBtn.onclick = (e) => {
+          e.preventDefault();
+          sendMessage();
+        };
+      }
+      if (inp) {
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
       }
     }
 
@@ -605,8 +735,11 @@
     else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
       document.querySelectorAll('button').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('onayla') || t.includes('koru') || t.includes('iptal')) {
-          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Dön'); };
+        if (t.includes('iptal etmeyi onayla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Randevu İptali Bildirimi'); };
+        }
+        if (t.includes('koru') || t.includes('vazgeç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.keep_sid, 'İş Alanına Dön'); };
         }
       });
     }
@@ -658,10 +791,18 @@
       document.querySelectorAll('button, a').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('usta') && (t.includes('moduna geç') || t.includes('profesyoneli'))) {
-          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç'); };
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
+            window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç (Onboarding)');
+          };
         }
         if (t.includes('çıkış') || t.includes('oturumu kapat')) {
-          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap'); };
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap');
+          };
         }
       });
       const navLinks = document.querySelectorAll('footer a, nav a');
@@ -677,14 +818,31 @@
     else if (CURRENT_SID === 'a512d0928f11b9cb02877746d580c548') {
       const submitBtn = document.getElementById('btn-submit-pro');
       if (submitBtn) {
-        submitBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); };
+        submitBtn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Belge İncelemede Bekleme'); };
       }
+    }
+
+    else if (CURRENT_SID === 'def294a930bf4bb78f7ba4f857611884') {
+      // SCR-P-PENDING Handlers
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('demo') || t.includes('göz at') || t.includes('örnek talep')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Eşleşen Talepler Akışı'); };
+        }
+        if (t.includes('müşteri moduna') || t.includes('müşteri olarak')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+            window.bitadilatNav(SPEC.switch_customer_sid, 'Müşteri Moduna Geç');
+          };
+        }
+      });
     }
 
     else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {
       document.querySelectorAll('button, .bg-surface').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo')) {
+        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo') || t.includes('borusu onarımı')) {
           b.style.cursor = 'pointer';
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teklif Hazırlama'); };
         }
@@ -720,6 +878,22 @@
     }
 
     else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {
+      const btnSwitch = document.getElementById('btn-switch-to-customer');
+      const btnLogout = document.getElementById('btn-pro-logout');
+      if (btnSwitch) {
+        btnSwitch.onclick = (e) => {
+          e.preventDefault();
+          sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+          window.bitadilatNav(SPEC.switch_to_customer, 'Müşteri Moduna Geç');
+        };
+      }
+      if (btnLogout) {
+        btnLogout.onclick = (e) => {
+          e.preventDefault();
+          sessionStorage.clear();
+          window.bitadilatNav(SPEC.logout_sid, 'Usta Çıkış Yap');
+        };
+      }
       document.querySelectorAll('button').forEach(b => {
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('talepler') || t.includes('kaydet')) {
@@ -736,6 +910,19 @@
         }
         if (t.includes('bitirdim') || t.includes('teslim')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teslim Bildirimi'); };
+        }
+      });
+    }
+
+    else if (CURRENT_SID === 'dbf40b28dba64bd1bedb40e075662c42') {
+      // SCR-P-CANCEL Handlers
+      document.querySelectorAll('button').forEach(b => {
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('fırsat') || t.includes('yeni iş')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Yeni İş Fırsatları'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteri ile Mesajlaş'); };
         }
       });
     }

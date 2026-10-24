@@ -96,11 +96,19 @@
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
+    "id": "45350ca7f3de4ee6bedcde20b5a1b385",
+    "title": "Müşteri Teklif Reddetme & Geri Bildirim (SCR-C-OFFER-REJ)",
+    "device": "MOBILE",
+    "role": "CUSTOMER",
+    "step_num": 13,
+    "flow": "3. Teklif Karşılaştırma & Randevu"
+  },
+  {
     "id": "1fc70722168942c4a1933cd9c641ad68",
     "title": "Teklifleri Karşılaştır (Matris)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 13,
+    "step_num": 14,
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
@@ -108,7 +116,7 @@
     "title": "Hizmet Profesyoneli Profili (SCR-05)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 14,
+    "step_num": 15,
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
@@ -116,7 +124,15 @@
     "title": "Teklif Kabul Onayı (Güvence Havuzu)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 15,
+    "step_num": 16,
+    "flow": "3. Teklif Karşılaştırma & Randevu"
+  },
+  {
+    "id": "1476367258dd4a7aa4b9cbda6b0091c0",
+    "title": "Güvence Havuzu Ödeme Hatası & 3D Secure (SCR-C-PAY-ERR)",
+    "device": "MOBILE",
+    "role": "CUSTOMER",
+    "step_num": 17,
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
@@ -124,7 +140,7 @@
     "title": "Randevu Zamanı Seç (SCR-06)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 16,
+    "step_num": 18,
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
@@ -132,7 +148,7 @@
     "title": "Randevu Talebi İletildi",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 17,
+    "step_num": 19,
     "flow": "3. Teklif Karşılaştırma & Randevu"
   },
   {
@@ -140,7 +156,7 @@
     "title": "İş Alanı — Randevu Onaylandı",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 18,
+    "step_num": 20,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -148,7 +164,7 @@
     "title": "Usta ile Mesajlaşma (SCR-07)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 19,
+    "step_num": 21,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -156,7 +172,7 @@
     "title": "İş Aşamaları ve İlerleme Takibi (SCR-08)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 20,
+    "step_num": 22,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -164,7 +180,7 @@
     "title": "Randevu İptal / Değişiklik Talebi (SCR-09)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 21,
+    "step_num": 23,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -172,7 +188,7 @@
     "title": "İş Tamamlama ve Teslim Onayı (SCR-10)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 22,
+    "step_num": 24,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -180,7 +196,7 @@
     "title": "Hizmet Değerlendirme ve Puanlama (SCR-11)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 23,
+    "step_num": 25,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -188,7 +204,7 @@
     "title": "Şikayet ve Uyuşmazlık Bildirimi (SCR-12)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 24,
+    "step_num": 26,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -196,7 +212,7 @@
     "title": "Şikayet İletildi ve Durum Takibi (SCR-13)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 25,
+    "step_num": 27,
     "flow": "4. Aktif İş, Mesajlaşma & Teslim"
   },
   {
@@ -204,7 +220,7 @@
     "title": "Müşteri Profil & Ayarlar (SCR-C-PROF)",
     "device": "MOBILE",
     "role": "CUSTOMER",
-    "step_num": 26,
+    "step_num": 28,
     "flow": "5. Müşteri Profil & Ayarlar"
   },
   {
@@ -212,7 +228,15 @@
     "title": "Usta Kayıt & Belge Yükleme (SCR-P-ONB)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 27,
+    "step_num": 29,
+    "flow": "6. Hizmet Profesyoneli (Usta)"
+  },
+  {
+    "id": "def294a930bf4bb78f7ba4f857611884",
+    "title": "Usta Belge İncelemede Bekleme (SCR-P-PENDING)",
+    "device": "MOBILE",
+    "role": "PRO",
+    "step_num": 30,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -220,7 +244,7 @@
     "title": "Usta Eşleşen Talepler Akışı (SCR-14)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 28,
+    "step_num": 31,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -228,7 +252,7 @@
     "title": "Usta Teklif Hazırlama (SCR-15)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 29,
+    "step_num": 32,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -236,7 +260,7 @@
     "title": "Usta Teklif Gönderildi Onayı (SCR-16)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 30,
+    "step_num": 33,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -244,7 +268,7 @@
     "title": "Usta Profil & Müsaitlik Yönetimi (SCR-17)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 31,
+    "step_num": 34,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -252,7 +276,15 @@
     "title": "Usta İş Yürütme & Aşama Yönetimi (SCR-18)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 32,
+    "step_num": 35,
+    "flow": "6. Hizmet Profesyoneli (Usta)"
+  },
+  {
+    "id": "dbf40b28dba64bd1bedb40e075662c42",
+    "title": "Usta Randevu İptali Bildirimi (SCR-P-CANCEL)",
+    "device": "MOBILE",
+    "role": "PRO",
+    "step_num": 36,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -260,7 +292,7 @@
     "title": "Usta Teslim Bildirimi İletildi (SCR-P-DONE)",
     "device": "MOBILE",
     "role": "PRO",
-    "step_num": 33,
+    "step_num": 37,
     "flow": "6. Hizmet Profesyoneli (Usta)"
   },
   {
@@ -268,7 +300,7 @@
     "title": "Yönetici Web: Belge İnceleme (SCR-19)",
     "device": "DESKTOP",
     "role": "ADMIN",
-    "step_num": 34,
+    "step_num": 38,
     "flow": "7. Yönetici Portalı & Web"
   },
   {
@@ -276,7 +308,7 @@
     "title": "Yönetici Web: Şikayet Merkezi (SCR-20)",
     "device": "DESKTOP",
     "role": "ADMIN",
-    "step_num": 35,
+    "step_num": 39,
     "flow": "7. Yönetici Portalı & Web"
   },
   {
@@ -284,7 +316,7 @@
     "title": "Yönetici Web: Hesap Yönetimi (SCR-21)",
     "device": "DESKTOP",
     "role": "ADMIN",
-    "step_num": 36,
+    "step_num": 40,
     "flow": "7. Yönetici Portalı & Web"
   },
   {
@@ -292,7 +324,7 @@
     "title": "BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)",
     "device": "DESKTOP",
     "role": "WEB",
-    "step_num": 37,
+    "step_num": 41,
     "flow": "7. Yönetici Portalı & Web"
   }
 ]

@@ -3,7 +3,7 @@ import os, json, re
 screens_dir = '/Users/ata/Documents/antigravity/BiTadilat/preview/screens'
 preview_dir = '/Users/ata/Documents/antigravity/BiTadilat/preview'
 
-# The authoritative 37-screen specification
+# The authoritative 41-screen specification
 screens_spec = [
     # -------------------------------------------------------------
     # FLOW 1: MÜŞTERİ GİRİŞ & ONBOARDING (Adım 01 - 03)
@@ -96,7 +96,10 @@ screens_spec = [
         'role': 'CUSTOMER',
         'device': 'MOBILE',
         'back_sid': '585d649f4ea046ffa70e4cb481ddd030',
-        'next_sid': '94a730cef5374f2ab9632d9acf0d7e19'
+        'next_sid': '94a730cef5374f2ab9632d9acf0d7e19',
+        'edit_step1': '44c003fee81d4a188f187608554efdd5',
+        'edit_step2': 'b3c3c2845017451fb1b85b89f04fd4b8',
+        'edit_step3': '585d649f4ea046ffa70e4cb481ddd030'
     },
     {
         'id': '94a730cef5374f2ab9632d9acf0d7e19',
@@ -111,7 +114,7 @@ screens_spec = [
     },
 
     # -------------------------------------------------------------
-    # FLOW 3: TEKLİF KARŞILAŞTIRMA & RANDEVU (Adım 10 - 17)
+    # FLOW 3: TEKLİF KARŞILAŞTIRMA & RANDEVU (Adım 10 - 19)
     # -------------------------------------------------------------
     {
         'id': '86fe79e681034183a8681bb0d2893e29',
@@ -147,12 +150,23 @@ screens_spec = [
         'device': 'MOBILE',
         'back_sid': '994e3b4ffce942ce8778f7a6cfaa42c0',
         'next_sid': '58f9993b5f444ff3a9f9361cb8d3b731',
+        'reject_sid': '45350ca7f3de4ee6bedcde20b5a1b385',
         'profile_sid': '98cd20d6ab4e4f8fbc29bc462ce55cca',
         'chat_sid': 'c9aa92f5a4e04897952d05f30c2aef10'
     },
     {
-        'id': '1fc70722168942c4a1933cd9c641ad68',
+        'id': '45350ca7f3de4ee6bedcde20b5a1b385',
         'step_num': 13,
+        'title': 'Müşteri Teklif Reddetme & Geri Bildirim (SCR-C-OFFER-REJ)',
+        'flow': '3. Teklif Karşılaştırma & Randevu',
+        'role': 'CUSTOMER',
+        'device': 'MOBILE',
+        'back_sid': 'ea7af2d7298b4b6cb24e4603935503f0',
+        'next_sid': '994e3b4ffce942ce8778f7a6cfaa42c0'
+    },
+    {
+        'id': '1fc70722168942c4a1933cd9c641ad68',
+        'step_num': 14,
         'title': 'Teklifleri Karşılaştır (Matris)',
         'flow': '3. Teklif Karşılaştırma & Randevu',
         'role': 'CUSTOMER',
@@ -162,7 +176,7 @@ screens_spec = [
     },
     {
         'id': '98cd20d6ab4e4f8fbc29bc462ce55cca',
-        'step_num': 14,
+        'step_num': 15,
         'title': 'Hizmet Profesyoneli Profili (SCR-05)',
         'flow': '3. Teklif Karşılaştırma & Randevu',
         'role': 'CUSTOMER',
@@ -173,17 +187,30 @@ screens_spec = [
     },
     {
         'id': '58f9993b5f444ff3a9f9361cb8d3b731',
-        'step_num': 15,
+        'step_num': 16,
         'title': 'Teklif Kabul Onayı (Güvence Havuzu)',
         'flow': '3. Teklif Karşılaştırma & Randevu',
         'role': 'CUSTOMER',
         'device': 'MOBILE',
         'back_sid': 'ea7af2d7298b4b6cb24e4603935503f0',
-        'next_sid': '7c6ec3a02d3347a997a3fc5b1a2c91d0'
+        'next_sid': '7c6ec3a02d3347a997a3fc5b1a2c91d0',
+        'pay_error_sid': '1476367258dd4a7aa4b9cbda6b0091c0'
+    },
+    {
+        'id': '1476367258dd4a7aa4b9cbda6b0091c0',
+        'step_num': 17,
+        'title': 'Güvence Havuzu Ödeme Hatası & 3D Secure (SCR-C-PAY-ERR)',
+        'flow': '3. Teklif Karşılaştırma & Randevu',
+        'role': 'CUSTOMER',
+        'device': 'MOBILE',
+        'back_sid': '58f9993b5f444ff3a9f9361cb8d3b731',
+        'next_sid': '58f9993b5f444ff3a9f9361cb8d3b731',
+        'retry_sid': '58f9993b5f444ff3a9f9361cb8d3b731',
+        'offer_sid': 'ea7af2d7298b4b6cb24e4603935503f0'
     },
     {
         'id': '7c6ec3a02d3347a997a3fc5b1a2c91d0',
-        'step_num': 16,
+        'step_num': 18,
         'title': 'Randevu Zamanı Seç (SCR-06)',
         'flow': '3. Teklif Karşılaştırma & Randevu',
         'role': 'CUSTOMER',
@@ -193,7 +220,7 @@ screens_spec = [
     },
     {
         'id': '3bd2afe80ced4d2498ec9f16c7099326',
-        'step_num': 17,
+        'step_num': 19,
         'title': 'Randevu Talebi İletildi',
         'flow': '3. Teklif Karşılaştırma & Randevu',
         'role': 'CUSTOMER',
@@ -203,11 +230,11 @@ screens_spec = [
     },
 
     # -------------------------------------------------------------
-    # FLOW 4: AKTİF İŞ, MESAJLAŞMA & TESLİM (Adım 18 - 25)
+    # FLOW 4: AKTİF İŞ, MESAJLAŞMA & TESLİM (Adım 20 - 27)
     # -------------------------------------------------------------
     {
         'id': 'f3e7de808fdb49c18e3c5d430cb72528',
-        'step_num': 18,
+        'step_num': 20,
         'title': 'İş Alanı — Randevu Onaylandı',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -220,17 +247,18 @@ screens_spec = [
     },
     {
         'id': 'c9aa92f5a4e04897952d05f30c2aef10',
-        'step_num': 19,
+        'step_num': 21,
         'title': 'Usta ile Mesajlaşma (SCR-07)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
         'device': 'MOBILE',
         'back_sid': 'f3e7de808fdb49c18e3c5d430cb72528',
-        'next_sid': 'f3e7de808fdb49c18e3c5d430cb72528'
+        'next_sid': 'f3e7de808fdb49c18e3c5d430cb72528',
+        'pro_back_sid': '8ba8c346d11c46f39163fd6ebf06dae1'
     },
     {
         'id': 'b89d998c02d34e67b8e8f34334f87f02',
-        'step_num': 20,
+        'step_num': 22,
         'title': 'İş Aşamaları ve İlerleme Takibi (SCR-08)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -242,17 +270,18 @@ screens_spec = [
     },
     {
         'id': '6acc9307352f497ca6bd878d628c6a1a',
-        'step_num': 21,
+        'step_num': 23,
         'title': 'Randevu İptal / Değişiklik Talebi (SCR-09)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
         'device': 'MOBILE',
         'back_sid': 'f3e7de808fdb49c18e3c5d430cb72528',
-        'next_sid': 'f3e7de808fdb49c18e3c5d430cb72528'
+        'next_sid': 'dbf40b28dba64bd1bedb40e075662c42',
+        'keep_sid': 'f3e7de808fdb49c18e3c5d430cb72528'
     },
     {
         'id': 'd485263b3ae244a9b35500665b5c759b',
-        'step_num': 22,
+        'step_num': 24,
         'title': 'İş Tamamlama ve Teslim Onayı (SCR-10)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -263,7 +292,7 @@ screens_spec = [
     },
     {
         'id': 'db8a1b368a7749cbb5fd6cf497f34de6',
-        'step_num': 23,
+        'step_num': 25,
         'title': 'Hizmet Değerlendirme ve Puanlama (SCR-11)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -273,7 +302,7 @@ screens_spec = [
     },
     {
         'id': '488f3698f93c454099ca2382585aeb66',
-        'step_num': 24,
+        'step_num': 26,
         'title': 'Şikayet ve Uyuşmazlık Bildirimi (SCR-12)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -283,7 +312,7 @@ screens_spec = [
     },
     {
         'id': '3bb4b954e5224b0097b2bee12be9bcbf',
-        'step_num': 25,
+        'step_num': 27,
         'title': 'Şikayet İletildi ve Durum Takibi (SCR-13)',
         'flow': '4. Aktif İş, Mesajlaşma & Teslim',
         'role': 'CUSTOMER',
@@ -294,11 +323,11 @@ screens_spec = [
     },
 
     # -------------------------------------------------------------
-    # FLOW 5: MÜŞTERİ PROFİL & AYARLAR (Adım 26)
+    # FLOW 5: MÜŞTERİ PROFİL & AYARLAR (Adım 28)
     # -------------------------------------------------------------
     {
         'id': '20de80b8dc984e86be873761409a2396',
-        'step_num': 26,
+        'step_num': 28,
         'title': 'Müşteri Profil & Ayarlar (SCR-C-PROF)',
         'flow': '5. Müşteri Profil & Ayarlar',
         'role': 'CUSTOMER',
@@ -309,26 +338,37 @@ screens_spec = [
         'tab_requests': '86fe79e681034183a8681bb0d2893e29',
         'tab_messages': 'c9aa92f5a4e04897952d05f30c2aef10',
         'tab_profile': '20de80b8dc984e86be873761409a2396',
-        'switch_to_pro': '11b9cb02877746d580c5484512d0928f',
+        'switch_to_pro': 'a512d0928f11b9cb02877746d580c548',
         'logout_sid': '0c06b06e422b40daacbc0b8e6e8fb7bf'
     },
 
     # -------------------------------------------------------------
-    # FLOW 6: HİZMET PROFESYONELİ (USTA) AKIŞI (Adım 27 - 33)
+    # FLOW 6: HİZMET PROFESYONELİ (USTA) AKIŞI (Adım 29 - 37)
     # -------------------------------------------------------------
     {
         'id': 'a512d0928f11b9cb02877746d580c548',
-        'step_num': 27,
+        'step_num': 29,
         'title': 'Usta Kayıt & Belge Yükleme (SCR-P-ONB)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
         'device': 'MOBILE',
         'back_sid': '0c06b06e422b40daacbc0b8e6e8fb7bf',
-        'next_sid': '11b9cb02877746d580c5484512d0928f'
+        'next_sid': 'def294a930bf4bb78f7ba4f857611884'
+    },
+    {
+        'id': 'def294a930bf4bb78f7ba4f857611884',
+        'step_num': 30,
+        'title': 'Usta Belge İncelemede Bekleme (SCR-P-PENDING)',
+        'flow': '6. Hizmet Profesyoneli (Usta)',
+        'role': 'PRO',
+        'device': 'MOBILE',
+        'back_sid': 'a512d0928f11b9cb02877746d580c548',
+        'next_sid': '11b9cb02877746d580c5484512d0928f',
+        'switch_customer_sid': 'cc1f55661a1a4036a890b43d9f15596a'
     },
     {
         'id': '11b9cb02877746d580c5484512d0928f',
-        'step_num': 28,
+        'step_num': 31,
         'title': 'Usta Eşleşen Talepler Akışı (SCR-14)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
@@ -342,7 +382,7 @@ screens_spec = [
     },
     {
         'id': 'b9086f1030784def8eb267fd9110addd',
-        'step_num': 29,
+        'step_num': 32,
         'title': 'Usta Teklif Hazırlama (SCR-15)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
@@ -352,7 +392,7 @@ screens_spec = [
     },
     {
         'id': '82f9d783b88b40ec8ca6260566c0f5cb',
-        'step_num': 30,
+        'step_num': 33,
         'title': 'Usta Teklif Gönderildi Onayı (SCR-16)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
@@ -363,28 +403,42 @@ screens_spec = [
     },
     {
         'id': 'fc6f0f8e9b724365a5a0f124617dbe7a',
-        'step_num': 31,
+        'step_num': 34,
         'title': 'Usta Profil & Müsaitlik Yönetimi (SCR-17)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
         'device': 'MOBILE',
         'back_sid': '11b9cb02877746d580c5484512d0928f',
-        'next_sid': '11b9cb02877746d580c5484512d0928f'
+        'next_sid': '11b9cb02877746d580c5484512d0928f',
+        'switch_to_customer': 'cc1f55661a1a4036a890b43d9f15596a',
+        'logout_sid': '0c06b06e422b40daacbc0b8e6e8fb7bf'
     },
     {
         'id': '8ba8c346d11c46f39163fd6ebf06dae1',
-        'step_num': 32,
+        'step_num': 35,
         'title': 'Usta İş Yürütme & Aşama Yönetimi (SCR-18)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
         'device': 'MOBILE',
         'back_sid': '11b9cb02877746d580c5484512d0928f',
         'next_sid': 'c6ebf06dae18ba8c346d11c46f39163f',
+        'chat_sid': 'c9aa92f5a4e04897952d05f30c2aef10',
+        'cancel_sid': 'dbf40b28dba64bd1bedb40e075662c42'
+    },
+    {
+        'id': 'dbf40b28dba64bd1bedb40e075662c42',
+        'step_num': 36,
+        'title': 'Usta Randevu İptali Bildirimi (SCR-P-CANCEL)',
+        'flow': '6. Hizmet Profesyoneli (Usta)',
+        'role': 'PRO',
+        'device': 'MOBILE',
+        'back_sid': '11b9cb02877746d580c5484512d0928f',
+        'next_sid': '11b9cb02877746d580c5484512d0928f',
         'chat_sid': 'c9aa92f5a4e04897952d05f30c2aef10'
     },
     {
         'id': 'c6ebf06dae18ba8c346d11c46f39163f',
-        'step_num': 33,
+        'step_num': 37,
         'title': 'Usta Teslim Bildirimi İletildi (SCR-P-DONE)',
         'flow': '6. Hizmet Profesyoneli (Usta)',
         'role': 'PRO',
@@ -395,11 +449,11 @@ screens_spec = [
     },
 
     # -------------------------------------------------------------
-    # FLOW 7: YÖNETİCİ WEB PORTALI & TANITIM SİTESİ (Adım 34 - 37)
+    # FLOW 7: YÖNETİCİ WEB PORTALI & TANITIM SİTESİ (Adım 38 - 41)
     # -------------------------------------------------------------
     {
         'id': '612429fdea1b42a1bf9e628883f7e58f',
-        'step_num': 34,
+        'step_num': 38,
         'title': 'Yönetici Web: Belge İnceleme (SCR-19)',
         'flow': '7. Yönetici Portalı & Web',
         'role': 'ADMIN',
@@ -411,7 +465,7 @@ screens_spec = [
     },
     {
         'id': 'cb00d67723e34ec990786a82d25c77ca',
-        'step_num': 35,
+        'step_num': 39,
         'title': 'Yönetici Web: Şikayet Merkezi (SCR-20)',
         'flow': '7. Yönetici Portalı & Web',
         'role': 'ADMIN',
@@ -423,7 +477,7 @@ screens_spec = [
     },
     {
         'id': '5ce8968e2703443ca129c0e7c9e9d145',
-        'step_num': 36,
+        'step_num': 40,
         'title': 'Yönetici Web: Hesap Yönetimi (SCR-21)',
         'flow': '7. Yönetici Portalı & Web',
         'role': 'ADMIN',
@@ -435,7 +489,7 @@ screens_spec = [
     },
     {
         'id': '164cd33666284338b929a8325dc5ea20',
-        'step_num': 37,
+        'step_num': 41,
         'title': 'BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)',
         'flow': '7. Yönetici Portalı & Web',
         'role': 'WEB',
@@ -446,8 +500,6 @@ screens_spec = [
         'start_pro': 'a512d0928f11b9cb02877746d580c548'
     }
 ]
-
-specs_by_id = {s['id']: s for s in screens_spec}
 
 # 1. Update screens_map.json
 screens_map_data = [
@@ -487,6 +539,13 @@ def inject_clean_controller(s):
 (function() {{
   const SPEC = {spec_json};
   const CURRENT_SID = "{sid}";
+
+  // Save current role in session storage
+  if (SPEC.role === 'PRO') {{
+    sessionStorage.setItem('bitadilat_active_role', 'PRO');
+  }} else if (SPEC.role === 'CUSTOMER') {{
+    sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+  }}
 
   window.bitadilatNav = function(targetSid, label) {{
     if (!targetSid) return;
@@ -568,8 +627,10 @@ def inject_clean_controller(s):
         btnCont.onclick = function(e) {{
           e.preventDefault();
           if (chosenRole === 'pro') {{
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
             window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
           }} else {{
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
             window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
           }}
         }};
@@ -599,20 +660,17 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {{
-      // CTA button
       document.querySelectorAll('button').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('talep') || t.includes('başla') || t.includes('oluştur')) {{
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); }};
         }}
       }});
-      // Category Cards
       document.querySelectorAll('.grid > div, .grid > button').forEach(c => {{
         c.style.cursor = 'pointer';
         c.onclick = () => window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi -> Adım 1');
       }});
-      // Bottom Navigation
-      const navLinks = document.querySelectorAll('footer a, nav a, [role=\"tablist\"] a');
+      const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a');
       if (navLinks.length >= 4) {{
         navLinks[0].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); }};
         navLinks[1].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); }};
@@ -636,6 +694,22 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {{
+      // Enliven prompt chips
+      const taskDesc = document.getElementById('task-description');
+      const counter = document.getElementById('char-counter');
+      document.querySelectorAll('.prompt-chip').forEach(chip => {{
+        chip.style.cursor = 'pointer';
+        chip.onclick = function(e) {{
+          e.preventDefault();
+          const p = chip.getAttribute('data-prompt') || chip.innerText.trim();
+          if (taskDesc) {{
+            taskDesc.value = (taskDesc.value ? taskDesc.value + ' ' : '') + p;
+            if (counter) counter.innerText = taskDesc.value.length + ' / 500';
+            chip.classList.add('bg-primary-container', 'text-white');
+          }}
+        }};
+      }});
+
       document.querySelectorAll('button').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('3. adıma') || t.includes('devam et')) {{
@@ -654,6 +728,14 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {{
+      // Bind Edit Buttons
+      const editBtns = document.querySelectorAll('button.cursor-pointer');
+      if (editBtns.length >= 4) {{
+        editBtns[0].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.edit_step1, 'Düzenle: Hizmet'); }};
+        editBtns[1].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.edit_step2, 'Düzenle: Konum'); }};
+        editBtns[2].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.edit_step2, 'Düzenle: Detay'); }};
+        editBtns[3].onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.edit_step3, 'Düzenle: Fotoğraflar'); }};
+      }}
       document.querySelectorAll('button').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('yayınla') || t.includes('onayla')) {{
@@ -675,7 +757,6 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {{
-      // Customer Requests List
       document.querySelectorAll('button, [data-card]').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('teklif') || t.includes('gör') || t.includes('incele')) {{
@@ -699,7 +780,7 @@ def inject_clean_controller(s):
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('karşılaştır')) {{
           b.onclick = (e) => {{ e.preventDefault(); e.stopPropagation(); window.bitadilatNav(SPEC.compare_sid, 'Karşılaştır'); }};
-        }} else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Kaya')) {{
+        }} else if (t.includes('incele') || t.includes('detay') || (b.innerText || '').includes('Mavi Hat')) {{
           b.style.cursor = 'pointer';
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); }};
         }}
@@ -707,16 +788,39 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {{
+      const acceptBtn = document.getElementById('acceptOfferBtn') || document.querySelector('button.bg-primary-container');
+      const rejectBtn = document.getElementById('rejectOfferBtn');
+      const askBtn = document.getElementById('askQuestionBtn');
+
+      if (acceptBtn) {{
+        acceptBtn.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); }};
+      }}
+      if (rejectBtn) {{
+        rejectBtn.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.reject_sid, 'Teklif Reddetme'); }};
+      }}
+      if (askBtn) {{
+        askBtn.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); }};
+      }}
       document.querySelectorAll('button, a').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('kabul et')) {{
-          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Onayı'); }};
-        }}
         if (t.includes('soru sor') || t.includes('mesaj')) {{
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); }};
         }}
         if (t.includes('profil') || t.includes('hakkında')) {{
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); }};
+        }}
+      }});
+    }}
+
+    else if (CURRENT_SID === '45350ca7f3de4ee6bedcde20b5a1b385') {{
+      // SCR-C-OFFER-REJ Handlers
+      document.querySelectorAll('button').forEach(b => {{
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('reddet')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Reddedildi -> Teklifler'); }};
+        }}
+        if (t.includes('vazgeç') || t.includes('teklife dön')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Vazgeç -> Teklife Dön'); }};
         }}
       }});
     }}
@@ -750,6 +854,19 @@ def inject_clean_controller(s):
         }}
         if (t.includes('vazgeç')) {{
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklif Detayına Dön'); }};
+        }}
+      }});
+    }}
+
+    else if (CURRENT_SID === '1476367258dd4a7aa4b9cbda6b0091c0') {{
+      // SCR-C-PAY-ERR Handlers
+      document.querySelectorAll('button').forEach(b => {{
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('tekrar dene') || t.includes('farklı bir kart')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.retry_sid, 'Ödemeyi Tekrar Dene'); }};
+        }}
+        if (t.includes('teklif detayına')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.offer_sid, 'Teklif Detayına Dön'); }};
         }}
       }});
     }}
@@ -795,10 +912,63 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {{
-      const sendBtn = document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
-      const inp = document.querySelector('input[type=\"text\"]');
-      if (sendBtn && inp) {{
-        sendBtn.onclick = (e) => {{ e.preventDefault(); if (inp.value) inp.value = ''; }};
+      // Chat Dynamic Persona & Message Submission
+      const isPro = sessionStorage.getItem('bitadilat_active_role') === 'PRO';
+      if (isPro) {{
+        // Switch Header to Client: Ali Yılmaz
+        const titleEl = document.querySelector('h1');
+        if (titleEl) titleEl.innerText = 'Ali Yılmaz (Müşteri)';
+        const avatarEl = document.querySelector('.bg-primary-container span');
+        if (avatarEl) avatarEl.innerText = 'AY';
+        const backBtn = document.querySelector('header button');
+        if (backBtn) {{
+          backBtn.onclick = (e) => {{
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.pro_back_sid, 'Usta İş Alanına Geri Dön');
+          }};
+        }}
+      }}
+
+      const sendBtn = document.querySelector('button[aria-label="Gönder"]') || document.querySelector('button.send') || document.querySelector('button:has(.material-symbols-outlined)');
+      const inp = document.querySelector('input[type="text"]');
+      const chatStream = document.querySelector('section.flex-1');
+
+      function sendMessage() {{
+        if (!inp || !inp.value.trim() || !chatStream) return;
+        const msgText = inp.value.trim();
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        
+        const bubble = document.createElement('div');
+        bubble.className = 'flex flex-col items-end max-w-[85%] ml-auto animate-fade-in';
+        bubble.innerHTML = `
+          <div class="bg-primary-container rounded-2xl rounded-tr-sm p-3.5 text-white shadow-none">
+            <p class="font-body-md text-body-md text-white leading-relaxed">${{msgText}}</p>
+            <div class="flex justify-end items-center gap-1 mt-1.5 pt-0.5 text-on-primary-container">
+              <span class="font-label-sm text-label-sm text-surface-variant">${{timeStr}}</span>
+              <span class="material-symbols-outlined text-[15px] text-surface-variant">done</span>
+            </div>
+          </div>
+        `;
+        chatStream.appendChild(bubble);
+        inp.value = '';
+        chatStream.scrollTop = chatStream.scrollHeight;
+      }}
+
+      if (sendBtn) {{
+        sendBtn.onclick = (e) => {{
+          e.preventDefault();
+          sendMessage();
+        }};
+      }}
+      if (inp) {{
+        inp.addEventListener('keydown', (e) => {{
+          if (e.key === 'Enter') {{
+            e.preventDefault();
+            sendMessage();
+          }}
+        }});
       }}
     }}
 
@@ -820,8 +990,11 @@ def inject_clean_controller(s):
     else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {{
       document.querySelectorAll('button').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('onayla') || t.includes('koru') || t.includes('iptal')) {{
-          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Dön'); }};
+        if (t.includes('iptal etmeyi onayla')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Randevu İptali Bildirimi'); }};
+        }}
+        if (t.includes('koru') || t.includes('vazgeç')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.keep_sid, 'İş Alanına Dön'); }};
         }}
       }});
     }}
@@ -873,10 +1046,18 @@ def inject_clean_controller(s):
       document.querySelectorAll('button, a').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('usta') && (t.includes('moduna geç') || t.includes('profesyoneli'))) {{
-          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç'); }};
+          b.onclick = (e) => {{
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
+            window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç (Onboarding)');
+          }};
         }}
         if (t.includes('çıkış') || t.includes('oturumu kapat')) {{
-          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap'); }};
+          b.onclick = (e) => {{
+            e.preventDefault();
+            sessionStorage.clear();
+            window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap');
+          }};
         }}
       }});
       const navLinks = document.querySelectorAll('footer a, nav a');
@@ -892,14 +1073,31 @@ def inject_clean_controller(s):
     else if (CURRENT_SID === 'a512d0928f11b9cb02877746d580c548') {{
       const submitBtn = document.getElementById('btn-submit-pro');
       if (submitBtn) {{
-        submitBtn.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); }};
+        submitBtn.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Belge İncelemede Bekleme'); }};
       }}
+    }}
+
+    else if (CURRENT_SID === 'def294a930bf4bb78f7ba4f857611884') {{
+      // SCR-P-PENDING Handlers
+      document.querySelectorAll('button').forEach(b => {{
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('demo') || t.includes('göz at') || t.includes('örnek talep')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Eşleşen Talepler Akışı'); }};
+        }}
+        if (t.includes('müşteri moduna') || t.includes('müşteri olarak')) {{
+          b.onclick = (e) => {{
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+            window.bitadilatNav(SPEC.switch_customer_sid, 'Müşteri Moduna Geç');
+          }};
+        }}
+      }});
     }}
 
     else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {{
       document.querySelectorAll('button, .bg-surface').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
-        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo')) {{
+        if (t.includes('teklif') || t.includes('hazırla') || t.includes('banyo lavabo') || t.includes('borusu onarımı')) {{
           b.style.cursor = 'pointer';
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teklif Hazırlama'); }};
         }}
@@ -935,6 +1133,22 @@ def inject_clean_controller(s):
     }}
 
     else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {{
+      const btnSwitch = document.getElementById('btn-switch-to-customer');
+      const btnLogout = document.getElementById('btn-pro-logout');
+      if (btnSwitch) {{
+        btnSwitch.onclick = (e) => {{
+          e.preventDefault();
+          sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+          window.bitadilatNav(SPEC.switch_to_customer, 'Müşteri Moduna Geç');
+        }};
+      }}
+      if (btnLogout) {{
+        btnLogout.onclick = (e) => {{
+          e.preventDefault();
+          sessionStorage.clear();
+          window.bitadilatNav(SPEC.logout_sid, 'Usta Çıkış Yap');
+        }};
+      }}
       document.querySelectorAll('button').forEach(b => {{
         const t = (b.innerText || '').toLowerCase();
         if (t.includes('talepler') || t.includes('kaydet')) {{
@@ -951,6 +1165,19 @@ def inject_clean_controller(s):
         }}
         if (t.includes('bitirdim') || t.includes('teslim')) {{
           b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Teslim Bildirimi'); }};
+        }}
+      }});
+    }}
+
+    else if (CURRENT_SID === 'dbf40b28dba64bd1bedb40e075662c42') {{
+      // SCR-P-CANCEL Handlers
+      document.querySelectorAll('button').forEach(b => {{
+        const t = (b.innerText || '').toLowerCase();
+        if (t.includes('fırsat') || t.includes('yeni iş')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Yeni İş Fırsatları'); }};
+        }}
+        if (t.includes('mesaj')) {{
+          b.onclick = (e) => {{ e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteri ile Mesajlaş'); }};
         }}
       }});
     }}
@@ -1018,4 +1245,4 @@ def inject_clean_controller(s):
 for s in screens_spec:
     inject_clean_controller(s)
 
-print('All 37 screens updated with clean authoritative navigation controllers!')
+print('All 41 screens updated with clean authoritative navigation controllers!')
