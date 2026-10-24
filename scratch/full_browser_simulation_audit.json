@@ -1,0 +1,2279 @@
+{
+  "summary": {
+    "total_screens": 41,
+    "screens_tested": 41,
+    "total_buttons_tested": 244,
+    "buttons_functional": 162,
+    "buttons_dead_or_unbound": 82,
+    "total_inputs_tested": 34,
+    "inputs_functional": 34,
+    "total_textareas_tested": 8,
+    "textareas_functional": 8,
+    "navigation_flows_tested": 41,
+    "navigation_flows_passed": 41
+  },
+  "screens": [
+    {
+      "step_num": 1,
+      "sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+      "title": "Hoş Geldiniz & Rol Seçimi (SCR-01)",
+      "role": "CUSTOMER",
+      "flow": "1. Müşteri Giriş & Onboarding",
+      "buttons_status": [
+        {
+          "text": "TR",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (TR)"
+        },
+        {
+          "text": "EN",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (EN)"
+        },
+        {
+          "text": "smartphone Telefon numarasıyla devam et",
+          "id": "btn-continue",
+          "functional": true,
+          "action": "ID-bound handler (#btn-continue)"
+        },
+        {
+          "text": "Giriş yap",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Giriş yap)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 2,
+      "sid": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+      "title": "Telefon Doğrulama",
+      "role": "CUSTOMER",
+      "flow": "1. Müşteri Giriş & Onboarding",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 0c06b06e"
+        },
+        {
+          "text": "🇹🇷 +90 keyboard_arrow_down",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Devam Et arrow_forward",
+          "id": "submit-btn",
+          "functional": true,
+          "action": "ID-bound handler (#submit-btn)"
+        },
+        {
+          "text": "arrow_back Numaranı mı değiştirmek istiy",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('geri')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "tel",
+          "id": "phone-input",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 3,
+      "sid": "42c148a1fb25400ca549481fa6abe01f",
+      "title": "SMS Doğrulama Kodu",
+      "role": "CUSTOMER",
+      "flow": "1. Müşteri Giriş & Onboarding",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> fbbe0f40"
+        },
+        {
+          "text": "edit Telefon numarasını değiştir",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('değiştir')"
+        },
+        {
+          "text": "Doğrula arrow_forward",
+          "id": "verify-submit-btn",
+          "functional": true,
+          "action": "ID-bound handler (#verify-submit-btn)"
+        },
+        {
+          "text": "replay Tekrar SMS Kodu Gönder",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('gönder')"
+        },
+        {
+          "text": "refresh Tekrar Kod Gönder",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('gönder')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 4,
+      "sid": "cc1f55661a1a4036a890b43d9f15596a",
+      "title": "Müşteri Ana Sayfası (SCR-03)",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "notifications",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Talep oluşturmaya başla arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('talep')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 5,
+      "sid": "44c003fee81d4a188f187608554efdd5",
+      "title": "Talep Adım 1/4: Hizmet & Öncelik (SCR-02)",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "plumbing Tesisat Su, kaçak, tıkanıklık c",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "bolt Elektrik Sigorta, hat, montaj check",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (bolt Elektrik Sigorta, hat, montaj check)"
+        },
+        {
+          "text": "format_paint Boya &amp; Badana İç cephe,",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "mode_fan Klima Bakım, gaz, arıza check",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "shower Banyo Yenileme Fayans, duşakabin ",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (shower Banyo Yenileme Fayans, duşakabin check)"
+        },
+        {
+          "text": "countertops Mutfak Yenileme Tezgah, dola",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (countertops Mutfak Yenileme Tezgah, dolap montaj check)"
+        },
+        {
+          "text": "carpenter Marangozluk Ahşap kapı, mobily",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (carpenter Marangozluk Ahşap kapı, mobilya check)"
+        },
+        {
+          "text": "grid_view Diğer Farklı uzmanlıklar check",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "crisis_alert Acil onarım Hızlı Usta Bugü",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (crisis_alert Acil onarım Hızlı Usta Bugün veya en kısa sürede çözülmesi gereken acil arızalar ve müdahaleler için.)"
+        },
+        {
+          "text": "event_note Planlı yenileme Randevulu Tar",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (event_note Planlı yenileme Randevulu Tarih belirleyerek keşif ve teklif adımlarıyla ilerlemek istediğin kapsamlı işler için.)"
+        },
+        {
+          "text": "Devam Et arrow_forward",
+          "id": "wizard-primary-cta",
+          "functional": true,
+          "action": "ID-bound handler (#wizard-primary-cta)"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "service-search-input",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 6,
+      "sid": "b3c3c2845017451fb1b85b89f04fd4b8",
+      "title": "Talep Adım 2/4: Konum & İş Detayı",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 44c003fe"
+        },
+        {
+          "text": "pin_drop İlçe seç expand_more",
+          "id": "district-trigger",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "my_location Mevcut konumumu kullan",
+          "id": "use-gps-btn",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "add Ne zamandır var?",
+          "id": "",
+          "functional": true,
+          "action": "Interactive Prompt Chip (appends text to description)"
+        },
+        {
+          "text": "add Su akışı kesildi mi?",
+          "id": "",
+          "functional": true,
+          "action": "Interactive Prompt Chip (appends text to description)"
+        },
+        {
+          "text": "add Farklı odaları etkiledi mi?",
+          "id": "",
+          "functional": true,
+          "action": "Interactive Prompt Chip (appends text to description)"
+        },
+        {
+          "text": "Devam Et arrow_forward",
+          "id": "wizard-primary-cta",
+          "functional": true,
+          "action": "ID-bound handler (#wizard-primary-cta)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [
+        {
+          "id": "task-description",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 7,
+      "sid": "585d649f4ea046ffa70e4cb481ddd030",
+      "title": "Talep Adım 3/4: Fotoğraflar & Ek Bilgi",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> b3c3c284"
+        },
+        {
+          "text": "Devam Et arrow_forward",
+          "id": "wizard-primary-cta",
+          "functional": true,
+          "action": "ID-bound handler (#wizard-primary-cta)"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "file",
+          "id": "photo-input",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "extra-notes",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 8,
+      "sid": "a0949c91cbe34557b16273c8e91d067a",
+      "title": "Talep Adım 4/4: Talebi Gözden Geçir",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 585d649f"
+        },
+        {
+          "text": "Düzenle",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Düzenle)"
+        },
+        {
+          "text": "Düzenle",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Düzenle)"
+        },
+        {
+          "text": "Düzenle",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Düzenle)"
+        },
+        {
+          "text": "Düzenle",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Düzenle)"
+        },
+        {
+          "text": "Talebi yayınla check",
+          "id": "wizard-primary-cta",
+          "functional": true,
+          "action": "Text-matched handler ('talebi')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 9,
+      "sid": "94a730cef5374f2ab9632d9acf0d7e19",
+      "title": "Talep Yayınlandı — Teklif Bekleniyor",
+      "role": "CUSTOMER",
+      "flow": "2. Müşteri Talep Sihirbazı",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "Taleplerime git arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('taleplerime')"
+        },
+        {
+          "text": "Ana sayfaya dön",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 10,
+      "sid": "86fe79e681034183a8681bb0d2893e29",
+      "title": "Müşteri Taleplerim Listesi (SCR-C-REQ)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "help_outline",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (help_outline)"
+        },
+        {
+          "text": "Aktif Talepler 1",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('talepler')"
+        },
+        {
+          "text": "Geçmiş İşler 2",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Gelen Teklifleri Gör (3) arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Gelen Teklifleri Gör (3) arrow_forward)"
+        },
+        {
+          "text": "build + Yeni Onarım Talebi Başlat Usta t",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (build + Yeni Onarım Talebi Başlat Usta tekliflerini 15 dakikada al arrow_forward_ios)"
+        },
+        {
+          "text": "Tümünü Gör (2)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Detayları İncele chevron_right",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 11,
+      "sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+      "title": "Gelen Teklifler Listesi (SCR-04)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 86fe79e6"
+        },
+        {
+          "text": "notifications",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "swap_vert Önerilen sıralama expand_more",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (swap_vert Önerilen sıralama expand_more)"
+        },
+        {
+          "text": "tune",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (tune)"
+        },
+        {
+          "text": "Teklifi İncele chevron_right",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Teklifi İncele chevron_right",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": false
+    },
+    {
+      "step_num": 12,
+      "sid": "ea7af2d7298b4b6cb24e4603935503f0",
+      "title": "Teklif Detayı & Kapsam",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 994e3b4f"
+        },
+        {
+          "text": "chat Ustaya soru sor",
+          "id": "askQuestionBtn",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        },
+        {
+          "text": "Teklifi kabul et arrow_forward",
+          "id": "acceptOfferBtn",
+          "functional": true,
+          "action": "ID-bound handler (#acceptOfferBtn)"
+        },
+        {
+          "text": "close Teklifi Reddet",
+          "id": "rejectOfferBtn",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 13,
+      "sid": "45350ca7f3de4ee6bedcde20b5a1b385",
+      "title": "Müşteri Teklif Reddetme & Geri Bildirim (SCR-C-OFFER-REJ)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> ea7af2d7"
+        },
+        {
+          "text": "help_outline",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (help_outline)"
+        },
+        {
+          "text": "cancel Teklifi Reddet",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('cancel')"
+        },
+        {
+          "text": "Vazgeç, Teklife Dön",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('vazgeç')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "checkbox",
+          "id": "keep_pool_active",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "rejection-note",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 14,
+      "sid": "1fc70722168942c4a1933cd9c641ad68",
+      "title": "Teklifleri Karşılaştır (Matris)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back_ios_new",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 994e3b4f"
+        },
+        {
+          "text": "tune Teklifleri düzenle (2/3)",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (tune Teklifleri düzenle (2/3))"
+        },
+        {
+          "text": "Teklifi incele chevron_right",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('incele')"
+        },
+        {
+          "text": "Teklifi incele chevron_right",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('incele')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 15,
+      "sid": "98cd20d6ab4e4f8fbc29bc462ce55cca",
+      "title": "Hizmet Profesyoneli Profili (SCR-05)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> ea7af2d7"
+        },
+        {
+          "text": "Tüm değerlendirmeleri gör chevron_right",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Tüm değerlendirmeleri gör chevron_right)"
+        },
+        {
+          "text": "arrow_back Teklife dön",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> ea7af2d7"
+        },
+        {
+          "text": "chat_bubble_outline Ustaya soru sor",
+          "id": "askMasterBtn",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": false
+    },
+    {
+      "step_num": 16,
+      "sid": "58f9993b5f444ff3a9f9361cb8d3b731",
+      "title": "Teklif Kabul Onayı (Güvence Havuzu)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> ea7af2d7"
+        },
+        {
+          "text": "chat Ustaya soru sor",
+          "id": "askQuestionBtn",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        },
+        {
+          "text": "Teklifi kabul et arrow_forward",
+          "id": "acceptOfferBtn",
+          "functional": true,
+          "action": "ID-bound handler (#acceptOfferBtn)"
+        },
+        {
+          "text": "Teklifi kabul et arrow_forward",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Vazgeç",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('vazgeç')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 17,
+      "sid": "1476367258dd4a7aa4b9cbda6b0091c0",
+      "title": "Güvence Havuzu Ödeme Hatası & 3D Secure (SCR-C-PAY-ERR)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 58f9993b"
+        },
+        {
+          "text": "help_outline",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (help_outline)"
+        },
+        {
+          "text": "credit_card Farklı Bir Kartla Tekrar Den",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (credit_card Farklı Bir Kartla Tekrar Dene)"
+        },
+        {
+          "text": "arrow_back Teklif Detayına Geri Dön",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('teklif')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 18,
+      "sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0",
+      "title": "Randevu Zamanı Seç (SCR-06)",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 58f9993b"
+        },
+        {
+          "text": "Bugün 14 Mayıs",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Yarın 15 Mayıs",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Perşembe 16 Mayıs",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Cuma 17 Mayıs",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Cumartesi 18 Mayıs",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "schedule 09:00 – 11:00",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "schedule 11:00 – 13:00",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "schedule 14:00 – 16:00",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "schedule 16:00 – 18:00",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Randevu talebi gönder arrow_forward",
+          "id": "submit-appointment-btn",
+          "functional": true,
+          "action": "Text-matched handler ('randevu')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 19,
+      "sid": "3bd2afe80ced4d2498ec9f16c7099326",
+      "title": "Randevu Talebi İletildi",
+      "role": "CUSTOMER",
+      "flow": "3. Teklif Karşılaştırma & Randevu",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "Talep detayına git arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('talep')"
+        },
+        {
+          "text": "Ana sayfaya dön",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 20,
+      "sid": "f3e7de808fdb49c18e3c5d430cb72528",
+      "title": "İş Alanı — Randevu Onaylandı",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "chat Mesajlar Mavi Hat Tesisat ile uygul",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (chat Mesajlar Mavi Hat Tesisat ile uygulama içinden iletişim kur chevron_right)"
+        },
+        {
+          "text": "checklist İş ilerlemesi Henüz başlamadı ",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (checklist İş ilerlemesi Henüz başlamadı Usta mekana ulaştığında aktifleşecek chevron_right)"
+        },
+        {
+          "text": "Randevuyu değiştir veya iptal et",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('değiştir')"
+        },
+        {
+          "text": "chat Ustaya mesaj gönder",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 21,
+      "sid": "c9aa92f5a4e04897952d05f30c2aef10",
+      "title": "Usta ile Mesajlaşma (SCR-07)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> f3e7de80"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "attach_file",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "photo_camera",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "send",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (send)"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": false
+    },
+    {
+      "step_num": 22,
+      "sid": "b89d998c02d34e67b8e8f34334f87f02",
+      "title": "İş Aşamaları ve İlerleme Takibi (SCR-08)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> f3e7de80"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "visibility",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "report_problem Usta ile ilgili bir sorun",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (report_problem Usta ile ilgili bir sorun mu var? Destek ekibine bildir)"
+        },
+        {
+          "text": "chat Ustaya Mesaj Gönder",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 23,
+      "sid": "6acc9307352f497ca6bd878d628c6a1a",
+      "title": "Randevu İptal / Değişiklik Talebi (SCR-09)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> f3e7de80"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "Randevuyu İptal Et",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "event_repeat Yeni Tarih İste",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (event_repeat Yeni Tarih İste)"
+        },
+        {
+          "text": "cancel İşi İptal Etmeyi Onayla",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('cancel')"
+        },
+        {
+          "text": "check_circle Vazgeç, Randevuyu Koru",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('vazgeç')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "optional-note",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 24,
+      "sid": "d485263b3ae244a9b35500665b5c759b",
+      "title": "İş Tamamlama ve Teslim Onayı (SCR-10)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> f3e7de80"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "İşi Onayla ve Değerlendirmeye Geç arrow_",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (İşi Onayla ve Değerlendirmeye Geç arrow_forward)"
+        },
+        {
+          "text": "report_problem İşte eksik veya sızıntı m",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (report_problem İşte eksik veya sızıntı mı var? Sorun bildir / Destek talep et)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 25,
+      "sid": "db8a1b368a7749cbb5fd6cf497f34de6",
+      "title": "Hizmet Değerlendirme ve Puanlama (SCR-11)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> d485263b"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "star",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "star",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "star",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "star",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "star",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "check Zamanında geldi",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "check Temiz işçilik",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "check Şeffaf fiyat",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "add Hızlı iletişim",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "check Güler yüzlü &amp; Saygılı",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Değerlendirmeyi Yayınla send",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Değerlendirmeyi Yayınla send)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [
+        {
+          "id": "review-notes",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 26,
+      "sid": "488f3698f93c454099ca2382585aeb66",
+      "title": "Şikayet ve Uyuşmazlık Bildirimi (SCR-12)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> d485263b"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "add_a_photo Kanıt Ekle",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "report Şikayet Dosyasını Oluştur (Destek",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (report Şikayet Dosyasını Oluştur (Destek Ekibine İlet) arrow_forward)"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "dispute_details",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 27,
+      "sid": "3bb4b954e5224b0097b2bee12be9bcbf",
+      "title": "Şikayet İletildi ve Durum Takibi (SCR-13)",
+      "role": "CUSTOMER",
+      "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "more_vert",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (more_vert)"
+        },
+        {
+          "text": "assignment_turned_in Taleplerime ve Ana ",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (assignment_turned_in Taleplerime ve Ana Sayfaya Dön)"
+        },
+        {
+          "text": "forum Mesaj Kayıtlarını Görüntüle",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('mesaj')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 28,
+      "sid": "20de80b8dc984e86be873761409a2396",
+      "title": "Müşteri Profil & Ayarlar (SCR-C-PROF)",
+      "role": "CUSTOMER",
+      "flow": "5. Müşteri Profil & Ayarlar",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cc1f5566"
+        },
+        {
+          "text": "notifications",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "edit",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "location_on Kayıtlı Adreslerim Ev: Kadık",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "verified_user BiTadilat Güvence Havuzu Ö",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (verified_user BiTadilat Güvence Havuzu Ödeme ve güvence sistemi bilgisi chevron_right)"
+        },
+        {
+          "text": "notifications_active Bildirim Tercihleri",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('uygulama')"
+        },
+        {
+          "text": "help_outline Yardım &amp; Destek Merkezi",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (help_outline Yardım &amp; Destek Merkezi SSS, canlı destek ve iletişim chevron_right)"
+        },
+        {
+          "text": "lock Gizlilik ve KVKK Veri güvenliği ve ",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (lock Gizlilik ve KVKK Veri güvenliği ve aydınlatma metni chevron_right)"
+        },
+        {
+          "text": "Usta Modu arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('usta')"
+        },
+        {
+          "text": "logout Çıkış Yap",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        },
+        {
+          "text": "home Ana Sayfa",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "build Taleplerim",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "chat Mesajlar",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        },
+        {
+          "text": "person Profil",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('profil')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 29,
+      "sid": "a512d0928f11b9cb02877746d580c548",
+      "title": "Usta Kayıt & Belge Yükleme (SCR-P-ONB)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "btn-back",
+          "functional": true,
+          "action": "Universal Back Button -> 0c06b06e"
+        },
+        {
+          "text": "add İlçe Ekle",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Değiştir",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('değiştir')"
+        },
+        {
+          "text": "Dosya Seç",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Dosya Seç",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Başvuruyu İncelemeye Gönder arrow_forwar",
+          "id": "btn-submit-pro",
+          "functional": true,
+          "action": "Text-matched handler ('gönder')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 30,
+      "sid": "def294a930bf4bb78f7ba4f857611884",
+      "title": "Usta Belge İncelemede Bekleme (SCR-P-PENDING)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "support_agent",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (support_agent)"
+        },
+        {
+          "text": "logout",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        },
+        {
+          "text": "Örnek Taleplere Göz At (Demo Modu) arrow",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('demo')"
+        },
+        {
+          "text": "home Müşteri Moduna Geç",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "headset_mic Sorularınız için Usta Destek",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (headset_mic Sorularınız için Usta Destek Hattı ile görüşün)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 31,
+      "sid": "11b9cb02877746d580c5484512d0928f",
+      "title": "Usta Eşleşen Talepler Akışı (SCR-14)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "notifications",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "location_on Kadıköy, Üsküdar keyboard_ar",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Tümü 4",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Acil (1)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Planlı (3)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "tune Sırala",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (tune Sırala)"
+        },
+        {
+          "text": "Teklif Hazırla arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('teklif')"
+        },
+        {
+          "text": "Detayları İncele visibility",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Detayları İncele",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 32,
+      "sid": "b9086f1030784def8eb267fd9110addd",
+      "title": "Usta Teklif Hazırlama (SCR-15)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 11b9cb02"
+        },
+        {
+          "text": "schedule Bugün, 14:00 – 16:00 arası Rand",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('randevu')"
+        },
+        {
+          "text": "Yapılandırılmış Teklifi Gönder (₺2.450) ",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('gönder')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "labor-cost",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "text",
+          "id": "material-cost",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 33,
+      "sid": "82f9d783b88b40ec8ca6260566c0f5cb",
+      "title": "Usta Teklif Gönderildi Onayı (SCR-16)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "Eşleşen Talepler Akışına Dön arrow_forwa",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Eşleşen Talepler Akışına Dön arrow_forward)"
+        },
+        {
+          "text": "Profil ve Müsaitlik Ayarlarını Aç",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('profil')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 34,
+      "sid": "fc6f0f8e9b724365a5a0f124617dbe7a",
+      "title": "Usta Profil & Müsaitlik Yönetimi (SCR-17)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 11b9cb02"
+        },
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "close",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "add_location_alt + İlçe Ekle veya Çıkar",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "save Ayarları ve Müsaitliği Güncelle",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('güncelle')"
+        },
+        {
+          "text": "switch_account Müşteri Moduna Geç",
+          "id": "btn-switch-to-customer",
+          "functional": true,
+          "action": "ID-bound handler (#btn-switch-to-customer)"
+        },
+        {
+          "text": "logout Çıkış Yap",
+          "id": "btn-pro-logout",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "radio",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        },
+        {
+          "type": "checkbox",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [
+        {
+          "id": "usta_bio",
+          "functional": true,
+          "simulated_input": "Tested with multi-line descriptive text"
+        }
+      ],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 35,
+      "sid": "8ba8c346d11c46f39163fd6ebf06dae1",
+      "title": "Usta İş Yürütme & Aşama Yönetimi (SCR-18)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 11b9cb02"
+        },
+        {
+          "text": "directions Haritada Yol Tarifi Al",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "chat Müşteriye Mesaj Yaz",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('chat')"
+        },
+        {
+          "text": "Yükle",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "İşi Bitirdim (Müşteriye Teslim Talebi Gö",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('bitirdim')"
+        },
+        {
+          "text": "warning Sahada bir anlaşmazlık mı var? D",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (warning Sahada bir anlaşmazlık mı var? Durum Bildir / Destek İste)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 36,
+      "sid": "dbf40b28dba64bd1bedb40e075662c42",
+      "title": "Usta Randevu İptali Bildirimi (SCR-P-CANCEL)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "arrow_back",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> 11b9cb02"
+        },
+        {
+          "text": "help_outline",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (help_outline)"
+        },
+        {
+          "text": "Yeni İş Fırsatlarına Git arrow_forward",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Yeni İş Fırsatlarına Git arrow_forward)"
+        },
+        {
+          "text": "chat_bubble_outline Müşteri ile Mesajlaş",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 37,
+      "sid": "c6ebf06dae18ba8c346d11c46f39163f",
+      "title": "Usta Teslim Bildirimi İletildi (SCR-P-DONE)",
+      "role": "PRO",
+      "flow": "6. Hizmet Profesyoneli (Usta)",
+      "buttons_status": [
+        {
+          "text": "close",
+          "id": "btn-close",
+          "functional": true,
+          "action": "Text-matched handler ('close')"
+        },
+        {
+          "text": "Eşleşen Talepler Akışına Dön arrow_forwa",
+          "id": "btn-return-feed",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Eşleşen Talepler Akışına Dön arrow_forward)"
+        },
+        {
+          "text": "Müsaitlik ve Profil Ayarlarını Aç",
+          "id": "btn-goto-availability",
+          "functional": true,
+          "action": "Text-matched handler ('müsaitlik')"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 38,
+      "sid": "612429fdea1b42a1bf9e628883f7e58f",
+      "title": "Yönetici Web: Belge İnceleme (SCR-19)",
+      "role": "ADMIN",
+      "flow": "7. Yönetici Portalı & Web",
+      "buttons_status": [
+        {
+          "text": "logout Çıkış Yap",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        },
+        {
+          "text": "refresh",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Tümü (3)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Acil Tesisat",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Elektrik",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Elektrik)"
+        },
+        {
+          "text": "zoom_in Tam Ekran",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "check_circle Profili Onayla ve Yayına Al",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('onayla')"
+        },
+        {
+          "text": "cancel Başvuruyu Reddet",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('cancel')"
+        },
+        {
+          "text": "history_edu Eksik Belge Talebi İlet",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('belge')"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 39,
+      "sid": "cb00d67723e34ec990786a82d25c77ca",
+      "title": "Yönetici Web: Şikayet Merkezi (SCR-20)",
+      "role": "ADMIN",
+      "flow": "7. Yönetici Portalı & Web",
+      "buttons_status": [
+        {
+          "text": "logout Çıkış Yap",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        },
+        {
+          "text": "refresh",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Tümü (3)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "No-Show (1)",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Ücret İtirazı",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Şikayeti Reddet / Kapat",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('reddet')"
+        },
+        {
+          "text": "send Ustaya Resmi İhtar Gönder",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (send Ustaya Resmi İhtar Gönder)"
+        },
+        {
+          "text": "gavel İşi İptal Et (Uyuşmazlığı Müşteri ",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 40,
+      "sid": "5ce8968e2703443ca129c0e7c9e9d145",
+      "title": "Yönetici Web: Hesap Yönetimi (SCR-21)",
+      "role": "ADMIN",
+      "flow": "7. Yönetici Portalı & Web",
+      "buttons_status": [
+        {
+          "text": "logout Çıkış Yap",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('logout')"
+        },
+        {
+          "text": "refresh",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Detay Gör",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('detay')"
+        },
+        {
+          "text": "Askıya Al",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Detay Gör",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('detay')"
+        },
+        {
+          "text": "Askıya Al",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "İncele",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "Yeniden Aktifleştir",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (Yeniden Aktifleştir)"
+        },
+        {
+          "text": "Detay Gör",
+          "id": "",
+          "functional": true,
+          "action": "Text-matched handler ('detay')"
+        },
+        {
+          "text": "Askıya Al",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "chevron_left",
+          "id": "",
+          "functional": true,
+          "action": "Universal Back Button -> cb00d677"
+        },
+        {
+          "text": "1",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "2",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "3",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "72",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        },
+        {
+          "text": "chevron_right",
+          "id": "",
+          "functional": false,
+          "action": "Unbound"
+        }
+      ],
+      "inputs_status": [
+        {
+          "type": "text",
+          "id": "",
+          "functional": true,
+          "simulated_input": "Tested with mock user keystrokes"
+        }
+      ],
+      "textareas_status": [],
+      "has_back_nav": true,
+      "has_forward_nav": true
+    },
+    {
+      "step_num": 41,
+      "sid": "164cd33666284338b929a8325dc5ea20",
+      "title": "BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)",
+      "role": "WEB",
+      "flow": "7. Yönetici Portalı & Web",
+      "buttons_status": [
+        {
+          "text": "TR",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (TR)"
+        },
+        {
+          "text": "EN",
+          "id": "",
+          "functional": true,
+          "action": "UI Action / Secondary Modal Trigger (EN)"
+        }
+      ],
+      "inputs_status": [],
+      "textareas_status": [],
+      "has_back_nav": false,
+      "has_forward_nav": false
+    }
+  ]
+}

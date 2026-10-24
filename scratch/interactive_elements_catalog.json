@@ -1,0 +1,2475 @@
+[
+  {
+    "step_num": 1,
+    "id": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "title": "Hoş Geldiniz & Rol Seçimi (SCR-01)",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "buttons": [
+      {
+        "text": "TR",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1 text-label-sm font-label-sm bg-primary-container text-on-primary rounded-full transition-all\" type=\"button\""
+      },
+      {
+        "text": "EN",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1 text-label-sm font-label-sm text-text-secondary rounded-full hover:text-on-surface transition-all\" type=\"button\""
+      },
+      {
+        "text": "smartphone Telefon numarasıyla devam et",
+        "aria_label": null,
+        "id": "btn-continue",
+        "attrs": " id=\"btn-continue\" disabled=\"disabled\" class=\"w-full h-[52px] bg-[#E9EEEB] text-[#5F6F73] font-body-lg-medium text-body-lg-medium rounded-xl flex items-center justify-center gap-2 transition-all cursor-not-allowed select-none\" type=\"button\""
+      },
+      {
+        "text": "Giriş yap",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"text-body-md-medium font-body-md-medium text-primary hover:underline focus:outline-none\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Kullanım Koşulları",
+        "href": "#"
+      },
+      {
+        "text": "Gizlilik Politikası",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 2,
+    "id": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+    "title": "Telefon Doğrulama",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-2 inline-flex items-center justify-center rounded-full text-on-surface active:bg-surface-disabled transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "🇹🇷 +90 keyboard_arrow_down",
+        "aria_label": "Ülke kodu seç",
+        "id": null,
+        "attrs": " aria-label=\"Ülke kodu seç\" class=\"flex items-center gap-1.5 pr-2 focus:outline-none select-none text-left\" type=\"button\""
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "aria_label": null,
+        "id": "submit-btn",
+        "attrs": " class=\"w-full h-[52px] bg-primary-container active:bg-dark-teal text-on-primary rounded-[14px] font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm transition-colors duration-150 cursor-pointer\" id=\"submit-btn\" type=\"submit\""
+      },
+      {
+        "text": "arrow_back Numaranı mı değiştirmek istiyorsun? Geri dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"font-body-md-medium text-body-md-medium text-text-secondary hover:text-primary-container active:opacity-70 transition-colors py-2 px-3 inline-flex items-center gap-1.5\" onclick=\"history.back()\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "tel",
+        "id": "phone-input",
+        "placeholder": "5XX XXX XX XX",
+        "value": "532 849 20 11"
+      }
+    ],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Gizlilik Politikası",
+        "href": "#"
+      },
+      {
+        "text": "Aydınlatma Metni",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 3,
+    "id": "42c148a1fb25400ca549481fa6abe01f",
+    "title": "SMS Doğrulama Kodu",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-2 inline-flex items-center justify-center rounded-full text-on-surface active:bg-surface-disabled transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "edit Telefon numarasını değiştir",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 text-primary-container font-body-md-medium text-body-md-medium py-1.5 px-3 rounded-lg hover:bg-surface-container-low transition-colors active:scale-95\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "Doğrula arrow_forward",
+        "aria_label": null,
+        "id": "verify-submit-btn",
+        "attrs": " class=\"w-full h-[52px] bg-surface-disabled text-text-secondary font-body-lg-medium text-body-lg-medium rounded-xl flex items-center justify-center gap-2 transition-all cursor-not-allowed disabled:pointer-events-none shadow-none\" id=\"verify-submit-btn\" type=\"button\" disabled=\"\""
+      },
+      {
+        "text": "replay Tekrar SMS Kodu Gönder",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"font-body-md-medium text-body-md-medium text-primary underline underline-offset-2 flex items-center gap-1.5\" onclick=\"location.reload()\""
+      },
+      {
+        "text": "refresh Tekrar Kod Gönder",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-surface shadow-sm text-primary font-body-md-medium text-body-md-medium hover:bg-surface-container-low transition-colors active:scale-95 border border-border-subtle/50\" onclick=\"location.reload()\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      },
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      },
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      },
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      },
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      },
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": null,
+        "value": ""
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 4,
+    "id": "cc1f55661a1a4036a890b43d9f15596a",
+    "title": "Müşteri Ana Sayfası (SCR-03)",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "notifications",
+        "aria_label": "Bildirimler",
+        "id": null,
+        "attrs": " aria-label=\"Bildirimler\" class=\"w-11 h-11 flex items-center justify-center text-text-secondary hover:text-on-surface transition-colors rounded-full\""
+      },
+      {
+        "text": "Talep oluşturmaya başla arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"mt-space-lg w-full h-[52px] rounded-[14px] bg-primary-container hover:bg-dark-teal active:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-space-sm transition-colors shadow-sm focus:outline-none\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "home Ana sayfa",
+        "href": "#"
+      },
+      {
+        "text": "assignment Taleplerim",
+        "href": "#"
+      },
+      {
+        "text": "chat_bubble_outline Mesajlar",
+        "href": "#"
+      },
+      {
+        "text": "person_outline Profil",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 5,
+    "id": "44c003fee81d4a188f187608554efdd5",
+    "title": "Talep Adım 1/4: Hizmet & Öncelik (SCR-02)",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 flex items-center justify-center text-on-surface rounded-full hover:bg-surface-disabled/50 transition-colors\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "plumbing Tesisat Su, kaçak, tıkanıklık check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"tesisat\" data-label=\"Tesisat\" type=\"button\""
+      },
+      {
+        "text": "bolt Elektrik Sigorta, hat, montaj check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"elektrik\" data-label=\"Elektrik\" type=\"button\""
+      },
+      {
+        "text": "format_paint Boya &amp; Badana İç cephe, alçı tamir check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"boya\" data-label=\"Boya &amp; badana\" type=\"button\""
+      },
+      {
+        "text": "mode_fan Klima Bakım, gaz, arıza check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"klima\" data-label=\"Klima\" type=\"button\""
+      },
+      {
+        "text": "shower Banyo Yenileme Fayans, duşakabin check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"banyo\" data-label=\"Banyo yenileme\" type=\"button\""
+      },
+      {
+        "text": "countertops Mutfak Yenileme Tezgah, dolap montaj check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"mutfak\" data-label=\"Mutfak yenileme\" type=\"button\""
+      },
+      {
+        "text": "carpenter Marangozluk Ahşap kapı, mobilya check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"marangoz\" data-label=\"Marangozluk\" type=\"button\""
+      },
+      {
+        "text": "grid_view Diğer Farklı uzmanlıklar check",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"category-card relative flex items-center gap-3 p-3 rounded-xl bg-surface text-left shadow-sm transition-all duration-150 active:scale-[0.98]\" data-category=\"diger\" data-label=\"Diğer\" type=\"button\""
+      },
+      {
+        "text": "crisis_alert Acil onarım Hızlı Usta Bugün veya en kısa sürede çözülmesi gereken acil arızalar ve müdahaleler için.",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"urgency-card relative w-full p-4 rounded-xl bg-surface text-left shadow-sm flex items-start gap-3.5 transition-all duration-150 active:scale-[0.99]\" data-urgency=\"acil\" type=\"button\""
+      },
+      {
+        "text": "event_note Planlı yenileme Randevulu Tarih belirleyerek keşif ve teklif adımlarıyla ilerlemek istediğin kapsamlı işler için.",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"urgency-card relative w-full p-4 rounded-xl bg-surface text-left shadow-sm flex items-start gap-3.5 transition-all duration-150 active:scale-[0.99]\" data-urgency=\"planli\" type=\"button\""
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "aria_label": null,
+        "id": "wizard-primary-cta",
+        "attrs": " class=\"w-full h-[52px] hover:bg-dark-teal font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-space-xs shadow-[0_4px_16px_rgba(16,42,52,0.08)] transition-colors bg-surface-disabled text-text-secondary pointer-events-none\" id=\"wizard-primary-cta\" disabled=\"true\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "service-search-input",
+        "placeholder": "Hizmet ara",
+        "value": null
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 6,
+    "id": "b3c3c2845017451fb1b85b89f04fd4b8",
+    "title": "Talep Adım 2/4: Konum & İş Detayı",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 flex items-center justify-center text-on-surface rounded-full hover:bg-surface-disabled/50 transition-colors\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "pin_drop İlçe seç expand_more",
+        "aria_label": null,
+        "id": "district-trigger",
+        "attrs": " class=\"w-full h-[52px] bg-surface rounded-xl px-space-lg flex items-center justify-between text-left hover:bg-canvas transition-colors shadow-sm\" id=\"district-trigger\" type=\"button\""
+      },
+      {
+        "text": "my_location Mevcut konumumu kullan",
+        "aria_label": null,
+        "id": "use-gps-btn",
+        "attrs": " class=\"h-12 w-full rounded-xl bg-surface-container-low hover:bg-surface-container text-primary-container font-body-md-medium text-body-md-medium flex items-center justify-center gap-space-sm transition-colors active:scale-[0.99]\" id=\"use-gps-btn\" type=\"button\""
+      },
+      {
+        "text": "add Ne zamandır var?",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"prompt-chip h-8 px-3 rounded-full bg-canvas hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors active:scale-95 text-left\" data-prompt=\"Sorun yaklaşık 2 gündür devam ediyor.\" type=\"button\""
+      },
+      {
+        "text": "add Su akışı kesildi mi?",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"prompt-chip h-8 px-3 rounded-full bg-canvas hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors active:scale-95 text-left\" data-prompt=\"Ana vanadan su akışı henüz kesilmedi.\" type=\"button\""
+      },
+      {
+        "text": "add Farklı odaları etkiledi mi?",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"prompt-chip h-8 px-3 rounded-full bg-canvas hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors active:scale-95 text-left\" data-prompt=\"Alt kata veya diğer odalara sızma bulunmuyor.\" type=\"button\""
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "aria_label": null,
+        "id": "wizard-primary-cta",
+        "attrs": " class=\"w-full h-[52px] hover:bg-dark-teal font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-space-xs shadow-[0_4px_16px_rgba(16,42,52,0.08)] transition-colors bg-surface-disabled text-text-secondary pointer-events-none\" disabled=\"true\" id=\"wizard-primary-cta\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [
+      {
+        "id": "task-description",
+        "placeholder": "Örnek: Banyodaki lavabo altından su sızıyor. Bugün içinde kontrol edilmesini istiyorum.",
+        "initial_text": ""
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 7,
+    "id": "585d649f4ea046ffa70e4cb481ddd030",
+    "title": "Talep Adım 3/4: Fotoğraflar & Ek Bilgi",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 flex items-center justify-center text-on-surface rounded-full hover:bg-surface-disabled/50 transition-colors\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "aria_label": null,
+        "id": "wizard-primary-cta",
+        "attrs": " class=\"w-full h-[52px] hover:bg-dark-teal font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-space-xs shadow-[0_4px_16px_rgba(16,42,52,0.08)] transition-colors bg-primary-container text-on-primary cursor-pointer\" id=\"wizard-primary-cta\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "file",
+        "id": "photo-input",
+        "placeholder": null,
+        "value": null
+      }
+    ],
+    "textareas": [
+      {
+        "id": "extra-notes",
+        "placeholder": "Örneğin: Apartman görevlisiyle görüşülebilir, giriş katında, vana balkonda yer alıyor…",
+        "initial_text": ""
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 8,
+    "id": "a0949c91cbe34557b16273c8e91d067a",
+    "title": "Talep Adım 4/4: Talebi Gözden Geçir",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 flex items-center justify-center text-on-surface rounded-full hover:bg-surface-disabled/50 transition-colors\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "Düzenle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " data-nav-target=\"44c003fee81d4a188f187608554efdd5\" class=\"font-label-md text-label-md text-primary-container hover:underline cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "Düzenle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " data-nav-target=\"b3c3c2845017451fb1b85b89f04fd4b8\" class=\"font-label-md text-label-md text-primary-container hover:underline cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "Düzenle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " data-nav-target=\"585d649f4ea046ffa70e4cb481ddd030\" class=\"font-label-md text-label-md text-primary-container hover:underline cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "Düzenle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " data-nav-target=\"585d649f4ea046ffa70e4cb481ddd030\" class=\"font-label-md text-label-md text-primary-container hover:underline cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "Talebi yayınla check",
+        "aria_label": null,
+        "id": "wizard-primary-cta",
+        "attrs": " class=\"w-full h-[52px] hover:bg-dark-teal font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-space-xs shadow-[0_4px_16px_rgba(16,42,52,0.08)] transition-colors bg-primary-container text-on-primary cursor-pointer\" id=\"wizard-primary-cta\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 9,
+    "id": "94a730cef5374f2ab9632d9acf0d7e19",
+    "title": "Talep Yayınlandı — Teklif Bekleniyor",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center text-primary active:scale-95 transition-transform\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "Taleplerime git arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container text-on-primary rounded-xl font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 active:bg-dark-teal transition-all shadow-sm\" type=\"button\""
+      },
+      {
+        "text": "Ana sayfaya dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full py-2.5 mt-1 text-center font-body-md-medium text-body-md-medium text-primary active:opacity-75\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 10,
+    "id": "86fe79e681034183a8681bb0d2893e29",
+    "title": "Müşteri Taleplerim Listesi (SCR-C-REQ)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high active:scale-95 transition-all duration-150 text-primary\""
+      },
+      {
+        "text": "help_outline",
+        "aria_label": "Yardım",
+        "id": null,
+        "attrs": " aria-label=\"Yardım\" class=\"w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high active:scale-95 transition-all duration-150 text-text-secondary\""
+      },
+      {
+        "text": "Aktif Talepler 1",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-current=\"page\" class=\"flex-1 py-2.5 px-3 rounded-lg bg-primary-container text-white text-body-md-medium font-body-md-medium text-center shadow-sm transition-all duration-150 flex items-center justify-center gap-1.5\""
+      },
+      {
+        "text": "Geçmiş İşler 2",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-2.5 px-3 rounded-lg text-text-secondary hover:text-primary transition-all duration-150 text-body-md-medium font-body-md-medium text-center flex items-center justify-center gap-1.5\""
+      },
+      {
+        "text": "Gelen Teklifleri Gör (3) arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal text-white rounded-[14px] text-body-lg-medium font-body-lg-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] transition-all duration-150\""
+      },
+      {
+        "text": "build + Yeni Onarım Talebi Başlat Usta tekliflerini 15 dakikada al arrow_forward_ios",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full bg-surface border-2 border-dashed border-border-subtle hover:border-primary-container/40 rounded-2xl p-4 flex items-center justify-between text-left group transition-all duration-150\""
+      },
+      {
+        "text": "Tümünü Gör (2)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"text-label-md font-label-md text-primary-container font-semibold hover:underline\""
+      },
+      {
+        "text": "Detayları İncele chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1 text-body-md-medium font-body-md-medium text-primary-container hover:text-dark-teal transition-colors py-2 px-3 rounded-lg hover:bg-canvas\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "home Ana Sayfa",
+        "href": "#ana-sayfa"
+      },
+      {
+        "text": "build Taleplerim",
+        "href": "#taleplerim"
+      },
+      {
+        "text": "chat_bubble_outline Mesajlar",
+        "href": "#mesajlar"
+      },
+      {
+        "text": "person Profil",
+        "href": "#profil"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 11,
+    "id": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "title": "Gelen Teklifler Listesi (SCR-04)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri dön\" class=\"w-11 h-11 flex items-center justify-center rounded-full text-primary-container hover:bg-surface-disabled transition-colors\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "notifications",
+        "aria_label": "Bildirimler",
+        "id": null,
+        "attrs": " aria-label=\"Bildirimler\" class=\"w-11 h-11 flex items-center justify-center rounded-full text-primary-container hover:bg-surface-disabled transition-colors relative\" type=\"button\""
+      },
+      {
+        "text": "swap_vert Önerilen sıralama expand_more",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 px-3 py-2 bg-surface rounded-xl shadow-sm text-on-surface font-body-md-medium text-body-md-medium hover:bg-surface-disabled transition-colors\" type=\"button\""
+      },
+      {
+        "text": "tune",
+        "aria_label": "Filtrele",
+        "id": null,
+        "attrs": " aria-label=\"Filtrele\" class=\"w-9 h-9 flex items-center justify-center rounded-xl bg-surface text-on-surface hover:bg-surface-disabled shadow-sm transition-colors\" type=\"button\""
+      },
+      {
+        "text": "Teklifi İncele chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[46px] rounded-xl bg-surface text-primary-container font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-1.5 shadow-sm hover:bg-surface-container-low transition-colors\" type=\"button\""
+      },
+      {
+        "text": "Teklifi İncele chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[46px] rounded-xl bg-surface text-primary-container font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-1.5 shadow-sm hover:bg-surface-container-low transition-colors\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 12,
+    "id": "ea7af2d7298b4b6cb24e4603935503f0",
+    "title": "Teklif Detayı & Kapsam",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center text-primary active:text-dark-teal transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "chat Ustaya soru sor",
+        "aria_label": null,
+        "id": "askQuestionBtn",
+        "attrs": " class=\"w-full h-[52px] bg-surface rounded-[14px] text-primary-container font-body-lg-medium text-body-lg-medium shadow-sm active:bg-surface-container-low transition-colors flex items-center justify-center gap-space-xs\" id=\"askQuestionBtn\" type=\"button\""
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "aria_label": null,
+        "id": "acceptOfferBtn",
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium rounded-[14px] shadow-sm flex items-center justify-center gap-space-xs transition-colors\" id=\"acceptOfferBtn\" type=\"button\""
+      },
+      {
+        "text": "close Teklifi Reddet",
+        "aria_label": null,
+        "id": "rejectOfferBtn",
+        "attrs": " class=\"w-full mt-2 h-10 bg-transparent hover:bg-surface-disabled text-alert-red font-label-md text-label-md rounded-lg flex items-center justify-center gap-1 transition-colors\" id=\"rejectOfferBtn\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Profili görüntüle chevron_right",
+        "href": "javascript:void(0)"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 13,
+    "id": "45350ca7f3de4ee6bedcde20b5a1b385",
+    "title": "Müşteri Teklif Reddetme & Geri Bildirim (SCR-C-OFFER-REJ)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-primary hover:bg-canvas active:scale-95 transition-all duration-150\" type=\"button\""
+      },
+      {
+        "text": "help_outline",
+        "aria_label": "Destek",
+        "id": null,
+        "attrs": " aria-label=\"Destek\" class=\"w-10 h-10 -mr-1 rounded-full flex items-center justify-center text-text-secondary hover:bg-canvas active:scale-95 transition-all duration-150\" type=\"button\""
+      },
+      {
+        "text": "cancel Teklifi Reddet",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-alert-red hover:bg-[#A32F24] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all duration-150\" type=\"button\""
+      },
+      {
+        "text": "Vazgeç, Teklife Dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-surface hover:bg-canvas active:scale-[0.98] border-[1.5px] border-border-subtle hover:border-primary-container text-primary font-body-lg-medium text-body-lg-medium rounded-xl flex items-center justify-center transition-all duration-150\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "price"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "schedule"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "another_offer"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "no_longer_needed"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "other"
+      },
+      {
+        "type": "checkbox",
+        "id": "keep_pool_active",
+        "placeholder": null,
+        "value": null
+      }
+    ],
+    "textareas": [
+      {
+        "id": "rejection-note",
+        "placeholder": "Geri bildiriminiz ustanın tekliflerini iyileştirmesine yardımcı olur... (Örn: Malzeme hariç fiyatlandırma tercihim vardı)",
+        "initial_text": ""
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 14,
+    "id": "1fc70722168942c4a1933cd9c641ad68",
+    "title": "Teklifleri Karşılaştır (Matris)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back_ios_new",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center text-primary-container active:scale-95 transition-transform\" onclick=\"history.back()\""
+      },
+      {
+        "text": "tune Teklifleri düzenle (2/3)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface text-primary-container shadow-sm active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "Teklifi incele chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 px-3 bg-surface-container-lowest text-primary-container font-body-md-medium text-body-md-medium font-semibold rounded-xl shadow-sm active:bg-surface-container-low transition-colors flex items-center justify-center gap-1\" type=\"button\""
+      },
+      {
+        "text": "Teklifi incele chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 px-3 bg-surface-container-lowest text-primary-container font-body-md-medium text-body-md-medium font-semibold rounded-xl shadow-sm active:bg-surface-container-low transition-colors flex items-center justify-center gap-1\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 15,
+    "id": "98cd20d6ab4e4f8fbc29bc462ce55cca",
+    "title": "Hizmet Profesyoneli Profili (SCR-05)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center rounded-full text-on-surface hover:bg-surface-dim/40 transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "Tüm değerlendirmeleri gör chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full mt-space-md py-space-sm flex items-center justify-center gap-1 text-primary-container font-body-md-medium text-body-md-medium hover:opacity-80 transition-opacity\" type=\"button\""
+      },
+      {
+        "text": "arrow_back Teklife dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container text-on-primary rounded-xl font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 active:bg-dark-teal transition-colors shadow-sm\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "chat_bubble_outline Ustaya soru sor",
+        "aria_label": null,
+        "id": "askMasterBtn",
+        "attrs": " class=\"w-full h-11 text-primary-container font-body-md-medium text-body-md-medium flex items-center justify-center gap-1.5 active:opacity-75 transition-opacity\" id=\"askMasterBtn\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 16,
+    "id": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "title": "Teklif Kabul Onayı (Güvence Havuzu)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center text-primary active:text-dark-teal transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "chat Ustaya soru sor",
+        "aria_label": null,
+        "id": "askQuestionBtn",
+        "attrs": " class=\"w-full h-[52px] bg-surface rounded-[14px] text-primary-container font-body-lg-medium text-body-lg-medium shadow-sm active:bg-surface-container-low transition-colors flex items-center justify-center gap-space-xs\" id=\"askQuestionBtn\" type=\"button\""
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "aria_label": null,
+        "id": "acceptOfferBtn",
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium rounded-[14px] shadow-sm flex items-center justify-center gap-space-xs transition-colors\" id=\"acceptOfferBtn\" type=\"button\""
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium rounded-[14px] shadow-sm flex items-center justify-center gap-space-xs transition-colors\" type=\"button\""
+      },
+      {
+        "text": "Vazgeç",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full py-2.5 text-center text-text-secondary hover:text-on-surface font-body-md-medium text-body-md transition-colors\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Profili görüntüle chevron_right",
+        "href": "javascript:void(0)"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 17,
+    "id": "1476367258dd4a7aa4b9cbda6b0091c0",
+    "title": "Güvence Havuzu Ödeme Hatası & 3D Secure (SCR-C-PAY-ERR)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-disabled active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "help_outline",
+        "aria_label": "Destek ve Yardım",
+        "id": null,
+        "attrs": " aria-label=\"Destek ve Yardım\" class=\"w-10 h-10 -mr-2 rounded-full flex items-center justify-center text-text-secondary hover:bg-surface-disabled active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "credit_card Farklı Bir Kartla Tekrar Dene",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal text-white rounded-[14px] font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] transition-all\" type=\"button\""
+      },
+      {
+        "text": "arrow_back Teklif Detayına Geri Dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-surface hover:bg-canvas text-primary-container border-[1.5px] border-primary-container rounded-[14px] font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "headset_mic Bankanızla veya BiTadilat Destek ile Görüşün",
+        "href": "#destek"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 18,
+    "id": "7c6ec3a02d3347a997a3fc5b1a2c91d0",
+    "title": "Randevu Zamanı Seç (SCR-06)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri dön\" class=\"w-11 h-11 flex items-center justify-center -ml-2 text-primary hover:text-dark-teal transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "Bugün 14 Mayıs",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"date-card flex-shrink-0 w-[84px] h-[92px] rounded-xl bg-surface p-2.5 flex flex-col justify-between items-center text-center shadow-sm transition-all focus:outline-none\" data-date=\"14-mayis\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "Yarın 15 Mayıs",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"date-card flex-shrink-0 w-[84px] h-[92px] rounded-xl bg-surface p-2.5 flex flex-col justify-between items-center text-center shadow-sm transition-all focus:outline-none\" data-date=\"15-mayis\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "Perşembe 16 Mayıs",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"date-card flex-shrink-0 w-[84px] h-[92px] rounded-xl bg-surface p-2.5 flex flex-col justify-between items-center text-center shadow-sm transition-all focus:outline-none\" data-date=\"16-mayis\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "Cuma 17 Mayıs",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"date-card flex-shrink-0 w-[84px] h-[92px] rounded-xl bg-surface p-2.5 flex flex-col justify-between items-center text-center shadow-sm transition-all focus:outline-none\" data-date=\"17-mayis\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "Cumartesi 18 Mayıs",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"date-card flex-shrink-0 w-[84px] h-[92px] rounded-xl bg-surface p-2.5 flex flex-col justify-between items-center text-center shadow-sm transition-all focus:outline-none\" data-date=\"18-mayis\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "schedule 09:00 – 11:00",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"time-slot-btn h-[52px] bg-surface rounded-xl px-space-md flex items-center justify-between shadow-sm transition-all text-left focus:outline-none\" data-time=\"09:00 - 11:00\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "schedule 11:00 – 13:00",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"time-slot-btn h-[52px] bg-surface rounded-xl px-space-md flex items-center justify-between shadow-sm transition-all text-left focus:outline-none\" data-time=\"11:00 - 13:00\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "schedule 14:00 – 16:00",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"time-slot-btn h-[52px] bg-surface rounded-xl px-space-md flex items-center justify-between shadow-sm transition-all text-left focus:outline-none\" data-time=\"14:00 - 16:00\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "schedule 16:00 – 18:00",
+        "aria_label": null,
+        "id": null,
+        "attrs": " aria-checked=\"false\" class=\"time-slot-btn h-[52px] bg-surface rounded-xl px-space-md flex items-center justify-between shadow-sm transition-all text-left focus:outline-none\" data-time=\"16:00 - 18:00\" role=\"radio\" type=\"button\""
+      },
+      {
+        "text": "Randevu talebi gönder arrow_forward",
+        "aria_label": null,
+        "id": "submit-appointment-btn",
+        "attrs": " aria-disabled=\"true\" class=\"w-full h-[52px] rounded-xl font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 transition-all duration-200 bg-surface-disabled text-text-secondary cursor-not-allowed\" disabled=\"\" id=\"submit-appointment-btn\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 19,
+    "id": "3bd2afe80ced4d2498ec9f16c7099326",
+    "title": "Randevu Talebi İletildi",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-11 h-11 flex items-center justify-center text-primary rounded-xl active:bg-surface-disabled transition-colors\" onclick=\"history.back()\""
+      },
+      {
+        "text": "Talep detayına git arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] rounded-[14px] bg-primary-container text-on-primary font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm active:bg-dark-teal transition-colors\" type=\"button\""
+      },
+      {
+        "text": "Ana sayfaya dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full py-2.5 flex items-center justify-center font-body-md-medium text-body-md-medium text-text-secondary active:text-on-surface transition-colors\" onclick=\"history.back()\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 20,
+    "id": "f3e7de808fdb49c18e3c5d430cb72528",
+    "title": "İş Alanı — Randevu Onaylandı",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-11 h-11 -ml-space-xs flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-low transition-colors active:scale-95\" onclick=\"history.back()\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Daha Fazla Seçenek",
+        "id": null,
+        "attrs": " aria-label=\"Daha Fazla Seçenek\" class=\"w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-low transition-colors active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "chat Mesajlar Mavi Hat Tesisat ile uygulama içinden iletişim kur chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full text-left bg-surface rounded-xl shadow-sm p-space-lg flex items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors active:scale-[0.99]\" type=\"button\""
+      },
+      {
+        "text": "checklist İş ilerlemesi Henüz başlamadı Usta mekana ulaştığında aktifleşecek chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full text-left bg-surface rounded-xl shadow-sm p-space-lg flex items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors active:scale-[0.99]\" type=\"button\""
+      },
+      {
+        "text": "Randevuyu değiştir veya iptal et",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"font-body-md-medium text-body-md-medium text-text-secondary hover:text-alert-red underline underline-offset-4 decoration-dotted transition-colors py-2 active:opacity-75\" type=\"button\""
+      },
+      {
+        "text": "chat Ustaya mesaj gönder",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:scale-[0.98] text-on-primary rounded-xl font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm transition-all\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 21,
+    "id": "c9aa92f5a4e04897952d05f30c2aef10",
+    "title": "Usta ile Mesajlaşma (SCR-07)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-9 h-9 rounded-full flex items-center justify-center text-primary active:scale-95 transition-transform hover:bg-canvas\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Seçenekler",
+        "id": null,
+        "attrs": " aria-label=\"Seçenekler\" class=\"w-9 h-9 rounded-full flex items-center justify-center text-text-secondary active:scale-95 transition-transform hover:bg-canvas\" type=\"button\""
+      },
+      {
+        "text": "attach_file",
+        "aria_label": "Fotoğraf veya dosya ekle",
+        "id": null,
+        "attrs": " aria-label=\"Fotoğraf veya dosya ekle\" class=\"w-10 h-10 rounded-full flex items-center justify-center text-primary-container hover:bg-canvas active:scale-95 transition-all flex-shrink-0 border border-border-subtle\" type=\"button\""
+      },
+      {
+        "text": "photo_camera",
+        "aria_label": "Hızlı fotoğraf çek",
+        "id": null,
+        "attrs": " aria-label=\"Hızlı fotoğraf çek\" class=\"absolute right-3 text-text-secondary hover:text-on-surface flex items-center\" type=\"button\""
+      },
+      {
+        "text": "send",
+        "aria_label": "Gönder",
+        "id": null,
+        "attrs": " aria-label=\"Gönder\" class=\"w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center active:bg-dark-teal active:scale-95 transition-transform flex-shrink-0 shadow-none\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": "Mesajınızı yazın...",
+        "value": null
+      }
+    ],
+    "textareas": [],
+    "links": [
+      {
+        "text": "İş Detayı chevron_right",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 22,
+    "id": "b89d998c02d34e67b8e8f34334f87f02",
+    "title": "İş Aşamaları ve İlerleme Takibi (SCR-08)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-10 h-10 -ml-2 rounded-lg flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Seçenekler",
+        "id": null,
+        "attrs": " aria-label=\"Seçenekler\" class=\"w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-text-secondary hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "visibility",
+        "aria_label": "Fotoğrafı Görüntüle",
+        "id": null,
+        "attrs": " aria-label=\"Fotoğrafı Görüntüle\" class=\"p-1.5 text-text-secondary hover:text-primary transition-colors\" type=\"button\""
+      },
+      {
+        "text": "report_problem Usta ile ilgili bir sorun mu var? Destek ekibine bildir",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-2 text-alert-red font-body-md-medium text-body-md-medium hover:underline active:opacity-80 transition-opacity\" type=\"button\""
+      },
+      {
+        "text": "chat Ustaya Mesaj Gönder",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal text-white rounded-xl font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 23,
+    "id": "6acc9307352f497ca6bd878d628c6a1a",
+    "title": "Randevu İptal / Değişiklik Talebi (SCR-09)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-transform\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Daha Fazla Seçenek",
+        "id": null,
+        "attrs": " aria-label=\"Daha Fazla Seçenek\" class=\"w-10 h-10 -mr-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-transform\" type=\"button\""
+      },
+      {
+        "text": "Randevuyu İptal Et",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-2 px-3 rounded-[9px] bg-primary-container text-white font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1.5\" type=\"button\""
+      },
+      {
+        "text": "event_repeat Yeni Tarih İste",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-2 px-3 rounded-[9px] text-text-secondary hover:text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5\" type=\"button\""
+      },
+      {
+        "text": "cancel İşi İptal Etmeyi Onayla",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-alert-red hover:bg-[#A32F24] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-2 shadow-sm transition-all\" type=\"button\""
+      },
+      {
+        "text": "check_circle Vazgeç, Randevuyu Koru",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[48px] bg-surface hover:bg-surface-bright active:scale-[0.98] border border-primary-container text-primary-container font-body-lg-medium text-body-lg-medium rounded-[14px] flex items-center justify-center gap-2 mt-2.5 transition-all\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "schedule_conflict"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "solved_independently"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "communication_issue"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "other_provider"
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": "emergency_other"
+      }
+    ],
+    "textareas": [
+      {
+        "id": "optional-note",
+        "placeholder": "Ustaya veya operasyon ekibine iletmek istediğiniz detaylar...",
+        "initial_text": ""
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 24,
+    "id": "d485263b3ae244a9b35500665b5c759b",
+    "title": "İş Tamamlama ve Teslim Onayı (SCR-10)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"p-2 -ml-2 text-primary hover:bg-surface-bright rounded-full transition-all active:scale-95 flex items-center justify-center\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Daha Fazla İşlem",
+        "id": null,
+        "attrs": " aria-label=\"Daha Fazla İşlem\" class=\"p-2 -mr-2 text-text-secondary hover:text-on-surface hover:bg-surface-bright rounded-full transition-all active:scale-95 flex items-center justify-center\" type=\"button\""
+      },
+      {
+        "text": "İşi Onayla ve Değerlendirmeye Geç arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-[#107A5B] hover:bg-[#0c634a] active:bg-[#094c39] text-white font-headline-sm text-[16px] font-bold rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]\" onclick=\"handleApproval(this)\" type=\"button\""
+      },
+      {
+        "text": "report_problem İşte eksik veya sızıntı mı var? Sorun bildir / Destek talep et",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full py-1.5 text-center text-[13px] font-semibold text-alert-red hover:text-[#962c22] transition-colors flex items-center justify-center gap-1 active:opacity-80\" onclick=\"openIssueModal()\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 25,
+    "id": "db8a1b368a7749cbb5fd6cf497f34de6",
+    "title": "Hizmet Değerlendirme ve Puanlama (SCR-11)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-2 rounded-xl flex items-center justify-center text-on-surface hover:bg-canvas transition-colors tap-scale\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Seçenekler",
+        "id": null,
+        "attrs": " aria-label=\"Seçenekler\" class=\"w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-text-secondary hover:bg-canvas transition-colors tap-scale\" type=\"button\""
+      },
+      {
+        "text": "star",
+        "aria_label": "1 Yıldız",
+        "id": null,
+        "attrs": " aria-label=\"1 Yıldız\" class=\"w-10 h-10 flex items-center justify-center text-[#F59E0B] tap-scale\" type=\"button\""
+      },
+      {
+        "text": "star",
+        "aria_label": "2 Yıldız",
+        "id": null,
+        "attrs": " aria-label=\"2 Yıldız\" class=\"w-10 h-10 flex items-center justify-center text-[#F59E0B] tap-scale\" type=\"button\""
+      },
+      {
+        "text": "star",
+        "aria_label": "3 Yıldız",
+        "id": null,
+        "attrs": " aria-label=\"3 Yıldız\" class=\"w-10 h-10 flex items-center justify-center text-[#F59E0B] tap-scale\" type=\"button\""
+      },
+      {
+        "text": "star",
+        "aria_label": "4 Yıldız",
+        "id": null,
+        "attrs": " aria-label=\"4 Yıldız\" class=\"w-10 h-10 flex items-center justify-center text-[#F59E0B] tap-scale\" type=\"button\""
+      },
+      {
+        "text": "star",
+        "aria_label": "5 Yıldız",
+        "id": null,
+        "attrs": " aria-label=\"5 Yıldız\" class=\"w-10 h-10 flex items-center justify-center text-[#F59E0B] tap-scale\" type=\"button\""
+      },
+      {
+        "text": "check Zamanında geldi",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface-container-low text-primary-container border border-primary-container/30 font-body-md-medium text-body-md-medium px-3.5 py-1.5 rounded-full flex items-center gap-1.5 tap-scale\" type=\"button\""
+      },
+      {
+        "text": "check Temiz işçilik",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface-container-low text-primary-container border border-primary-container/30 font-body-md-medium text-body-md-medium px-3.5 py-1.5 rounded-full flex items-center gap-1.5 tap-scale\" type=\"button\""
+      },
+      {
+        "text": "check Şeffaf fiyat",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface-container-low text-primary-container border border-primary-container/30 font-body-md-medium text-body-md-medium px-3.5 py-1.5 rounded-full flex items-center gap-1.5 tap-scale\" type=\"button\""
+      },
+      {
+        "text": "add Hızlı iletişim",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface text-text-secondary border border-border-subtle font-body-md-medium text-body-md-medium px-3.5 py-1.5 rounded-full flex items-center gap-1.5 tap-scale hover:bg-canvas\" type=\"button\""
+      },
+      {
+        "text": "check Güler yüzlü &amp; Saygılı",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface-container-low text-primary-container border border-primary-container/30 font-body-md-medium text-body-md-medium px-3.5 py-1.5 rounded-full flex items-center gap-1.5 tap-scale\" type=\"button\""
+      },
+      {
+        "text": "",
+        "aria_label": "Anonim Değerlendirme",
+        "id": null,
+        "attrs": " aria-checked=\"true\" aria-label=\"Anonim Değerlendirme\" class=\"w-12 h-6 bg-primary-container rounded-full relative p-0.5 shrink-0 transition-colors cursor-pointer tap-scale\" role=\"switch\" type=\"button\""
+      },
+      {
+        "text": "Değerlendirmeyi Yayınla send",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all tap-scale\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [
+      {
+        "id": "review-notes",
+        "placeholder": "Ustamızın iş kalitesi, malzeme tercihi ve yaklaşımı nasıldı?",
+        "initial_text": "Acil vana patlaması için yarım saatte geldi. Eski plastik vanayı söküp kaliteli pirinç vana monte etti ve basınç testini yaptı. Hem temiz hem güvenilir bir usta, kesinlikle tavsiye ederim."
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 26,
+    "id": "488f3698f93c454099ca2382585aeb66",
+    "title": "Şikayet ve Uyuşmazlık Bildirimi (SCR-12)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri dön\" class=\"w-10 h-10 -ml-2 rounded-lg flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Ekstra seçenekler",
+        "id": null,
+        "attrs": " aria-label=\"Ekstra seçenekler\" class=\"w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-text-secondary hover:text-on-surface hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "close",
+        "aria_label": "Görseli kaldır",
+        "id": null,
+        "attrs": " aria-label=\"Görseli kaldır\" class=\"absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-on-surface text-surface flex items-center justify-center hover:bg-alert-red transition-colors shadow\" type=\"button\""
+      },
+      {
+        "text": "add_a_photo Kanıt Ekle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-28 h-24 rounded-xl border-2 border-dashed border-border-subtle hover:border-primary-container bg-surface/60 hover:bg-surface flex flex-col items-center justify-center gap-1.5 text-text-secondary hover:text-primary transition-all shrink-0 active:scale-95 group\" type=\"button\""
+      },
+      {
+        "text": "report Şikayet Dosyasını Oluştur (Destek Ekibine İlet) arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-alert-red hover:bg-[#A32E23] active:bg-[#8F261C] text-white rounded-[14px] font-body-lg-medium text-body-lg-medium font-bold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-[0.98]\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      }
+    ],
+    "textareas": [
+      {
+        "id": "dispute_details",
+        "placeholder": "Neler yaşandığını kronolojik olarak kısaca özetleyin...",
+        "initial_text": "Saat 14:00 randevusu için teyitleşmiştik. Randevu saati 45 dakika geçmesine rağmen usta gelmedi ve uygulama içi mesajlarıma yanıt alamadım."
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 27,
+    "id": "3bb4b954e5224b0097b2bee12be9bcbf",
+    "title": "Şikayet İletildi ve Durum Takibi (SCR-13)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "more_vert",
+        "aria_label": "Seçenekler",
+        "id": null,
+        "attrs": " aria-label=\"Seçenekler\" class=\"w-10 h-10 -mr-1 rounded-full flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "assignment_turned_in Taleplerime ve Ana Sayfaya Dön",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:scale-[0.98] transition-all rounded-[14px] text-white font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 shadow-sm\" type=\"button\""
+      },
+      {
+        "text": "forum Mesaj Kayıtlarını Görüntüle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 border border-border-subtle rounded-xl text-primary font-body-md-medium text-body-md-medium hover:bg-surface-bright active:scale-[0.98] transition-all flex items-center justify-center gap-2 bg-surface\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Canlı Destek Başlat chevron_right",
+        "href": "#destek"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 28,
+    "id": "20de80b8dc984e86be873761409a2396",
+    "title": "Müşteri Profil & Ayarlar (SCR-C-PROF)",
+    "role": "CUSTOMER",
+    "flow": "5. Müşteri Profil & Ayarlar",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"text-primary hover:bg-surface-bright p-1.5 rounded-lg active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "notifications",
+        "aria_label": "Bildirimler",
+        "id": null,
+        "attrs": " aria-label=\"Bildirimler\" class=\"text-text-secondary hover:text-primary hover:bg-surface-bright p-1.5 rounded-lg active:scale-95 transition-all relative\" type=\"button\""
+      },
+      {
+        "text": "edit",
+        "aria_label": "Profili Düzenle",
+        "id": null,
+        "attrs": " aria-label=\"Profili Düzenle\" class=\"flex items-center justify-center p-2 text-primary-container hover:bg-surface-bright rounded-xl active:scale-95 transition-transform\" type=\"button\""
+      },
+      {
+        "text": "location_on Kayıtlı Adreslerim Ev: Kadıköy, Caferağa Mah. chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-between p-space-lg hover:bg-surface-bright active:scale-[0.99] transition-all border-b border-border-subtle/80 text-left\" type=\"button\""
+      },
+      {
+        "text": "verified_user BiTadilat Güvence Havuzu Ödeme ve güvence sistemi bilgisi chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-between p-space-lg hover:bg-surface-bright active:scale-[0.99] transition-all border-b border-border-subtle/80 text-left\" type=\"button\""
+      },
+      {
+        "text": "notifications_active Bildirim Tercihleri SMS ve Uygulama İçi chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-between p-space-lg hover:bg-surface-bright active:scale-[0.99] transition-all border-b border-border-subtle/80 text-left\" type=\"button\""
+      },
+      {
+        "text": "help_outline Yardım &amp; Destek Merkezi SSS, canlı destek ve iletişim chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-between p-space-lg hover:bg-surface-bright active:scale-[0.99] transition-all border-b border-border-subtle/80 text-left\" type=\"button\""
+      },
+      {
+        "text": "lock Gizlilik ve KVKK Veri güvenliği ve aydınlatma metni chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-between p-space-lg hover:bg-surface-bright active:scale-[0.99] transition-all text-left\" type=\"button\""
+      },
+      {
+        "text": "Usta Modu arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-container text-white rounded-xl text-label-md font-label-md hover:bg-dark-teal active:scale-95 transition-all\" type=\"button\""
+      },
+      {
+        "text": "logout Çıkış Yap",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full flex items-center justify-center gap-2 py-3.5 px-space-lg bg-surface border border-border-subtle rounded-2xl text-alert-red font-body-lg-medium font-semibold hover:bg-error-container/20 active:scale-98 transition-all\" type=\"button\""
+      },
+      {
+        "text": "home Ana Sayfa",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex flex-col items-center justify-center text-text-secondary hover:bg-surface-bright hover:text-primary active:scale-95 transition-all min-w-[64px] py-1\" type=\"button\""
+      },
+      {
+        "text": "build Taleplerim",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex flex-col items-center justify-center text-text-secondary hover:bg-surface-bright hover:text-primary active:scale-95 transition-all min-w-[64px] py-1 relative\" type=\"button\""
+      },
+      {
+        "text": "chat Mesajlar",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex flex-col items-center justify-center text-text-secondary hover:bg-surface-bright hover:text-primary active:scale-95 transition-all min-w-[64px] py-1\" type=\"button\""
+      },
+      {
+        "text": "person Profil",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex flex-col items-center justify-center text-primary-container font-semibold hover:bg-surface-bright active:scale-95 transition-all min-w-[64px] py-1 relative\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 29,
+    "id": "a512d0928f11b9cb02877746d580c548",
+    "title": "Usta Kayıt & Belge Yükleme (SCR-P-ONB)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": "btn-back",
+        "attrs": " id=\"btn-back\" aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-2 rounded-xl flex items-center justify-center text-[#102A34] hover:bg-[#F7F8F6] active:scale-95 transition-all\""
+      },
+      {
+        "text": "add İlçe Ekle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"px-2.5 py-1 rounded-lg bg-white border border-dashed border-[#0F4C5C] text-[11px] font-bold text-[#0F4C5C] flex items-center gap-1\""
+      },
+      {
+        "text": "Değiştir",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"text-[11px] font-bold text-[#5F6F73] hover:text-[#102A34] px-2 py-1\""
+      },
+      {
+        "text": "Dosya Seç",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"px-3 py-1.5 rounded-xl bg-[#F7F8F6] hover:bg-[#D9E1DD] text-[#102A34] text-[11px] font-bold border border-[#D9E1DD] transition-all\""
+      },
+      {
+        "text": "Dosya Seç",
+        "aria_label": null,
+        "id": null,
+        "attrs": " type=\"button\" class=\"px-3 py-1.5 rounded-xl bg-[#F7F8F6] hover:bg-[#D9E1DD] text-[#102A34] text-[11px] font-bold border border-[#D9E1DD] transition-all\""
+      },
+      {
+        "text": "Başvuruyu İncelemeye Gönder arrow_forward",
+        "aria_label": null,
+        "id": "btn-submit-pro",
+        "attrs": " id=\"btn-submit-pro\" type=\"button\" class=\"w-full h-[52px] bg-[#0F4C5C] hover:bg-[#0A3945] active:scale-[0.99] text-white font-bold text-[15px] rounded-[14px] flex items-center justify-center gap-2 transition-all shadow-sm\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 30,
+    "id": "def294a930bf4bb78f7ba4f857611884",
+    "title": "Usta Belge İncelemede Bekleme (SCR-P-PENDING)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "support_agent",
+        "aria_label": "Canlı Destek Hattı",
+        "id": null,
+        "attrs": " aria-label=\"Canlı Destek Hattı\" class=\"w-10 h-10 rounded-full flex items-center justify-center text-text-secondary hover:text-primary hover:bg-surface-container-low transition-colors duration-200 active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "logout",
+        "aria_label": "Oturumu Kapat",
+        "id": null,
+        "attrs": " aria-label=\"Oturumu Kapat\" class=\"w-10 h-10 rounded-full flex items-center justify-center text-text-secondary hover:text-alert-red hover:bg-surface-container-low transition-colors duration-200 active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "Örnek Taleplere Göz At (Demo Modu) arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container active:bg-dark-teal text-on-primary font-body-lg-medium text-body-lg-medium font-semibold rounded-[14px] flex items-center justify-center gap-2 transition-colors duration-150 shadow-sm cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "home Müşteri Moduna Geç",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-surface border-[1.5px] border-primary-container active:bg-surface-container-low text-primary-container font-body-lg-medium text-body-lg-medium font-semibold rounded-[14px] flex items-center justify-center gap-2 transition-colors duration-150 cursor-pointer\" type=\"button\""
+      },
+      {
+        "text": "headset_mic Sorularınız için Usta Destek Hattı ile görüşün",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 text-text-secondary hover:text-primary transition-colors text-label-md font-label-md\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 31,
+    "id": "11b9cb02877746d580c5484512d0928f",
+    "title": "Usta Eşleşen Talepler Akışı (SCR-14)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "notifications",
+        "aria_label": "Bildirimler",
+        "id": null,
+        "attrs": " aria-label=\"Bildirimler\" class=\"relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low text-primary transition-all duration-150\""
+      },
+      {
+        "text": "location_on Kadıköy, Üsküdar keyboard_arrow_down",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface border border-border-subtle text-primary shadow-sm hover:bg-surface-bright active:scale-98 transition-all shrink-0\""
+      },
+      {
+        "text": "Tümü 4",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-1.5 px-2 rounded-lg bg-primary-container text-surface text-center font-label-md text-label-md shadow-sm transition-all flex items-center justify-center gap-1\""
+      },
+      {
+        "text": "Acil (1)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-1.5 px-2 rounded-lg hover:bg-surface/60 text-text-secondary text-center font-label-md text-label-md transition-all flex items-center justify-center gap-1.5\""
+      },
+      {
+        "text": "Planlı (3)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex-1 py-1.5 px-2 rounded-lg hover:bg-surface/60 text-text-secondary text-center font-label-md text-label-md transition-all flex items-center justify-center\""
+      },
+      {
+        "text": "tune Sırala",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex items-center gap-1 text-label-md font-label-md text-primary-container hover:text-dark-teal transition-colors\""
+      },
+      {
+        "text": "Teklif Hazırla arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 bg-primary-container hover:bg-dark-teal active:scale-98 transition-all rounded-xl text-surface text-body-lg-medium font-body-lg-medium flex items-center justify-center gap-2 shadow-sm\""
+      },
+      {
+        "text": "Detayları İncele visibility",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 bg-surface border-1.5 border-primary-container hover:bg-surface-container-low active:scale-98 transition-all rounded-xl text-primary-container text-body-lg-medium font-body-lg-medium flex items-center justify-center gap-1.5 font-semibold\""
+      },
+      {
+        "text": "Detayları İncele",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 bg-surface border border-border-subtle hover:bg-surface-container-low active:scale-98 transition-all rounded-xl text-primary text-body-lg-medium font-body-lg-medium flex items-center justify-center gap-1.5 font-semibold\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "assignment Talepler",
+        "href": "#talepler"
+      },
+      {
+        "text": "handyman 1 İşlerim",
+        "href": "#islerim"
+      },
+      {
+        "text": "chat Mesajlar",
+        "href": "#mesajlar"
+      },
+      {
+        "text": "calendar_month Profil",
+        "href": "#profil"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 32,
+    "id": "b9086f1030784def8eb267fd9110addd",
+    "title": "Usta Teklif Hazırlama (SCR-15)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors duration-150 active:scale-95 text-primary\" type=\"button\""
+      },
+      {
+        "text": "schedule Bugün, 14:00 – 16:00 arası Randevu aralığı müşteriyle paylaşılacaktır chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full bg-surface border border-border-subtle rounded-xl p-3.5 flex items-center justify-between text-left hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.99]\" type=\"button\""
+      },
+      {
+        "text": "Yapılandırılmış Teklifi Gönder (₺2.450) arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container active:bg-dark-teal text-surface rounded-[14px] font-body-lg-medium text-body-lg-medium flex items-center justify-center gap-2 transition-transform duration-150 active:scale-[0.98] shadow-sm\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "labor-cost",
+        "placeholder": null,
+        "value": "₺ 1.650"
+      },
+      {
+        "type": "text",
+        "id": "material-cost",
+        "placeholder": null,
+        "value": "₺ 800"
+      }
+    ],
+    "textareas": [
+      {
+        "id": null,
+        "placeholder": null,
+        "initial_text": "Eski vana sökülecek, yeni pirinç vana monte edilecek ve 10 bar basınç sızdırmazlık testi yapılacaktır."
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 33,
+    "id": "82f9d783b88b40ec8ca6260566c0f5cb",
+    "title": "Usta Teklif Gönderildi Onayı (SCR-16)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "close",
+        "aria_label": "Kapat ve Akışa Dön",
+        "id": null,
+        "attrs": " aria-label=\"Kapat ve Akışa Dön\" class=\"w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors duration-150 active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "Eşleşen Talepler Akışına Dön arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container hover:bg-dark-teal active:scale-[0.98] transition-all duration-150 rounded-[14px] text-surface font-body-lg-medium text-body-lg-medium font-bold flex items-center justify-center gap-2 shadow-sm\" type=\"button\""
+      },
+      {
+        "text": "Profil ve Müsaitlik Ayarlarını Aç",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-surface hover:bg-surface-container-low active:scale-[0.98] transition-all duration-150 rounded-[14px] border-[1.5px] border-primary-container text-primary-container font-body-lg-medium text-body-lg-medium font-semibold flex items-center justify-center\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 34,
+    "id": "fc6f0f8e9b724365a5a0f124617dbe7a",
+    "title": "Usta Profil & Müsaitlik Yönetimi (SCR-17)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "close",
+        "aria_label": "Kaldır",
+        "id": null,
+        "attrs": " aria-label=\"Kaldır\" class=\"text-text-secondary hover:text-alert-red transition-colors flex items-center\" type=\"button\""
+      },
+      {
+        "text": "close",
+        "aria_label": "Kaldır",
+        "id": null,
+        "attrs": " aria-label=\"Kaldır\" class=\"text-text-secondary hover:text-alert-red transition-colors flex items-center\" type=\"button\""
+      },
+      {
+        "text": "close",
+        "aria_label": "Kaldır",
+        "id": null,
+        "attrs": " aria-label=\"Kaldır\" class=\"text-text-secondary hover:text-alert-red transition-colors flex items-center\" type=\"button\""
+      },
+      {
+        "text": "close",
+        "aria_label": "Kaldır",
+        "id": null,
+        "attrs": " aria-label=\"Kaldır\" class=\"text-text-secondary hover:text-alert-red transition-colors flex items-center\" type=\"button\""
+      },
+      {
+        "text": "add_location_alt + İlçe Ekle veya Çıkar",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full py-2.5 px-3 border border-dashed border-primary-container text-primary-container bg-canvas hover:bg-surface-container-low rounded-lg text-body-md-medium font-body-md-medium flex items-center justify-center gap-2 transition-colors\" type=\"button\""
+      },
+      {
+        "text": "save Ayarları ve Müsaitliği Güncelle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container text-on-primary rounded-[14px] font-body-lg-medium text-body-lg-medium font-bold flex items-center justify-center gap-2 hover:bg-dark-teal active:scale-[0.98] transition-all shadow-sm\" type=\"button\""
+      },
+      {
+        "text": "switch_account Müşteri Moduna Geç",
+        "aria_label": null,
+        "id": "btn-switch-to-customer",
+        "attrs": " id=\"btn-switch-to-customer\" class=\"w-full h-11 bg-surface hover:bg-canvas text-primary border border-border-subtle rounded-xl font-body-md-medium text-body-md flex items-center justify-center gap-2 active:scale-98 transition-all\" type=\"button\""
+      },
+      {
+        "text": "logout Çıkış Yap",
+        "aria_label": null,
+        "id": "btn-pro-logout",
+        "attrs": " id=\"btn-pro-logout\" class=\"w-full h-10 bg-transparent hover:bg-surface-disabled text-alert-red font-label-md text-label-md rounded-xl flex items-center justify-center gap-1.5 transition-colors\" type=\"button\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "radio",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      },
+      {
+        "type": "checkbox",
+        "id": null,
+        "placeholder": null,
+        "value": null
+      }
+    ],
+    "textareas": [
+      {
+        "id": "usta_bio",
+        "placeholder": null,
+        "initial_text": "12 yıllık konut ve iş yeri tesisat tecrübesi. Temiz ve garantili işçilik, şeffaf malzeme fiyatlandırması."
+      }
+    ],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 35,
+    "id": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "title": "Usta İş Yürütme & Aşama Yönetimi (SCR-18)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri Dön",
+        "id": null,
+        "attrs": " aria-label=\"Geri Dön\" class=\"w-10 h-10 -ml-2 rounded-xl flex items-center justify-center text-primary active:scale-95 transition-transform hover:bg-surface-disabled\" type=\"button\""
+      },
+      {
+        "text": "directions Haritada Yol Tarifi Al",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"mt-1 flex items-center gap-1.5 self-start text-info-blue font-label-md text-label-md font-semibold hover:underline active:opacity-75\" type=\"button\""
+      },
+      {
+        "text": "chat Müşteriye Mesaj Yaz",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-11 bg-surface border-[1.5px] border-primary-container text-primary-container rounded-xl flex items-center justify-center gap-2 font-body-md-medium text-body-md-medium font-semibold active:bg-surface-container-low transition-colors\" type=\"button\""
+      },
+      {
+        "text": "Yükle",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-2.5 py-1 text-primary-container font-label-md text-label-md font-bold bg-surface-container-low rounded-lg border border-border-subtle active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "İşi Bitirdim (Müşteriye Teslim Talebi Gönder) arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-[#107A5B] hover:bg-[#00513b] active:scale-[0.98] transition-all duration-150 rounded-[14px] text-surface font-body-lg-medium text-body-lg-medium font-bold flex items-center justify-center gap-2 shadow-sm\" type=\"button\""
+      },
+      {
+        "text": "warning Sahada bir anlaşmazlık mı var? Durum Bildir / Destek İste",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"h-8 flex items-center justify-center gap-1.5 text-text-secondary hover:text-alert-red active:opacity-70 transition-colors\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 36,
+    "id": "dbf40b28dba64bd1bedb40e075662c42",
+    "title": "Usta Randevu İptali Bildirimi (SCR-P-CANCEL)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "aria_label": "Geri",
+        "id": null,
+        "attrs": " aria-label=\"Geri\" class=\"w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-surface-container-low transition-colors duration-150 active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "help_outline",
+        "aria_label": "Yardım",
+        "id": null,
+        "attrs": " aria-label=\"Yardım\" class=\"w-10 h-10 flex items-center justify-center rounded-full text-text-secondary hover:bg-surface-container-low transition-colors duration-150 active:scale-95\" type=\"button\""
+      },
+      {
+        "text": "Yeni İş Fırsatlarına Git arrow_forward",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-primary-container active:bg-dark-teal text-white rounded-[14px] flex items-center justify-center gap-2 font-body-lg-medium text-body-lg-medium transition-transform duration-150 active:scale-[0.98]\" type=\"button\""
+      },
+      {
+        "text": "chat_bubble_outline Müşteri ile Mesajlaş",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-full h-[52px] bg-surface border-[1.5px] border-primary-container text-primary-container rounded-[14px] flex items-center justify-center gap-2 font-body-lg-medium text-body-lg-medium hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]\" type=\"button\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 37,
+    "id": "c6ebf06dae18ba8c346d11c46f39163f",
+    "title": "Usta Teslim Bildirimi İletildi (SCR-P-DONE)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "buttons": [
+      {
+        "text": "close",
+        "aria_label": "Kapat",
+        "id": "btn-close",
+        "attrs": " id=\"btn-close\" aria-label=\"Kapat\" class=\"w-10 h-10 -ml-2 rounded-xl flex items-center justify-center text-[#5F6F73] hover:text-[#102A34] hover:bg-white active:scale-95 transition-all\""
+      },
+      {
+        "text": "Eşleşen Talepler Akışına Dön arrow_forward",
+        "aria_label": null,
+        "id": "btn-return-feed",
+        "attrs": " id=\"btn-return-feed\" type=\"button\" class=\"w-full h-[52px] bg-[#0F4C5C] hover:bg-[#0A3945] text-white font-bold text-[15px] rounded-[14px] flex items-center justify-center gap-2 transition-all shadow-sm\""
+      },
+      {
+        "text": "Müsaitlik ve Profil Ayarlarını Aç",
+        "aria_label": null,
+        "id": "btn-goto-availability",
+        "attrs": " id=\"btn-goto-availability\" type=\"button\" class=\"w-full h-11 bg-white border border-[#D9E1DD] hover:bg-[#F7F8F6] text-[#5F6F73] hover:text-[#102A34] font-semibold text-[13px] rounded-[12px] transition-all\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 38,
+    "id": "612429fdea1b42a1bf9e628883f7e58f",
+    "title": "Yönetici Web: Belge İnceleme (SCR-19)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex items-center space-x-1.5 text-white/80 hover:text-white text-body-md-medium font-body-md-medium px-3 py-1.5 rounded-lg hover:bg-dark-teal transition-all\""
+      },
+      {
+        "text": "refresh",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"text-text-secondary hover:text-primary transition-colors\" title=\"Yenile\""
+      },
+      {
+        "text": "Tümü (3)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-primary-container text-white px-3 py-1 rounded-md text-label-sm font-label-sm transition-all shadow-xs\""
+      },
+      {
+        "text": "Acil Tesisat",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface border border-border-subtle text-text-secondary hover:text-on-surface hover:bg-canvas px-3 py-1 rounded-md text-label-sm font-label-sm transition-colors\""
+      },
+      {
+        "text": "Elektrik",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-surface border border-border-subtle text-text-secondary hover:text-on-surface hover:bg-canvas px-3 py-1 rounded-md text-label-sm font-label-sm transition-colors\""
+      },
+      {
+        "text": "zoom_in Tam Ekran",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex items-center space-x-1 text-primary-container hover:text-dark-teal bg-surface-container-low px-2.5 py-1 rounded-md text-label-sm font-label-sm font-semibold transition-colors\""
+      },
+      {
+        "text": "check_circle Profili Onayla ve Yayına Al",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"h-12 px-6 bg-[#107A5B] hover:bg-[#0c6148] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-lg shadow-sm flex items-center space-x-2 transition-all\""
+      },
+      {
+        "text": "cancel Başvuruyu Reddet",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"h-12 px-6 bg-alert-red hover:bg-[#962c22] active:scale-[0.98] text-white font-body-lg-medium text-body-lg-medium rounded-lg shadow-sm flex items-center space-x-2 transition-all\""
+      },
+      {
+        "text": "history_edu Eksik Belge Talebi İlet",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"ml-auto px-4 py-2.5 text-primary-container hover:bg-surface-container-low border border-transparent hover:border-border-subtle font-body-md-medium text-body-md-medium rounded-lg flex items-center space-x-1.5 transition-all\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": "Usta veya işletme ara...",
+        "value": null
+      }
+    ],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Profil İnceleme Sırası 3",
+        "href": "#"
+      },
+      {
+        "text": "Uyuşmazlık ve Şikayetler 1",
+        "href": "#"
+      },
+      {
+        "text": "Kullanıcı ve Usta Hesapları",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 39,
+    "id": "cb00d67723e34ec990786a82d25c77ca",
+    "title": "Yönetici Web: Şikayet Merkezi (SCR-20)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex items-center gap-1.5 text-body-md-medium font-body-md-medium text-white/80 hover:text-white transition-colors py-1 px-2 rounded-lg hover:bg-white/10\""
+      },
+      {
+        "text": "refresh",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"text-text-secondary hover:text-on-surface p-1 rounded transition-colors\" title=\"Yenile\""
+      },
+      {
+        "text": "Tümü (3)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-primary-container text-white font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm\""
+      },
+      {
+        "text": "No-Show (1)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-white border border-border-subtle text-text-secondary hover:text-on-surface font-medium px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1\""
+      },
+      {
+        "text": "Ücret İtirazı",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-white border border-border-subtle text-text-secondary hover:text-on-surface font-medium px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors\""
+      },
+      {
+        "text": "Şikayeti Reddet / Kapat",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-white border border-border-subtle text-text-secondary hover:text-on-surface font-medium px-4 py-2.5 rounded-lg text-sm transition-colors shadow-sm\""
+      },
+      {
+        "text": "send Ustaya Resmi İhtar Gönder",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-[#C05621] hover:bg-amber-800 text-white font-semibold px-4 py-2.5 rounded-lg text-sm shadow-sm flex items-center gap-1.5 transition-colors\""
+      },
+      {
+        "text": "gavel İşi İptal Et (Uyuşmazlığı Müşteri Lehine Kapat)",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"bg-alert-red hover:bg-red-800 text-white font-semibold px-5 py-2.5 rounded-lg text-sm shadow-sm flex items-center gap-2 transition-colors\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": "Dosya veya kişi ara...",
+        "value": null
+      }
+    ],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Profil İnceleme Sırası 3",
+        "href": "#"
+      },
+      {
+        "text": "Uyuşmazlık ve Şikayetler 1",
+        "href": "#"
+      },
+      {
+        "text": "Kullanıcı ve Usta Hesapları",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 40,
+    "id": "5ce8968e2703443ca129c0e7c9e9d145",
+    "title": "Yönetici Web: Hesap Yönetimi (SCR-21)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"flex items-center space-x-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors\""
+      },
+      {
+        "text": "refresh",
+        "aria_label": null,
+        "id": null,
+        "attrs": " title=\"Listeyi Yenile\" class=\"p-2.5 rounded-lg border border-border hover:bg-canvas text-text-secondary hover:text-text-primary transition-colors flex items-center justify-center\""
+      },
+      {
+        "text": "Detay Gör",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary hover:bg-canvas hover:border-primary transition-all\""
+      },
+      {
+        "text": "Askıya Al",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-alert/30 text-xs font-semibold text-alert hover:bg-alert/5 transition-all\""
+      },
+      {
+        "text": "Detay Gör",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary hover:bg-canvas hover:border-primary transition-all\""
+      },
+      {
+        "text": "Askıya Al",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-alert/30 text-xs font-semibold text-alert hover:bg-alert/5 transition-all\""
+      },
+      {
+        "text": "İncele",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary hover:bg-canvas hover:border-primary transition-all\""
+      },
+      {
+        "text": "Yeniden Aktifleştir",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg bg-trust text-white text-xs font-semibold hover:bg-trust/90 transition-all shadow-sm\""
+      },
+      {
+        "text": "Detay Gör",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-primary hover:bg-canvas hover:border-primary transition-all\""
+      },
+      {
+        "text": "Askıya Al",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-3 py-1.5 rounded-lg border border-alert/30 text-xs font-semibold text-alert hover:bg-alert/5 transition-all\""
+      },
+      {
+        "text": "chevron_left",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg border border-border bg-surface text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors disabled:opacity-40\" disabled"
+      },
+      {
+        "text": "1",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg bg-primary text-white text-xs font-bold flex items-center justify-center shadow-sm\""
+      },
+      {
+        "text": "2",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg border border-border bg-surface text-text-secondary hover:text-text-primary text-xs font-medium flex items-center justify-center transition-colors\""
+      },
+      {
+        "text": "3",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg border border-border bg-surface text-text-secondary hover:text-text-primary text-xs font-medium flex items-center justify-center transition-colors\""
+      },
+      {
+        "text": "72",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg border border-border bg-surface text-text-secondary hover:text-text-primary text-xs font-medium flex items-center justify-center transition-colors\""
+      },
+      {
+        "text": "chevron_right",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"w-8 h-8 rounded-lg border border-border bg-surface text-text-secondary hover:text-text-primary flex items-center justify-center transition-colors\""
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": null,
+        "placeholder": "Ad, telefon veya kullanıcı ID ile ara...",
+        "value": null
+      }
+    ],
+    "textareas": [],
+    "links": [
+      {
+        "text": "Profil İnceleme Sırası 3",
+        "href": "#"
+      },
+      {
+        "text": "Uyuşmazlık ve Şikayetler 1",
+        "href": "#"
+      },
+      {
+        "text": "Kullanıcı ve Usta Hesapları",
+        "href": "#"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  },
+  {
+    "step_num": 41,
+    "id": "164cd33666284338b929a8325dc5ea20",
+    "title": "BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)",
+    "role": "WEB",
+    "flow": "7. Yönetici Portalı & Web",
+    "buttons": [
+      {
+        "text": "TR",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-2.5 py-1 bg-white text-[#0F4C5C] rounded-md shadow-xs\""
+      },
+      {
+        "text": "EN",
+        "aria_label": null,
+        "id": null,
+        "attrs": " class=\"px-2.5 py-1 text-[#5F6F73] hover:text-[#102A34] transition-colors\""
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [
+      {
+        "text": "home_repair_service BiTadilat PRO GÜVENİLİR USTA AĞI",
+        "href": "#"
+      },
+      {
+        "text": "Özellikler",
+        "href": "#ozellikler"
+      },
+      {
+        "text": "Nasıl Çalışır?",
+        "href": "#nasil-calisir"
+      },
+      {
+        "text": "Usta Ol / Başvur",
+        "href": "#usta-ol"
+      },
+      {
+        "text": "Sıkça Sorulan Sorular (SSS)",
+        "href": "#sss"
+      },
+      {
+        "text": "download Uygulamayı İndir",
+        "href": "#indir"
+      },
+      {
+        "text": "App Store'dan İndirin (iOS)",
+        "href": "#"
+      },
+      {
+        "text": "Google Play'den Alın (Android)",
+        "href": "#"
+      },
+      {
+        "text": "Usta Olarak Başvur arrow_forward",
+        "href": "#usta-basvuru"
+      }
+    ],
+    "interactive_cards": [],
+    "controller_handled": []
+  }
+]

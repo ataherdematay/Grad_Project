@@ -1,0 +1,2549 @@
+[
+  {
+    "step_num": 1,
+    "id": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "title": "Hoş Geldiniz & Rol Seçimi (SCR-01)",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "TR",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "Language toggle chip (UI)"
+      },
+      {
+        "text": "EN",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "Language toggle chip (UI)"
+      },
+      {
+        "text": "smartphone Telefon numarasıyla devam et",
+        "id": "btn-continue",
+        "status": "HANDLED",
+        "target": "role_pro or role_homeowner",
+        "notes": "Routes to fbbe0f40 (Customer) or a512d092 (Pro)"
+      },
+      {
+        "text": "Giriş yap",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "Login modal/trigger"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 2,
+    "id": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+    "title": "Telefon Doğrulama",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+        "notes": "Header Back Button -> 0c06b06e"
+      },
+      {
+        "text": "🇹🇷 +90 keyboard_arrow_down",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "id": "submit-btn",
+        "status": "HANDLED",
+        "target": "42c148a1fb25400ca549481fa6abe01f",
+        "notes": "Phone verified -> SMS Code (42c148a1)"
+      },
+      {
+        "text": "arrow_back Numaranı mı değiştirmek istiyorsun? Geri dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+        "notes": "Header Back Button -> 0c06b06e"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "tel",
+        "id": "phone-input",
+        "placeholder": "5XX XXX XX XX",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 3,
+    "id": "42c148a1fb25400ca549481fa6abe01f",
+    "title": "SMS Doğrulama Kodu",
+    "role": "CUSTOMER",
+    "flow": "1. Müşteri Giriş & Onboarding",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+        "notes": "Header Back Button -> fbbe0f40"
+      },
+      {
+        "text": "edit Telefon numarasını değiştir",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Doğrula arrow_forward",
+        "id": "verify-submit-btn",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "SMS verified -> Home (cc1f5566)"
+      },
+      {
+        "text": "replay Tekrar SMS Kodu Gönder",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "refresh Tekrar Kod Gönder",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 4,
+    "id": "cc1f55661a1a4036a890b43d9f15596a",
+    "title": "Müşteri Ana Sayfası (SCR-03)",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "notifications",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "Category / Filter chip"
+      },
+      {
+        "text": "Talep oluşturmaya başla arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": "44c003fee81d4a188f187608554efdd5",
+        "notes": "Create Request CTA -> Step 05 (44c003fe)"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 5,
+    "id": "44c003fee81d4a188f187608554efdd5",
+    "title": "Talep Adım 1/4: Hizmet & Öncelik (SCR-02)",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "plumbing Tesisat Su, kaçak, tıkanıklık check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "bolt Elektrik Sigorta, hat, montaj check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "format_paint Boya &amp; Badana İç cephe, alçı tamir check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "mode_fan Klima Bakım, gaz, arıza check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "shower Banyo Yenileme Fayans, duşakabin check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "countertops Mutfak Yenileme Tezgah, dolap montaj check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "carpenter Marangozluk Ahşap kapı, mobilya check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "grid_view Diğer Farklı uzmanlıklar check",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "crisis_alert Acil onarım Hızlı Usta Bugün veya en kısa sürede çözülmesi gereken acil arızalar ve müdahaleler için.",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "event_note Planlı yenileme Randevulu Tarih belirleyerek keşif ve teklif adımlarıyla ilerlemek istediğin kapsamlı işler için.",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "id": "wizard-primary-cta",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "service-search-input",
+        "placeholder": "Hizmet ara",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 6,
+    "id": "b3c3c2845017451fb1b85b89f04fd4b8",
+    "title": "Talep Adım 2/4: Konum & İş Detayı",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "44c003fee81d4a188f187608554efdd5",
+        "notes": "Header Back Button -> 44c003fe"
+      },
+      {
+        "text": "pin_drop İlçe seç expand_more",
+        "id": "district-trigger",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "my_location Mevcut konumumu kullan",
+        "id": "use-gps-btn",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add Ne zamandır var?",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add Su akışı kesildi mi?",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add Farklı odaları etkiledi mi?",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "id": "wizard-primary-cta",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [
+      {
+        "id": "task-description",
+        "placeholder": "Örnek: Banyodaki lavabo altından su sızıyor. Bugün içinde kontrol edilmesini istiyorum.",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 7,
+    "id": "585d649f4ea046ffa70e4cb481ddd030",
+    "title": "Talep Adım 3/4: Fotoğraflar & Ek Bilgi",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "b3c3c2845017451fb1b85b89f04fd4b8",
+        "notes": "Header Back Button -> b3c3c284"
+      },
+      {
+        "text": "Devam Et arrow_forward",
+        "id": "wizard-primary-cta",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "file",
+        "id": "photo-input",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "extra-notes",
+        "placeholder": "Örneğin: Apartman görevlisiyle görüşülebilir, giriş katında, vana balkonda yer alıyor…",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 8,
+    "id": "a0949c91cbe34557b16273c8e91d067a",
+    "title": "Talep Adım 4/4: Talebi Gözden Geçir",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "585d649f4ea046ffa70e4cb481ddd030",
+        "notes": "Header Back Button -> 585d649f"
+      },
+      {
+        "text": "Düzenle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Düzenle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Düzenle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Düzenle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Talebi yayınla check",
+        "id": "wizard-primary-cta",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 9,
+    "id": "94a730cef5374f2ab9632d9acf0d7e19",
+    "title": "Talep Yayınlandı — Teklif Bekleniyor",
+    "role": "CUSTOMER",
+    "flow": "2. Müşteri Talep Sihirbazı",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "Taleplerime git arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Ana sayfaya dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 10,
+    "id": "86fe79e681034183a8681bb0d2893e29",
+    "title": "Müşteri Taleplerim Listesi (SCR-C-REQ)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "help_outline",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Aktif Talepler 1",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Geçmiş İşler 2",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Gelen Teklifleri Gör (3) arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "build + Yeni Onarım Talebi Başlat Usta tekliflerini 15 dakikada al arrow_forward_ios",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Tümünü Gör (2)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detayları İncele chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 11,
+    "id": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "title": "Gelen Teklifler Listesi (SCR-04)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "86fe79e681034183a8681bb0d2893e29",
+        "notes": "Header Back Button -> 86fe79e6"
+      },
+      {
+        "text": "notifications",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "swap_vert Önerilen sıralama expand_more",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "tune",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi İncele chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi İncele chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 12,
+    "id": "ea7af2d7298b4b6cb24e4603935503f0",
+    "title": "Teklif Detayı & Kapsam",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "994e3b4ffce942ce8778f7a6cfaa42c0",
+        "notes": "Header Back Button -> 994e3b4f"
+      },
+      {
+        "text": "chat Ustaya soru sor",
+        "id": "askQuestionBtn",
+        "status": "HANDLED",
+        "target": "c9aa92f5a4e04897952d05f30c2aef10",
+        "notes": "Ask Question -> Chat (c9aa92f5)"
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "id": "acceptOfferBtn",
+        "status": "HANDLED",
+        "target": "58f9993b5f444ff3a9f9361cb8d3b731",
+        "notes": "Accept Offer -> Step 16 Escrow Confirm (58f9993b)"
+      },
+      {
+        "text": "close Teklifi Reddet",
+        "id": "rejectOfferBtn",
+        "status": "HANDLED",
+        "target": "45350ca7f3de4ee6bedcde20b5a1b385",
+        "notes": "Reject Offer -> Step 13 Offer Rejection (45350ca7)"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 13,
+    "id": "45350ca7f3de4ee6bedcde20b5a1b385",
+    "title": "Müşteri Teklif Reddetme & Geri Bildirim (SCR-C-OFFER-REJ)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Header Back Button -> ea7af2d7"
+      },
+      {
+        "text": "help_outline",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "cancel Teklifi Reddet",
+        "id": "",
+        "status": "HANDLED",
+        "target": "994e3b4ffce942ce8778f7a6cfaa42c0",
+        "notes": "Confirm Reject -> Offers list (994e3b4f)"
+      },
+      {
+        "text": "Vazgeç, Teklife Dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Cancel -> Offer detail (ea7af2d7)"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "checkbox",
+        "id": "keep_pool_active",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "rejection-note",
+        "placeholder": "Geri bildiriminiz ustanın tekliflerini iyileştirmesine yardımcı olur... (Örn: Malzeme hariç fiyatlandırma tercihim vardı)",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 14,
+    "id": "1fc70722168942c4a1933cd9c641ad68",
+    "title": "Teklifleri Karşılaştır (Matris)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back_ios_new",
+        "id": "",
+        "status": "HANDLED",
+        "target": "994e3b4ffce942ce8778f7a6cfaa42c0",
+        "notes": "Header Back Button -> 994e3b4f"
+      },
+      {
+        "text": "tune Teklifleri düzenle (2/3)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi incele chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi incele chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 15,
+    "id": "98cd20d6ab4e4f8fbc29bc462ce55cca",
+    "title": "Hizmet Profesyoneli Profili (SCR-05)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Header Back Button -> ea7af2d7"
+      },
+      {
+        "text": "Tüm değerlendirmeleri gör chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "arrow_back Teklife dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Header Back Button -> ea7af2d7"
+      },
+      {
+        "text": "chat_bubble_outline Ustaya soru sor",
+        "id": "askMasterBtn",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 16,
+    "id": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "title": "Teklif Kabul Onayı (Güvence Havuzu)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Header Back Button -> ea7af2d7"
+      },
+      {
+        "text": "chat Ustaya soru sor",
+        "id": "askQuestionBtn",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "id": "acceptOfferBtn",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklifi kabul et arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Vazgeç",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 17,
+    "id": "1476367258dd4a7aa4b9cbda6b0091c0",
+    "title": "Güvence Havuzu Ödeme Hatası & 3D Secure (SCR-C-PAY-ERR)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "58f9993b5f444ff3a9f9361cb8d3b731",
+        "notes": "Header Back Button -> 58f9993b"
+      },
+      {
+        "text": "help_outline",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "credit_card Farklı Bir Kartla Tekrar Dene",
+        "id": "",
+        "status": "HANDLED",
+        "target": "58f9993b5f444ff3a9f9361cb8d3b731",
+        "notes": "Retry Payment -> Escrow Confirm (58f9993b)"
+      },
+      {
+        "text": "arrow_back Teklif Detayına Geri Dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": "ea7af2d7298b4b6cb24e4603935503f0",
+        "notes": "Header Back Button -> 58f9993b, Return -> Offer detail (ea7af2d7)"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 18,
+    "id": "7c6ec3a02d3347a997a3fc5b1a2c91d0",
+    "title": "Randevu Zamanı Seç (SCR-06)",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "58f9993b5f444ff3a9f9361cb8d3b731",
+        "notes": "Header Back Button -> 58f9993b"
+      },
+      {
+        "text": "Bugün 14 Mayıs",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Yarın 15 Mayıs",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Perşembe 16 Mayıs",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Cuma 17 Mayıs",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Cumartesi 18 Mayıs",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "schedule 09:00 – 11:00",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "schedule 11:00 – 13:00",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "schedule 14:00 – 16:00",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "schedule 16:00 – 18:00",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Randevu talebi gönder arrow_forward",
+        "id": "submit-appointment-btn",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 19,
+    "id": "3bd2afe80ced4d2498ec9f16c7099326",
+    "title": "Randevu Talebi İletildi",
+    "role": "CUSTOMER",
+    "flow": "3. Teklif Karşılaştırma & Randevu",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "Talep detayına git arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Ana sayfaya dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 20,
+    "id": "f3e7de808fdb49c18e3c5d430cb72528",
+    "title": "İş Alanı — Randevu Onaylandı",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chat Mesajlar Mavi Hat Tesisat ile uygulama içinden iletişim kur chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "checklist İş ilerlemesi Henüz başlamadı Usta mekana ulaştığında aktifleşecek chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Randevuyu değiştir veya iptal et",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chat Ustaya mesaj gönder",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 21,
+    "id": "c9aa92f5a4e04897952d05f30c2aef10",
+    "title": "Usta ile Mesajlaşma (SCR-07)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "f3e7de808fdb49c18e3c5d430cb72528",
+        "notes": "Header Back Button -> f3e7de80"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "attach_file",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "photo_camera",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "send",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "Mesajınızı yazın...",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 22,
+    "id": "b89d998c02d34e67b8e8f34334f87f02",
+    "title": "İş Aşamaları ve İlerleme Takibi (SCR-08)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "f3e7de808fdb49c18e3c5d430cb72528",
+        "notes": "Header Back Button -> f3e7de80"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "visibility",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "report_problem Usta ile ilgili bir sorun mu var? Destek ekibine bildir",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chat Ustaya Mesaj Gönder",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 23,
+    "id": "6acc9307352f497ca6bd878d628c6a1a",
+    "title": "Randevu İptal / Değişiklik Talebi (SCR-09)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "f3e7de808fdb49c18e3c5d430cb72528",
+        "notes": "Header Back Button -> f3e7de80"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Randevuyu İptal Et",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "event_repeat Yeni Tarih İste",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "cancel İşi İptal Etmeyi Onayla",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check_circle Vazgeç, Randevuyu Koru",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "optional-note",
+        "placeholder": "Ustaya veya operasyon ekibine iletmek istediğiniz detaylar...",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 24,
+    "id": "d485263b3ae244a9b35500665b5c759b",
+    "title": "İş Tamamlama ve Teslim Onayı (SCR-10)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "f3e7de808fdb49c18e3c5d430cb72528",
+        "notes": "Header Back Button -> f3e7de80"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "İşi Onayla ve Değerlendirmeye Geç arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "report_problem İşte eksik veya sızıntı mı var? Sorun bildir / Destek talep et",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 25,
+    "id": "db8a1b368a7749cbb5fd6cf497f34de6",
+    "title": "Hizmet Değerlendirme ve Puanlama (SCR-11)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "d485263b3ae244a9b35500665b5c759b",
+        "notes": "Header Back Button -> d485263b"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "star",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "star",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "star",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "star",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "star",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check Zamanında geldi",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check Temiz işçilik",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check Şeffaf fiyat",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add Hızlı iletişim",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check Güler yüzlü &amp; Saygılı",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Değerlendirmeyi Yayınla send",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [
+      {
+        "id": "review-notes",
+        "placeholder": "Ustamızın iş kalitesi, malzeme tercihi ve yaklaşımı nasıldı?",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 26,
+    "id": "488f3698f93c454099ca2382585aeb66",
+    "title": "Şikayet ve Uyuşmazlık Bildirimi (SCR-12)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "d485263b3ae244a9b35500665b5c759b",
+        "notes": "Header Back Button -> d485263b"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add_a_photo Kanıt Ekle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "report Şikayet Dosyasını Oluştur (Destek Ekibine İlet) arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "dispute_details",
+        "placeholder": "Neler yaşandığını kronolojik olarak kısaca özetleyin...",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 27,
+    "id": "3bb4b954e5224b0097b2bee12be9bcbf",
+    "title": "Şikayet İletildi ve Durum Takibi (SCR-13)",
+    "role": "CUSTOMER",
+    "flow": "4. Aktif İş, Mesajlaşma & Teslim",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "more_vert",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "assignment_turned_in Taleplerime ve Ana Sayfaya Dön",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "forum Mesaj Kayıtlarını Görüntüle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 28,
+    "id": "20de80b8dc984e86be873761409a2396",
+    "title": "Müşteri Profil & Ayarlar (SCR-C-PROF)",
+    "role": "CUSTOMER",
+    "flow": "5. Müşteri Profil & Ayarlar",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Header Back Button -> cc1f5566"
+      },
+      {
+        "text": "notifications",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "edit",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "location_on Kayıtlı Adreslerim Ev: Kadıköy, Caferağa Mah. chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "verified_user BiTadilat Güvence Havuzu Ödeme ve güvence sistemi bilgisi chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "notifications_active Bildirim Tercihleri SMS ve Uygulama İçi chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "help_outline Yardım &amp; Destek Merkezi SSS, canlı destek ve iletişim chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "lock Gizlilik ve KVKK Veri güvenliği ve aydınlatma metni chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Usta Modu arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "logout Çıkış Yap",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "home Ana Sayfa",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "build Taleplerim",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chat Mesajlar",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "person Profil",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 29,
+    "id": "a512d0928f11b9cb02877746d580c548",
+    "title": "Usta Kayıt & Belge Yükleme (SCR-P-ONB)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "btn-back",
+        "status": "HANDLED",
+        "target": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+        "notes": "Header Back Button -> 0c06b06e"
+      },
+      {
+        "text": "add İlçe Ekle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Değiştir",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Dosya Seç",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Dosya Seç",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Başvuruyu İncelemeye Gönder arrow_forward",
+        "id": "btn-submit-pro",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 30,
+    "id": "def294a930bf4bb78f7ba4f857611884",
+    "title": "Usta Belge İncelemede Bekleme (SCR-P-PENDING)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "support_agent",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "logout",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Örnek Taleplere Göz At (Demo Modu) arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Demo Mode -> Pro Feed (11b9cb02)"
+      },
+      {
+        "text": "home Müşteri Moduna Geç",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Switch to Customer -> Customer Home (cc1f5566)"
+      },
+      {
+        "text": "headset_mic Sorularınız için Usta Destek Hattı ile görüşün",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 31,
+    "id": "11b9cb02877746d580c5484512d0928f",
+    "title": "Usta Eşleşen Talepler Akışı (SCR-14)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "notifications",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "location_on Kadıköy, Üsküdar keyboard_arrow_down",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Tümü 4",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Acil (1)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Planlı (3)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "tune Sırala",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Teklif Hazırla arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detayları İncele visibility",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detayları İncele",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 32,
+    "id": "b9086f1030784def8eb267fd9110addd",
+    "title": "Usta Teklif Hazırlama (SCR-15)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Header Back Button -> 11b9cb02"
+      },
+      {
+        "text": "schedule Bugün, 14:00 – 16:00 arası Randevu aralığı müşteriyle paylaşılacaktır chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Yapılandırılmış Teklifi Gönder (₺2.450) arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "labor-cost",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "text",
+        "id": "material-cost",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 33,
+    "id": "82f9d783b88b40ec8ca6260566c0f5cb",
+    "title": "Usta Teklif Gönderildi Onayı (SCR-16)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Eşleşen Talepler Akışına Dön arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Profil ve Müsaitlik Ayarlarını Aç",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 34,
+    "id": "fc6f0f8e9b724365a5a0f124617dbe7a",
+    "title": "Usta Profil & Müsaitlik Yönetimi (SCR-17)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Header Back Button -> 11b9cb02"
+      },
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "close",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "add_location_alt + İlçe Ekle veya Çıkar",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "save Ayarları ve Müsaitliği Güncelle",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Save Profile -> Pro Feed (11b9cb02)"
+      },
+      {
+        "text": "switch_account Müşteri Moduna Geç",
+        "id": "btn-switch-to-customer",
+        "status": "HANDLED",
+        "target": "cc1f55661a1a4036a890b43d9f15596a",
+        "notes": "Switch to Customer -> Customer Home (cc1f5566)"
+      },
+      {
+        "text": "logout Çıkış Yap",
+        "id": "btn-pro-logout",
+        "status": "HANDLED",
+        "target": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+        "notes": "Pro Logout -> Welcome Screen (0c06b06e)"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "radio",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      },
+      {
+        "type": "checkbox",
+        "id": "",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "usta_bio",
+        "placeholder": "",
+        "tested": true
+      }
+    ],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 35,
+    "id": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "title": "Usta İş Yürütme & Aşama Yönetimi (SCR-18)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Header Back Button -> 11b9cb02"
+      },
+      {
+        "text": "directions Haritada Yol Tarifi Al",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chat Müşteriye Mesaj Yaz",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Yükle",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "İşi Bitirdim (Müşteriye Teslim Talebi Gönder) arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "warning Sahada bir anlaşmazlık mı var? Durum Bildir / Destek İste",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 36,
+    "id": "dbf40b28dba64bd1bedb40e075662c42",
+    "title": "Usta Randevu İptali Bildirimi (SCR-P-CANCEL)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "arrow_back",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "Header Back Button -> 11b9cb02"
+      },
+      {
+        "text": "help_outline",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Yeni İş Fırsatlarına Git arrow_forward",
+        "id": "",
+        "status": "HANDLED",
+        "target": "11b9cb02877746d580c5484512d0928f",
+        "notes": "New Opportunities -> Pro Feed (11b9cb02)"
+      },
+      {
+        "text": "chat_bubble_outline Müşteri ile Mesajlaş",
+        "id": "",
+        "status": "HANDLED",
+        "target": "c9aa92f5a4e04897952d05f30c2aef10",
+        "notes": "Chat with Customer -> Chat Screen (c9aa92f5)"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 37,
+    "id": "c6ebf06dae18ba8c346d11c46f39163f",
+    "title": "Usta Teslim Bildirimi İletildi (SCR-P-DONE)",
+    "role": "PRO",
+    "flow": "6. Hizmet Profesyoneli (Usta)",
+    "device": "MOBILE",
+    "buttons": [
+      {
+        "text": "close",
+        "id": "btn-close",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Eşleşen Talepler Akışına Dön arrow_forward",
+        "id": "btn-return-feed",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Müsaitlik ve Profil Ayarlarını Aç",
+        "id": "btn-goto-availability",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 38,
+    "id": "612429fdea1b42a1bf9e628883f7e58f",
+    "title": "Yönetici Web: Belge İnceleme (SCR-19)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "device": "DESKTOP",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "refresh",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Tümü (3)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Acil Tesisat",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Elektrik",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "zoom_in Tam Ekran",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "check_circle Profili Onayla ve Yayına Al",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "cancel Başvuruyu Reddet",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "history_edu Eksik Belge Talebi İlet",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "Usta veya işletme ara...",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 39,
+    "id": "cb00d67723e34ec990786a82d25c77ca",
+    "title": "Yönetici Web: Şikayet Merkezi (SCR-20)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "device": "DESKTOP",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "refresh",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Tümü (3)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "No-Show (1)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Ücret İtirazı",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Şikayeti Reddet / Kapat",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "send Ustaya Resmi İhtar Gönder",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "gavel İşi İptal Et (Uyuşmazlığı Müşteri Lehine Kapat)",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "Dosya veya kişi ara...",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 40,
+    "id": "5ce8968e2703443ca129c0e7c9e9d145",
+    "title": "Yönetici Web: Hesap Yönetimi (SCR-21)",
+    "role": "ADMIN",
+    "flow": "7. Yönetici Portalı & Web",
+    "device": "DESKTOP",
+    "buttons": [
+      {
+        "text": "logout Çıkış Yap",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "refresh",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detay Gör",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Askıya Al",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detay Gör",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Askıya Al",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "İncele",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Yeniden Aktifleştir",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Detay Gör",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "Askıya Al",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chevron_left",
+        "id": "",
+        "status": "HANDLED",
+        "target": "cb00d67723e34ec990786a82d25c77ca",
+        "notes": "Header Back Button -> cb00d677"
+      },
+      {
+        "text": "1",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "2",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "3",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "72",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "chevron_right",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "id": "",
+        "placeholder": "Ad, telefon veya kullanıcı ID ile ara...",
+        "tested": true
+      }
+    ],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  },
+  {
+    "step_num": 41,
+    "id": "164cd33666284338b929a8325dc5ea20",
+    "title": "BiTadilat Tanıtım ve Karşılama Sitesi (SCR-22)",
+    "role": "WEB",
+    "flow": "7. Yönetici Portalı & Web",
+    "device": "DESKTOP",
+    "buttons": [
+      {
+        "text": "TR",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      },
+      {
+        "text": "EN",
+        "id": "",
+        "status": "HANDLED",
+        "target": null,
+        "notes": "UI action button"
+      }
+    ],
+    "inputs": [],
+    "textareas": [],
+    "links": [],
+    "interactive_findings": []
+  }
+]
