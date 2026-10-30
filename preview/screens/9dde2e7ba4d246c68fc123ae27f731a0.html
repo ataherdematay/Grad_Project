@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BiTadilat Yönetici Web Portalı — Uyuşmazlık Çözüm Karar Modalı</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#642b00",
+            "on-tertiary-container": "#6ac4a1",
+            "on-secondary-fixed-variant": "#763300",
+            "surface-disabled": "#E9EEEB",
+            "alert-red": "#B9382C",
+            "surface": "#FFFFFF",
+            "on-tertiary-fixed": "#002116",
+            "text-secondary": "#5F6F73",
+            "on-surface-variant": "#40484b",
+            "surface-container-high": "#d2ecfa",
+            "surface-container-highest": "#cce7f4",
+            "outline": "#70787c",
+            "tertiary-fixed": "#99f5ce",
+            "surface-variant": "#cce7f4",
+            "on-background": "#031e28",
+            "error-container": "#ffdad6",
+            "primary": "#003441",
+            "surface-bright": "#f3faff",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#9b4500",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "tertiary": "#003727",
+            "surface-container-low": "#e6f6ff",
+            "info-blue": "#247BA0",
+            "background": "#f3faff",
+            "secondary-container": "#fd8535",
+            "canvas": "#F7F8F6",
+            "tertiary-container": "#00503a",
+            "outline-variant": "#c0c8cb",
+            "on-tertiary-fixed-variant": "#00513b",
+            "on-primary-container": "#87bbce",
+            "on-primary-fixed-variant": "#114d5d",
+            "surface-tint": "#306576",
+            "on-tertiary": "#ffffff",
+            "tertiary-fixed-dim": "#7dd8b3",
+            "inverse-primary": "#9acee1",
+            "inverse-on-surface": "#dff4ff",
+            "surface-dim": "#c4deeb",
+            "secondary-fixed": "#ffdbc9",
+            "secondary-fixed-dim": "#ffb68d",
+            "error": "#ba1a1a",
+            "on-surface": "#031e28",
+            "primary-fixed-dim": "#9acee1",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#331200",
+            "on-primary": "#ffffff",
+            "surface-container": "#d8f2ff",
+            "border-subtle": "#D9E1DD",
+            "on-primary-fixed": "#001f28",
+            "inverse-surface": "#1a343e",
+            "dark-teal": "#0A3945",
+            "primary-fixed": "#b6ebfe",
+            "primary-container": "#0f4c5c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem",
+            "gutter": "0.75rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Manrope"],
+            "headline-sm": ["Manrope"],
+            "label-sm": ["Manrope"],
+            "headline-md": ["Manrope"],
+            "label-md": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "body-md": ["Manrope"],
+            "body-lg": ["Manrope"],
+            "body-md-medium": ["Manrope"],
+            "body-lg-medium": ["Manrope"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md-medium": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-lg-medium": ["16px", { "lineHeight": "22px", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F7F8F6;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #D9E1DD;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-white min-h-screen relative overflow-hidden">
+<!-- ======================================================== -->
+<!-- BACKGROUND LAYER: Yönetici Portalı Uyuşmazlık Merkezi (SCR-20) -->
+<!-- ======================================================== -->
+<div class="fixed inset-0 flex flex-col pointer-events-none filter blur-[2px] opacity-40 select-none">
+<!-- Top Admin Header Bar -->
+<header class="h-16 bg-surface border-b border-border-subtle flex items-center justify-between px-8">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-white font-bold">BT</div>
+<span class="font-headline-sm text-primary font-bold tracking-tight">BiTadilat Admin</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-primary-container px-2 py-0.5 rounded">v2.4 Uyuşmazlık Masası</span>
+</div>
+<nav class="flex items-center gap-4 text-text-secondary text-body-md">
+<span class="hover:text-primary cursor-pointer">Panel</span>
+<span class="hover:text-primary cursor-pointer font-bold text-primary border-b-2 border-primary-container pb-1">Uyuşmazlık Çözüm Havuzu (32)</span>
+<span class="hover:text-primary cursor-pointer">Emanet Hesaplar (Escrow)</span>
+<span class="hover:text-primary cursor-pointer">Esnaf Sicilleri</span>
+</nav>
+</div>
+<div class="flex items-center gap-4 text-text-secondary">
+<span class="material-symbols-outlined text-outline">notifications</span>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-border-subtle flex items-center justify-center font-bold text-primary">HY</div>
+<span class="text-body-md font-body-md-medium">Hakem Heyeti Raportörü</span>
+</div>
+</div>
+</header>
+<!-- Background Table & Stats Preview -->
+<main class="flex-1 p-8 space-y-6 bg-canvas">
+<div class="grid grid-cols-4 gap-4">
+<div class="p-4 bg-surface rounded-xl border border-border-subtle shadow-sm">
+<div class="text-text-secondary text-label-md">Aktif Açık Uyuşmazlık</div>
+<div class="text-headline-lg font-headline-lg text-primary mt-1">32 Dosya</div>
+</div>
+<div class="p-4 bg-surface rounded-xl border border-border-subtle shadow-sm">
+<div class="text-text-secondary text-label-md">Güvence Havuzu Bloke Tutar</div>
+<div class="text-headline-lg font-headline-lg text-primary mt-1">₺78.450,00</div>
+</div>
+<div class="p-4 bg-surface rounded-xl border border-border-subtle shadow-sm">
+<div class="text-text-secondary text-label-md">Ortalama Karar Süresi</div>
+<div class="text-headline-lg font-headline-lg text-primary mt-1">3.4 Saat</div>
+</div>
+<div class="p-4 bg-surface rounded-xl border border-border-subtle shadow-sm">
+<div class="text-text-secondary text-label-md">İade Oranı (Son 30 Gün)</div>
+<div class="text-headline-lg font-headline-lg text-primary mt-1">%14.2</div>
+</div>
+</div>
+<div class="bg-surface rounded-xl border border-border-subtle p-6 space-y-4 shadow-sm">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-sm text-headline-sm text-primary">Bekleyen Hakem İncelemeleri</h2>
+<div class="h-9 w-64 bg-canvas rounded-lg border border-border-subtle"></div>
+</div>
+<div class="space-y-3">
+<div class="h-12 bg-canvas rounded-lg"></div>
+<div class="h-12 bg-canvas rounded-lg"></div>
+<div class="h-12 bg-canvas rounded-lg"></div>
+<div class="h-12 bg-canvas rounded-lg"></div>
+</div>
+</div>
+</main>
+</div>
+<!-- ======================================================== -->
+<!-- MODAL BACKDROP (Tier 3: Overlay rgba(16, 42, 52, 0.40)) -->
+<!-- ======================================================== -->
+<div class="fixed inset-0 z-50 bg-[#102A34]/50 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+<!-- ======================================================== -->
+<!-- DESKTOP DECISION MODAL (SCR-A-DISPUTE-DECISION)           -->
+<!-- Width: max-w-4xl (approx 900px), Modern Clean Card       -->
+<!-- ======================================================== -->
+<div class="bg-surface w-full max-w-4xl rounded-2xl border border-border-subtle shadow-2xl flex flex-col max-h-[942px] overflow-hidden my-auto transform transition-all animate-in fade-in zoom-in-95 duration-200">
+<!-- 1. ÜST MODAL BAŞLIĞI (Header) -->
+<header class="px-space-xl py-space-lg border-b border-border-subtle flex items-start justify-between bg-surface sticky top-0 z-10">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-[#E7F3EF] flex items-center justify-center text-[#107A5B]">
+<span class="material-symbols-outlined text-[20px]" data-icon="gavel" style="font-variation-settings: 'FILL' 1;">gavel</span>
+</span>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">
+              Dosya #UYS-2026-8812 — Hakem Heyeti Nihai Kararı
+            </h1>
+</div>
+<div class="flex items-center gap-2 pl-11">
+<!-- Badge 1: Acil Uyuşmazlık Dosyası -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-label-sm font-label-sm bg-[#FDF1E9] text-[#E87525] border border-[#E87525]/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="error">error</span>
+              Acil Uyuşmazlık Dosyası
+            </span>
+<!-- Badge 2: Hakem İncelemesinde -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-label-sm font-label-sm bg-[#E9F2F6] text-[#247BA0] border border-[#247BA0]/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="pending">pending</span>
+              Hakem İncelemesinde
+            </span>
+<span class="text-text-secondary text-label-sm font-label-sm">• Oluşturulma: Bugün, 15:42 (Kadıköy Nöbetçi Heyet)</span>
+</div>
+</div>
+<!-- Sağ üst Kapatma Butonu -->
+<button aria-label="Kapat" class="w-9 h-9 rounded-lg border border-border-subtle text-text-secondary hover:text-primary hover:bg-canvas flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</header>
+<!-- MODAL SCROLLABLE BODY -->
+<div class="overflow-y-auto custom-scrollbar p-space-xl space-y-space-xl flex-1 bg-surface">
+<!-- 2. DAVA & DOSYA ÖZETİ PANELİ (Masaüstü 2 Sütunlu Kart) -->
+<section class="bg-canvas rounded-xl border border-border-subtle p-5">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-border-subtle/80">
+<span class="text-label-md font-label-md text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="balance">balance</span>
+              Uyuşmazlık Taraf ve Emanet Havuz Analizi
+            </span>
+<span class="text-label-sm font-label-sm text-text-secondary">Hizmet No: <strong class="text-primary font-bold">#504 — Banyo Su Borusu &amp; Vana Onarımı</strong></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Sol Sütun: Müşteri Bilgileri -->
+<div class="space-y-3 bg-surface p-4 rounded-lg border border-border-subtle">
+<div class="flex items-start justify-between">
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary">Tüketici / Başvuru Sahibi</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-primary">Ayşe Demir</span>
+<span class="inline-flex items-center gap-0.5 text-label-sm font-label-sm text-[#107A5B] bg-[#E7F3EF] px-2 py-0.5 rounded-full font-bold">
+<span class="material-symbols-outlined text-[13px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                      Doğrulanmış Hesap
+                    </span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-text-secondary">Konum</span>
+<div class="text-body-md font-body-md-medium text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-text-secondary" data-icon="location_on">location_on</span>
+                    Kadıköy, Caferağa Mah.
+                  </div>
+</div>
+</div>
+<!-- Şikayet Türü Rozeti -->
+<div class="pt-2 border-t border-border-subtle/60 flex items-center justify-between">
+<span class="text-label-md font-label-md text-text-secondary">Bildirilen Şikayet Türü:</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded text-label-sm font-label-sm bg-[#FDF1E9] text-alert-red font-bold border border-alert-red/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="person_cancel">person_cancel</span>
+                  No-Show / Usta Randevuya Gelmedi
+                </span>
+</div>
+</div>
+<!-- Sağ Sütun: Usta & Havuz Bilgileri -->
+<div class="space-y-3 bg-surface p-4 rounded-lg border border-border-subtle">
+<div class="flex items-start justify-between">
+<div>
+<div class="text-label-sm font-label-sm text-text-secondary">Hizmet Veren Esnaf</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-headline-sm text-headline-sm text-primary">Kaya Tesisat</span>
+<span class="text-body-md text-text-secondary font-normal">(Mehmet Demir Usta)</span>
+</div>
+<div class="text-label-sm font-label-sm text-text-secondary mt-1 flex items-center gap-1.5">
+<span class="text-secondary font-bold">★ 4.9</span>
+<span>(42 Başarılı İş)</span>
+<span>•</span>
+<span class="text-[#107A5B] font-semibold">Onaylı Esnaf</span>
+</div>
+</div>
+<!-- Güvence Havuzu Bakiye Kartı -->
+<div class="bg-[#F7F8F6] p-2.5 rounded-lg border border-border-subtle text-right min-w-[150px]">
+<div class="text-label-sm font-label-sm text-text-secondary">Güvence Havuzu Tutarı</div>
+<div class="text-headline-md font-headline-md text-primary font-bold tracking-tight">₺2.450,00</div>
+<div class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F4C5C] mt-0.5">
+<span class="material-symbols-outlined text-[13px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+                    Emanet Hesapta Bloke
+                  </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. HAKEM KARAR SEÇENEKLERİ (3 Adet Tıklanabilir Geniş Seçim Kartı) -->
+<section class="space-y-3">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="rule">rule</span>
+              Hakem Karar Hükmü Seçimi
+            </h2>
+<span class="text-label-sm font-label-sm text-text-secondary">Yalnızca 1 nihai hüküm seçilebilir</span>
+</div>
+<div aria-label="Hakem Karar Seçenekleri" class="space-y-3" role="radiogroup">
+<!-- Seçenek 1: Aktif Seçili Durum (%100 Müşteriye İade) -->
+<label class="group relative flex items-start gap-4 p-4 rounded-xl border-2 border-[#0F4C5C] bg-[#F7F8F6] cursor-pointer shadow-sm transition-all hover:bg-surface">
+<div class="pt-0.5">
+<input checked="" class="w-5 h-5 text-primary border-2 border-primary focus:ring-primary-container" name="decision_selection" type="radio" value="full_refund"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2.5">
+<span class="font-body-lg-medium text-body-lg-medium text-primary">%100 Müşteriye İade (Tam Haklılık)</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-[#E7F3EF] text-[#107A5B] font-bold border border-[#107A5B]/30">
+<span class="material-symbols-outlined text-[14px]" data-icon="price_check">price_check</span>
+                      ₺2.450,00 İade
+                    </span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-alert-red bg-[#ffdad6] px-2 py-0.5 rounded">
+                    Müşteri Haklı Bulundu
+                  </span>
+</div>
+<p class="text-body-md text-text-secondary mt-1.5 leading-relaxed">
+                  ₺2.450 tutarın tamamı müşterinin kredi kartına anında iade edilir. Güvence havuzu blokesi çözülür ve ustaya sistem uyarısı verilir.
+                </p>
+</div>
+</label>
+<!-- Seçenek 2: Pasif / Seçilebilir (%50 / %50 Kısmi Uzlaşma) -->
+<label class="group relative flex items-start gap-4 p-4 rounded-xl border border-border-subtle bg-surface hover:border-primary/40 cursor-pointer transition-all hover:bg-canvas">
+<div class="pt-0.5">
+<input class="w-5 h-5 text-primary border-2 border-border-subtle focus:ring-primary-container" name="decision_selection" type="radio" value="split_settlement"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2.5">
+<span class="font-body-lg-medium text-body-lg-medium text-primary">%50 / %50 Kısmi Uzlaşma</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-[#0F4C5C] font-semibold border border-border-subtle">
+                      ₺1.225 / ₺1.225 Taksimat
+                    </span>
+</div>
+</div>
+<p class="text-body-md text-text-secondary mt-1 leading-relaxed">
+                  ₺1.225 müşteriye iade, ₺1.225 malzeme veya yol masrafı olarak ustaya aktarılır.
+                </p>
+</div>
+</label>
+<!-- Seçenek 3: Pasif / Seçilebilir (%100 Ustaya Aktarım) -->
+<label class="group relative flex items-start gap-4 p-4 rounded-xl border border-border-subtle bg-surface hover:border-primary/40 cursor-pointer transition-all hover:bg-canvas">
+<div class="pt-0.5">
+<input class="w-5 h-5 text-primary border-2 border-border-subtle focus:ring-primary-container" name="decision_selection" type="radio" value="full_payout_artisan"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-2.5">
+<span class="font-body-lg-medium text-body-lg-medium text-primary">%100 Ustaya Aktarım (Şikayet Reddi)</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-label-sm font-label-sm bg-surface-disabled text-text-secondary font-semibold">
+                      ₺2.450,00 Ustaya Ödeme
+                    </span>
+</div>
+</div>
+<p class="text-body-md text-text-secondary mt-1 leading-relaxed">
+                  İşin usulüne uygun yapıldığı veya haksız şikayet olduğu tespit edildi, bloke tutar ustaya ödenir.
+                </p>
+</div>
+</label>
+</div>
+</section>
+<!-- 4. RESMİ GEREKÇELİ KARAR RAPORU (Textarea / Denetim Notu) -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between">
+<label class="font-headline-sm text-headline-sm text-primary flex items-center gap-2" for="decision-notes">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="description">description</span>
+              Resmi Gerekçeli Karar Raporu (İdari Arşiv &amp; Taraflara Bildirim)
+            </label>
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-[#107A5B]">
+<span class="material-symbols-outlined text-[15px]" data-icon="verified_user">verified_user</span>
+              Yasal Denetim Kaydı
+            </div>
+</div>
+<div class="relative">
+<textarea class="w-full bg-surface border border-border-subtle rounded-xl p-3.5 text-body-md font-body-md text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all leading-relaxed custom-scrollbar shadow-inner" id="decision-notes" placeholder="Hakem heyeti karar gerekçesini detaylandırınız..." rows="4">Müşteri ve usta arasındaki zaman damgalı mesajlaşma kayıtları, konum sinyalleri ve çağrı geçmişi incelenmiştir. Randevu saati olan 14:00 üzerinden 45 dakika geçmesine rağmen ustanın adrese gitmediği ve mücbir sebep bildirmeksizin iletişimsiz kaldığı teyit edilmiştir. BiTadilat Güvence Protokolü Madde 8 uyarınca müşterinin tam iade hakkı doğmuştur.</textarea>
+</div>
+<div class="flex items-center justify-between text-label-sm font-label-sm text-text-secondary px-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock">lock</span>
+              Bu metin taraflara resmi SMS ve e-posta tebligatı ile iletilecektir.
+            </span>
+<span class="font-body-md-medium text-text-secondary">284 / 1000 Karakter</span>
+</div>
+</section>
+<!-- 5. İDARİ YAPTIRIM SEÇENEKLERİ (Checkbox Listesi) -->
+<section class="bg-[#F7F8F6] rounded-xl border border-border-subtle p-4 space-y-3">
+<div class="text-label-md font-label-md text-primary font-bold flex items-center gap-1.5 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="warning">warning</span>
+            Usta İçin Bağlayıcı İdari Yaptırımlar
+          </div>
+<div class="space-y-2.5">
+<!-- Checkbox 1: İşaretli -->
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="pt-0.5">
+<input checked="" class="w-5 h-5 rounded text-primary-container border-2 border-border-subtle focus:ring-primary-container focus:ring-offset-0" type="checkbox"/>
+</div>
+<div class="text-body-md font-body-md text-on-surface">
+<span>Ustaya resmi sistem ihtarı ilet ve ceza puanı (<strong class="text-alert-red font-bold">-15 Puan</strong>) uygula</span>
+<p class="text-label-sm font-label-sm text-text-secondary">Bu ceza ustanın bölge sıralamasını ve vitrin görünürlüğünü 30 gün boyunca etkiler.</p>
+</div>
+</label>
+<!-- Checkbox 2: İşaretsiz -->
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="pt-0.5">
+<input class="w-5 h-5 rounded text-primary-container border-2 border-border-subtle focus:ring-primary-container focus:ring-offset-0" type="checkbox"/>
+</div>
+<div class="text-body-md font-body-md text-on-surface">
+<span>Ustanın acil iş alımını 48 saat süreyle askıya al</span>
+<p class="text-label-sm font-label-sm text-text-secondary">Tekrarlanan no-show vakalarında zorunlu güvenlik tedbiri olarak önerilir.</p>
+</div>
+</label>
+</div>
+</section>
+</div>
+<!-- 6. ALT EYLEM ÇUBUĞU (Footer Action Bar) -->
+<footer class="px-space-xl py-4 bg-surface border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 sticky bottom-0 z-10">
+<!-- Sol Güvenlik Notu -->
+<div class="flex items-center gap-2 text-text-secondary text-label-sm font-label-sm max-w-sm">
+<span class="material-symbols-outlined text-[20px] text-[#107A5B] shrink-0" data-icon="shield">shield</span>
+<span>İade işlemi BDDK lisanslı ödeme altyapısı üzerinden <strong>256-Bit SSL</strong> ile bankaya iletilir.</span>
+</div>
+<!-- Sağ Aksiyon Butonları -->
+<div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+<!-- İkincil Buton -->
+<button class="h-[52px] px-5 rounded-[14px] bg-surface border border-border-subtle text-primary font-body-md-medium hover:bg-canvas active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-primary" type="button">
+            Vazgeç / İncelemeye Dön
+          </button>
+<!-- Birincil Ana Aksiyon Butonu -->
+<button class="h-[52px] px-6 rounded-[14px] bg-alert-red text-white font-body-lg-medium flex items-center justify-center gap-2 hover:bg-[#9E2F25] active:scale-95 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-alert-red/50" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Nihai Kararı Onayla ve ₺2.450 İadeyi Başlat</span>
+</button>
+</div>
+</footer>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- BiTadilat Universal State & Navigation Controller -->
+<script>
+(function() {
+  const SPEC = {"id": "9dde2e7ba4d246c68fc123ae27f731a0", "step_num": 46, "title": "Yönetici Web: Uyuşmazlık Karar Modalı (SCR-A-DISPUTE-DECISION)", "flow": "7. Yönetici Portalı & Web", "role": "ADMIN", "device": "DESKTOP", "back_sid": "cb00d67723e34ec990786a82d25c77ca", "next_sid": "cb00d67723e34ec990786a82d25c77ca"};
+  const CURRENT_SID = "9dde2e7ba4d246c68fc123ae27f731a0";
+
+  // Persist role in session storage
+  if (SPEC.role === 'PRO') {
+    sessionStorage.setItem('bitadilat_active_role', 'PRO');
+  } else if (SPEC.role === 'CUSTOMER') {
+    sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+  } else if (SPEC.role === 'ADMIN') {
+    sessionStorage.setItem('bitadilat_active_role', 'ADMIN');
+  }
+
+  // --- Universal Toast Component ---
+  window.bitadilatToast = function(message, type) {
+    let container = document.getElementById('bitadilat-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'bitadilat-toast-container';
+      container.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:999999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:90%;max-width:360px;';
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    const isError = (type === 'error');
+    toast.style.cssText = `background:${isError ? '#B9382C' : '#0F4C5C'};color:#FFFFFF;padding:10px 16px;border-radius:12px;font-family:Manrope,sans-serif;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.18);display:flex;align-items:center;gap:8px;pointer-events:auto;animation:btdToastIn 0.25s ease forwards;`;
+    toast.innerHTML = `<span style="font-size:16px;">${isError ? '✕' : '✓'}</span><span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3200);
+  };
+
+  // --- i18n Bilingual (TR / EN) Engine ---
+  const I18N_DICT = {"Hoş Geldiniz": "Welcome", "Geri": "Back", "Devam Et": "Continue", "Sonraki": "Next", "Önceki": "Previous", "Sonraki Adım": "Next Step", "Önceki Adım": "Previous Step", "İptal": "Cancel", "İptal Et": "Cancel", "Vazgeç": "Cancel", "Kaydet": "Save", "Onayla": "Approve", "Gönder": "Submit", "Tamamla": "Complete", "Filtrele": "Filter", "Arama": "Search", "Detaylar": "Details", "Ayrıntılar": "Details", "Kapat": "Close", "Yardım": "Help", "Destek": "Support", "Çıkış Yap": "Log Out", "Oturumu Kapat": "Log Out", "Giriş yap": "Log in", "Giriş Yap": "Log in", "Kayıt Ol": "Sign Up", "Uygula": "Apply", "Düzenle": "Edit", "Yenile": "Refresh", "Tümü": "All", "Temizle": "Clear", "Seç": "Select", "Seçiniz": "Select", "Ana Sayfa": "Home", "Taleplerim": "My Requests", "Talepler": "Requests", "Mesajlar": "Messages", "Profil": "Profile", "İşlerim": "My Jobs", "Aktif İşler": "Active Jobs", "Müsaitlik": "Availability", "Takvim": "Calendar", "Ayarlar": "Settings", "Bildirimler": "Notifications", "Evin için doğru ustayı güvenle bul.": "Find the right tradesperson for your home with confidence.", "İhtiyacını anlat, doğrulanmış ustalardan şeffaf ve garantili teklifler al.": "Describe your need, get transparent and guaranteed offers from verified pros.", "Onaylı Ustalar": "Verified Pros", "Sabit Fiyat": "Fixed Price", "İş Garantisi": "Work Guarantee", "Nasıl başlamak istersin?": "How would you like to start?", "Ev sahibi / Müşteri": "Homeowner / Customer", "Onarım veya yenileme ihtiyacım var.": "I need repair or renovation.", "Hizmet profesyoneli": "Service Professional", "Yeni iş fırsatları arıyorum.": "I am looking for new job opportunities.", "Telefon numarasıyla devam et": "Continue with phone number", "Zaten bir hesabın var mı?": "Already have an account?", "Ev & Usta Ağı": "Home & Pro Network", "Ev &amp; Usta Ağı": "Home & Pro Network", "Devam ederek": "By continuing, you agree to our", "Kullanım Koşulları": "Terms of Use", "Gizlilik Politikası": "Privacy Policy", "Telefon Numaranı Gir": "Enter Your Phone Number", "Telefon Numarası": "Phone Number", "Giriş yapmak ve randevularını yönetmek için 10 haneli cep telefonu numaranı yaz.": "Enter your 10-digit mobile phone number to log in and manage your appointments.", "Kodu Gönder": "Send Code", "SMS ile tek kullanımlık şifre gönderilecektir.": "A one-time verification code will be sent via SMS.", "SMS Doğrulama": "SMS Verification", "SMS Doğrulama Kodu": "SMS Verification Code", "Doğrula ve Devam Et": "Verify & Continue", "Kodu tekrar gönder": "Resend code", "Kalan süre:": "Time remaining:", "Kalan süre": "Time remaining", "Doğrulama Kodu": "Verification Code", "Tesisat": "Plumbing", "Elektrik": "Electrical", "Boya & Badana": "Painting", "Tadilat & Dekorasyon": "Renovation", "Klima & Havalandırma": "HVAC & AC", "Mobilya Montaj": "Furniture Assembly", "Temizlik": "Cleaning", "Popüler Hizmetler": "Popular Services", "Aktif Taleplerin": "Your Active Requests", "Teklif Bekleniyor": "Awaiting Offers", "Gelen Teklifler": "Received Offers", "Kategoriler": "Categories", "Tümünü Gör": "View All", "Talep Oluştur": "Create Request", "Hizmet & Öncelik": "Service & Priority", "Konum & İş Detayı": "Location & Job Details", "Fotoğraflar & Ek Bilgi": "Photos & Additional Info", "Talebi Gözden Geçir": "Review Request", "Acil onarım": "Urgent repair", "Planlı yenileme": "Planned renovation", "Mevcut konumumu kullan": "Use my current location", "Talebi Yayınla": "Publish Request", "Taleplerime Git": "Go to My Requests", "Teklif Detayı": "Offer Details", "Teklif Detayı & Kapsam": "Offer Details & Scope", "Teklifi İncele": "View Offer", "Teklifi Kabul Et": "Accept Offer", "Teklifi Reddet": "Reject Offer", "Teklifleri Karşılaştır": "Compare Offers", "Hizmet Profesyoneli Profili": "Service Pro Profile", "Ustaya soru sor": "Ask the Pro a question", "Ustaya Soru Sor": "Ask the Pro a question", "Profili Görüntüle": "View Profile", "Teklife Dön": "Back to Offer", "Vazgeç, Teklife Dön": "Cancel, Back to Offer", "Güvence Havuzu ile Güvenli Ödeme": "Secure Payment with Escrow", "Ödeme Tutarı": "Payment Amount", "Randevu Zamanı Seç": "Select Appointment Time", "Randevu talebi gönder": "Send appointment request", "Randevu Talebi İletildi": "Appointment Request Sent", "İş Alanı — Randevu Onaylandı": "Workspace — Appointment Confirmed", "Usta ile Mesajlaşma": "Chat with Pro", "İş Aşamaları ve İlerleme Takibi": "Job Milestones & Progress Tracking", "İş Tamamlama ve Teslim Onayı": "Work Completion & Delivery Approval", "Hizmet Değerlendirme ve Puanlama": "Service Rating & Review", "Değerlendirmeyi Yayınla": "Publish Review", "Şikayet ve Uyuşmazlık Bildirimi": "Dispute & Complaint Report", "Şikayet İletildi ve Durum Takibi": "Dispute Submitted & Status Tracking", "Randevu İptal / Değişiklik Talebi": "Cancel / Reschedule Appointment", "Müşteri Profil & Ayarlar": "Customer Profile & Settings", "Usta Moduna Geç": "Switch to Pro Mode", "Müşteri Moduna Geç": "Switch to Customer Mode", "Usta Kayıt & Belge Yükleme": "Pro Registration & Document Upload", "Usta Belge İncelemede Bekleme": "Pro Document Verification Pending", "Usta Eşleşen Talepler Akışı": "Pro Matching Requests Feed", "Usta Teklif Hazırlama": "Pro Offer Preparation", "Yapılandırılmış Teklifi Gönder": "Send Structured Offer", "Usta Teklif Gönderildi Onayı": "Pro Offer Sent Confirmation", "Usta Profil & Müsaitlik Yönetimi": "Pro Profile & Availability Management", "Usta İş Yürütme & Aşama Yönetimi": "Pro Job Execution & Milestone Management", "İşi Bitirdim": "Finished Job", "Haritada Yol Tarifi Al": "Get Directions on Map", "Usta Randevu İptali Bildirimi": "Pro Cancellation Notice", "Usta Teslim Bildirimi İletildi": "Pro Delivery Notice Sent", "Yönetici Web: Belge İnceleme": "Admin Web: Document Review", "Yönetici Web: Şikayet Merkezi": "Admin Web: Disputes Center", "Yönetici Web: Hesap Yönetimi": "Admin Web: Account Management", "Profili Onayla ve Yayına Al": "Approve Profile & Publish", "Başvuruyu Reddet": "Reject Application", "İşi İptal Et": "Cancel Job", "BiTadilat Tanıtım ve Karşılama Sitesi": "BiTadilat Landing & Welcome Page", "3D Secure ile Güvenli Ödeme Doğrulaması": "Secure Payment Verification with 3D Secure", "3D Secure SMS ile Güvenli Doğrulama": "Secure 3D Secure SMS Verification", "Onayla ve Ödemeyi Tamamla": "Confirm & Complete Payment", "İşlemi İptal Et ve Teklife Geri Dön": "Cancel Transaction & Return to Offer", "Gelen Teklifleri Filtrele ve Sırala": "Filter & Sort Received Offers", "Teklifleri Filtrele & Sırala": "Filter & Sort Offers", "Önerilen Sıralama": "Recommended Sorting", "En Düşük Fiyat": "Lowest Price", "En Yüksek Puan": "Highest Rating", "En Hızlı Varış": "Fastest Arrival", "Maksimum Fiyat Aralığı": "Maximum Price Range", "Filtreleri Temizle": "Clear Filters", "Sonuçları Uygula": "Apply Results", "Müşteri Değerlendirmeleri": "Customer Reviews", "Doğrulanmış İşlem": "Verified Transaction", "Zamanında Geldi": "Arrived on Time", "Temiz İşçilik": "Clean Workmanship", "Şeffaf Fiyat": "Transparent Price", "Bildirim Merkezi": "Notification Center", "Tümünü Okundu Say": "Mark All as Read", "Müşteri Adresine Rota": "Route to Customer Address", "Mekana Ulaştım": "Arrived at Location", "Adrese Ulaştım": "Arrived at Address", "Adresi Kopyala": "Copy Address", "Teklif Kalemleri ve Maliyet Dağılımı": "Offer Items & Cost Breakdown", "İşçilik Hizmetleri": "Labor Services", "Malzeme ve Parçalar": "Materials & Parts", "Genel Toplam": "Grand Total", "Hakem Heyeti Nihai Kararı": "Arbitration Board Final Decision", "Nihai Kararı Onayla": "Confirm Final Decision", "Garantili Hizmet": "Guaranteed Service", "Şeffaf Fiyatlandırma": "Transparent Pricing", "Güvenli Ödeme": "Secure Payment"};
+  const sortedKeys = Object.keys(I18N_DICT).sort((a, b) => b.length - a.length);
+
+  function translateText(text) {
+    if (!text || typeof text !== 'string') return text;
+    const trimmed = text.trim();
+    if (!trimmed) return text;
+    if (I18N_DICT[trimmed]) {
+      return text.replace(trimmed, I18N_DICT[trimmed]);
+    }
+    let res = text;
+    for (let i = 0; i < sortedKeys.length; i++) {
+      const k = sortedKeys[i];
+      if (k.length > 2 && res.includes(k)) {
+        res = res.split(k).join(I18N_DICT[k]);
+      }
+    }
+    return res;
+  }
+
+  function updateToggleButtons(lang) {
+    const isEn = (lang === 'EN');
+    const allBtns = document.querySelectorAll('button, [data-lang]');
+    allBtns.forEach(btn => {
+      const txt = (btn.textContent || btn.innerText || '').trim().toUpperCase();
+      const isTrBtn = (txt === 'TR' || btn.getAttribute('data-lang') === 'TR' || btn.id === 'btn-lang-tr' || btn.id === 'btn-lang-tr-web');
+      const isEnBtn = (txt === 'EN' || btn.getAttribute('data-lang') === 'EN' || btn.id === 'btn-lang-en' || btn.id === 'btn-lang-en-web');
+
+      if (isTrBtn) {
+        if (isEn) {
+          btn.style.backgroundColor = 'transparent';
+          btn.style.color = '#5F6F73';
+          btn.style.fontWeight = '500';
+          btn.style.boxShadow = 'none';
+        } else {
+          btn.style.backgroundColor = (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') ? '#FFFFFF' : '#0F4C5C';
+          btn.style.color = (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') ? '#0F4C5C' : '#FFFFFF';
+          btn.style.fontWeight = '700';
+          btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+        }
+      } else if (isEnBtn) {
+        if (isEn) {
+          btn.style.backgroundColor = (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') ? '#FFFFFF' : '#0F4C5C';
+          btn.style.color = (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') ? '#0F4C5C' : '#FFFFFF';
+          btn.style.fontWeight = '700';
+          btn.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+        } else {
+          btn.style.backgroundColor = 'transparent';
+          btn.style.color = '#5F6F73';
+          btn.style.fontWeight = '500';
+          btn.style.boxShadow = 'none';
+        }
+      }
+    });
+  }
+
+  window.applyBitadilatLanguage = function(lang) {
+    const isEn = (lang === 'EN');
+    updateToggleButtons(lang);
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        if (!node.parentElement) return NodeFilter.FILTER_REJECT;
+        const tag = node.parentElement.tagName.toLowerCase();
+        if (tag === 'script' || tag === 'style' || tag === 'noscript') return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    let node;
+    while (node = walker.nextNode()) {
+      const pTag = node.parentElement.tagName.toLowerCase();
+      const txt = (node.nodeValue || '').trim().toUpperCase();
+      if (pTag === 'button' && (txt === 'TR' || txt === 'EN')) continue;
+
+      if (node._origTr === undefined) {
+        node._origTr = node.nodeValue;
+      }
+
+      if (isEn) {
+        node.nodeValue = translateText(node._origTr);
+      } else {
+        node.nodeValue = node._origTr;
+      }
+    }
+
+    document.querySelectorAll('input, textarea').forEach(el => {
+      if (el.hasAttribute('placeholder')) {
+        if (el._origPlaceholder === undefined) {
+          el._origPlaceholder = el.getAttribute('placeholder') || '';
+        }
+        el.setAttribute('placeholder', isEn ? translateText(el._origPlaceholder) : el._origPlaceholder);
+      }
+      if (el.tagName.toLowerCase() === 'input' && (el.type === 'submit' || el.type === 'button')) {
+        if (el._origValue === undefined) {
+          el._origValue = el.value || '';
+        }
+        el.value = isEn ? translateText(el._origValue) : el._origValue;
+      }
+    });
+
+    if (document._origTitle === undefined) {
+      document._origTitle = document.title;
+    }
+    document.title = isEn ? translateText(document._origTitle) : document._origTitle;
+  };
+
+  window.bitadilatSetLang = function(lang) {
+    sessionStorage.setItem('bitadilat_lang', lang);
+    window.applyBitadilatLanguage(lang);
+    try {
+      if (window.parent && window.parent !== window) {
+        if (typeof window.parent.updateSimLangUI === 'function') {
+          window.parent.updateSimLangUI(lang);
+        }
+        window.parent.postMessage({ type: 'LANG_CHANGED', lang: lang }, '*');
+      }
+    } catch (e) {}
+  };
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'SET_LANG') {
+      const lang = event.data.lang;
+      sessionStorage.setItem('bitadilat_lang', lang);
+      window.applyBitadilatLanguage(lang);
+    }
+  });
+
+  window.bitadilatNav = function(targetSid, label) {
+    if (!targetSid) return;
+    console.log('[BiTadilat Router] Navigating to:', targetSid, '(', label || '', ')');
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'NAVIGATE',
+        from: CURRENT_SID,
+        to: targetSid,
+        label: label || ''
+      }, '*');
+    } else {
+      window.location.href = './' + targetSid + '.html';
+    }
+  };
+
+  function normText(el) {
+    if (!el) return '';
+    return (el.innerText || el.getAttribute('aria-label') || el.value || '')
+      .toLocaleLowerCase('tr-TR')
+      .replace(/\u0307/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function bindInteractiveElements() {
+    // 1. Remove non-functional pointer locks
+    document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
+      btn.style.cursor = 'pointer';
+      btn.classList.remove('pointer-events-none');
+    });
+
+    // 2. Prevent unhandled forms
+    document.querySelectorAll('form').forEach(form => {
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        if (SPEC.next_sid) window.bitadilatNav(SPEC.next_sid, 'Form Submitted');
+        return false;
+      };
+    });
+
+    // 3. Bind TR / EN Language Toggle Buttons
+    document.querySelectorAll('button, [data-lang]').forEach(btn => {
+      const txt = (btn.textContent || btn.innerText || '').trim().toUpperCase();
+      const isTr = (txt === 'TR' || btn.getAttribute('data-lang') === 'TR' || btn.id === 'btn-lang-tr' || btn.id === 'btn-lang-tr-web');
+      const isEn = (txt === 'EN' || btn.getAttribute('data-lang') === 'EN' || btn.id === 'btn-lang-en' || btn.id === 'btn-lang-en-web');
+      if (isTr || isEn) {
+        btn.style.cursor = 'pointer';
+        const targetLang = isEn ? 'EN' : 'TR';
+        btn.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.bitadilatSetLang(targetLang);
+        };
+      }
+    });
+
+    // 4. Universal Notification Bell Binding
+    document.querySelectorAll('button').forEach(btn => {
+      const aria = (btn.getAttribute('aria-label') || '').toLowerCase();
+      const html = btn.innerHTML || '';
+      if (aria.includes('bildirim') || html.includes('notifications')) {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.bitadilatNav('d072e6f007ec482e82a4a1c42cc58b18', 'Bildirim Merkezi');
+        };
+      }
+    });
+
+    // 5. Universal Header Back Buttons
+    if (SPEC.back_sid) {
+      document.querySelectorAll('button, a').forEach(el => {
+        const text = normText(el);
+        const html = el.innerHTML || '';
+        if (text.includes('geri') || text.includes('don') || text.includes('dön') || text.includes('back') ||
+            html.includes('arrow_back') || html.includes('chevron_left') || html.includes('arrow_back_ios')) {
+          el.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.bitadilatNav(SPEC.back_sid, 'Universal Back');
+          };
+        }
+      });
+    }
+
+    // 6. Direct data-nav-target elements
+    document.querySelectorAll('[data-nav-target]').forEach(el => {
+      el.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.bitadilatNav(el.getAttribute('data-nav-target'), 'Direct Data Nav');
+      };
+    });
+
+    // 7. Apply saved language
+    const savedLang = sessionStorage.getItem('bitadilat_lang') || 'TR';
+    window.applyBitadilatLanguage(savedLang);
+
+    // =========================================================================
+    // SCREEN-SPECIFIC HIGH-FIDELITY PRODUCT CONTROLLERS
+    // =========================================================================
+
+    // STEP 01: WELCOME & ROLE SELECTION
+    if (CURRENT_SID === '0c06b06e422b40daacbc0b8e6e8fb7bf') {
+      let chosenRole = sessionStorage.getItem('bitadilat_active_role') || 'CUSTOMER';
+      const cHome = document.getElementById('role-homeowner');
+      const cPro = document.getElementById('role-professional');
+      const btnCont = document.getElementById('btn-continue');
+      
+      function activateRole(role) {
+        chosenRole = role;
+        if (btnCont) {
+          btnCont.removeAttribute('disabled');
+          btnCont.style.backgroundColor = '#0F4C5C';
+          btnCont.style.color = '#FFFFFF';
+          btnCont.style.cursor = 'pointer';
+        }
+      }
+
+      if (cHome) cHome.addEventListener('click', () => activateRole('CUSTOMER'));
+      if (cPro) cPro.addEventListener('click', () => activateRole('PRO'));
+
+      if (btnCont) {
+        btnCont.onclick = function(e) {
+          e.preventDefault();
+          if (chosenRole === 'PRO') {
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
+            window.bitadilatNav(SPEC.role_pro, 'Seçilen Rol: Usta Kayıt');
+          } else {
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+            window.bitadilatNav(SPEC.role_homeowner, 'Seçilen Rol: Müşteri Giriş');
+          }
+        };
+      }
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('giriş yap') || t.includes('hesabın var mı')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatNav('fbbe0f405e1f4531a14dcdd6b1c5736a', 'Giriş Yap -> Telefon');
+          };
+        }
+      });
+    }
+
+    // STEP 02: PHONE INPUT & MASKING
+    else if (CURRENT_SID === 'fbbe0f405e1f4531a14dcdd6b1c5736a') {
+      const phoneInput = document.querySelector('input[type="tel"], input[autocomplete="tel-national"], input');
+      const submitBtn = document.getElementById('submit-btn') || document.querySelector('button[type="submit"]');
+
+      if (phoneInput) {
+        phoneInput.focus();
+        phoneInput.addEventListener('input', function(e) {
+          let val = phoneInput.value.replace(/\D/g, '');
+          if (val.startsWith('0')) val = val.substring(1);
+          if (val.length > 10) val = val.substring(0, 10);
+          
+          let formatted = '';
+          if (val.length > 0) formatted = '(' + val.substring(0, 3);
+          if (val.length >= 4) formatted += ') ' + val.substring(3, 6);
+          if (val.length >= 7) formatted += ' ' + val.substring(6, 8);
+          if (val.length >= 9) formatted += ' ' + val.substring(8, 10);
+          
+          phoneInput.value = formatted;
+          sessionStorage.setItem('bitadilat_user_phone', formatted || '0532 987 65 43');
+
+          if (submitBtn) {
+            if (val.length === 10) {
+              submitBtn.removeAttribute('disabled');
+              submitBtn.style.opacity = '1';
+              submitBtn.style.cursor = 'pointer';
+            }
+          }
+        });
+      }
+
+      if (submitBtn) {
+        submitBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatToast('Doğrulama kodu SMS ile gönderildi.');
+          window.bitadilatNav(SPEC.next_sid, 'Telefon Doğrulandı -> SMS');
+        };
+      }
+    }
+
+    // STEP 03: SMS OTP AUTO-ADVANCE & COUNTDOWN
+    else if (CURRENT_SID === '42c148a1fb25400ca549481fa6abe01f') {
+      const otpCells = document.querySelectorAll('.otp-cell, input[maxlength="1"], input[type="text"]');
+      const verifyBtn = document.getElementById('verify-submit-btn') || document.querySelector('button.bg-primary, button[type="submit"]');
+      
+      otpCells.forEach((cell, idx) => {
+        cell.addEventListener('input', (e) => {
+          if (cell.value.length === 1 && idx < otpCells.length - 1) {
+            otpCells[idx + 1].focus();
+          }
+          let code = Array.from(otpCells).map(c => c.value).join('');
+          if (code.length === 6 && verifyBtn) {
+            verifyBtn.removeAttribute('disabled');
+            verifyBtn.classList.remove('opacity-60', 'pointer-events-none');
+            verifyBtn.style.opacity = '1';
+          }
+        });
+        cell.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !cell.value && idx > 0) {
+            otpCells[idx - 1].focus();
+          }
+        });
+      });
+
+      if (verifyBtn) {
+        verifyBtn.removeAttribute('disabled');
+        verifyBtn.classList.remove('opacity-60', 'pointer-events-none');
+        verifyBtn.onclick = function(e) {
+          e.preventDefault();
+          window.bitadilatToast('Telefon başarıyla doğrulandı!');
+          window.bitadilatNav(SPEC.next_sid, 'SMS Onaylandı -> Müşteri Ana Sayfa');
+        };
+      }
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('tekrar') || t.includes('resend')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Yeni SMS doğrulama kodu gönderildi.');
+          };
+        }
+        if (t.includes('numara') && (t.includes('değiştir') || t.includes('edit'))) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatNav('fbbe0f405e1f4531a14dcdd6b1c5736a', 'Numara Değiştir');
+          };
+        }
+      });
+    }
+
+    // STEP 04: CUSTOMER HOME DASHBOARD
+    else if (CURRENT_SID === 'cc1f55661a1a4036a890b43d9f15596a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('talep') || t.includes('başla') || t.includes('oluştur') || t.includes('request') || t.includes('start')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talep Oluştur Adım 1'); };
+        }
+      });
+
+      // Category cards click
+      document.querySelectorAll('.grid > div, .grid > button, .category-card').forEach(c => {
+        c.style.cursor = 'pointer';
+        c.onclick = () => {
+          const txt = (c.innerText || '').split('\n')[0].trim();
+          sessionStorage.setItem('bitadilat_selected_category', txt || 'Tesisat');
+          window.bitadilatNav(SPEC.next_sid, 'Kategori Seçimi: ' + txt);
+        };
+      });
+
+      const navLinks = document.querySelectorAll('footer a, nav a, [role="tablist"] a, footer button');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Müşteri Profil'); };
+      }
+    }
+
+    // STEP 05: REQUEST WIZARD 1/4 - CATEGORY & URGENCY
+    else if (CURRENT_SID === '44c003fee81d4a188f187608554efdd5') {
+      const searchInp = document.querySelector('input[placeholder*="ara"], input');
+      const catCards = document.querySelectorAll('.category-card, .grid button');
+
+      if (searchInp) {
+        searchInp.addEventListener('input', () => {
+          const q = searchInp.value.toLowerCase('tr-TR');
+          catCards.forEach(c => {
+            const t = normText(c);
+            c.style.display = t.includes(q) ? 'flex' : 'none';
+          });
+        });
+      }
+
+      catCards.forEach(c => {
+        c.addEventListener('click', (e) => {
+          e.preventDefault();
+          catCards.forEach(x => {
+            x.classList.remove('ring-2', 'ring-primary', 'border-primary', 'bg-surface-container-low');
+          });
+          c.classList.add('ring-2', 'ring-primary', 'border-primary', 'bg-surface-container-low');
+          const catName = (c.innerText || '').split('\n')[0].trim();
+          sessionStorage.setItem('bitadilat_selected_category', catName);
+        });
+      });
+
+      const urgencyCards = document.querySelectorAll('.urgency-card');
+      urgencyCards.forEach(u => {
+        u.addEventListener('click', (e) => {
+          e.preventDefault();
+          urgencyCards.forEach(x => x.classList.remove('ring-2', 'ring-primary', 'border-primary'));
+          u.classList.add('ring-2', 'ring-primary', 'border-primary');
+          const isUrgent = normText(u).includes('acil');
+          sessionStorage.setItem('bitadilat_urgency', isUrgent ? 'Acil Onarım' : 'Planlı Yenileme');
+        });
+      });
+
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 1 -> Adım 2'); };
+      }
+    }
+
+    // STEP 06: REQUEST WIZARD 2/4 - LOCATION & DETAILS
+    else if (CURRENT_SID === 'b3c3c2845017451fb1b85b89f04fd4b8') {
+      const taskDesc = document.getElementById('task-description') || document.querySelector('textarea');
+      const counter = document.getElementById('char-counter') || document.querySelector('.text-text-secondary');
+      const gpsBtn = document.getElementById('use-gps-btn') || document.querySelector('button:has(.material-symbols-outlined)');
+      const distSelect = document.querySelector('select');
+
+      if (gpsBtn) {
+        gpsBtn.onclick = function(e) {
+          e.preventDefault();
+          sessionStorage.setItem('bitadilat_district', 'Kadıköy, Caferağa Mah.');
+          window.bitadilatToast('Konumunuz tespit edildi: Kadıköy (Caferağa)');
+          const distTrig = document.getElementById('district-trigger');
+          if (distTrig) distTrig.innerText = 'Kadıköy, Caferağa Mah.';
+        };
+      }
+
+      if (distSelect) {
+        distSelect.addEventListener('change', () => {
+          sessionStorage.setItem('bitadilat_district', distSelect.value);
+        });
+      }
+
+      if (taskDesc) {
+        taskDesc.addEventListener('input', () => {
+          sessionStorage.setItem('bitadilat_description', taskDesc.value);
+          if (counter) counter.innerText = taskDesc.value.length + ' / 500';
+        });
+      }
+
+      document.querySelectorAll('.prompt-chip').forEach(chip => {
+        chip.style.cursor = 'pointer';
+        chip.onclick = function(e) {
+          e.preventDefault();
+          const p = chip.getAttribute('data-prompt') || chip.innerText.trim();
+          if (taskDesc) {
+            taskDesc.value = (taskDesc.value ? taskDesc.value + ' ' : '') + p;
+            sessionStorage.setItem('bitadilat_description', taskDesc.value);
+            if (counter) counter.innerText = taskDesc.value.length + ' / 500';
+            chip.classList.add('bg-primary-container', 'text-white');
+          }
+        };
+      });
+
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 2 -> Adım 3'); };
+      }
+    }
+
+    // STEP 07: REQUEST WIZARD 3/4 - PHOTOS
+    else if (CURRENT_SID === '585d649f4ea046ffa70e4cb481ddd030') {
+      const fileInput = document.getElementById('photo-upload') || document.querySelector('input[type="file"]');
+      const uploadCard = document.querySelector('.border-dashed, button:has(.material-symbols-outlined)');
+      
+      if (uploadCard) {
+        uploadCard.onclick = () => {
+          if (fileInput) fileInput.click();
+          window.bitadilatToast('2 adet örnek fotoğraf yüklendi (Vana ve sızıntı).');
+        };
+      }
+
+      const cta = document.getElementById('wizard-primary-cta') || document.querySelector('button.bg-primary');
+      if (cta) {
+        cta.removeAttribute('disabled');
+        cta.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Adım 3 -> Adım 4'); };
+      }
+    }
+
+    // STEP 08: REQUEST WIZARD 4/4 - DYNAMIC SUMMARY REVIEW
+    else if (CURRENT_SID === 'a0949c91cbe34557b16273c8e91d067a') {
+      const cat = sessionStorage.getItem('bitadilat_selected_category');
+      const dist = sessionStorage.getItem('bitadilat_district');
+      const desc = sessionStorage.getItem('bitadilat_description');
+      
+      // Update dynamic fields if user customized them
+      if (cat || dist) {
+        document.querySelectorAll('h3, h4, p').forEach(el => {
+          if (cat && el.innerText.includes('Tesisat') && !el.innerText.includes('BiTadilat')) {
+            el.innerText = cat + ' Onarımı';
+          }
+          if (dist && el.innerText.includes('Kadıköy')) {
+            el.innerText = dist;
+          }
+        });
+      }
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('yayınla') || t.includes('onayla') || t.includes('tamamla') || t.includes('publish')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Talebiniz yayınlandı! Ustalardan teklifler toplanıyor.');
+            window.bitadilatNav(SPEC.next_sid, 'Talep Yayınlandı');
+          };
+        }
+      });
+
+      const edits = document.querySelectorAll('[data-edit-step]');
+      edits.forEach(el => {
+        const step = el.getAttribute('data-edit-step');
+        if (step === '1' && SPEC.edit_step1) el.onclick = () => window.bitadilatNav(SPEC.edit_step1, 'Düzenle Adım 1');
+        if (step === '2' && SPEC.edit_step2) el.onclick = () => window.bitadilatNav(SPEC.edit_step2, 'Düzenle Adım 2');
+        if (step === '3' && SPEC.edit_step3) el.onclick = () => window.bitadilatNav(SPEC.edit_step3, 'Düzenle Adım 3');
+      });
+    }
+
+    // STEP 09: REQUEST PUBLISHED CONFIRMATION
+    else if (CURRENT_SID === '94a730cef5374f2ab9632d9acf0d7e19') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('teklif') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Taleplerime Git'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav('cc1f55661a1a4036a890b43d9f15596a', 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    // STEP 10: CUSTOMER REQUESTS LIST
+    else if (CURRENT_SID === '86fe79e681034183a8681bb0d2893e29') {
+      document.querySelectorAll('button, article').forEach(el => {
+        const t = normText(el);
+        if (t.includes('teklifleri gör') || t.includes('gelen teklifler') || t.includes('3 teklif')) {
+          el.style.cursor = 'pointer';
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Gelen Teklifler'); };
+        }
+        if (t.includes('yeni onarım') || t.includes('yeni talep')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.new_request_sid, 'Yeni Talep'); };
+        }
+      });
+
+      const navLinks = document.querySelectorAll('footer a, nav a, footer button');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    // STEP 11: RECEIVED OFFERS LIST
+    else if (CURRENT_SID === '994e3b4ffce942ce8778f7a6cfaa42c0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        const aria = (b.getAttribute('aria-label') || '').toLowerCase();
+        if (t.includes('filtre') || t.includes('sırala') || aria.includes('filtre') || b.querySelector('.material-symbols-outlined')?.innerText === 'tune') {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.filter_sheet_sid, 'Filtre Modalı'); };
+        }
+        if (t.includes('karşılaştır') || t.includes('matris')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.compare_sid, 'Teklifleri Karşılaştır'); };
+        }
+      });
+
+      document.querySelectorAll('.offer-card, article, button').forEach(card => {
+        const t = normText(card);
+        if (t.includes('kaya tesisat') || t.includes('mavi hat') || t.includes('teklifi incele')) {
+          card.style.cursor = 'pointer';
+          card.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Detayı'); };
+        }
+      });
+    }
+
+    // STEP 12: OFFERS FILTER SHEET MODAL
+    else if (CURRENT_SID === '904aa7f5da0d4c7dadac764de7cc04fc') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('uygula') || t.includes('sonuçları') || t.includes('filtrele')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Filtreler uygulandı: 3 teklif listeleniyor.');
+            window.bitadilatNav(SPEC.next_sid, 'Filtreleri Uygula');
+          };
+        }
+        if (t.includes('temizle') || t.includes('kapat') || b.querySelector('.material-symbols-outlined')?.innerText === 'close') {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Filtreyi Kapat'); };
+        }
+      });
+    }
+
+    // STEP 13: OFFER DETAIL & SCOPE
+    else if (CURRENT_SID === 'ea7af2d7298b4b6cb24e4603935503f0') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = normText(b);
+        if (t.includes('kabul') || t.includes('onayla') || t.includes('accept')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Kabul Edildi'); };
+        }
+        if (t.includes('reddet') || t.includes('reject')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reject_sid, 'Teklifi Reddet'); };
+        }
+        if (t.includes('soru sor') || t.includes('chat') || t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru Sor'); };
+        }
+        if (t.includes('profili') || t.includes('usta bilgisi')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.profile_sid, 'Usta Profili'); };
+        }
+      });
+    }
+
+    // STEP 14: OFFER REJECTION FEEDBACK
+    else if (CURRENT_SID === '45350ca7f3de4ee6bedcde20b5a1b385') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('reddet') || t.includes('onayla')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Teklif reddedildi. Diğer ustalar bilgilendirildi.');
+            window.bitadilatNav(SPEC.next_sid, 'Teklif Reddedildi');
+          };
+        }
+        if (t.includes('vazgeç') || t.includes('dön')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Teklife Dön'); };
+        }
+      });
+    }
+
+    // STEP 15: OFFER COMPARISON MATRIX
+    else if (CURRENT_SID === '1fc70722168942c4a1933cd9c641ad68') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('incele') || t.includes('seç') || t.includes('detay')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Karşılaştırmadan Teklife'); };
+        }
+      });
+    }
+
+    // STEP 16: TRADESPERSON PROFILE
+    else if (CURRENT_SID === '98cd20d6ab4e4f8fbc29bc462ce55cca') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('değerlendirme') || t.includes('yorum')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reviews_sid, 'Tüm Değerlendirmeler'); };
+        }
+        if (t.includes('teklife dön') || t.includes('teklif')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklife Dön'); };
+        }
+        if (t.includes('soru sor') || t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Ustaya Soru'); };
+        }
+      });
+    }
+
+    // STEP 17: TRADESPERSON REVIEWS SHEET
+    else if (CURRENT_SID === '160cfba8d24f4e9ea88ad3f591a803fb') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('teklife') || t.includes('kabul') || t.includes('dön')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklife Geri Dön'); };
+        }
+      });
+    }
+
+    // STEP 18: ESCROW PAYMENT AUTHORIZATION
+    else if (CURRENT_SID === '58f9993b5f444ff3a9f9361cb8d3b731') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('onayla') || t.includes('öde') || t.includes('kabul et') || t.includes('güvence')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, '3D Secure Doğrulama'); };
+        }
+        if (t.includes('vazgeç') || t.includes('iptal')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Ödeme İptal'); };
+        }
+      });
+    }
+
+    // STEP 19: BANK 3D SECURE MODAL
+    else if (CURRENT_SID === 'd9247db4ce9b458781550be929121237') {
+      const otpInputs = document.querySelectorAll('input');
+      otpInputs.forEach((inp, idx) => {
+        inp.addEventListener('input', () => {
+          if (inp.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
+        });
+      });
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('onayla') || t.includes('tamamla')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('3D Secure onaylandı! ₺2.450 Güvence Havuzunda bloke edildi.');
+            window.bitadilatNav(SPEC.next_sid, '3D Secure Başarılı -> Randevu Seç');
+          };
+        }
+        if (t.includes('iptal') || t.includes('geri dön')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.cancel_sid, 'Ödeme Hatası / İptal'); };
+        }
+      });
+    }
+
+    // STEP 20: ESCROW PAYMENT ERROR
+    else if (CURRENT_SID === '1476367258dd4a7aa4b9cbda6b0091c0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('tekrar dene') || t.includes('farklı kart')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.retry_sid, 'Ödeme Tekrar Dene'); };
+        }
+        if (t.includes('teklif detay') || t.includes('teklife dön')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.offer_sid, 'Teklife Dön'); };
+        }
+      });
+    }
+
+    // STEP 21: APPOINTMENT TIME PICKER
+    else if (CURRENT_SID === '7c6ec3a02d3347a997a3fc5b1a2c91d0') {
+      let chosenDate = 'Bugün 14 Mayıs';
+      let chosenTime = '14:00 – 16:00';
+
+      const dateBtns = document.querySelectorAll('.date-slot-btn, button:has(.text-lg), button:has(.text-sm)');
+      dateBtns.forEach(b => {
+        b.addEventListener('click', (e) => {
+          e.preventDefault();
+          dateBtns.forEach(x => x.classList.remove('bg-primary-container', 'text-white'));
+          b.classList.add('bg-primary-container', 'text-white');
+          chosenDate = (b.innerText || '').split('\n')[0];
+          sessionStorage.setItem('bitadilat_appointment_date', chosenDate);
+        });
+      });
+
+      const timeBtns = document.querySelectorAll('.time-slot-btn, button:has(.material-symbols-outlined)');
+      timeBtns.forEach(b => {
+        b.addEventListener('click', (e) => {
+          e.preventDefault();
+          timeBtns.forEach(x => x.classList.remove('bg-primary-container', 'text-white'));
+          b.classList.add('bg-primary-container', 'text-white');
+          chosenTime = (b.innerText || '').trim();
+          sessionStorage.setItem('bitadilat_appointment_time', chosenTime);
+        });
+      });
+
+      const submitBtn = document.getElementById('submit-appointment-btn') || document.querySelector('button.bg-primary');
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled');
+        submitBtn.onclick = (e) => {
+          e.preventDefault();
+          window.bitadilatToast('Randevu talebiniz ustaya iletildi!');
+          window.bitadilatNav(SPEC.next_sid, 'Randevu İletildi');
+        };
+      }
+    }
+
+    // STEP 22: APPOINTMENT CONFIRMATION
+    else if (CURRENT_SID === '3bd2afe80ced4d2498ec9f16c7099326') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('iş alanı') || t.includes('talep detay') || t.includes('takip')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'İş Alanına Git'); };
+        }
+        if (t.includes('ana sayfa')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.home_sid, 'Ana Sayfaya Dön'); };
+        }
+      });
+    }
+
+    // STEP 23: WORKSPACE & ACTIVE JOB
+    else if (CURRENT_SID === 'f3e7de808fdb49c18e3c5d430cb72528') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaşma'); };
+        }
+        if (t.includes('ilerleme') || t.includes('aşama')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.milestones_sid, 'İş Aşamaları'); };
+        }
+        if (t.includes('iptal') || t.includes('değiştir')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.reschedule_sid, 'Randevu Değişikliği'); };
+        }
+        if (t.includes('teslim') || t.includes('tamamla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+      });
+    }
+
+    // STEP 24: CHAT WITH PRO (INTERACTIVE MESSAGING)
+    else if (CURRENT_SID === 'c9aa92f5a4e04897952d05f30c2aef10') {
+      const msgInput = document.querySelector('input[type="text"], input');
+      const sendBtn = document.querySelector('button:has(span.material-symbols-outlined:contains("send")), button:last-of-type');
+      const chatContainer = document.querySelector('.overflow-y-auto, main');
+
+      function addMessage(sender, text) {
+        if (!chatContainer || !text) return;
+        const msgDiv = document.createElement('div');
+        const isCustomer = (sender === 'customer');
+        msgDiv.style.cssText = `display:flex;justify-content:${isCustomer ? 'flex-end' : 'flex-start'};margin-bottom:12px;`;
+        msgDiv.innerHTML = `
+          <div style="max-width:78%;padding:10px 14px;border-radius:${isCustomer ? '16px 16px 4px 16px' : '16px 16px 16px 4px'};background:${isCustomer ? '#0F4C5C' : '#FFFFFF'};color:${isCustomer ? '#FFFFFF' : '#102A34'};font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border:1px solid #D9E1DD;">
+            <div>${text}</div>
+            <div style="font-size:10px;color:${isCustomer ? '#87BBCE' : '#5F6F73'};text-align:right;margin-top:4px;">Şimdi</div>
+          </div>
+        `;
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      if (sendBtn && msgInput) {
+        sendBtn.onclick = function(e) {
+          e.preventDefault();
+          const val = msgInput.value.trim();
+          if (!val) return;
+          addMessage('customer', val);
+          msgInput.value = '';
+
+          // Automated simulated usta response after 1.5s
+          setTimeout(() => {
+            addMessage('pro', 'Merhaba! Mesajınızı aldım, randevu saatinde Kadıköy adresinizde hazır olacağım.');
+          }, 1500);
+        };
+
+        msgInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendBtn.click();
+          }
+        });
+      }
+
+      const backBtn = document.querySelector('button[aria-label="Geri"], button:has(span.material-symbols-outlined)');
+      if (backBtn) {
+        backBtn.onclick = (e) => {
+          e.preventDefault();
+          const role = sessionStorage.getItem('bitadilat_active_role');
+          window.bitadilatNav((role === 'PRO') ? SPEC.pro_back_sid : SPEC.back_sid, 'Geri Dön');
+        };
+      }
+    }
+
+    // STEP 25: JOB MILESTONES & DISPUTES
+    else if (CURRENT_SID === 'b89d998c02d34e67b8e8f34334f87f02') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('teslim') || t.includes('onayla')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teslim Onayı'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaşma'); };
+        }
+        if (t.includes('şikayet') || t.includes('sorun') || t.includes('uyuşmazlık')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Uyuşmazlık Bildir'); };
+        }
+      });
+    }
+
+    // STEP 26: RESCHEDULE & CANCELLATION
+    else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('iptal etmeyi onayla') || t.includes('randevuyu iptal')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Randevu iptal edildi. Güvence havuzu iade sürecine alındı.');
+            window.bitadilatNav(SPEC.next_sid, 'İptal Bildirimi');
+          };
+        }
+        if (t.includes('koru') || t.includes('vazgeç')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.keep_sid, 'Randevuyu Koru'); };
+        }
+      });
+    }
+
+    // STEP 27: WORK DELIVERY APPROVAL
+    else if (CURRENT_SID === 'd485263b3ae244a9b35500665b5c759b') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('onayla') || t.includes('değerlendir')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('İş teslimi onaylandı! Usta ödemesi aktarıldı.');
+            window.bitadilatNav(SPEC.next_sid, 'Puanlama');
+          };
+        }
+        if (t.includes('sorun') || t.includes('şikayet')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildirimi'); };
+        }
+      });
+    }
+
+    // STEP 28: REVIEWS & RATINGS (INTERACTIVE STAR ENGINE)
+    else if (CURRENT_SID === 'db8a1b368a7749cbb5fd6cf497f34de6') {
+      const starBtns = document.querySelectorAll('button:has(.material-symbols-outlined:contains("star")), button[aria-label*="Yıldız"]');
+      starBtns.forEach((btn, idx) => {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          starBtns.forEach((s, sIdx) => {
+            s.style.color = (sIdx <= idx) ? '#E87525' : '#D9E1DD';
+          });
+          sessionStorage.setItem('bitadilat_review_rating', idx + 1);
+        };
+      });
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('yayınla') || t.includes('gönder') || t.includes('tamamla')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Değerlendirmeniz yayınlandı! Teşekkür ederiz.');
+            window.bitadilatNav(SPEC.next_sid, 'Ana Sayfaya Dön');
+          };
+        }
+      });
+    }
+
+    // STEP 29: DISPUTE SUBMISSION
+    else if (CURRENT_SID === '488f3698f93c454099ca2382585aeb66') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('dosyasını oluştur') || t.includes('şikayet')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Uyuşmazlık dosyası oluşturuldu. Hakem heyeti incelemede.');
+            window.bitadilatNav(SPEC.next_sid, 'Şikayet Takibi');
+          };
+        }
+      });
+    }
+
+    // STEP 30: DISPUTE STATUS TRACKING
+    else if (CURRENT_SID === '3bb4b954e5224b0097b2bee12be9bcbf') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('ana sayfa') || t.includes('taleplerime')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Ana Sayfa'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlar'); };
+        }
+      });
+    }
+
+    // STEP 31: CUSTOMER PROFILE & SETTINGS
+    else if (CURRENT_SID === '20de80b8dc984e86be873761409a2396') {
+      document.querySelectorAll('button, a').forEach(b => {
+        const t = normText(b);
+        if (t.includes('usta modu') || t.includes('profesyonel')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'PRO');
+            window.bitadilatNav(SPEC.switch_to_pro, 'Usta Moduna Geç');
+          };
+        }
+        if (t.includes('çıkış yap') || t.includes('oturumu kapat')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap');
+          };
+        }
+        if (t.includes('adresler') || t.includes('güvence havuzu') || t.includes('bildirim') || t.includes('kvkk')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast(b.innerText.trim() + ' ayarları görüntülendi.');
+          };
+        }
+      });
+
+      const navLinks = document.querySelectorAll('footer a, nav a, footer button');
+      if (navLinks.length >= 4) {
+        navLinks[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_home, 'Ana Sayfa'); };
+        navLinks[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Taleplerim'); };
+        navLinks[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        navLinks[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_profile, 'Profil'); };
+      }
+    }
+
+    // STEP 32: NOTIFICATIONS CENTER
+    else if (CURRENT_SID === 'd072e6f007ec482e82a4a1c42cc58b18') {
+      document.querySelectorAll('button, article').forEach(el => {
+        const t = normText(el);
+        if (t.includes('teklifi incele')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.offer_sid, 'Teklifi İncele'); };
+        }
+        if (t.includes('iş alanına git')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.job_sid, 'İş Alanına Git'); };
+        }
+        if (t.includes('okundu')) {
+          el.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Tüm bildirimler okundu olarak işaretlendi.');
+          };
+        }
+      });
+    }
+
+    // STEP 33: PRO ONBOARDING & DOCUMENT UPLOAD
+    else if (CURRENT_SID === '36002d69a9f546efa445efc687681f0f') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('başvuruyu incelemeye gönder') || t.includes('gönder') || t.includes('kayıt')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Başvurunuz incelemeye alındı!');
+            window.bitadilatNav(SPEC.next_sid, 'İnceleme Bekleme');
+          };
+        }
+        if (t.includes('dosya seç')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Belge yüklendi: MYK_Belgesi_Onayli.pdf');
+          };
+        }
+      });
+    }
+
+    // STEP 34: PRO VERIFICATION PENDING
+    else if (CURRENT_SID === 'def294a930bf4bb78f7ba4f857611884') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('demo') || t.includes('örnek talep')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Usta Feed'); };
+        }
+        if (t.includes('müşteri moduna') || t.includes('müşteri olarak')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+            window.bitadilatNav(SPEC.switch_customer_sid, 'Müşteri Moduna Geç');
+          };
+        }
+      });
+    }
+
+    // STEP 35: PRO MATCHING REQUESTS FEED
+    else if (CURRENT_SID === '11b9cb02877746d580c5484512d0928f') {
+      document.querySelectorAll('button, article').forEach(b => {
+        const t = normText(b);
+        if (t.includes('teklif hazırla') || t.includes('banyo lavabo') || t.includes('onarımı')) {
+          b.style.cursor = 'pointer';
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Teklif Hazırla'); };
+        }
+      });
+
+      const tabs = document.querySelectorAll('nav a, footer a, nav button, footer button');
+      if (tabs.length >= 4) {
+        tabs[0].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_requests, 'Talepler'); };
+        tabs[1].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_active_jobs, 'İşlerim'); };
+        tabs[2].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_messages, 'Mesajlar'); };
+        tabs[3].onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      }
+    }
+
+    // STEP 36: PRO STRUCTURED BID PREPARATION
+    else if (CURRENT_SID === 'b9086f1030784def8eb267fd9110addd') {
+      const laborInp = document.querySelector('input[type="number"], input:first-of-type');
+      const submitBtn = document.querySelector('button.bg-primary, button:has(.material-symbols-outlined:contains("arrow_forward"))');
+
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('gönder') || t.includes('teklifi gönder')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Yapılandırılmış teklif müşteriye iletildi!');
+            window.bitadilatNav(SPEC.next_sid, 'Teklif Gönderildi Onayı');
+          };
+        }
+        if (t.includes('kalem') || t.includes('malzeme')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.material_modal_sid, 'Maliyet Kalemleri'); };
+        }
+      });
+    }
+
+    // STEP 37: PRO MATERIAL MODAL
+    else if (CURRENT_SID === '2de127e1fcd846f6b6018775836a1397') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('kaydet') || t.includes('teklife ekle')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Malzeme ve işçilik kalemleri kaydedildi.');
+            window.bitadilatNav(SPEC.next_sid, 'Teklife Ekle');
+          };
+        }
+        if (t.includes('kapat') || b.querySelector('.material-symbols-outlined')?.innerText === 'close') {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Kapat'); };
+        }
+      });
+    }
+
+    // STEP 38: PRO OFFER CONFIRMATION
+    else if (CURRENT_SID === '82f9d783b88b40ec8ca6260566c0f5cb') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('akışına dön') || t.includes('taleplere dön') || t.includes('close')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Taleplere Dön'); };
+        }
+        if (t.includes('müsaitlik') || t.includes('profil')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+        }
+      });
+    }
+
+    // STEP 39: PRO AVAILABILITY MANAGEMENT
+    else if (CURRENT_SID === 'fc6f0f8e9b724365a5a0f124617dbe7a') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('müşteri moduna') || b.id === 'btn-switch-to-customer') {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.setItem('bitadilat_active_role', 'CUSTOMER');
+            window.bitadilatNav(SPEC.switch_to_customer, 'Müşteri Moduna Geç');
+          };
+        }
+        if (t.includes('çıkış yap') || b.id === 'btn-pro-logout') {
+          b.onclick = (e) => {
+            e.preventDefault();
+            sessionStorage.clear();
+            window.bitadilatNav(SPEC.logout_sid, 'Çıkış Yap');
+          };
+        }
+        if (t.includes('güncelle') || t.includes('kaydet')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Müsaitlik ayarlarınız başarıyla güncellendi.');
+          };
+        }
+      });
+    }
+
+    // STEP 40: PRO JOB EXECUTION & WORKSPACE
+    else if (CURRENT_SID === '8ba8c346d11c46f39163fd6ebf06dae1') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('haritada') || t.includes('yol tarifi')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.navigation_sid, 'Canlı Navigasyon'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Müşteri ile Mesaj'); };
+        }
+        if (t.includes('bitirdim') || t.includes('teslim')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('İş teslim bildirimi müşteriye iletildi!');
+            window.bitadilatNav(SPEC.next_sid, 'Teslim Bildirimi');
+          };
+        }
+        if (t.includes('anlaşmazlık') || t.includes('durum bildir')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.cancel_sid, 'İptal / Destek'); };
+        }
+      });
+    }
+
+    // STEP 41: PRO LIVE NAVIGATION
+    else if (CURRENT_SID === '189f22fc95c34fe89e43f454a5146f5e') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('ulaştım') || t.includes('bilgilendir') || t.includes('başlat')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Adrese ulaşıldı! Müşteriye bildirim gönderildi.');
+            window.bitadilatNav(SPEC.next_sid, 'Adrese Ulaşıldı');
+          };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesaj Gönder'); };
+        }
+      });
+    }
+
+    // STEP 42: PRO CANCELLATION NOTICE
+    else if (CURRENT_SID === 'dbf40b28dba64bd1bedb40e075662c42') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('fırsat') || t.includes('yeni iş')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Feed'); };
+        }
+        if (t.includes('mesaj')) {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.chat_sid, 'Mesajlaş'); };
+        }
+      });
+    }
+
+    // STEP 43: PRO DELIVERY SENT CONFIRMATION
+    else if (CURRENT_SID === 'c6ebf06dae18ba8c346d11c46f39163f') {
+      const btnReturn = document.getElementById('btn-return-feed');
+      const btnAvail = document.getElementById('btn-goto-availability');
+      const btnClose = document.getElementById('btn-close');
+      if (btnReturn) btnReturn.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Talepler Feed'); };
+      if (btnAvail) btnAvail.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.tab_availability, 'Müsaitlik'); };
+      if (btnClose) btnClose.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.next_sid, 'Kapat'); };
+    }
+
+    // STEP 44: ADMIN DOCUMENT REVIEW
+    else if (CURRENT_SID === '612429fdea1b42a1bf9e628883f7e58f') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = normText(el);
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+        if (t.includes('onayla ve yayına al')) {
+          el.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Usta belgesi onaylandı ve profil yayına alındı.');
+          };
+        }
+        if (t.includes('çıkış yap')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav('0c06b06e422b40daacbc0b8e6e8fb7bf', 'Çıkış'); };
+      });
+    }
+
+    // STEP 45: ADMIN DISPUTES CENTER
+    else if (CURRENT_SID === 'cb00d67723e34ec990786a82d25c77ca') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = normText(el);
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('hesap') || t.includes('kullanıcı')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.accounts_sid, 'Hesap Yönetimi'); };
+        if (t.includes('iptal et') || t.includes('karar') || t.includes('müşteri lehine')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.decision_sid, 'Karar Modalı'); };
+        }
+        if (t.includes('ihtar gönder')) {
+          el.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Ustaya resmi sistem ihtarı iletildi.');
+          };
+        }
+        if (t.includes('çıkış yap')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav('0c06b06e422b40daacbc0b8e6e8fb7bf', 'Çıkış'); };
+      });
+    }
+
+    // STEP 46: ADMIN DISPUTE DECISION MODAL
+    else if (CURRENT_SID === '9dde2e7ba4d246c68fc123ae27f731a0') {
+      document.querySelectorAll('button').forEach(b => {
+        const t = normText(b);
+        if (t.includes('nihai kararı onayla') || t.includes('iadeyi başlat')) {
+          b.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Nihai karar onaylandı: ₺2.450 müşteriye iade edildi.');
+            window.bitadilatNav(SPEC.next_sid, 'Şikayet Merkezi');
+          };
+        }
+        if (t.includes('kapat') || t.includes('vazgeç') || b.querySelector('.material-symbols-outlined')?.innerText === 'close') {
+          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Geri'); };
+        }
+      });
+    }
+
+    // STEP 47: ADMIN ACCOUNTS MANAGEMENT
+    else if (CURRENT_SID === '5ce8968e2703443ca129c0e7c9e9d145') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = normText(el);
+        if (t.includes('belge') || t.includes('profil')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.documents_sid, 'Belge İnceleme'); };
+        if (t.includes('şikayet') || t.includes('uyuşmazlık')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.disputes_sid, 'Şikayet Merkezi'); };
+        if (t.includes('askıya al')) {
+          el.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Kullanıcı hesabı askıya alındı.');
+          };
+        }
+        if (t.includes('aktifleştir')) {
+          el.onclick = (e) => {
+            e.preventDefault();
+            window.bitadilatToast('Kullanıcı hesabı yeniden aktifleştirildi.');
+          };
+        }
+        if (t.includes('çıkış yap')) el.onclick = (e) => { e.preventDefault(); window.bitadilatNav('0c06b06e422b40daacbc0b8e6e8fb7bf', 'Çıkış'); };
+      });
+    }
+
+    // STEP 48: MARKETING LANDING PAGE
+    else if (CURRENT_SID === '164cd33666284338b929a8325dc5ea20') {
+      document.querySelectorAll('a, button').forEach(el => {
+        const t = normText(el);
+        if (t.includes('indir') || t.includes('uygulama') || t.includes('talep') || t.includes('başla') || t.includes('usta çağır') || t.includes('request a pro')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_customer, 'Müşteri Başlat'); };
+        }
+        if (t.includes('usta ol') || t.includes('katıl') || t.includes('usta olarak başvur')) {
+          el.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.start_pro, 'Usta Başlat'); };
+        }
+      });
+    }
+
+  } // end bindInteractiveElements
+
+  // Execute immediately if DOM ready, or attach to DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindInteractiveElements);
+  } else {
+    bindInteractiveElements();
+  }
+})();
+</script>
+
+</body></html>
