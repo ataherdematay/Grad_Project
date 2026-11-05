@@ -124,7 +124,7 @@ async function openTab(url) {
 async function runTests() {
   await getCDP();
 
-  const tab = await openTab('http://localhost:8090/index.html');
+  const tab = await openTab('http://localhost:8090/preview/index.html');
   const cdp = new CdpSession(tab.webSocketDebuggerUrl);
   await cdp.ready();
   await cdp.send('Page.enable');
@@ -196,7 +196,7 @@ async function runTests() {
   const issues = [];
 
   for (const s of screens) {
-    const url = `http://localhost:8090/screens/${s.id}.html`;
+    const url = `http://localhost:8090/preview/screens/${s.id}.html`;
     await cdp.navigate(url);
     await cdp.waitForLoad(4000);
     await sleep(300);
@@ -257,7 +257,7 @@ async function runTests() {
   const funcTests = [];
 
   // 3.1 Phone masking – Step 2
-  await cdp.navigate('http://localhost:8090/screens/fbbe0f405e1f4531a14dcdd6b1c5736a.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/fbbe0f405e1f4531a14dcdd6b1c5736a.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const phoneResult = await cdp.eval(`(() => {
     const inp = document.querySelector('input[type="tel"]') || document.querySelector('input');
@@ -271,7 +271,7 @@ async function runTests() {
   funcTests.push({ name: 'Step 2: Phone masking', ok: phoneOk, detail: phone.value });
 
   // 3.2 OTP inputs – Step 3
-  await cdp.navigate('http://localhost:8090/screens/42c148a1fb25400ca549481fa6abe01f.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/42c148a1fb25400ca549481fa6abe01f.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const otpResult = await cdp.eval(`(() => {
     const inputs = document.querySelectorAll('input[maxlength="1"], input[type="tel"], input[type="text"]');
@@ -281,7 +281,7 @@ async function runTests() {
   funcTests.push({ name: 'Step 3: OTP inputs exist', ok: otp.count >= 4, detail: `count=${otp.count}` });
 
   // 3.3 Step 28 stars
-  await cdp.navigate('http://localhost:8090/screens/db8a1b368a7749cbb5fd6cf497f34de6.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/db8a1b368a7749cbb5fd6cf497f34de6.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const starResult = await cdp.eval(`(() => {
     const stars = [...document.querySelectorAll('.material-symbols-outlined')].filter(e => e.textContent.trim().startsWith('star'));
@@ -291,19 +291,19 @@ async function runTests() {
   const star = JSON.parse(starResult);
   funcTests.push({ name: 'Step 28: Star rating elements', ok: star.stars >= 5, detail: `stars=${star.stars}` });
 
-  // 3.4 Step 19: 3D Secure
-  await cdp.navigate('http://localhost:8090/screens/d9247db4ce9b458781550be929121237.html');
+  // 3.4 Step 19: Card form (requires backend on :8090)
+  await cdp.navigate('http://localhost:8090/preview/screens/d9247db4ce9b458781550be929121237.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const secResult = await cdp.eval(`(() => {
-    const inp = document.querySelector('input');
-    const submitBtn = [...document.querySelectorAll('button')].find(b => /Doğrula|Onayla|Gönder/.test(b.textContent));
-    return JSON.stringify({ hasInput: !!inp, hasSubmit: !!submitBtn });
+    const cardNumber = document.getElementById('card-number');
+    const submitBtn = document.getElementById('pay-submit-btn');
+    return JSON.stringify({ hasInput: !!cardNumber, hasSubmit: !!submitBtn });
   })()`);
   const sec = JSON.parse(secResult);
-  funcTests.push({ name: 'Step 19: 3D Secure form', ok: sec.hasInput || sec.hasSubmit, detail: JSON.stringify(sec) });
+  funcTests.push({ name: 'Step 19: Card form', ok: sec.hasInput && sec.hasSubmit, detail: JSON.stringify(sec) });
 
   // 3.5 Step 41 Live Nav arrival
-  await cdp.navigate('http://localhost:8090/screens/189f22fc95c34fe89e43f454a5146f5e.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/189f22fc95c34fe89e43f454a5146f5e.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const navResult = await cdp.eval(`(() => {
     const btns = [...document.querySelectorAll('button')];
@@ -314,7 +314,7 @@ async function runTests() {
   funcTests.push({ name: 'Step 41: Live nav buttons', ok: nav.btnCount >= 1, detail: JSON.stringify(nav) });
 
   // 3.6 Step 24: Chat messaging
-  await cdp.navigate('http://localhost:8090/screens/c9aa92f5a4e04897952d05f30c2aef10.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/c9aa92f5a4e04897952d05f30c2aef10.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const chatResult = await cdp.eval(`(() => {
     const msgInput = document.querySelector('input[type="text"], textarea');
@@ -329,7 +329,7 @@ async function runTests() {
   funcTests.push({ name: 'Step 24: Chat messaging', ok: chat.hasMsgInput || chat.hasSendBtn, detail: JSON.stringify(chat) });
 
   // 3.7 Step 36: Quote price calculator
-  await cdp.navigate('http://localhost:8090/screens/b9086f1030784def8eb267fd9110addd.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/b9086f1030784def8eb267fd9110addd.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const calcResult = await cdp.eval(`(() => {
     const priceInputs = [...document.querySelectorAll('input[type="number"], input[type="text"]')].filter(i => i.placeholder?.includes('₺') || i.id?.includes('price') || i.id?.includes('amount'));
@@ -340,7 +340,7 @@ async function runTests() {
   funcTests.push({ name: 'Step 36: Quote price calc', ok: true, detail: JSON.stringify(calc) });
 
   // 3.8 Step 46 Admin dispute modal
-  await cdp.navigate('http://localhost:8090/screens/9dde2e7ba4d246c68fc123ae27f731a0.html');
+  await cdp.navigate('http://localhost:8090/preview/screens/9dde2e7ba4d246c68fc123ae27f731a0.html');
   await cdp.waitForLoad(4000); await sleep(400);
   const adminResult = await cdp.eval(`(() => {
     const btns = document.querySelectorAll('button');

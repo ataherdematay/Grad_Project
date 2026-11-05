@@ -330,6 +330,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- BiTadilat Universal State & Navigation Controller -->
 <script>
 (function() {
@@ -357,7 +369,12 @@
     const toast = document.createElement('div');
     const isError = (type === 'error');
     toast.style.cssText = `background:${isError ? '#B9382C' : '#0F4C5C'};color:#FFFFFF;padding:10px 16px;border-radius:12px;font-family:Manrope,sans-serif;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.18);display:flex;align-items:center;gap:8px;pointer-events:auto;animation:btdToastIn 0.25s ease forwards;`;
-    toast.innerHTML = `<span style="font-size:16px;">${isError ? '✕' : '✓'}</span><span>${message}</span>`;
+    const toastIcon = document.createElement('span');
+    toastIcon.style.fontSize = '16px';
+    toastIcon.textContent = isError ? '✕' : '✓';
+    const toastText = document.createElement('span');
+    toastText.textContent = message;
+    toast.append(toastIcon, toastText);
     container.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
@@ -367,7 +384,7 @@
   };
 
   // --- i18n Bilingual (TR / EN) Engine ---
-  const I18N_DICT = {"Hoş Geldiniz": "Welcome", "Geri": "Back", "Devam Et": "Continue", "Sonraki": "Next", "Önceki": "Previous", "Sonraki Adım": "Next Step", "Önceki Adım": "Previous Step", "İptal": "Cancel", "İptal Et": "Cancel", "Vazgeç": "Cancel", "Kaydet": "Save", "Onayla": "Approve", "Gönder": "Submit", "Tamamla": "Complete", "Filtrele": "Filter", "Arama": "Search", "Detaylar": "Details", "Ayrıntılar": "Details", "Kapat": "Close", "Yardım": "Help", "Destek": "Support", "Çıkış Yap": "Log Out", "Oturumu Kapat": "Log Out", "Giriş yap": "Log in", "Giriş Yap": "Log in", "Kayıt Ol": "Sign Up", "Uygula": "Apply", "Düzenle": "Edit", "Yenile": "Refresh", "Tümü": "All", "Temizle": "Clear", "Seç": "Select", "Seçiniz": "Select", "Ana Sayfa": "Home", "Taleplerim": "My Requests", "Talepler": "Requests", "Mesajlar": "Messages", "Profil": "Profile", "İşlerim": "My Jobs", "Aktif İşler": "Active Jobs", "Müsaitlik": "Availability", "Takvim": "Calendar", "Ayarlar": "Settings", "Bildirimler": "Notifications", "Evin için doğru ustayı güvenle bul.": "Find the right tradesperson for your home with confidence.", "İhtiyacını anlat, doğrulanmış ustalardan şeffaf ve garantili teklifler al.": "Describe your need, get transparent and guaranteed offers from verified pros.", "Onaylı Ustalar": "Verified Pros", "Sabit Fiyat": "Fixed Price", "İş Garantisi": "Work Guarantee", "Nasıl başlamak istersin?": "How would you like to start?", "Ev sahibi / Müşteri": "Homeowner / Customer", "Onarım veya yenileme ihtiyacım var.": "I need repair or renovation.", "Hizmet profesyoneli": "Service Professional", "Yeni iş fırsatları arıyorum.": "I am looking for new job opportunities.", "Telefon numarasıyla devam et": "Continue with phone number", "Zaten bir hesabın var mı?": "Already have an account?", "Ev & Usta Ağı": "Home & Pro Network", "Ev &amp; Usta Ağı": "Home & Pro Network", "Devam ederek": "By continuing, you agree to our", "Kullanım Koşulları": "Terms of Use", "Gizlilik Politikası": "Privacy Policy", "Telefon Numaranı Gir": "Enter Your Phone Number", "Telefon Numarası": "Phone Number", "Giriş yapmak ve randevularını yönetmek için 10 haneli cep telefonu numaranı yaz.": "Enter your 10-digit mobile phone number to log in and manage your appointments.", "Kodu Gönder": "Send Code", "SMS ile tek kullanımlık şifre gönderilecektir.": "A one-time verification code will be sent via SMS.", "SMS Doğrulama": "SMS Verification", "SMS Doğrulama Kodu": "SMS Verification Code", "Doğrula ve Devam Et": "Verify & Continue", "Kodu tekrar gönder": "Resend code", "Kalan süre:": "Time remaining:", "Kalan süre": "Time remaining", "Doğrulama Kodu": "Verification Code", "Tesisat": "Plumbing", "Elektrik": "Electrical", "Boya & Badana": "Painting", "Tadilat & Dekorasyon": "Renovation", "Klima & Havalandırma": "HVAC & AC", "Mobilya Montaj": "Furniture Assembly", "Temizlik": "Cleaning", "Popüler Hizmetler": "Popular Services", "Aktif Taleplerin": "Your Active Requests", "Teklif Bekleniyor": "Awaiting Offers", "Gelen Teklifler": "Received Offers", "Kategoriler": "Categories", "Tümünü Gör": "View All", "Talep Oluştur": "Create Request", "Hizmet & Öncelik": "Service & Priority", "Konum & İş Detayı": "Location & Job Details", "Fotoğraflar & Ek Bilgi": "Photos & Additional Info", "Talebi Gözden Geçir": "Review Request", "Acil onarım": "Urgent repair", "Planlı yenileme": "Planned renovation", "Mevcut konumumu kullan": "Use my current location", "Talebi Yayınla": "Publish Request", "Taleplerime Git": "Go to My Requests", "Teklif Detayı": "Offer Details", "Teklif Detayı & Kapsam": "Offer Details & Scope", "Teklifi İncele": "View Offer", "Teklifi Kabul Et": "Accept Offer", "Teklifi Reddet": "Reject Offer", "Teklifleri Karşılaştır": "Compare Offers", "Hizmet Profesyoneli Profili": "Service Pro Profile", "Ustaya soru sor": "Ask the Pro a question", "Ustaya Soru Sor": "Ask the Pro a question", "Profili Görüntüle": "View Profile", "Teklife Dön": "Back to Offer", "Vazgeç, Teklife Dön": "Cancel, Back to Offer", "Güvence Havuzu ile Güvenli Ödeme": "Secure Payment with Escrow", "Ödeme Tutarı": "Payment Amount", "Randevu Zamanı Seç": "Select Appointment Time", "Randevu talebi gönder": "Send appointment request", "Randevu Talebi İletildi": "Appointment Request Sent", "İş Alanı — Randevu Onaylandı": "Workspace — Appointment Confirmed", "Usta ile Mesajlaşma": "Chat with Pro", "İş Aşamaları ve İlerleme Takibi": "Job Milestones & Progress Tracking", "İş Tamamlama ve Teslim Onayı": "Work Completion & Delivery Approval", "Hizmet Değerlendirme ve Puanlama": "Service Rating & Review", "Değerlendirmeyi Yayınla": "Publish Review", "Şikayet ve Uyuşmazlık Bildirimi": "Dispute & Complaint Report", "Şikayet İletildi ve Durum Takibi": "Dispute Submitted & Status Tracking", "Randevu İptal / Değişiklik Talebi": "Cancel / Reschedule Appointment", "Müşteri Profil & Ayarlar": "Customer Profile & Settings", "Usta Moduna Geç": "Switch to Pro Mode", "Müşteri Moduna Geç": "Switch to Customer Mode", "Usta Kayıt & Belge Yükleme": "Pro Registration & Document Upload", "Usta Belge İncelemede Bekleme": "Pro Document Verification Pending", "Usta Eşleşen Talepler Akışı": "Pro Matching Requests Feed", "Usta Teklif Hazırlama": "Pro Offer Preparation", "Yapılandırılmış Teklifi Gönder": "Send Structured Offer", "Usta Teklif Gönderildi Onayı": "Pro Offer Sent Confirmation", "Usta Profil & Müsaitlik Yönetimi": "Pro Profile & Availability Management", "Usta İş Yürütme & Aşama Yönetimi": "Pro Job Execution & Milestone Management", "İşi Bitirdim": "Finished Job", "Haritada Yol Tarifi Al": "Get Directions on Map", "Usta Randevu İptali Bildirimi": "Pro Cancellation Notice", "Usta Teslim Bildirimi İletildi": "Pro Delivery Notice Sent", "Yönetici Web: Belge İnceleme": "Admin Web: Document Review", "Yönetici Web: Şikayet Merkezi": "Admin Web: Disputes Center", "Yönetici Web: Hesap Yönetimi": "Admin Web: Account Management", "Profili Onayla ve Yayına Al": "Approve Profile & Publish", "Başvuruyu Reddet": "Reject Application", "İşi İptal Et": "Cancel Job", "BiTadilat Tanıtım ve Karşılama Sitesi": "BiTadilat Landing & Welcome Page", "3D Secure ile Güvenli Ödeme Doğrulaması": "Secure Payment Verification with 3D Secure", "3D Secure SMS ile Güvenli Doğrulama": "Secure 3D Secure SMS Verification", "Onayla ve Ödemeyi Tamamla": "Confirm & Complete Payment", "İşlemi İptal Et ve Teklife Geri Dön": "Cancel Transaction & Return to Offer", "Gelen Teklifleri Filtrele ve Sırala": "Filter & Sort Received Offers", "Teklifleri Filtrele & Sırala": "Filter & Sort Offers", "Önerilen Sıralama": "Recommended Sorting", "En Düşük Fiyat": "Lowest Price", "En Yüksek Puan": "Highest Rating", "En Hızlı Varış": "Fastest Arrival", "Maksimum Fiyat Aralığı": "Maximum Price Range", "Filtreleri Temizle": "Clear Filters", "Sonuçları Uygula": "Apply Results", "Müşteri Değerlendirmeleri": "Customer Reviews", "Doğrulanmış İşlem": "Verified Transaction", "Zamanında Geldi": "Arrived on Time", "Temiz İşçilik": "Clean Workmanship", "Şeffaf Fiyat": "Transparent Price", "Bildirim Merkezi": "Notification Center", "Tümünü Okundu Say": "Mark All as Read", "Müşteri Adresine Rota": "Route to Customer Address", "Mekana Ulaştım": "Arrived at Location", "Adrese Ulaştım": "Arrived at Address", "Adresi Kopyala": "Copy Address", "Teklif Kalemleri ve Maliyet Dağılımı": "Offer Items & Cost Breakdown", "İşçilik Hizmetleri": "Labor Services", "Malzeme ve Parçalar": "Materials & Parts", "Genel Toplam": "Grand Total", "Hakem Heyeti Nihai Kararı": "Arbitration Board Final Decision", "Nihai Kararı Onayla": "Confirm Final Decision", "Garantili Hizmet": "Guaranteed Service", "Şeffaf Fiyatlandırma": "Transparent Pricing", "Güvenli Ödeme": "Secure Payment"};
+  const I18N_DICT = {"Hoş Geldiniz": "Welcome", "Geri": "Back", "Devam Et": "Continue", "Sonraki": "Next", "Önceki": "Previous", "Sonraki Adım": "Next Step", "Önceki Adım": "Previous Step", "İptal": "Cancel", "İptal Et": "Cancel", "Vazgeç": "Cancel", "Kaydet": "Save", "Onayla": "Approve", "Gönder": "Submit", "Tamamla": "Complete", "Filtrele": "Filter", "Arama": "Search", "Detaylar": "Details", "Ayrıntılar": "Details", "Kapat": "Close", "Yardım": "Help", "Destek": "Support", "Çıkış Yap": "Log Out", "Oturumu Kapat": "Log Out", "Giriş yap": "Log in", "Giriş Yap": "Log in", "Kayıt Ol": "Sign Up", "Uygula": "Apply", "Düzenle": "Edit", "Yenile": "Refresh", "Tümü": "All", "Temizle": "Clear", "Seç": "Select", "Seçiniz": "Select", "Ana Sayfa": "Home", "Taleplerim": "My Requests", "Talepler": "Requests", "Mesajlar": "Messages", "Profil": "Profile", "İşlerim": "My Jobs", "Aktif İşler": "Active Jobs", "Müsaitlik": "Availability", "Takvim": "Calendar", "Ayarlar": "Settings", "Bildirimler": "Notifications", "Evin için doğru ustayı güvenle bul.": "Find the right tradesperson for your home with confidence.", "İhtiyacını anlat, doğrulanmış ustalardan şeffaf ve garantili teklifler al.": "Describe your need, get transparent and guaranteed offers from verified pros.", "Onaylı Ustalar": "Verified Pros", "Sabit Fiyat": "Fixed Price", "İş Garantisi": "Work Guarantee", "Nasıl başlamak istersin?": "How would you like to start?", "Ev sahibi / Müşteri": "Homeowner / Customer", "Onarım veya yenileme ihtiyacım var.": "I need repair or renovation.", "Hizmet profesyoneli": "Service Professional", "Yeni iş fırsatları arıyorum.": "I am looking for new job opportunities.", "Telefon numarasıyla devam et": "Continue with phone number", "Zaten bir hesabın var mı?": "Already have an account?", "Ev & Usta Ağı": "Home & Pro Network", "Ev &amp; Usta Ağı": "Home & Pro Network", "Devam ederek": "By continuing, you agree to our", "Kullanım Koşulları": "Terms of Use", "Gizlilik Politikası": "Privacy Policy", "Telefon Numaranı Gir": "Enter Your Phone Number", "Telefon Numarası": "Phone Number", "Giriş yapmak ve randevularını yönetmek için 10 haneli cep telefonu numaranı yaz.": "Enter your 10-digit mobile phone number to log in and manage your appointments.", "Kodu Gönder": "Send Code", "SMS ile tek kullanımlık şifre gönderilecektir.": "A one-time verification code will be sent via SMS.", "SMS Doğrulama": "SMS Verification", "SMS Doğrulama Kodu": "SMS Verification Code", "Doğrula ve Devam Et": "Verify & Continue", "Kodu tekrar gönder": "Resend code", "Kalan süre:": "Time remaining:", "Kalan süre": "Time remaining", "Doğrulama Kodu": "Verification Code", "Tesisat": "Plumbing", "Elektrik": "Electrical", "Boya & Badana": "Painting", "Tadilat & Dekorasyon": "Renovation", "Klima & Havalandırma": "HVAC & AC", "Mobilya Montaj": "Furniture Assembly", "Temizlik": "Cleaning", "Popüler Hizmetler": "Popular Services", "Aktif Taleplerin": "Your Active Requests", "Teklif Bekleniyor": "Awaiting Offers", "Gelen Teklifler": "Received Offers", "Kategoriler": "Categories", "Tümünü Gör": "View All", "Talep Oluştur": "Create Request", "Hizmet & Öncelik": "Service & Priority", "Konum & İş Detayı": "Location & Job Details", "Fotoğraflar & Ek Bilgi": "Photos & Additional Info", "Talebi Gözden Geçir": "Review Request", "Acil onarım": "Urgent repair", "Planlı yenileme": "Planned renovation", "Mevcut konumumu kullan": "Use my current location", "Talebi Yayınla": "Publish Request", "Taleplerime Git": "Go to My Requests", "Teklif Detayı": "Offer Details", "Teklif Detayı & Kapsam": "Offer Details & Scope", "Teklifi İncele": "View Offer", "Teklifi Kabul Et": "Accept Offer", "Teklifi Reddet": "Reject Offer", "Teklifleri Karşılaştır": "Compare Offers", "Hizmet Profesyoneli Profili": "Service Pro Profile", "Ustaya soru sor": "Ask the Pro a question", "Ustaya Soru Sor": "Ask the Pro a question", "Profili Görüntüle": "View Profile", "Teklife Dön": "Back to Offer", "Vazgeç, Teklife Dön": "Cancel, Back to Offer", "Güvence Havuzu ile Güvenli Ödeme": "Secure Payment with Escrow", "Ödeme Tutarı": "Payment Amount", "Randevu Zamanı Seç": "Select Appointment Time", "Randevu talebi gönder": "Send appointment request", "Randevu Talebi İletildi": "Appointment Request Sent", "İş Alanı — Randevu Onaylandı": "Workspace — Appointment Confirmed", "Usta ile Mesajlaşma": "Chat with Pro", "İş Aşamaları ve İlerleme Takibi": "Job Milestones & Progress Tracking", "İş Tamamlama ve Teslim Onayı": "Work Completion & Delivery Approval", "Hizmet Değerlendirme ve Puanlama": "Service Rating & Review", "Değerlendirmeyi Yayınla": "Publish Review", "Şikayet ve Uyuşmazlık Bildirimi": "Dispute & Complaint Report", "Şikayet İletildi ve Durum Takibi": "Dispute Submitted & Status Tracking", "Randevu İptal / Değişiklik Talebi": "Cancel / Reschedule Appointment", "Müşteri Profil & Ayarlar": "Customer Profile & Settings", "Usta Moduna Geç": "Switch to Pro Mode", "Müşteri Moduna Geç": "Switch to Customer Mode", "Usta Kayıt & Belge Yükleme": "Pro Registration & Document Upload", "Usta Belge İncelemede Bekleme": "Pro Document Verification Pending", "Usta Eşleşen Talepler Akışı": "Pro Matching Requests Feed", "Usta Teklif Hazırlama": "Pro Offer Preparation", "Yapılandırılmış Teklifi Gönder": "Send Structured Offer", "Usta Teklif Gönderildi Onayı": "Pro Offer Sent Confirmation", "Usta Profil & Müsaitlik Yönetimi": "Pro Profile & Availability Management", "Usta İş Yürütme & Aşama Yönetimi": "Pro Job Execution & Milestone Management", "İşi Bitirdim": "Finished Job", "Haritada Yol Tarifi Al": "Get Directions on Map", "Usta Randevu İptali Bildirimi": "Pro Cancellation Notice", "Usta Teslim Bildirimi İletildi": "Pro Delivery Notice Sent", "Yönetici Web: Belge İnceleme": "Admin Web: Document Review", "Yönetici Web: Şikayet Merkezi": "Admin Web: Disputes Center", "Yönetici Web: Hesap Yönetimi": "Admin Web: Account Management", "Profili Onayla ve Yayına Al": "Approve Profile & Publish", "Başvuruyu Reddet": "Reject Application", "İşi İptal Et": "Cancel Job", "BiTadilat Tanıtım ve Karşılama Sitesi": "BiTadilat Landing & Welcome Page", "3D Secure ile Güvenli Ödeme Doğrulaması": "Secure Payment Verification with 3D Secure", "3D Secure SMS ile Güvenli Doğrulama": "Secure 3D Secure SMS Verification", "Onayla ve Ödemeyi Tamamla": "Confirm & Complete Payment", "İşlemi İptal Et ve Teklife Geri Dön": "Cancel and Return to Offer", "Gelen Teklifleri Filtrele ve Sırala": "Filter & Sort Received Offers", "Teklifleri Filtrele & Sırala": "Filter & Sort Offers", "Önerilen Sıralama": "Recommended Sorting", "En Düşük Fiyat": "Lowest Price", "En Yüksek Puan": "Highest Rating", "En Hızlı Varış": "Fastest Arrival", "Maksimum Fiyat Aralığı": "Maximum Price Range", "Filtreleri Temizle": "Clear Filters", "Sonuçları Uygula": "Apply Results", "Müşteri Değerlendirmeleri": "Customer Reviews", "Doğrulanmış İşlem": "Verified Transaction", "Zamanında Geldi": "Arrived on Time", "Temiz İşçilik": "Clean Workmanship", "Şeffaf Fiyat": "Transparent Price", "Bildirim Merkezi": "Notification Center", "Tümünü Okundu Say": "Mark All as Read", "Müşteri Adresine Rota": "Route to Customer Address", "Mekana Ulaştım": "Arrived at Location", "Adrese Ulaştım": "Arrived at Address", "Adresi Kopyala": "Copy Address", "Teklif Kalemleri ve Maliyet Dağılımı": "Offer Items & Cost Breakdown", "İşçilik Hizmetleri": "Labor Services", "Malzeme ve Parçalar": "Materials & Parts", "Genel Toplam": "Grand Total", "Hakem Heyeti Nihai Kararı": "Arbitration Board Final Decision", "Nihai Kararı Onayla": "Confirm Final Decision", "Garantili Hizmet": "Guaranteed Service", "Şeffaf Fiyatlandırma": "Transparent Pricing", "Güvenli Ödeme": "Secure Payment", "Teklifi kabul et ve ödemeye geç": "Accept offer and continue to payment", "Sonraki adımda kart bilgilerinle ödeme yapacaksın. Tutar, işi onaylayana kadar güvence havuzunda bekler ve ödemeden sonra randevu zamanını seçersin.": "Next you will pay by card. The amount stays in escrow until you approve the work, and you pick an appointment after payment.", "Test ortamı, gerçek para çekilmez": "Test environment, no real money is charged", "İşlem Özeti": "Transaction Summary", "Hizmet Veren": "Service Provider", "Talep": "Request", "İşçilik": "Labor", "Malzeme": "Materials", "Bu teklifin ödemesi alındı": "Payment for this offer was received", "Randevu Seçimine İlerle": "Continue to Appointment", "Yeni Demo Ödemesi Başlat": "Start a New Demo Payment", "Kart Bilgileri": "Card Details", "Test Kartını Yaz": "Fill Test Card", "Kart Üzerindeki Ad Soyad": "Name on Card", "Kart Numarası": "Card Number", "Son Kullanma (AA/YY)": "Expiry (MM/YY)", "AA/YY": "MM/YY", "Güvenlik Kodu (CVC)": "Security Code (CVC)", "Ödeme bankanızın 3D Secure ekranında onaylanır. Tutar, işi onaylayana kadar güvence havuzunda bekler.": "You confirm the payment on your bank's 3D Secure screen. The amount stays in escrow until you approve the work.", "Güvenli Öde ve 3D Secure Adımına Geç": "Pay Securely and Continue to 3D Secure", "Bankaya Bağlanılıyor...": "Connecting to Bank...", "Kart üzerindeki adı ve soyadı girin.": "Enter the first and last name on the card.", "Kart numarası geçersiz.": "The card number is invalid.", "Son kullanma tarihi geçersiz.": "The expiry date is invalid.", "Kartın son kullanma tarihi geçmiş.": "This card has expired.", "Güvenlik kodu (CVC) geçersiz.": "The security code (CVC) is invalid.", "Ödeme Durumu": "Payment Status", "Ödeme Alınamadı": "Payment Failed", "Ödeme Doğrulanamadı": "Payment Could Not Be Verified", "Ödeme tamamlanamadı. Lütfen farklı bir kart deneyin veya bankanızla görüşün.": "The payment could not be completed. Please try another card or contact your bank.", "3D Secure doğrulaması tamamlanamadı. Şifreyi kontrol edip tekrar deneyin veya farklı bir kart kullanın.": "3D Secure verification failed. Check the code and try again, or use another card.", "Bankanız bu ödemeyi onaylamadı. Lütfen bankanızla görüşün veya farklı bir kart deneyin.": "Your bank did not approve this payment. Please contact your bank or try another card.", "Kartınızın bakiyesi bu ödeme için yetersiz. Lütfen farklı bir kart deneyin.": "This card does not have enough balance. Please try another card.", "Ödeme sonucu doğrulanamadı. Kartınızı kontrol etmeden tekrar denemeyin; gerekirse destekle görüşün.": "The payment result could not be verified. Check your card before retrying and contact support if needed.", "Bankadan dönen sonuç doğrulanamadı.": "The result returned by the bank could not be verified.", "Craftgate Ödeme No:": "Craftgate Payment No:", "Kartınızdan hiçbir ücret tahsil edilmemiştir": "Your card was not charged", "Teklif geçerliliğini koruyor, farklı bir kartla tekrar deneyebilirsin.": "The offer is still valid. You can try again with another card.", "Ödeme sonucu kesinleşmedi": "The payment result is not final", "Tekrar denemeden önce kartınızı kontrol edin. Ücret alındıysa destekle görüşün.": "Check your card before retrying. Contact support if you were charged.", "İşlem Detayları": "Transaction Details", "Hizmet Sağlayıcı": "Service Provider", "Denenen Kart": "Card Used", "İşlem Tutarı": "Transaction Amount", "Bu tutar güvence havuzuna alınmadı": "This amount was not placed in escrow", "Neden Reddedilmiş Olabilir?": "Why Might It Have Been Declined?", "Kartınız internet alışverişlerine veya 3D Secure onayına kapalı olabilir.": "Your card may be closed to online purchases or 3D Secure.", "Kart limitiniz işlem tutarı için yetersiz kalmış olabilir.": "Your card limit may be too low for this amount.", "Banka güvenlik algoritması şüpheli işlem kontrolü uygulamış olabilir.": "Your bank's security checks may have flagged the transaction.", "Farklı Bir Kartla Tekrar Dene": "Try Again with Another Card", "Teklif Detayına Geri Dön": "Back to Offer Details", "Bankanızla veya BiTadilat Destek ile Görüşün": "Contact Your Bank or BiTadilat Support", "256-Bit SSL Şifreleme": "256-Bit SSL Encryption", "Bu işlem ödemenin mevcut durumunda yapılamaz.": "This action is not available in the payment's current state.", "Ödeme sunucusuna ulaşılamıyor. Prototipi backend üzerinden açın: http://localhost:8090": "The payment server is unreachable. Open the prototype through the backend: http://localhost:8090", "Nihai Kararı Onayla ve ₺2.450 İadeyi Başlat": "Confirm Final Decision and Refund ₺2,450", "Nihai Kararı Onayla ve ₺1.225 İadeyi Başlat": "Confirm Final Decision and Refund ₺1,225", "Nihai Kararı Onayla ve Ustaya Aktar": "Confirm Final Decision and Pay the Pro"};
   const sortedKeys = Object.keys(I18N_DICT).sort((a, b) => b.length - a.length);
 
   function translateText(text) {
@@ -519,7 +536,100 @@
       .trim();
   }
 
+  // --- Craftgate Sandbox Payment Client ---
+  // Backend ile aynı origin'den çalışır: http://localhost:8090/preview/index.html
+  const ESCROW_REF_KEY = 'bitadilat_escrow_ref';
+  const JUST_LOCKED_KEY = 'bitadilat_escrow_just_locked';
+  const PENDING_TOAST_KEY = 'bitadilat_pending_toast';
+  const DEMO_OFFER_ID = 'OFFER-BD-88412';
+  const SERVER_UNREACHABLE = 'Ödeme sunucusuna ulaşılamıyor. Prototipi backend üzerinden açın: http://localhost:8090';
+
+  function escrowRef() {
+    return sessionStorage.getItem(ESCROW_REF_KEY);
+  }
+
+  async function paymentApi(path, options) {
+    let res;
+    try {
+      res = await fetch('/api' + path, options);
+    } catch (networkError) {
+      throw new Error(SERVER_UNREACHABLE);
+    }
+    let body = null;
+    try {
+      body = await res.json();
+    } catch (notJson) {
+      throw new Error(SERVER_UNREACHABLE);
+    }
+    if (!res.ok) {
+      const apiError = new Error((body && body.message) || SERVER_UNREACHABLE);
+      apiError.data = body;
+      throw apiError;
+    }
+    return body;
+  }
+
+  function postPayment(path, body) {
+    return paymentApi(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {})
+    });
+  }
+
+  function formatTry(value) {
+    return '₺' + Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function setText(id, value) {
+    const node = document.getElementById(id);
+    if (node) node.textContent = value;
+  }
+
+  // Sunucudan gelen metinler yazıldıktan sonra seçili dil yeniden uygulanır.
+  function reapplyLanguage() {
+    window.applyBitadilatLanguage(sessionStorage.getItem('bitadilat_lang') || 'TR');
+  }
+
+  // Ekran değişince toast kaybolmasın diye mesaj bir sonraki ekranda gösterilir.
+  function navWithToast(targetSid, label, message) {
+    sessionStorage.setItem(PENDING_TOAST_KEY, message);
+    window.bitadilatNav(targetSid, label);
+  }
+
+  function showPendingToast() {
+    const message = sessionStorage.getItem(PENDING_TOAST_KEY);
+    if (message) {
+      sessionStorage.removeItem(PENDING_TOAST_KEY);
+      window.bitadilatToast(message);
+    }
+  }
+
+  // Güvence havuzu işlemi: oturumda ödeme yoksa prototip turu bozulmasın diye bilgi verip ilerler,
+  // ödeme varsa ve işlem başarısızsa ekrandan çıkılmaz.
+  function bindEscrowAction(button, describe) {
+    button.onclick = async (e) => {
+      e.preventDefault();
+      const action = describe();
+      const ref = escrowRef();
+      if (!ref) {
+        navWithToast(action.nextSid, action.label, action.noPaymentToast);
+        return;
+      }
+      button.disabled = true;
+      try {
+        const payment = await postPayment('/payments/' + ref + '/' + action.path, action.body);
+        navWithToast(action.nextSid, action.label, action.successToast(payment));
+      } catch (error) {
+        window.bitadilatToast(error.message, 'error');
+        button.disabled = false;
+      }
+    };
+  }
+
   function bindInteractiveElements() {
+    showPendingToast();
+
     // 1. Remove non-functional pointer locks
     document.querySelectorAll('button, [role="button"], input[type="submit"]').forEach(btn => {
       btn.style.cursor = 'pointer';
@@ -1072,32 +1182,260 @@
       });
     }
 
-    // STEP 19: BANK 3D SECURE MODAL
+    // STEP 19: CARD ENTRY + REAL CRAFTGATE SANDBOX 3D SECURE
     else if (CURRENT_SID === 'd9247db4ce9b458781550be929121237') {
-      const otpInputs = document.querySelectorAll('input');
-      otpInputs.forEach((inp, idx) => {
-        inp.addEventListener('input', () => {
-          if (inp.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
+      const fields = {
+        holderName: document.getElementById('card-holder'),
+        number: document.getElementById('card-number'),
+        expiry: document.getElementById('card-expiry'),
+        cvc: document.getElementById('card-cvc')
+      };
+      const payBtn = document.getElementById('pay-submit-btn');
+      const cardPanel = document.getElementById('pay-card-panel');
+      const alreadyPanel = document.getElementById('pay-already-panel');
+      const banner = document.getElementById('pay-banner');
+      let attemptKey = crypto.randomUUID();
+
+      function showBanner(message) {
+        banner.textContent = message;
+        banner.classList.remove('hidden');
+        reapplyLanguage();
+      }
+
+      function clearErrors() {
+        banner.classList.add('hidden');
+        Object.keys(fields).forEach(name => {
+          document.getElementById('err-' + name).classList.add('hidden');
+          fields[name].classList.remove('border-alert-red');
         });
+      }
+
+      function showFieldError(name, message) {
+        const node = document.getElementById('err-' + name);
+        node.textContent = message;
+        node.classList.remove('hidden');
+        fields[name].classList.add('border-alert-red');
+        reapplyLanguage();
+      }
+
+      function digitsOf(value) {
+        return value.replace(/[^0-9]/g, '');
+      }
+
+      function passesLuhn(digits) {
+        let sum = 0;
+        let doubleIt = false;
+        for (let i = digits.length - 1; i >= 0; i--) {
+          let digit = Number(digits[i]);
+          if (doubleIt) {
+            digit *= 2;
+            if (digit > 9) digit -= 9;
+          }
+          sum += digit;
+          doubleIt = !doubleIt;
+        }
+        return sum % 10 === 0;
+      }
+
+      fields.number.addEventListener('input', () => {
+        const groups = digitsOf(fields.number.value).slice(0, 16).match(/.{1,4}/g);
+        fields.number.value = groups ? groups.join(' ') : '';
+      });
+      fields.expiry.addEventListener('input', () => {
+        const digits = digitsOf(fields.expiry.value).slice(0, 4);
+        fields.expiry.value = digits.length > 2 ? digits.slice(0, 2) + '/' + digits.slice(2) : digits;
+      });
+      fields.cvc.addEventListener('input', () => {
+        fields.cvc.value = digitsOf(fields.cvc.value).slice(0, 4);
       });
 
-      document.querySelectorAll('button').forEach(b => {
-        const t = normText(b);
-        if (t.includes('onayla') || t.includes('tamamla')) {
-          b.onclick = (e) => {
-            e.preventDefault();
-            window.bitadilatToast('3D Secure onaylandı! ₺2.450 Güvence Havuzunda bloke edildi.');
-            window.bitadilatNav(SPEC.next_sid, '3D Secure Başarılı -> Randevu Seç');
-          };
+      // Kartı sunucuya göndermeden önce yakalanabilecek hatalar. Sunucu aynı kontrolleri yineler.
+      function validateCard() {
+        const holder = fields.holderName.value.trim();
+        const number = digitsOf(fields.number.value);
+        const expiry = digitsOf(fields.expiry.value);
+        const cvc = fields.cvc.value.trim();
+        let valid = true;
+
+        if (holder.length < 3 || !holder.includes(' ')) {
+          showFieldError('holderName', 'Kart üzerindeki adı ve soyadı girin.');
+          valid = false;
         }
-        if (t.includes('iptal') || t.includes('geri dön')) {
-          b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.cancel_sid, 'Ödeme Hatası / İptal'); };
+        if ((number.length !== 15 && number.length !== 16) || !passesLuhn(number)) {
+          showFieldError('number', 'Kart numarası geçersiz.');
+          valid = false;
         }
-      });
+        const month = Number(expiry.slice(0, 2));
+        const year = 2000 + Number(expiry.slice(2));
+        const now = new Date();
+        if (expiry.length !== 4 || month < 1 || month > 12) {
+          showFieldError('expiry', 'Son kullanma tarihi geçersiz.');
+          valid = false;
+        } else if (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1)) {
+          showFieldError('expiry', 'Kartın son kullanma tarihi geçmiş.');
+          valid = false;
+        }
+        if (cvc.length < 3) {
+          showFieldError('cvc', 'Güvenlik kodu (CVC) geçersiz.');
+          valid = false;
+        }
+        if (!valid) return null;
+        return {
+          cardHolderName: holder,
+          cardNumber: number,
+          expireMonth: expiry.slice(0, 2),
+          expireYear: String(year),
+          cvc: cvc
+        };
+      }
+
+      // Banka adımı tam sayfada açılır: tarayıcılar, iframe içindeki bir HTTPS sayfasının
+      // localhost'a dönüş yapmasını engelliyor. Dönüşte simülatör ?sid= ile doğru ekrana açılır.
+      function goToBank(session) {
+        if (session.htmlContent) {
+          const holder = document.createElement('div');
+          holder.style.display = 'none';
+          holder.innerHTML = session.htmlContent;
+          document.body.appendChild(holder);
+          const form = holder.querySelector('form');
+          if (form) {
+            form.target = '_top';
+            HTMLFormElement.prototype.submit.call(form);
+            return;
+          }
+        }
+        if (session.redirectUrl) {
+          window.top.location.href = session.redirectUrl;
+          return;
+        }
+        throw new Error('Banka doğrulama sayfası açılamadı. Lütfen tekrar deneyin.');
+      }
+
+      function showCardForm() {
+        alreadyPanel.classList.add('hidden');
+        alreadyPanel.classList.remove('flex');
+        cardPanel.classList.remove('hidden');
+        document.getElementById('pay-actions').classList.remove('hidden');
+      }
+
+      function showAlreadyPaid(payment) {
+        cardPanel.classList.add('hidden');
+        document.getElementById('pay-actions').classList.add('hidden');
+        alreadyPanel.classList.remove('hidden');
+        alreadyPanel.classList.add('flex');
+        setText('pay-already-text', formatTry(payment.totalAmount) + ' · •••• ' + payment.cardLast4 + ' · Craftgate #' + payment.craftgatePaymentId);
+        reapplyLanguage();
+      }
+
+      paymentApi('/offers/' + DEMO_OFFER_ID).then(offer => {
+        setText('pay-pro', offer.proName);
+        setText('pay-job', '#' + offer.jobRef + ' · ' + offer.jobTitle);
+        setText('pay-labor', formatTry(offer.laborAmount));
+        setText('pay-materials', formatTry(offer.materialsAmount));
+        setText('pay-total', formatTry(offer.totalAmount));
+        payBtn.disabled = false;
+        reapplyLanguage();
+      }).catch(error => showBanner(error.message));
+
+      const existingRef = escrowRef();
+      if (existingRef) {
+        paymentApi('/payments/' + existingRef).then(payment => {
+          if (['LOCKED', 'DISPUTED', 'RELEASED_TO_PRO'].includes(payment.status)) {
+            showAlreadyPaid(payment);
+          }
+        }).catch(() => {});
+      }
+
+      const testCardBtn = document.getElementById('pay-fill-test-card');
+      if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+        testCardBtn.classList.remove('hidden');
+        testCardBtn.onclick = (e) => {
+          e.preventDefault();
+          clearErrors();
+          fields.holderName.value = 'Test Kullanici';
+          fields.number.value = '5258 6400 0000 0001';
+          fields.expiry.value = '07/44';
+          fields.cvc.value = '000';
+        };
+      }
+
+      document.getElementById('pay-continue-btn').onclick = (e) => {
+        e.preventDefault();
+        window.bitadilatNav(SPEC.next_sid, 'Ödeme Alındı -> Randevu Seç');
+      };
+      document.getElementById('pay-new-demo-btn').onclick = (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem(ESCROW_REF_KEY);
+        showCardForm();
+      };
+
+      payBtn.onclick = async (e) => {
+        e.preventDefault();
+        clearErrors();
+        const card = validateCard();
+        if (!card) return;
+
+        payBtn.disabled = true;
+        setText('pay-submit-label', 'Bankaya Bağlanılıyor...');
+        reapplyLanguage();
+        try {
+          const session = await postPayment('/payments/3ds/init', Object.assign(
+            { offerId: DEMO_OFFER_ID, attemptKey: attemptKey }, card));
+          sessionStorage.setItem(ESCROW_REF_KEY, session.ref);
+          goToBank(session);
+        } catch (error) {
+          const data = error.data || {};
+          attemptKey = crypto.randomUUID();
+          payBtn.disabled = false;
+          setText('pay-submit-label', 'Güvenli Öde ve 3D Secure Adımına Geç');
+          reapplyLanguage();
+          if (data.code === 'PAYMENT_DECLINED' && data.ref) {
+            sessionStorage.setItem(ESCROW_REF_KEY, data.ref);
+            window.bitadilatNav(SPEC.cancel_sid, 'Ödeme Reddedildi');
+          } else if (data.code === 'INVALID_CARD' && fields[data.field]) {
+            showFieldError(data.field, error.message);
+          } else {
+            showBanner(error.message);
+          }
+        }
+      };
     }
 
-    // STEP 20: ESCROW PAYMENT ERROR
+    // STEP 20: ESCROW PAYMENT ERROR (REAL RESULT FROM BACKEND)
     else if (CURRENT_SID === '1476367258dd4a7aa4b9cbda6b0091c0') {
+      paymentApi('/offers/' + DEMO_OFFER_ID).then(offer => {
+        setText('pay-fail-job', '#' + offer.jobRef + ' · ' + offer.jobTitle);
+        setText('pay-fail-pro', offer.proName);
+        setText('pay-fail-amount', formatTry(offer.totalAmount));
+        reapplyLanguage();
+      }).catch(() => {});
+
+      const failedRef = escrowRef();
+      if (failedRef) {
+        paymentApi('/payments/' + failedRef).then(payment => {
+          setText('pay-fail-amount', formatTry(payment.totalAmount));
+          if (payment.cardLast4) setText('pay-fail-card', '•••• ' + payment.cardLast4);
+          if (payment.errorMessage) setText('pay-fail-desc', payment.errorMessage);
+          if (payment.craftgatePaymentId) {
+            setText('pay-fail-ref', String(payment.craftgatePaymentId));
+            const pill = document.getElementById('pay-fail-ref-pill');
+            pill.classList.remove('hidden');
+            pill.classList.add('inline-flex');
+          }
+          if (payment.resultUncertain) {
+            // Paranın durumu kesin değilken "ücret alınmadı" denmez.
+            setText('pay-fail-title', 'Ödeme Doğrulanamadı');
+            setText('pay-fail-note-title', 'Ödeme sonucu kesinleşmedi');
+            setText('pay-fail-note-body', 'Tekrar denemeden önce kartınızı kontrol edin. Ücret alındıysa destekle görüşün.');
+            setText('pay-fail-amount-note', '');
+            if (!payment.errorMessage) {
+              setText('pay-fail-desc', 'Bankadan dönen sonuç doğrulanamadı.');
+            }
+          }
+          reapplyLanguage();
+        }).catch(() => {});
+      }
+
       document.querySelectorAll('button').forEach(b => {
         const t = normText(b);
         if (t.includes('tekrar dene') || t.includes('farklı kart')) {
@@ -1111,6 +1449,19 @@
 
     // STEP 21: APPOINTMENT TIME PICKER
     else if (CURRENT_SID === '7c6ec3a02d3347a997a3fc5b1a2c91d0') {
+      // Başarı mesajı bankadan dönüşte gerçek ödeme durumuna göre gösterilir.
+      if (sessionStorage.getItem(JUST_LOCKED_KEY)) {
+        sessionStorage.removeItem(JUST_LOCKED_KEY);
+        const lockedRef = escrowRef();
+        if (lockedRef) {
+          paymentApi('/payments/' + lockedRef).then(payment => {
+            if (payment.status === 'LOCKED') {
+              window.bitadilatToast('3D Secure onaylandı. ' + formatTry(payment.totalAmount) + ' güvence havuzunda.');
+            }
+          }).catch(() => {});
+        }
+      }
+
       let chosenDate = 'Bugün 14 Mayıs';
       let chosenTime = '14:00 – 16:00';
 
@@ -1252,12 +1603,16 @@
     else if (CURRENT_SID === '6acc9307352f497ca6bd878d628c6a1a') {
       document.querySelectorAll('button').forEach(b => {
         const t = normText(b);
-        if (t.includes('iptal etmeyi onayla') || t.includes('randevuyu iptal')) {
-          b.onclick = (e) => {
-            e.preventDefault();
-            window.bitadilatToast('Randevu iptal edildi. Güvence havuzu iade sürecine alındı.');
-            window.bitadilatNav(SPEC.next_sid, 'İptal Bildirimi');
-          };
+        // Yalnızca onay düğmesi iade başlatır; "Randevuyu İptal Et" sekmesine basmak para iade etmemeli.
+        if (t.includes('iptal etmeyi onayla')) {
+          bindEscrowAction(b, () => ({
+            path: 'refund',
+            body: { type: 'FULL' },
+            nextSid: SPEC.next_sid,
+            label: 'İptal Bildirimi',
+            noPaymentToast: 'Randevu iptal edildi. Bu oturumda ödeme kaydı yok, iade yapılmadı.',
+            successToast: (p) => 'Randevu iptal edildi. ' + formatTry(p.refundedAmount) + ' kartınıza iade edildi.'
+          }));
         }
         if (t.includes('koru') || t.includes('vazgeç')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.keep_sid, 'Randevuyu Koru'); };
@@ -1270,11 +1625,13 @@
       document.querySelectorAll('button').forEach(b => {
         const t = normText(b);
         if (t.includes('onayla') || t.includes('değerlendir')) {
-          b.onclick = (e) => {
-            e.preventDefault();
-            window.bitadilatToast('İş teslimi onaylandı! Usta ödemesi aktarıldı.');
-            window.bitadilatNav(SPEC.next_sid, 'Puanlama');
-          };
+          bindEscrowAction(b, () => ({
+            path: 'release',
+            nextSid: SPEC.next_sid,
+            label: 'Puanlama',
+            noPaymentToast: 'İş teslimi onaylandı. Bu oturumda ödeme kaydı yok, havuz işlemi yapılmadı.',
+            successToast: (p) => 'İş onaylandı. Usta payı ' + formatTry(p.proPayout) + ', platform komisyonu ' + formatTry(p.commission) + '.'
+          }));
         }
         if (t.includes('sorun') || t.includes('şikayet')) {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.dispute_sid, 'Şikayet Bildirimi'); };
@@ -1312,11 +1669,13 @@
       document.querySelectorAll('button').forEach(b => {
         const t = normText(b);
         if (t.includes('dosyasını oluştur') || t.includes('şikayet')) {
-          b.onclick = (e) => {
-            e.preventDefault();
-            window.bitadilatToast('Uyuşmazlık dosyası oluşturuldu. Hakem heyeti incelemede.');
-            window.bitadilatNav(SPEC.next_sid, 'Şikayet Takibi');
-          };
+          bindEscrowAction(b, () => ({
+            path: 'dispute',
+            nextSid: SPEC.next_sid,
+            label: 'Şikayet Takibi',
+            noPaymentToast: 'Uyuşmazlık dosyası oluşturuldu. Bu oturumda ödeme kaydı yok, havuz işlemi yapılmadı.',
+            successToast: (p) => 'Uyuşmazlık dosyası oluşturuldu. ' + formatTry(p.totalAmount) + ' havuzda donduruldu.'
+          }));
         }
       });
     }
@@ -1621,14 +1980,52 @@
 
     // STEP 46: ADMIN DISPUTE DECISION MODAL
     else if (CURRENT_SID === '9dde2e7ba4d246c68fc123ae27f731a0') {
+      const DECISIONS = {
+        full_refund: {
+          cta: 'Nihai Kararı Onayla ve ₺2.450 İadeyi Başlat',
+          path: 'refund',
+          body: { type: 'FULL' },
+          successToast: (p) => 'Nihai karar onaylandı: ' + formatTry(p.refundedAmount) + ' müşteriye iade edildi.'
+        },
+        split_settlement: {
+          cta: 'Nihai Kararı Onayla ve ₺1.225 İadeyi Başlat',
+          path: 'refund',
+          body: { type: 'SPLIT_50_50' },
+          successToast: (p) => 'Nihai karar onaylandı: ' + formatTry(p.refundedAmount) + ' müşteriye iade edildi, ' + formatTry(p.proPayout) + ' ustaya yazıldı.'
+        },
+        full_payout_artisan: {
+          cta: 'Nihai Kararı Onayla ve Ustaya Aktar',
+          path: 'release',
+          successToast: (p) => 'Nihai karar onaylandı: usta payı ' + formatTry(p.proPayout) + ', platform komisyonu ' + formatTry(p.commission) + '.'
+        }
+      };
+
+      function selectedDecision() {
+        const checked = document.querySelector('input[name="decision_selection"]:checked');
+        return DECISIONS[checked ? checked.value : 'full_refund'];
+      }
+
+      document.querySelectorAll('input[name="decision_selection"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          setText('decision-cta-label', selectedDecision().cta);
+          reapplyLanguage();
+        });
+      });
+
       document.querySelectorAll('button').forEach(b => {
         const t = normText(b);
         if (t.includes('nihai kararı onayla') || t.includes('iadeyi başlat')) {
-          b.onclick = (e) => {
-            e.preventDefault();
-            window.bitadilatToast('Nihai karar onaylandı: ₺2.450 müşteriye iade edildi.');
-            window.bitadilatNav(SPEC.next_sid, 'Şikayet Merkezi');
-          };
+          bindEscrowAction(b, () => {
+            const decision = selectedDecision();
+            return {
+              path: decision.path,
+              body: decision.body,
+              nextSid: SPEC.next_sid,
+              label: 'Şikayet Merkezi',
+              noPaymentToast: 'Nihai karar kaydedildi. Bu oturumda ödeme kaydı yok, para işlemi yapılmadı.',
+              successToast: decision.successToast
+            };
+          });
         }
         if (t.includes('kapat') || t.includes('vazgeç') || b.querySelector('.material-symbols-outlined')?.innerText === 'close') {
           b.onclick = (e) => { e.preventDefault(); window.bitadilatNav(SPEC.back_sid, 'Geri'); };

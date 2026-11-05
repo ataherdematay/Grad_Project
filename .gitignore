@@ -21,3 +21,11 @@ dist/
 
 # Local logs
 *.log
+
+# Secrets
+.env
+.env.*
+
+# Payment backend
+backend/target/
+backend/data/

@@ -14,7 +14,7 @@
    - Sistemde kullanıcılar `CUSTOMER` (Müşteri) veya `PRO` (Usta / Esnaf) rolüne sahiptir.
    - Tüm uç noktalar token içerisindeki `role` talebini (claim) zorunlu olarak denetler. Müşteri uç noktalarına usta, usta uç noktalarına müşteri erişemez.
 2. **Güvenli Havuz (Escrow Protection) Modeli:**
-   - Müşteri usta teklifini kabul ettiğinde tutar doğrudan ustaya **aktarılmaz**; platformun BDDK/TCMB lisanslı sanal POS havuz hesabında (Escrow) bloke edilir (`LOCKED`).
+   - Müşteri usta teklifini kabul ettiğinde tutar doğrudan ustaya **aktarılmaz**; platformun güvence havuzu kaydında bloke edilir (`LOCKED`). Mevcut uygulama Craftgate sandbox kullanır (bkz. Bölüm 3.3).
    - İş bitiminde müşteri onay kodu (PIN) veya dijital tamamlama onayı verdiğinde bakiye platform hizmet komisyonu (%10) kesilerek ustaya serbest bırakılır (`RELEASED`).
 3. **Gizlilik ve Doğrudan İletişim Yasağı:**
    - İki taraf arasında teklif kabul edilip havuz ödemesi kilitlenmeden telefon numarası veya tam sokak/bina adresi kesinlikle paylaşılmaz. İletişim BiTadilat Maskeli Mesajlaşma üzerinden yürütülür.
@@ -130,7 +130,7 @@ CREATE TABLE offers (
 );
 
 -- 6. GÜVENLİ HAVUZ / ÖDEME İŞLEMLERİ (ESCROW TRANSACTIONS)
-CREATE TYPE escrow_status AS ENUM ('INITIALIZED', 'LOCKED', 'RELEASED_TO_PRO', 'REFUNDED_TO_CUSTOMER', 'DISPUTED');
+CREATE TYPE escrow_status AS ENUM ('INITIALIZED', 'LOCKED', 'RELEASED_TO_PRO', 'REFUNDED_TO_CUSTOMER', 'DISPUTED', 'SPLIT_SETTLED', 'FAILED');
 
 CREATE TABLE escrow_transactions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -141,7 +141,7 @@ CREATE TABLE escrow_transactions (
     platform_commission NUMERIC(10, 2) NOT NULL, -- %10
     pro_payout_amount NUMERIC(10, 2) NOT NULL,   -- %90
     status escrow_status NOT NULL DEFAULT 'INITIALIZED',
-    payment_provider_ref VARCHAR(100), -- Sanal POS Referansı (Iyzico / Stripe)
+    payment_provider_ref VARCHAR(100), -- Craftgate paymentId
     locked_at TIMESTAMP WITH TIME ZONE,
     released_at TIMESTAMP WITH TIME ZONE,
     refunded_at TIMESTAMP WITH TIME ZONE
@@ -326,55 +326,62 @@ Belirli bir talebin tüm detaylarını, tekliflerini ve aktif durumunu getirir.
 
 ### 3.3. Teklif Seçimi ve Escrow Ödemesi (Escrow & Payment Module)
 
-#### `POST /api/v1/jobs/{jobId}/accept-offer`
-Müşteri ustanın teklifini seçer ve ödeme adımını başlatır.
+> **Uygulandı:** `backend/` (Spring Boot + Craftgate sandbox). HTML prototip bu uç noktaları kullanır. Prototipte kimlik doğrulama olmadığı için uç noktalar henüz `/api/v1/jobs` altında değildir ve rol denetimi yapmaz. Eski taslaktaki `accept-offer` (`cardToken` ile) ve `complete-work` uç noktalarının yerini almıştır.
+
+Tutar her zaman sunucudaki tekliften belirlenir. İstemciden gelen tutar veya `callbackUrl` yok sayılır. Kart numarası ve CVC saklanmaz, loglanmaz.
+
+#### `GET /api/offers/{offerId}`
+Teklif özeti: `id`, `jobRef`, `jobTitle`, `proName`, `laborAmount`, `materialsAmount`, `totalAmount`.
+
+#### `POST /api/payments/3ds/init`
+Kaydı `INITIALIZED` olarak açar ve Craftgate 3-D Secure sürecini başlatır.
 - **Request Body:**
 ```json
 {
-  "offerId": "off-01",
-  "cardToken": "tok_visa_4242",
-  "saveCard": false
+  "offerId": "OFFER-BD-88412",
+  "attemptKey": "istemcinin ürettiği benzersiz deneme anahtarı",
+  "cardHolderName": "Test Kullanici",
+  "cardNumber": "5258640000000001",
+  "expireMonth": "07",
+  "expireYear": "2044",
+  "cvc": "000"
 }
 ```
-- **Response 200 OK:**
+- **Response 200 OK:** `{ "ref": "uuid", "htmlContent": "<banka formu>", "redirectUrl": "..." }`
+- **Hatalar:** `400 INVALID_CARD` (`field` içerir), `402 PAYMENT_DECLINED` (`ref` içerir), `404 NOT_FOUND`, `409 DUPLICATE_ATTEMPT`.
+
+İstemci `htmlContent` içindeki formu **tam sayfa** (`target=_top`) gönderir. Tarayıcılar, iframe içindeki HTTPS banka sayfasının `localhost`'a dönüşünü engeller.
+
+#### `POST /api/payments/3ds/callback`
+Bankadan dönen tarayıcının geldiği adres (`application/x-www-form-urlencoded`). Yanıt her durumda kullanıcıyı `/preview/index.html?sid=<ekran>` adresine götüren bir HTML sayfasıdır.
+
+Doğrulama sırası:
+1. `CRAFTGATE_CALLBACK_KEY` tanımlıysa `hash` kontrolü.
+2. Kayıt `conversationId` ile bulunur. Bankada iptalde `paymentId` boş gelir, dolu gelirse kayıtla eşleşmelidir.
+3. Kayıt `INITIALIZED` değilse sonuç değişmez (tekrarlanan callback).
+4. Sonuca Craftgate API yanıtına göre karar verilir: `complete3DSPayment` veya `retrievePayment`. `paymentStatus`, tutar ve `conversationId` kayıtla karşılaştırılır.
+5. Sonuç bilinmiyorsa kayıt `INITIALIZED` kalır, tahmin yürütülmez.
+
+#### `GET /api/payments/{ref}`
+Güncel kayıt: `ref`, `status`, `offerId`, `jobRef`, `proName`, `totalAmount`, `commission`, `proPayout`, `refundedAmount`, `cardLast4`, `craftgatePaymentId`, `errorMessage`, `resultUncertain`.
+
+`resultUncertain: true` ise paranın durumu kesin değildir, kullanıcıya "ücret alınmadı" denmez.
+
+#### `POST /api/payments/{ref}/release`
+`LOCKED` veya `DISPUTED` → `RELEASED_TO_PRO`. %10 komisyon defter kaydıdır, gerçek para aktarımı yapılmaz.
 ```json
-{
-  "success": true,
-  "jobStatus": "SCHEDULED",
-  "escrowTransaction": {
-    "id": "esc-901",
-    "totalAmount": 2450.00,
-    "status": "LOCKED",
-    "guaranteeDays": 30,
-    "lockedAt": "2026-10-22T19:55:00Z"
-  },
-  "completionPin": "849201"
-}
+{ "status": "RELEASED_TO_PRO", "totalAmount": 2450.00, "proPayout": 2205.00, "commission": 245.00 }
 ```
 
-#### `POST /api/v1/jobs/{jobId}/complete-work`
-Müşteri işin bittiğini onaylar ve PIN'i teyit eder. Tutar ustaya aktarılır.
-- **Request Body:**
-```json
-{
-  "pin": "849201",
-  "customerRating": 5,
-  "customerReview": "Ahmet usta tam vaktinde geldi, temiz ve titiz çalıştı. Garanti belgesini de teslim etti."
-}
-```
-- **Response 200 OK:**
-```json
-{
-  "success": true,
-  "jobStatus": "RELEASED",
-  "escrowStatus": "RELEASED_TO_PRO",
-  "payoutSummary": {
-    "totalPaid": 2450.00,
-    "proEarnings": 2205.00,
-    "platformFee": 245.00
-  }
-}
-```
+#### `POST /api/payments/{ref}/dispute`
+`LOCKED` → `DISPUTED`. Havuz karar verilene kadar dondurulur.
+
+#### `POST /api/payments/{ref}/refund`
+Craftgate üzerinden gerçek (sandbox) iade yapar. Body: `{ "type": "FULL" }` veya `{ "type": "SPLIT_50_50" }`.
+- `FULL`: `LOCKED` veya `DISPUTED` → `REFUNDED_TO_CUSTOMER`.
+- `SPLIT_50_50`: yalnızca `DISPUTED` → `SPLIT_SETTLED`. Yarısı iade edilir, yarısı ustaya yazılır, komisyon alınmaz.
+
+Geçersiz durum geçişi: `409 ILLEGAL_STATE`. Craftgate hatası: `502 GATEWAY_ERROR`. Hata gövdesi: `{ "code": "...", "message": "..." }`.
 
 ---
 

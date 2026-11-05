@@ -209,8 +209,45 @@ Projenin gerçek mobil istemcisi **Flutter (Dart 3.x / Flutter 3.27+)** ile Clea
 
 Backend ekibinin PostgreSQL şemalarını kurması ve REST uç noktalarını geliştirmesi için hazırlanan sözleşme:
 - **PostgreSQL Tabloları:** `users`, `pro_profiles`, `service_categories`, `job_requests`, `offers`, `escrow_transactions`, `chat_messages`, `reviews`
-- **Uç Noktalar:** SMS OTP (`/auth`), Talep Sihirbazı (`/jobs`), Escrow Ödeme & PIN Doğrulama (`/escrow`), Usta Feed & Teklif Verme (`/pro`)
-- **Güvenlik:** Rol Tabanlı Yetkilendirme (`CUSTOMER` vs `PRO`), Maskeli Telefon & Adres Gizliliği, BDDK uyumlu Escrow Kilitleme/Çözme
+- **Uç Noktalar:** SMS OTP (`/auth`), Talep Sihirbazı (`/jobs`), Ödeme & Güvence Havuzu (`/api/payments`), Usta Feed & Teklif Verme (`/pro`)
+- **Güvenlik:** Rol Tabanlı Yetkilendirme (`CUSTOMER` vs `PRO`), Maskeli Telefon & Adres Gizliliği, Escrow Kilitleme/Çözme
+
+---
+
+## 💳 Craftgate Sandbox Ödeme Entegrasyonu (`backend/`)
+
+HTML prototipteki ödeme akışı gerçek Craftgate **sandbox** ortamına bağlıdır: kart girişi, 3-D Secure, güvence havuzu ve iade. Gerçek para çekilmez. Flutter uygulaması mock veriyle çalışmaya devam eder.
+
+**Gereksinimler:** Java 17+, Craftgate sandbox anahtarları (ortam değişkeni olarak, koda veya depoya yazmayın).
+
+```bash
+export CRAFTGATE_API_KEY=...
+export CRAFTGATE_SECRET_KEY=...
+export CRAFTGATE_CALLBACK_KEY=...   # Sandbox panelinden; önerilir, yoksa hash kontrolü yapılmaz
+```
+
+```bash
+cd backend && ./mvnw spring-boot:run
+```
+
+Sonra prototipi **backend üzerinden** açın: <http://localhost:8090/preview/index.html>. `python3 -m http.server` ile açılan prototipte diğer ekranlar çalışır, ödeme yapılamaz.
+
+**Demo akışı:**
+1. Adım 18'de teklifi kabul edin. Adım 19'da "Test Kartını Yaz" ile test kartını doldurun (`5258 6400 0000 0001`, `07/44`, `000`).
+2. Banka adımı tam sayfada açılır. Ekranda yazan SMS kodunu girin. Başarılıysa adım 21'e, iptal veya hatada adım 20'ye dönersiniz.
+3. Havuzdaki ödeme için: adım 27 onayı serbest bırakır (2.205 ₺ usta, 245 ₺ komisyon), adım 26 tam iade yapar, adım 29 havuzu dondurur, adım 46 hakem kararını uygular.
+
+Başarısız kart senaryoları için resmi test kartı listesi giriş gerektiren [Craftgate geliştirici portalındadır](https://developer.craftgate.io).
+
+**Testler:**
+
+```bash
+cd backend && ./mvnw test
+```
+
+**Mimari kararlar:** Tutar sunucudan gelir, callback parametrelerine güvenilmez, sonuç Craftgate API'sinden doğrulanır, kart verisi saklanmaz ve loglanmaz. Ayrıntılar `docs/API_CONTRACT.md` Bölüm 3.3'te, RAD ile çelişen konular `docs/PAYMENT_RAD_CHANGE_NOTE.md` dosyasındadır.
+
+**Sınırlar:** Yalnızca sandbox için tasarlandı. Usta aktarımı defter kaydıdır, gerçek para hareketi olmaz. Prototipte kimlik doğrulama yoktur, bu yüzden sunucu varsayılan olarak yalnızca `127.0.0.1` üzerinde dinler.
 
 ---
 
@@ -218,6 +255,7 @@ Backend ekibinin PostgreSQL şemalarını kurması ve REST uç noktalarını gel
 
 ```text
 Grad_Project/
+├── backend/                       # 💳 Spring Boot + Craftgate Sandbox Ödeme & Güvence Havuzu Servisi
 ├── mobile/                        # 📱 Flutter Çapraz Platform Mobil Uygulama
 │   ├── lib/
 │   │   ├── core/                  # Tema, Renkler, Tipografi, BLoC, Modeller, Repository
@@ -251,7 +289,7 @@ Grad_Project/
 1. **Yeni bir ekran eklemek isterseniz:**
    - Ekran HTML dosyasını `preview/screens/<ekran_id>.html` olarak ekleyin.
    - `build_authoritative_prototype.py` dosyasındaki `screens_spec` listesine yeni ekranın ID'sini, başlığını, rolünü (`CUSTOMER` / `PRO` / `ADMIN`), `back_sid` ve `next_sid` değerlerini ekleyin.
-   - `python3 build_authoritative_prototype.py` ve `python3 generate_index_html.py` çalıştırarak navigasyon haritasını ve simülatörü saniyeler içinde otomatik olarak güncelleyin.
+   - `python3 build_authoritative_prototype.py` çalıştırarak navigasyon haritasını ve simülatörü saniyeler içinde otomatik olarak güncelleyin. `generate_index_html.py` simülatörü sıfırdan yazar ve `?sid=` desteğini siler, ödeme dönüşünü bozduğu için çalıştırmayın.
 2. **Klavye Kısayolları ile Test:**
    - Simülatör açıkken klavyenizden `Alt + Sol Ok` veya `Alt + Sağ Ok` tuşlarına basarak ekranlar arasında sıralı olarak gezinebilirsiniz.
 3. **Ekranı Yenilemek (Live Reload):**

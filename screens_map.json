@@ -208,7 +208,7 @@
   {
     "id": "d9247db4ce9b458781550be929121237",
     "step_num": 19,
-    "title": "3D Secure Güvenli Ödeme Doğrulama (SCR-C-3DSECURE)",
+    "title": "Güvenli Ödeme: Kart Bilgileri & 3D Secure (SCR-C-3DSECURE)",
     "flow": "3. Teklif Karşılaştırma & Randevu",
     "role": "CUSTOMER",
     "device": "MOBILE",
