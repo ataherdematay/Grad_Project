@@ -31,6 +31,8 @@ git restore --source=69607a0 -- mobile
 | 390 px sınırı, klavye ve taşma sorunları | Duyarlı yerleşim, küçük ekran ve büyük yazı testi |
 | Yayın derlemesinde `INTERNET` izni ve imza eksikti | Baştan doğru uygulama adı, izinler ve imza |
 
+Silinen sürümün test kanıtları ve kabul kriterleri: `docs/MOBILE_APP_AUDIT.md`, Bölüm 6.
+
 ## Başlamadan önce gereken kararlar
 
 Gerçek ürün kapsamı, emanet modeli, iptal ve komisyon kuralları, admin paneli yeri, backend kapsamı ve takvim.

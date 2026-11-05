@@ -66,8 +66,8 @@ Adım 19 artık sahte banka ekranı değil, kart formudur. Banka adımı Craftga
 | Metin | Yer | Sorun |
 |---|---|---|
 | "komisyonsuz" | Adım 48, `preview/screens/164cd336…html:399` | Backend %10 komisyon hesaplıyor |
-| "BDDK/TCMB lisanslı" | `docs/API_CONTRACT.md` geçmişi, adım 48 ve diğer ekranlar | Doğrulanmamış lisans iddiası, projenin böyle bir lisansı yok |
-| "30 Gün İş Garantisi" ve "6 ay" | Flutter `s04` ve teklif ekranları | Garanti süreleri birbirini tutmuyor |
+| Güvence iddiaları | "%100 Garantili" (adım 34), adım 13 ve 27'deki garanti süreleri | Doğrulanmamış güvence iddiası, RAD:80 ile çelişiyor. Prototipin görünür metinlerinde BDDK veya TCMB iddiası kalmadı |
+| Garanti süreleri: 3, 6 ve 12 ay | Adım 13, 15, 18, 27, 36 | Süreler birbirini tutmuyor |
 | Adım 43 sabit ₺2.450 | `preview/screens/c6ebf06d…html` | Canlı veriye bağlı değil |
 
 Adım 19, 20 ve 46'daki lisans iddiaları kaldırıldı, çünkü bu ekranlar artık gerçek akışın parçası.
@@ -78,4 +78,4 @@ Adım 19, 20 ve 46'daki lisans iddiaları kaldırıldı, çünkü bu ekranlar ar
 - Usta aktarımı defter kaydıdır, gerçek para hareketi olmaz.
 - Kart verisi tarayıcıdan backend'e geçer. Canlıya çıkılsaydı PCI kapsamı nedeniyle Craftgate'in ortak ödeme formu kullanılmalıydı.
 - Prototipte gerçek kimlik doğrulama yoktur. Ödeme kaydına erişim tahmin edilemez bir UUID ile yapılır ve sunucu yalnızca yerelde dinler.
-- Flutter uygulaması (`mobile/`) mock veriyle çalışmaya devam eder, ödeme yalnızca HTML prototipte vardır.
+- Ödeme yalnızca HTML prototipte vardır. Eski Flutter uygulaması kaldırıldı, sıfırdan yazılacak (`docs/FLUTTER_RESTART_NOTES.md`).

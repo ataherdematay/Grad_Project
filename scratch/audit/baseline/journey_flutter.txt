@@ -1,0 +1,101 @@
+--- A: Giriş ve geri
+başlangıç                                      => TR / EN / BiTadilat
+tap: Ev sahibi                                 => TR / EN / BiTadilat
+tap: Telefon numarasıyla                       => ADIM 1 / 2 / Güvenlik Onayı / 50
+GERİ(ok)                                       => TR / EN / BiTadilat
+tap: Telefon numarasıyla                       => ADIM 1 / 2 / Güvenlik Onayı / 50
+tap: Doğrulama kodu                            => ADIM 2 / 2 / Güvenlik Onayı / 100
+GERİ(ok)                                       => ADIM 1 / 2 / Güvenlik Onayı / 50
+tap: Doğrulama kodu                            => ADIM 2 / 2 / Güvenlik Onayı / 100
+tap: Kodu Doğrula                              => Merhaba! / Evin için neye ihtiyacın var? / Usta Ağı Aktif
+GERİ(yok)                                      => Merhaba! / Evin için neye ihtiyacın var? / Usta Ağı Aktif
+home has back? true
+--- B: Talep sihirbazı, Elektrik seçimi taşınıyor mu
+tap: Talep oluşturmaya                         => Talep oluştur • 1 / 4 / %25 Tamamlandı / 25
+tap: Elektrik                                  => Talep oluştur • 1 / 4 / %25 Tamamlandı / 25
+tap: Devam Et                                  => Talep oluştur • 2 / 4 / %50 Tamamlandı / 50
+s06 Elektrik gösteriyor mu: false Tesisat gösteriyor mu: true
+tap: Devam Et                                  => Talep oluştur • 3 / 4 / %75 Tamamlandı / 75
+tap: Devam Et                                  => Talep oluştur • 4 / 4 / %100 Tamamlandı / 100
+s08 Elektrik: false Tesisat: true
+tap: Düzenle                                   => Talep oluştur • 1 / 4 / %25 Tamamlandı / 25
+GERİ(ok)                                       => Talep oluştur • 4 / 4 / %100 Tamamlandı / 100
+Düzenle sonrası geri nerede
+git /step/8                                    => Talep oluştur • 4 / 4 / %100 Tamamlandı / 100
+tap: Talebi Onayla                             => Talebin yayınlandı / Tesisat talebini uygun ve doğrulanmış hizmet prof
+GERİ(ok)                                       => Merhaba! / Evin için neye ihtiyacın var? / Usta Ağı Aktif
+--- C: Yayın sonrası, teklif kimliği
+git /step/9                                    => Talebin yayınlandı / Tesisat talebini uygun ve doğrulanmış hizmet prof
+tap: Taleplerime Git                           => Aktif Talepler (1) / Geçmiş / Tamamlanan / #TD-84920
+tap: Gelen Teklifleri                          => TALEP ÖZETİ / Talep No: #TD-84920 / Tesisat
+tap: Teklifi İncele                            => Tesisat / Acil onarım / İstanbul, Kadıköy
+2. kart sonrası ekranda Kaya mı: false Mavi Hat mı: true
+GERİ(ok)                                       => TALEP ÖZETİ / Talep No: #TD-84920 / Tesisat
+tap: Teklifi İncele                            => Tesisat / Acil onarım / İstanbul, Kadıköy
+3. kart: Mavi Hat mı: true
+--- D: Kabul → randevu (ödeme var mı)
+tap: Teklifi kabul et                          => Talep No: #BD-88412 • Su kaçak tespiti ve onarım / Mavi Hat Tesisat / 
+tap: Teklifi kabul et                          => Mavi Hat Tesisat / ₺2.450 / Doğrulanmış uzman
+Ödeme/kart ekranı var mı: false
+tap: 14:00                                     => Mavi Hat Tesisat / ₺2.450 / Doğrulanmış uzman
+tap: Randevu talebini                          => Randevu talebin iletildi / Mavi Hat Tesisat seçtiğin zaman aralığı içi
+GERİ(ok)                                       => Mavi Hat Tesisat / ₺2.450 / Doğrulanmış uzman
+geri ile forma dönüldü, tekrar gönderilebilir mi
+tap: Randevu talebini                          => Randevu talebin iletildi / Mavi Hat Tesisat seçtiğin zaman aralığı içi
+tap: Talep detayına                            => Yaklaşan Randevu / Randevun onaylandı / Mavi Hat Tesisat seçtiğin zama
+s18 Randevun onaylandı (usta onayı olmadan): true
+--- E: Taleplerimden aktif işe ulaşma
+tap: Ustaya mesaj                              => Randevu: Yarın 14:00 – 16:00 / Acil Onarım / Tesisat
+GERİ(ok)                                       => Yaklaşan Randevu / Randevun onaylandı / Mavi Hat Tesisat seçtiğin zama
+git /step/10                                   => Aktif Talepler (1) / Geçmiş / Tamamlanan / #TD-84920
+s10 randevulu iş görünüyor mu: false hala 3 teklif: true
+--- F: İptal
+git /step/21                                   => Yarın 14:00 – 16:00 / Kadıköy, Moda / Planlandı
+tap: İşi İptal Etmeyi                          => Yaklaşan Randevu / Randevun onaylandı / Mavi Hat Tesisat seçtiğin zama
+iptal sonrası Randevun onaylandı: true
+--- G: Tamamlama ve geri
+git /step/20                                   => Onarım Sürüyor / Kadıköy · Caferağa / Usta adreste onarıma devam ediyo
+tap: Onayla >                                  => Usta onarımı tamamladığını bildirdi / Lütfen lavabo altındaki yeni van
+tap: İşi Onayla                                => Usta onarımı tamamladığını bildirdi / Lütfen lavabo altındaki yeni van
+900ms sonrası                                  => Mavi Hat Tesisat / Kadıköy / Acil Tesisat Onarımı
+GERİ(ok)                                       => Usta onarımı tamamladığını bildirdi / Lütfen lavabo altındaki yeni van
+s22e dönüş Onaylanıyor mu: true Usta onarımı tamamladığını bildirdi
+git /step/23                                   => Mavi Hat Tesisat / Kadıköy / Acil Tesisat Onarımı
+tap: Değerlendirmeyi Gönder                    => Merhaba! / Evin için neye ihtiyacın var? / Usta Ağı Aktif
+tap: Taleplerim ve                             => Aktif Talepler (1) / Geçmiş / Tamamlanan / #TD-84920
+değerlendirme sonrası hala aktif: true
+--- H: Şikayet verisi
+git /step/20                                   => Onarım Sürüyor / Kadıköy · Caferağa / Usta adreste onarıma devam ediyo
+tap: Usta ile ilgili                           => Uyuşmazlık Çözüm Merkezi / Güvence / BiTadilat arabuluculuk ekibi tara
+şikayette Ali Kaya: false Uyuşmazlık Çözüm Merkezi / Güvence
+tap: Şikayet Kaydı                             => İnceleme Sırasında / Öncelikli Dosya / Dosyanız Denetim Ekibine Ulaştı
+GERİ(ok)                                       => Uyuşmazlık Çözüm Merkezi / Güvence / BiTadilat arabuluculuk ekibi tara
+şikayet sonrası geri form? Uyuşmazlık Çözüm Merkezi
+--- I: Usta tarafı
+git /step/1                                    => TR / EN / BiTadilat
+tap: Hizmet profesyoneli                       => TR / EN / BiTadilat
+tap: Telefon numarasıyla                       => Doğrulanmış Usta Güvencesi / BiTadilat üzerinden ev sahiplerine teklif
+telefon adımı atlandı: false
+tap: Başvuruyu İncelemeye                      => Müsait / Kadıköy, Üsküdar / Tesisat
+onaysız akışa düştü: true
+tap: Teklif Hazırla                            => Acil Onarım / 1.2 km · Moda, Kadıköy / Banyo Lavabo Altı Temiz Su Boru
+2. iş (Mutfak) mı: false Banyo mu: true
+GERİ(ok)                                       => Müsait / Kadıköy, Üsküdar / Tesisat
+tap: Mesajlar                                  => Randevu: Yarın 14:00 – 16:00 / Acil Onarım / Tesisat
+usta sohbetinde: Randevu: Yarın 14:00 – 16:00 / Acil Onarım
+GERİ(ok)                                       => Yaklaşan Randevu / Randevun onaylandı / Mavi Hat Tesisat seçtiğin zama
+usta sohbetten geri: Yaklaşan Randevu / Randevun onaylandı Müşteri ekranı mı: false
+git /step/32                                   => Sahada / İşlemde: Onarım Sürüyor / Aktif
+tap: Sahada bir                                => Uyuşmazlık Çözüm Merkezi / Güvence / BiTadilat arabuluculuk ekibi tara
+GERİ(ok)                                       => Onarım Sürüyor / Kadıköy · Caferağa / Usta adreste onarıma devam ediyo
+ustanın şikayet geri: Onarım Sürüyor
+git /step/31                                   => Müsait / İş Alma Durumu / Yeni eşleşen talepleri alıyorsunuz
+usta profilinde Çıkış/Müşteri Moduna Geç var mı: false false
+--- J: Çıkış sonrası
+git /step/26                                   => AY / Ali Yılmaz / +90 532 450 88 92
+tap: Çıkış Yap                                 => TR / EN / BiTadilat
+git /step/4                                    => Merhaba! / Evin için neye ihtiyacın var? / Usta Ağı Aktif
+çıkıştan sonra ana sayfa açıldı (oturum yok): true
+--- K: Bilinmeyen adres
+/step/99                                       => Page Not Found / Home
+END

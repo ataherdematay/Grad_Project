@@ -1,0 +1,54 @@
+// Flutter'da müşteri ve usta yolculuğunu kullanıcı sırasıyla yürütür, geri tuşlarıyla birlikte.
+// Bugünkü kusurları da gösterir: düzeltmeler yapıldıkça "=>" ve evet/hayır satırları değişmelidir.
+// Kullanım: node scratch/audit/journey_flutter.mjs
+import { openChrome, bootFlutter, sleep } from './lib/cdp.mjs';
+
+const c = await openChrome({ port: 9343 });
+await bootFlutter(c, process.env.FLUTTER_URL || 'http://127.0.0.1:8092/');
+const ev = c.ev;
+const see=async(n=2)=>{await ev('__f.sem()');return ev(`__f.texts().slice(0,${n}).join(' / ').slice(0,70)`)};
+const log=async(what)=>{await sleep(700);console.log(what.padEnd(46),'=>',await see(3))};
+const tap=async(label,idx=0)=>{const r=await ev(`(()=>{const m=__f.nodes().filter(n=>__f.label(n).includes(${JSON.stringify(label)}));if(!m[${idx}])return 'YOK:'+__f.nodes().map(__f.label).map(s=>s.slice(0,18)).join(',');m[${idx}].click();return 'ok'})()`);if(r!=='ok')console.log('  !',label,r);await log('tap: '+label)};
+const back=async()=>{const r=await ev(`(()=>{const n=__f.nodes().filter(n=>{const b=n.getBoundingClientRect();return !__f.label(n)&&b.top<70&&b.left<80})[0];if(!n)return 'yok';n.click();return 'ok'})()`);await log('GERİ('+r+')')};
+const has=async(s)=>ev(`__f.texts().join('|').includes(${JSON.stringify(s)})`);
+const go=async(N)=>{await ev(`location.hash='#/step/${N}?j='+Date.now()`);await log('git /step/'+N)};
+console.log('--- A: Giriş ve geri');
+await log('başlangıç');
+await tap('Ev sahibi');await tap('Telefon numarasıyla');await back();await tap('Telefon numarasıyla');await tap('Doğrulama kodu');await back();await tap('Doğrulama kodu');await tap('Kodu Doğrula');await back();
+console.log('home has back?',await has('Merhaba'));
+console.log('--- B: Talep sihirbazı, Elektrik seçimi taşınıyor mu');
+await tap('Talep oluşturmaya');await tap('Elektrik');await tap('Devam Et');
+console.log('s06 Elektrik gösteriyor mu:',await has('Elektrik'),'Tesisat gösteriyor mu:',await has('Tesisat'));
+await tap('Devam Et');await tap('Devam Et');
+console.log('s08 Elektrik:',await has('Elektrik'),'Tesisat:',await has('Tesisat'));
+await tap('Düzenle',0);await back();console.log('Düzenle sonrası geri nerede');
+await go(8);await tap('Talebi Onayla');await back();
+console.log('--- C: Yayın sonrası, teklif kimliği');
+await go(9);await tap('Taleplerime Git');await tap('Gelen Teklifleri');
+await tap('Teklifi İncele',1);console.log('2. kart sonrası ekranda Kaya mı:',await has('Kaya'),'Mavi Hat mı:',await has('Mavi Hat'));await back();
+await tap('Teklifi İncele',2);console.log('3. kart: Mavi Hat mı:',await has('Mavi Hat'));
+console.log('--- D: Kabul → randevu (ödeme var mı)');
+await tap('Teklifi kabul et');await tap('Teklifi kabul et');console.log('Ödeme/kart ekranı var mı:',await has('Kart'));
+await tap('14:00');await tap('Randevu talebini');await back();console.log('geri ile forma dönüldü, tekrar gönderilebilir mi');
+await tap('Randevu talebini');await tap('Talep detayına');console.log('s18 Randevun onaylandı (usta onayı olmadan):',await has('onaylandı'));
+console.log('--- E: Taleplerimden aktif işe ulaşma');
+await tap('Ustaya mesaj');await back();await go(10);console.log('s10 randevulu iş görünüyor mu:',await has('Mavi Hat'),'hala 3 teklif:',await has('3 Usta'));
+console.log('--- F: İptal');
+await go(21);await tap('İşi İptal Etmeyi');console.log('iptal sonrası Randevun onaylandı:',await has('onaylandı'));
+console.log('--- G: Tamamlama ve geri');
+await go(20);await tap('Onayla >');await tap('İşi Onayla');await sleep(1300);await log('900ms sonrası');await back();await sleep(400);console.log('s22e dönüş Onaylanıyor mu:',await has('Onaylanıyor'),await see(1));
+await go(23);await tap('Değerlendirmeyi Gönder');await tap('Taleplerim ve');console.log('değerlendirme sonrası hala aktif:',await has('3 Usta'));
+console.log('--- H: Şikayet verisi');
+await go(20);await tap('Usta ile ilgili');console.log('şikayette Ali Kaya:',await has('Ali Usta'),await see(2));await tap('Şikayet Kaydı');await back();console.log('şikayet sonrası geri form?',await see(1));
+console.log('--- I: Usta tarafı');
+await go(1);await tap('Hizmet profesyoneli');await tap('Telefon numarasıyla');console.log('telefon adımı atlandı:',await has('Usta Belge'));
+await tap('Başvuruyu İncelemeye');console.log('onaysız akışa düştü:',await has('Eşleşen'));
+await tap('Teklif Hazırla',1);console.log('2. iş (Mutfak) mı:',await has('Mutfak'),'Banyo mu:',await has('Banyo Lavabo'));await back();
+await tap('Mesajlar');console.log('usta sohbetinde:',await see(2));await back();console.log('usta sohbetten geri:',await see(2),'Müşteri ekranı mı:',await has('İş Alanı'));
+await go(32);await tap('Sahada bir');await back();console.log('ustanın şikayet geri:',await see(1));
+await go(31);console.log('usta profilinde Çıkış/Müşteri Moduna Geç var mı:',await has('Çıkış'),await has('Müşteri Modu'));
+console.log('--- J: Çıkış sonrası');
+await go(26);await tap('Çıkış Yap');await go(4);console.log('çıkıştan sonra ana sayfa açıldı (oturum yok):',await has('Merhaba'));
+console.log('--- K: Bilinmeyen adres');
+await ev(`location.hash='#/step/99'`);await log('/step/99');
+console.log('END');c.close();process.exit(0);
