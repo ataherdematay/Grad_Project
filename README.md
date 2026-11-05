@@ -183,25 +183,9 @@ Kapsamlı PM & QA denetiminde tespit edilip bu sürümde tamamen çözülen krit
 
 ---
 
-## 📱 Flutter Çapraz Platform Mobil Uygulama (`mobile/`)
+## 📱 Mobil Uygulama (Flutter)
 
-Projenin gerçek mobil istemcisi **Flutter (Dart 3.x / Flutter 3.27+)** ile Clean Architecture & BLoC prensipleri gözetilerek hem iOS hem de Android için sıfırdan geliştirilmiştir:
-
-- **1:1 Piksel & Ekran Eşleşmesi:** Stitch prototipindeki 33 mobil ekranın tamamı (`mobile/lib/features/screens/s01_...` ile `s33_...`) bağımsız ve eksiksiz ekranlar olarak kodlanmıştır.
-- **Kesintisiz Yönlendirme:** `go_router` ile `/step/1` ile `/step/33` arasındaki tüm rota akışları birbirine bağlanmıştır.
-- **State Management:** `flutter_bloc` (AuthBloc, JobBloc)
-- **Tasarım Sistemi & Tokenlar:** Google Fonts `Manrope`, `#0F4C5C` (Teal), `#107A5B` (Trust Green), `#E87525` (Urgency Orange), `#F7F8F6` (Canvas)
-- **Çift Katmanlı Veri Mimarisi (Dual-Mode Repository):**
-  - `MockJobRepository`: Backend henüz hazır değilken bile jüri sunumunda offline/canlı çalışabilen Kadıköy / Moda senaryosu
-  - `JobRepository`: REST API sözleşmesine (`docs/API_CONTRACT.md`) birebir uyan soyut arayüz
-- **Uygulamayı Çalıştırma:**
-  ```bash
-  cd mobile
-  flutter pub get
-  flutter test        # Birim testleri çalıştırır
-  flutter run         # iOS Simülatör veya Android Emülatörde başlatır
-  flutter run -d chrome # Web tarayıcısında anında önizleme
-  ```
+Eski Flutter denemesi kaldırıldı, uygulama sıfırdan yazılacak. Ayrıntılar ve eski koda erişim: `docs/FLUTTER_RESTART_NOTES.md`. Akışların güncel referansı HTML prototiptir.
 
 ---
 
@@ -216,7 +200,7 @@ Backend ekibinin PostgreSQL şemalarını kurması ve REST uç noktalarını gel
 
 ## 💳 Craftgate Sandbox Ödeme Entegrasyonu (`backend/`)
 
-HTML prototipteki ödeme akışı gerçek Craftgate **sandbox** ortamına bağlıdır: kart girişi, 3-D Secure, güvence havuzu ve iade. Gerçek para çekilmez. Flutter uygulaması mock veriyle çalışmaya devam eder.
+HTML prototipteki ödeme akışı gerçek Craftgate **sandbox** ortamına bağlıdır: kart girişi, 3-D Secure, güvence havuzu ve iade. Gerçek para çekilmez.
 
 **Gereksinimler:** Java 17+, Craftgate sandbox anahtarları (ortam değişkeni olarak, koda veya depoya yazmayın).
 
@@ -256,12 +240,6 @@ cd backend && ./mvnw test
 ```text
 Grad_Project/
 ├── backend/                       # 💳 Spring Boot + Craftgate Sandbox Ödeme & Güvence Havuzu Servisi
-├── mobile/                        # 📱 Flutter Çapraz Platform Mobil Uygulama
-│   ├── lib/
-│   │   ├── core/                  # Tema, Renkler, Tipografi, BLoC, Modeller, Repository
-│   │   └── features/              # Auth, Customer Home, Wizard, Offers, Tracking, Pro Paneli
-│   ├── test/                      # Birim ve Widget Testleri
-│   └── pubspec.yaml               # Flutter Bağımlılıkları (bloc, go_router, google_fonts)
 ├── docs/
 │   ├── API_CONTRACT.md            # 🔌 Backend & DB Geliştiricileri İçin API ve ERD Şartnamesi
 │   ├── QA_AUDIT_REPORT.md         # Detaylı 33 Ekran QA ve PM Denetim Raporu
