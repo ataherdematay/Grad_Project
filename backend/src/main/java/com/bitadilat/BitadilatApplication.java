@@ -1,12 +1,12 @@
-package com.bitadilat.payment;
+package com.bitadilat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BitadilatPaymentApplication {
+public class BitadilatApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BitadilatPaymentApplication.class, args);
+        SpringApplication.run(BitadilatApplication.class, args);
     }
 }

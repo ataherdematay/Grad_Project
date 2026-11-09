@@ -1,5 +1,6 @@
 package com.bitadilat.payment.exception;
 
+import com.bitadilat.common.ApiException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,6 +60,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String, Object>> notFound(NoSuchElementException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body("NOT_FOUND", e.getMessage()));
+    }
+
+    /** Kimlik, hesap, katalog ve geliştirme uç noktalarının hataları: {code, message, field?}. */
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<Map<String, Object>> api(ApiException e) {
+        Map<String, Object> body = body(e.getCode(), e.getMessage());
+        if (e.getField() != null) {
+            body.put("field", e.getField());
+        }
+        return ResponseEntity.status(e.getStatus()).body(body);
+    }
+
+    /**
+     * Doğrulama hatası: VALIDATION_FAILED + ilk hatalı alan. Girilen değer yanıta yazılmaz. Ödeme uç noktaları
+     * eski davranışını (BAD_REQUEST) korur.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> invalid(MethodArgumentNotValidException e) {
+        if (e.getParameter().getContainingClass().getPackageName().startsWith("com.bitadilat.payment")) {
+            return ResponseEntity.badRequest().body(body("BAD_REQUEST", BAD_REQUEST));
+        }
+        FieldError first = e.getBindingResult().getFieldErrors().stream().findFirst().orElse(null);
+        String message = first != null && first.getDefaultMessage() != null ? first.getDefaultMessage() : BAD_REQUEST;
+        Map<String, Object> body = body("VALIDATION_FAILED", message);
+        if (first != null) {
+            body.put("field", first.getField());
+        }
+        return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
