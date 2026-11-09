@@ -27,3 +27,23 @@ Map<String, dynamic> _$AddressToJson(_Address instance) => <String, dynamic>{
   'doorNote': instance.doorNote,
   'isDefault': instance.isDefault,
 };
+
+_AddressInput _$AddressInputFromJson(Map<String, dynamic> json) =>
+    _AddressInput(
+      label: json['label'] as String,
+      districtId: idFromJson(json['districtId']),
+      neighborhood: json['neighborhood'] as String,
+      lineFull: json['lineFull'] as String,
+      doorNote: json['doorNote'] as String?,
+      isDefault: json['isDefault'] as bool?,
+    );
+
+Map<String, dynamic> _$AddressInputToJson(_AddressInput instance) =>
+    <String, dynamic>{
+      'label': instance.label,
+      'districtId': wireId(instance.districtId),
+      'neighborhood': instance.neighborhood,
+      'lineFull': instance.lineFull,
+      'doorNote': ?instance.doorNote,
+      'isDefault': ?instance.isDefault,
+    };

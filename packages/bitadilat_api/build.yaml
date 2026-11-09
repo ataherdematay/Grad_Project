@@ -4,3 +4,8 @@ targets:
       json_serializable:
         options:
           explicit_to_json: true
+      freezed:
+        options:
+          # freezed 3.2.5 + Dart 3.13: `final` içeren liste parametresi
+          # derlenmiyor; salt okunur sarmalayıcı yerine düz alan üretilir.
+          make_collections_unmodifiable: false
