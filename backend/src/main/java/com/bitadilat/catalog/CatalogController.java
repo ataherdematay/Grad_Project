@@ -23,9 +23,13 @@ public class CatalogController {
     private final CategoryRepository categories;
     private final DistrictRepository districts;
 
-    public CatalogController(CategoryRepository categories, DistrictRepository districts) {
+    private final com.bitadilat.request.QuestionCatalog questions;
+
+    public CatalogController(CategoryRepository categories, DistrictRepository districts,
+                             com.bitadilat.request.QuestionCatalog questions) {
         this.categories = categories;
         this.districts = districts;
+        this.questions = questions;
     }
 
     @GetMapping("/categories")
@@ -46,12 +50,12 @@ public class CatalogController {
                 .toList();
     }
 
-    /** Kategoriye özel sihirbaz soruları sonraki dalgada; şimdilik boş liste. */
+    /** Kategoriye özel sihirbaz soruları (tek seçim). */
     @GetMapping("/categories/{id}/questions")
-    public List<Object> questions(@PathVariable String id) {
+    public List<com.bitadilat.request.QuestionCatalog.Question> questions(@PathVariable String id) {
         if (!categories.existsById(id)) {
             throw ApiException.notFound("Kategori bulunamadı.");
         }
-        return List.of();
+        return questions.forCategory(id);
     }
 }

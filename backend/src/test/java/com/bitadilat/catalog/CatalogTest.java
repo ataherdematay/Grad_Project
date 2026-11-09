@@ -75,10 +75,19 @@ class CatalogTest extends ApiTestBase {
     }
 
     @Test
-    void questionsAreEmptyForKnownCategoryAndNotFoundOtherwise() throws Exception {
+    void questionsFollowContractAndNotFoundOtherwise() throws Exception {
         call(HttpMethod.GET, "/api/v1/categories/plumbing/questions", null, null)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[0].key").value("since"))
+                .andExpect(jsonPath("$[0].options.length()").value(3))
+                .andExpect(jsonPath("$[0].options[0].labelTr").value("Bugün"))
+                .andExpect(jsonPath("$[1].key").value("water_cut"))
+                .andExpect(jsonPath("$[2].key").value("other_rooms"));
+        call(HttpMethod.GET, "/api/v1/categories/painting/questions", null, null)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].key").value("since"));
         call(HttpMethod.GET, "/api/v1/categories/yok/questions", null, null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("NOT_FOUND"));

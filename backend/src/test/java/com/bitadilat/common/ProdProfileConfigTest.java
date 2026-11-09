@@ -43,6 +43,19 @@ class ProdProfileConfigTest {
     }
 
     @Test
+    void mediaSigningKeyAndDirHaveNoDefaultInBaseAndProd() throws Exception {
+        for (String file : new String[] {"application.properties", "application-prod.properties"}) {
+            Properties p = load(file);
+            assertThat(p.getProperty("bitadilat.media.signing-key")).as(file).isEqualTo("${MEDIA_SIGNING_KEY}");
+            assertThat(p.getProperty("bitadilat.media.dir")).as(file).isEqualTo("${MEDIA_DIR}");
+        }
+        assertThat(load("application-dev.properties").getProperty("bitadilat.media.signing-key"))
+                .startsWith("${MEDIA_SIGNING_KEY:");
+        org.assertj.core.api.Assertions.assertThatThrownBy(
+                () -> new com.bitadilat.media.MediaSigner("kisa-anahtar")).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
     void devOnlyBeansAreDevOnly() {
         for (Class<?> type : new Class<?>[] {DevDataService.class, DevSeeder.class, DevResetController.class}) {
             assertThat(type.getAnnotation(Profile.class).value()).as(type.getSimpleName()).containsExactly("dev");

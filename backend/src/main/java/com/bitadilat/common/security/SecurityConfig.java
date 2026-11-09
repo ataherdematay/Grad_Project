@@ -49,6 +49,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories", "/api/v1/categories/**",
                                 "/api/v1/districts").permitAll()
+                        // Medya içeriği: erişimi imza belirler (HMAC + son kullanma), Authorization gerekmez.
+                        .requestMatchers(HttpMethod.GET, "/api/v1/media/*/content").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Prototip uyumu: eski uç noktalar kimliksiz kalır.
                         .requestMatchers("/api/offers/**", "/api/payments/**", "/preview/**", "/", "/error")
@@ -81,6 +83,7 @@ public class SecurityConfig {
             boolean publicPath = !path.startsWith("/api/v1/")
                     || path.startsWith("/api/v1/auth/")
                     || path.startsWith("/api/v1/dev/")
+                    || (HttpMethod.GET.matches(request.getMethod()) && path.matches("/api/v1/media/[^/]+/content"))
                     || (HttpMethod.GET.matches(request.getMethod())
                     && (path.startsWith("/api/v1/categories") || path.equals("/api/v1/districts")));
             return publicPath ? null : delegate.resolve(request);

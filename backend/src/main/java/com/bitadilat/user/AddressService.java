@@ -44,6 +44,12 @@ public class AddressService {
         return view(find(userId, id), districtNames());
     }
 
+    /** Çözülmüş adres; kayıt yoksa veya kullanıcının değilse boş. */
+    @Transactional(readOnly = true)
+    public java.util.Optional<AddressView> findView(UUID userId, UUID id) {
+        return addresses.findByIdAndUserId(id, userId).map(a -> view(a, districtNames()));
+    }
+
     @Transactional
     public AddressView create(UUID userId, AddressRequest request) {
         requireDistrict(request.districtId());

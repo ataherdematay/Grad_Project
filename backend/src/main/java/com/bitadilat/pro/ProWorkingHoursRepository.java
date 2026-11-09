@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProWorkingHoursRepository extends JpaRepository<ProWorkingHours, UUID> {
 
     List<ProWorkingHours> findByProIdOrderByWeekdayAscStartTimeAsc(UUID proId);
+
+    void deleteByProId(UUID proId);
 }
