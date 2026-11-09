@@ -29,3 +29,16 @@ dist/
 # Payment backend
 backend/target/
 backend/data/
+
+# Flutter / Dart derleme çıktıları
+.dart_tool/
+.flutter-plugins-dependencies
+build/
+apps/*/ios/Pods/
+apps/*/ios/Flutter/ephemeral/
+apps/*/ios/Flutter/Generated.xcconfig
+apps/*/ios/Flutter/flutter_export_environment.sh
+apps/*/android/.gradle/
+apps/*/android/local.properties
+apps/*/android/**/GeneratedPluginRegistrant.java
+*.iml
