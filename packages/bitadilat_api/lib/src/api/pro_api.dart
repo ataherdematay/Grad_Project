@@ -41,10 +41,8 @@ class ProApi {
 
   Future<ProProfile> updateProfile(ProProfileInput body) async {
     final res = await guardApi(
-      () => _dio.put<Map<String, dynamic>>(
-        '$_base/profile',
-        data: body.toJson(),
-      ),
+      () =>
+          _dio.put<Map<String, dynamic>>('$_base/profile', data: body.toJson()),
     );
     return decodeApi(() => ProProfile.fromJson(res.data!));
   }
@@ -92,7 +90,10 @@ class ProApi {
     return decodeApi(() => OfferDetail.fromJson(res.data!));
   }
 
-  Future<Paged<ProOfferItem>> offers({OfferStatus? status, String? cursor}) async {
+  Future<Paged<ProOfferItem>> offers({
+    OfferStatus? status,
+    String? cursor,
+  }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
         '$_base/offers',
@@ -115,9 +116,8 @@ class ProApi {
   /// Teklif detayı (usta kendi teklifini `GET /offers/{id}` ile de açabilir).
   Future<OfferDetail> offer(String offerId) async {
     final res = await guardApi(
-      () => _dio.get<Map<String, dynamic>>(
-        '${ApiConfig.prefix}/offers/$offerId',
-      ),
+      () =>
+          _dio.get<Map<String, dynamic>>('${ApiConfig.prefix}/offers/$offerId'),
     );
     return decodeApi(() => OfferDetail.fromJson(res.data!));
   }

@@ -41,11 +41,7 @@ class RequestsApi {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
         _base,
-        queryParameters: {
-          'scope': scope,
-          'cursor': ?cursor,
-          'limit': ?limit,
-        },
+        queryParameters: {'scope': scope, 'cursor': ?cursor, 'limit': ?limit},
       ),
     );
     return decodeApi(() => Paged.fromJson(res.data!, RequestSummary.fromJson));

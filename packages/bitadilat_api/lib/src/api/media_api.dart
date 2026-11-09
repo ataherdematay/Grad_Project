@@ -29,7 +29,9 @@ class MediaApi {
       'file': MultipartFile.fromBytes(
         bytes,
         filename: filename,
-        contentType: contentType == null ? null : DioMediaType.parse(contentType),
+        contentType: contentType == null
+            ? null
+            : DioMediaType.parse(contentType),
       ),
     });
     final res = await guardApi(

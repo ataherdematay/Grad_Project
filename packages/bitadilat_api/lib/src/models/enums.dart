@@ -2,10 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 /// `tradeCert` -> `TRADE_CERT` (sorgu parametreleri ve gövdeler için).
 extension EnumWire on Enum {
-  String get wire => name.replaceAllMapped(
-    RegExp('[A-Z]'),
-    (m) => '_${m.group(0)}',
-  ).toUpperCase();
+  String get wire => name
+      .replaceAllMapped(RegExp('[A-Z]'), (m) => '_${m.group(0)}')
+      .toUpperCase();
 }
 
 @JsonEnum(fieldRename: FieldRename.screamingSnake)
@@ -61,4 +60,11 @@ enum ProDocumentType { identity, tradeCert, tax, criminalRecord }
 enum DocumentStatus { pending, accepted, rejected }
 
 @JsonEnum(fieldRename: FieldRename.screamingSnake)
-enum MediaPurpose { requestPhoto, proDocument, avatar, jobPhoto, chat, complaint }
+enum MediaPurpose {
+  requestPhoto,
+  proDocument,
+  avatar,
+  jobPhoto,
+  chat,
+  complaint,
+}

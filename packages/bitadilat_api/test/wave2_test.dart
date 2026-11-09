@@ -194,8 +194,18 @@ void main() {
       });
     }
 
-    roundTrip<MediaRef>('MediaRef', media(), MediaRef.fromJson, (m) => m.toJson());
-    roundTrip<ProCard>('ProCard', proCard(), ProCard.fromJson, (m) => m.toJson());
+    roundTrip<MediaRef>(
+      'MediaRef',
+      media(),
+      MediaRef.fromJson,
+      (m) => m.toJson(),
+    );
+    roundTrip<ProCard>(
+      'ProCard',
+      proCard(),
+      ProCard.fromJson,
+      (m) => m.toJson(),
+    );
     roundTrip<RequestSummary>(
       'RequestSummary',
       requestSummary(),
@@ -220,7 +230,12 @@ void main() {
       OfferDetail.fromJson,
       (m) => m.toJson(),
     );
-    roundTrip<FeedItem>('FeedItem', feedItem(), FeedItem.fromJson, (m) => m.toJson());
+    roundTrip<FeedItem>(
+      'FeedItem',
+      feedItem(),
+      FeedItem.fromJson,
+      (m) => m.toJson(),
+    );
     roundTrip<ProRequestDetail>(
       'ProRequestDetail',
       {
@@ -244,7 +259,12 @@ void main() {
         'categoryIds': [1, 2],
         'districtIds': ['3'],
         'documents': [
-          {'id': 'd1', 'type': 'IDENTITY', 'status': 'REJECTED', 'media': media()},
+          {
+            'id': 'd1',
+            'type': 'IDENTITY',
+            'status': 'REJECTED',
+            'media': media(),
+          },
         ],
         'submittedAt': '2026-11-10T08:00:00Z',
       },
@@ -260,7 +280,12 @@ void main() {
         'categoryIds': ['1'],
         'districtIds': ['2'],
         'workingHours': [
-          {'weekday': 1, 'start': '09:00', 'end': '18:00', 'acceptsUrgent': true},
+          {
+            'weekday': 1,
+            'start': '09:00',
+            'end': '18:00',
+            'acceptsUrgent': true,
+          },
         ],
         'reviewStatus': 'APPROVED',
         'availability': 'ON_BREAK',
@@ -363,7 +388,11 @@ void main() {
       expect(
         () => decodeApi(() => RequestSummary.fromJson(j)),
         throwsA(
-          isA<ApiException>().having((e) => e.code, 'code', ApiErrorCode.unknown),
+          isA<ApiException>().having(
+            (e) => e.code,
+            'code',
+            ApiErrorCode.unknown,
+          ),
         ),
       );
     });
@@ -439,7 +468,10 @@ void main() {
         (_) => jsonBody(200, {'items': <Object>[], 'nextCursor': null}),
       );
       await clientWith(a).requests.list(scope: 'past', cursor: 'c1');
-      expect(a.requests.single.queryParameters, {'scope': 'past', 'cursor': 'c1'});
+      expect(a.requests.single.queryParameters, {
+        'scope': 'past',
+        'cursor': 'c1',
+      });
     });
 
     test('ProApi.createOffer Idempotency-Key başlığını gönderir', () async {
@@ -462,7 +494,10 @@ void main() {
     test('ProApi.feed urgency ve offers status sorguları', () async {
       final a = FakeAdapter(
         (o) => o.path.endsWith('/pro/feed')
-            ? jsonBody(200, {'items': [feedItem()], 'onBreak': false})
+            ? jsonBody(200, {
+                'items': [feedItem()],
+                'onBreak': false,
+              })
             : jsonBody(200, {'items': <Object>[], 'nextCursor': null}),
       );
       final c = clientWith(a);
@@ -481,7 +516,8 @@ void main() {
           'availability': 'ON_BREAK',
         }),
       );
-      final p = await clientWith(a).pro.setAvailability(ProAvailability.onBreak);
+      final p = await clientWith(a).pro
+          .setAvailability(ProAvailability.onBreak);
       expect(p.availability, ProAvailability.onBreak);
       expect(a.requests.single.data, {'availability': 'ON_BREAK'});
       expect(a.requests.single.method, 'PUT');
@@ -515,44 +551,47 @@ void main() {
       );
     });
 
-    test('MediaApi.upload 401 yenilemesinden sonra gövdeyi baştan kurar', () async {
-      var uploads = 0;
-      final a = FakeAdapter((o) {
-        if (o.path.endsWith('/auth/refresh')) {
-          return jsonBody(200, {
-            'accessToken': 'A2',
-            'refreshToken': 'R2',
-            'accessExpiresIn': 900,
-            'user': {
-              'id': 'u',
-              'fullName': 'A B',
-              'email': 'a@b.co',
-              'phone': '+905000000000',
-              'locale': 'tr',
-              'lastMode': 'CUSTOMER',
-              'isAdmin': false,
-              'status': 'ACTIVE',
-            },
+    test(
+      'MediaApi.upload 401 yenilemesinden sonra gövdeyi baştan kurar',
+      () async {
+        var uploads = 0;
+        final a = FakeAdapter((o) {
+          if (o.path.endsWith('/auth/refresh')) {
+            return jsonBody(200, {
+              'accessToken': 'A2',
+              'refreshToken': 'R2',
+              'accessExpiresIn': 900,
+              'user': {
+                'id': 'u',
+                'fullName': 'A B',
+                'email': 'a@b.co',
+                'phone': '+905000000000',
+                'locale': 'tr',
+                'lastMode': 'CUSTOMER',
+                'isAdmin': false,
+                'status': 'ACTIVE',
+              },
+            });
+          }
+          uploads++;
+          if (uploads == 1) {
+            return jsonBody(401, {'code': 'TOKEN_EXPIRED', 'message': 'x'});
+          }
+          return jsonBody(201, {
+            'id': 'm1',
+            'contentType': 'image/jpeg',
+            'sizeBytes': 3,
           });
-        }
-        uploads++;
-        if (uploads == 1) {
-          return jsonBody(401, {'code': 'TOKEN_EXPIRED', 'message': 'x'});
-        }
-        return jsonBody(201, {
-          'id': 'm1',
-          'contentType': 'image/jpeg',
-          'sizeBytes': 3,
         });
-      });
-      final res = await clientWith(a).media.upload(
-        bytes: Uint8List.fromList([1, 2, 3]),
-        filename: 'a.jpg',
-        purpose: MediaPurpose.proDocument,
-      );
-      expect(res.id, 'm1');
-      expect(uploads, 2);
-    });
+        final res = await clientWith(a).media.upload(
+          bytes: Uint8List.fromList([1, 2, 3]),
+          filename: 'a.jpg',
+          purpose: MediaPurpose.proDocument,
+        );
+        expect(res.id, 'm1');
+        expect(uploads, 2);
+      },
+    );
 
     test('CatalogApi.questions ve MeApi.addresses', () async {
       final a = FakeAdapter((o) {
@@ -573,7 +612,10 @@ void main() {
       final c = clientWith(a);
       final qs = await c.catalog.questions('plumbing');
       expect(qs.single.options.single.value, 'today');
-      expect(a.requests.single.path, endsWith('/categories/plumbing/questions'));
+      expect(
+        a.requests.single.path,
+        endsWith('/categories/plumbing/questions'),
+      );
       expect(await c.me.addresses(), isEmpty);
     });
   });

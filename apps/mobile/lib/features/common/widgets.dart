@@ -34,7 +34,13 @@ class LogoText extends StatelessWidget {
 /// Yığında geri yoksa (derin bağlantı) rota köküne gider; boş yığında `pop`
 /// yapılmaz.
 class AppBackButton extends ConsumerWidget {
-  const AppBackButton({super.key});
+  const AppBackButton({super.key, this.fallback, this.onBack});
+
+  /// Yığında geri yoksa gidilecek rota (varsayılan: modun ana sekmesi).
+  final String? fallback;
+
+  /// Verilirse geri tuşunun yerine çalışır (örn. sihirbazda önceki adım).
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,11 +48,16 @@ class AppBackButton extends ConsumerWidget {
       icon: Icons.arrow_back,
       tooltip: AppLocalizations.of(context).back,
       onPressed: () {
-        if (context.canPop()) {
+        if (onBack != null) {
+          onBack!();
+        } else if (context.canPop()) {
           context.pop();
         } else {
           final session = ref.read(sessionProvider);
-          context.go(session.isSignedIn ? homeFor(session.me!) : '/welcome');
+          context.go(
+            fallback ??
+                (session.isSignedIn ? homeFor(session.me!) : '/welcome'),
+          );
         }
       },
     );

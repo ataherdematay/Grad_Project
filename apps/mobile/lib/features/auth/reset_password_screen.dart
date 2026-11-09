@@ -72,9 +72,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             ),
           );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.resetDone)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.resetDone)));
       // `go`: yığın sıfırlanır, geri tuşu forma dönmez.
       context.go('/login');
     } on ApiException catch (e) {

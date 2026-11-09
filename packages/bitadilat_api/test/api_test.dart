@@ -15,8 +15,7 @@ class FakeAdapter implements HttpClientAdapter {
   final Handler handler;
   final List<RequestOptions> requests = [];
 
-  int count(String path) =>
-      requests.where((r) => r.path.endsWith(path)).length;
+  int count(String path) => requests.where((r) => r.path.endsWith(path)).length;
 
   @override
   Future<ResponseBody> fetch(
@@ -133,66 +132,67 @@ void main() {
       expect(adapter.requests.single.headers['Authorization'], 'Bearer A1');
     });
 
-    test('3 paralel 401 tam 1 refresh yapar, 3 istek de tekrarlanıp başarılır',
-        () async {
-      final store = MemoryTokenStore(
-        const TokenPair(accessToken: 'OLD', refreshToken: 'R1'),
-      );
-      final adapter = FakeAdapter((o) async {
-        if (o.path.endsWith('/auth/refresh')) {
-          await Future<void>.delayed(const Duration(milliseconds: 50));
-          return jsonBody(200, authJson('NEW', 'R2'));
-        }
-        if (o.headers['Authorization'] == 'Bearer NEW') {
-          return jsonBody(200, meJson());
-        }
-        return jsonBody(401, {'code': 'TOKEN_EXPIRED', 'message': 'expired'});
-      });
-      final client = clientWith(adapter, store);
+    test(
+      '3 paralel 401 tam 1 refresh yapar, 3 istek de tekrarlanıp başarılır',
+      () async {
+        final store = MemoryTokenStore(
+          const TokenPair(accessToken: 'OLD', refreshToken: 'R1'),
+        );
+        final adapter = FakeAdapter((o) async {
+          if (o.path.endsWith('/auth/refresh')) {
+            await Future<void>.delayed(const Duration(milliseconds: 50));
+            return jsonBody(200, authJson('NEW', 'R2'));
+          }
+          if (o.headers['Authorization'] == 'Bearer NEW') {
+            return jsonBody(200, meJson());
+          }
+          return jsonBody(401, {'code': 'TOKEN_EXPIRED', 'message': 'expired'});
+        });
+        final client = clientWith(adapter, store);
 
-      final results = await Future.wait([
-        client.me.get(),
-        client.me.get(),
-        client.me.get(),
-      ]);
-
-      expect(results, hasLength(3));
-      expect(adapter.count('/auth/refresh'), 1);
-      // 3 ilk deneme + 3 tekrar
-      expect(adapter.count('/me'), 6);
-      final tokens = await store.read();
-      expect(tokens?.accessToken, 'NEW');
-      expect(tokens?.refreshToken, 'R2');
-    });
-
-    test('refresh 401 dönerse sessionExpired tetiklenir, token\'lar silinir',
-        () async {
-      final store = MemoryTokenStore(
-        const TokenPair(accessToken: 'OLD', refreshToken: 'R1'),
-      );
-      final adapter = FakeAdapter((o) async {
-        if (o.path.endsWith('/auth/refresh')) {
-          return jsonBody(401, {'code': 'UNAUTHENTICATED'});
-        }
-        return jsonBody(401, {'code': 'TOKEN_EXPIRED'});
-      });
-      final client = clientWith(adapter, store);
-      var events = 0;
-      client.sessionExpired.listen((_) => events++);
-
-      await expectLater(
-        Future.wait([
+        final results = await Future.wait([
           client.me.get(),
           client.me.get(),
-        ]),
-        throwsA(isA<ApiException>()),
-      );
-      await Future<void>.delayed(Duration.zero);
+          client.me.get(),
+        ]);
 
-      expect(await store.read(), isNull);
-      expect(events, 1);
-      expect(adapter.count('/auth/refresh'), 1);
-    });
+        expect(results, hasLength(3));
+        expect(adapter.count('/auth/refresh'), 1);
+        // 3 ilk deneme + 3 tekrar
+        expect(adapter.count('/me'), 6);
+        final tokens = await store.read();
+        expect(tokens?.accessToken, 'NEW');
+        expect(tokens?.refreshToken, 'R2');
+      },
+    );
+
+    test(
+      'refresh 401 dönerse sessionExpired tetiklenir, token\'lar silinir',
+      () async {
+        final store = MemoryTokenStore(
+          const TokenPair(accessToken: 'OLD', refreshToken: 'R1'),
+        );
+        final adapter = FakeAdapter((o) async {
+          if (o.path.endsWith('/auth/refresh')) {
+            return jsonBody(401, {'code': 'UNAUTHENTICATED'});
+          }
+          return jsonBody(401, {'code': 'TOKEN_EXPIRED'});
+        });
+        final client = clientWith(adapter, store);
+        var events = 0;
+        client.sessionExpired.listen((_) => events++);
+
+        await expectLater(
+          Future.wait([client.me.get(), client.me.get()]),
+          throwsA(isA<ApiException>()),
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        expect(await store.read(), isNull);
+        expect(events, 1);
+        expect(adapter.count('/auth/refresh'), 1);
+      },
+    );
 
     test('refresh sırasında ağ hatası token\'ları silmez', () async {
       final store = MemoryTokenStore(
@@ -218,8 +218,10 @@ void main() {
       );
       expect(res.user.id, 'u-1');
       expect((await store.read())?.refreshToken, 'R');
-      expect(adapter.requests.single.headers.containsKey('Authorization'),
-          isFalse);
+      expect(
+        adapter.requests.single.headers.containsKey('Authorization'),
+        isFalse,
+      );
     });
   });
 
@@ -300,10 +302,10 @@ void main() {
           'termsAccepted',
         },
       );
-      expect(
-        const LoginRequest(identifier: 'x', password: 'y').toJson().keys,
-        ['identifier', 'password'],
-      );
+      expect(const LoginRequest(identifier: 'x', password: 'y').toJson().keys, [
+        'identifier',
+        'password',
+      ]);
       expect(
         const ResetPasswordRequest(
           email: 'e',

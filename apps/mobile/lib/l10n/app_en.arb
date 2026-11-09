@@ -122,5 +122,526 @@
   "apiErrorGatewayError": "The payment system is unavailable. Try again in a few minutes.",
   "apiErrorInternalError": "Something unexpected happened. Try again shortly.",
   "apiErrorNetworkError": "We cannot reach the network. Check your connection and try again. Your details are kept.",
-  "apiErrorUnknown": "Something went wrong. Try again."
+  "apiErrorUnknown": "Something went wrong. Try again.",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "close": "Close",
+  "done": "Done",
+  "yes": "Yes",
+  "no": "No",
+  "searchLabel": "Search",
+  "noSearchResults": "No results",
+  "pickerNone": "Select",
+  "photoLoadFailed": "Photo could not be loaded",
+  "goHome": "Go to home",
+  "goToMyRequests": "Go to my requests",
+  "noteOptional": "Note (optional)",
+  "reasonRequired": "Select a reason to continue.",
+  "total": "Total",
+  "labor": "Labour",
+  "materials": "Materials",
+  "totalVatIncluded": "Total (VAT incl.)",
+  "vatIncluded": "VAT incl.",
+  "warranty": "Workmanship warranty",
+  "warrantyNone": "None",
+  "warrantyMonths": "{months} months",
+  "@warrantyMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "warrantyHelp": "The platform gives no warranty; the warranty is yours.",
+  "arrival": "Arrival window",
+  "urgencyUrgent": "Urgent repair",
+  "urgencyPlanned": "Planned job",
+  "tabActive": "Active",
+  "tabPast": "Past",
+  "dateToday": "Today",
+  "dateTomorrow": "Tomorrow",
+  "requestAwaitingOffers": "Awaiting offers",
+  "requestOffersCount": "{count} offers",
+  "@requestOffersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "requestAssigned": "Pro selected",
+  "requestCancelled": "Cancelled",
+  "requestExpired": "Expired",
+  "offerPending": "Pending",
+  "offerAccepted": "Accepted",
+  "offerDeclined": "Declined",
+  "offerWithdrawn": "Withdrawn",
+  "offerSuperseded": "Another offer chosen",
+  "offerExpired": "Expired",
+  "statusApproved": "Verified",
+  "proVerified": "Verified",
+  "photoAdd": "Add photo",
+  "photoFromCamera": "Take a photo",
+  "photoFromGallery": "Choose from gallery",
+  "photoRemove": "Remove photo",
+  "photoUploading": "Uploading",
+  "photoUploaded": "Uploaded",
+  "photoLimitReached": "You can add up to {count} photos",
+  "@photoLimitReached": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photoTooLarge": "The photo is over the 1.5 MB limit. Choose a smaller one.",
+  "addressesTitle": "My addresses",
+  "addressAdd": "Add address",
+  "addressDefault": "Default",
+  "addressMakeDefault": "Make default",
+  "addressesEmptyTitle": "You have no saved addresses",
+  "addressesEmptyBody": "Add an address to use when creating a request.",
+  "addressDeleteTitle": "Delete this address?",
+  "addressDeleteMessage": "The address \"{label}\" will be deleted. This cannot be undone.",
+  "@addressDeleteMessage": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "addressLabelField": "Address name",
+  "addressLabelHint": "E.g. Home, Work",
+  "addressDistrict": "District",
+  "addressNeighborhood": "Neighbourhood",
+  "addressLine": "Full address",
+  "addressLineHint": "Street, building and flat number",
+  "addressDoorNote": "Door note (optional)",
+  "addressDoorNoteHelp": "The full address and door note are shared only after a pro is chosen.",
+  "createRequest": "Create request",
+  "homeGreeting": "Hello {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeActiveRequest": "Your active request",
+  "homeNoActiveTitle": "No active request",
+  "homeNoActiveBody": "Open a request for your home repair and get offers from pros.",
+  "seeOffers": "See offers ({count})",
+  "@seeOffers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offerRange": "{min} - {max}",
+  "@offerRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "requestsEmptyActiveTitle": "No active requests",
+  "requestsEmptyActiveBody": "Create a request to get offers from pros.",
+  "requestsEmptyPastTitle": "No past requests",
+  "requestsEmptyPastBody": "Cancelled or expired requests appear here.",
+  "requestDetailTitle": "Request details",
+  "requestCode": "Request code",
+  "requestLocation": "Location",
+  "requestExpiresOn": "Expires",
+  "requestAnswers": "Answers",
+  "requestPhotos": "Photos",
+  "requestCancel": "Cancel request",
+  "keepRequest": "Keep the request",
+  "cancelReasonTitle": "Reason for cancelling",
+  "cancelReasonPlansChanged": "My plans changed",
+  "cancelReasonSolved": "I solved the problem",
+  "cancelReasonNoSuitableOffer": "No suitable offer",
+  "cancelReasonOther": "Other",
+  "cancelConfirmTitle": "Cancel this request?",
+  "cancelConfirmMessage": "All pending offers will close. This cannot be undone.",
+  "publishedTitle": "Request published",
+  "publishedMatchTitle": "{count} pros matched",
+  "@publishedMatchTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "publishedMatchBody": "Matching pros were notified. Offers will appear in My requests.",
+  "publishedNoMatchTitle": "No matching pros right now",
+  "publishedNoMatchBody": "If you keep the request open, new pros in your area can see it. Or edit it to change the category or location.",
+  "matchReasons": "Why they matched",
+  "matchCategory": "Works in your category",
+  "matchDistrict": "Serves your district",
+  "matchAvailability": "Currently available",
+  "keepOpen": "Keep open",
+  "wizTitle": "New request",
+  "wizEditTitle": "Edit request",
+  "wizStepOf": "Step {step} of {total}",
+  "@wizStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "wizContinue": "Continue",
+  "wizBackToReview": "Review",
+  "wizPublish": "Publish request",
+  "wizSaveChanges": "Save changes",
+  "wizStep1Title": "Category and urgency",
+  "wizStep2Title": "Location and details",
+  "wizStep3Title": "Photos and description",
+  "wizStep4Title": "Review",
+  "wizCategory": "Category",
+  "wizUrgency": "Urgency",
+  "wizUrgentHint": "As soon as possible",
+  "wizPlannedHint": "Pick the dates that suit you",
+  "wizDates": "Date range",
+  "wizDateFrom": "Earliest",
+  "wizDateTo": "Latest",
+  "wizAddress": "Address",
+  "wizAddAddress": "Add a new address",
+  "wizFieldTitle": "Title",
+  "wizFieldTitleHint": "E.g. Kitchen tap is dripping",
+  "wizFieldDescription": "Description",
+  "wizFieldDescriptionHint": "Describe the problem and what the pro should know",
+  "wizDescriptionCount": "{count} / at least {min} characters",
+  "@wizDescriptionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "wizPhotos": "Photos (up to {max})",
+  "@wizPhotos": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "wizPhotosHint": "Clear photos of the problem help you get offers.",
+  "wizPhotosCount": "Number of photos",
+  "wizReviewNote": "Matching pros are notified when you publish.",
+  "wizErrCategory": "Select a category to continue.",
+  "wizErrDateFrom": "Select the earliest date.",
+  "wizErrDateTo": "Select the latest date.",
+  "wizErrDateOrder": "The end must be after the start.",
+  "wizErrDatePast": "The start must be in the future.",
+  "wizErrDateRange": "The date range can be at most 30 days ahead.",
+  "wizErrAddress": "Select an address or add a new one.",
+  "wizErrAnswers": "Answer all the questions.",
+  "wizErrTitle": "The title must be {min}-{max} characters.",
+  "@wizErrTitle": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "wizErrDescription": "The description must be at least {min} characters.",
+  "@wizErrDescription": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "wizErrPhotosBusy": "Wait for the photos to finish uploading.",
+  "wizErrPhotosFailed": "Retry or remove the photo that failed to upload.",
+  "offersTitle": "Offers",
+  "offersResultCount": "{count} offers",
+  "@offersResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offersDeclinedCount": "You declined {count} offers.",
+  "@offersDeclinedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offersEmptyTitle": "No offers yet",
+  "offersEmptyBody": "Offers from pros will appear here.",
+  "offersEmptyFilteredTitle": "No offers match your filters",
+  "offersEmptyFilteredBody": "Loosen the filters and try again.",
+  "offersClearFilters": "Clear filters",
+  "offersFilterTitle": "Filter and sort",
+  "sortBy": "Sort by",
+  "sortRecommended": "Recommended",
+  "sortPrice": "Lowest price",
+  "sortRating": "Highest rating",
+  "sortArrival": "Earliest arrival",
+  "filterMaxPrice": "Maximum price",
+  "filterMaxPriceLabel": "Up to (₺)",
+  "filterMaxPriceHelp": "Labour and materials included. Leave empty for no limit.",
+  "filterMinRating": "Pro rating",
+  "filterAnyRating": "Any",
+  "filterRatingOrMore": "{rating}+",
+  "@filterRatingOrMore": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "applyFilters": "Apply",
+  "compare": "Compare",
+  "compareCancel": "Cancel",
+  "compareHint": "Select 2 or 3 offers.",
+  "compareSelected": "Compare ({count})",
+  "@compareSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "compareTitle": "Comparison",
+  "compareTotal": "Total (VAT incl.)",
+  "compareGoneTitle": "These offers are no longer listed",
+  "compareGoneBody": "The offers may have been withdrawn or expired.",
+  "compareBackToOffers": "Back to offers",
+  "viewOffer": "View offer",
+  "proRating": "Rating",
+  "proCompletedJobs": "Completed jobs",
+  "noRatingYet": "No rating yet",
+  "ratingWithCount": "{avg} ({count})",
+  "@ratingWithCount": {
+    "placeholders": {
+      "avg": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offerDetailTitle": "Offer",
+  "offerBreakdown": "Offer breakdown",
+  "offerNote": "Pro note",
+  "offerValidUntil": "Valid until",
+  "offerAccept": "Accept offer",
+  "offerDecline": "Decline offer",
+  "viewProfile": "View profile",
+  "declineIntro": "You are about to decline the {amount} offer from {pro}.",
+  "@declineIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "declineIrreversible": "This cannot be undone and does not affect the pro's profile.",
+  "declineReasonTitle": "Reason",
+  "declineReasonPrice": "The price is over my budget",
+  "declineReasonSchedule": "The timing does not suit me",
+  "declineReasonOtherOffer": "I chose another offer",
+  "declineReasonNotNeeded": "I no longer need this service",
+  "declineReasonOther": "Other",
+  "declineKeepOpen": "Keep my request open",
+  "declineKeepOpenHelp": "If off, your request is cancelled too.",
+  "declineCloseNeedsReason": "To close the request, select \"I no longer need this service\" or \"Other\".",
+  "declineConfirmTitle": "Decline this offer?",
+  "declineConfirmKeepOpen": "The offer is declined and your request stays open. This cannot be undone.",
+  "declineConfirmClose": "The offer is declined and your request is cancelled. This cannot be undone.",
+  "declineBack": "Back to the offer",
+  "proProfileTitle": "Pro profile",
+  "proReviews": "Reviews",
+  "proAbout": "About",
+  "proExperience": "Experience",
+  "experienceYears": "{years} years",
+  "@experienceYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "proMemberSince": "Member since",
+  "proVerifiedDocuments": "Verified documents",
+  "proNoVerifiedDocs": "No verified documents yet.",
+  "proCategories": "Categories",
+  "proServiceAreas": "Service areas",
+  "docIdentity": "Identity",
+  "docTradeCert": "Trade certificate",
+  "docTax": "Tax certificate",
+  "docCriminalRecord": "Criminal record",
+  "reviewsEmptyTitle": "No reviews yet",
+  "reviewsEmptyBody": "Reviews appear here once customers complete jobs.",
+  "starsOutOf5": "{rating} out of 5 stars",
+  "@starsOutOf5": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "anonymous": "Anonymous",
+  "applyIntro": "Send your business details and documents; our team will review them.",
+  "applyBusinessName": "Business name",
+  "applyBusinessNameInvalid": "The business name must be at least 2 characters.",
+  "applyAbout": "About (optional)",
+  "applyExperience": "Experience (years)",
+  "applyExperienceInvalid": "Experience must be between 0 and 60 years.",
+  "applyCategories": "Categories",
+  "applyDistricts": "Districts you serve",
+  "applyDocuments": "Documents",
+  "applyDocumentsHelp": "Upload a photo of each document. Identity and trade certificate are required.",
+  "docRequired": "{doc} (required)",
+  "@docRequired": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "docOptional": "{doc} (optional)",
+  "@docOptional": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "docMissing": "Upload your {doc}.",
+  "@docMissing": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "applySubmit": "Submit application",
+  "applyResubmit": "Update documents and resubmit",
+  "applicationPendingBody": "Our team is reviewing your documents and profile. Your status updates here.",
+  "applicationNeedsBody": "Some documents are missing or unreadable. Open the form, update them and resubmit.",
+  "applicationRejectedBody": "Your application was not accepted. Read the note, fix your documents and apply again.",
+  "applicationSuspendedBody": "Your account is suspended. Contact support.",
+  "adminNote": "Review note",
+  "docStatusPending": "Under review",
+  "docStatusAccepted": "Accepted",
+  "docStatusRejected": "Rejected",
+  "filterAll": "All",
+  "filterUrgent": "Urgent",
+  "filterPlanned": "Planned",
+  "feedOnBreakTitle": "You are on a break",
+  "feedOnBreakBody": "No new requests arrive during a break. Activate again when you are ready.",
+  "feedActivate": "Go active",
+  "feedEmptyTitle": "No matching requests right now",
+  "feedEmptyBody": "New requests in your categories and districts appear here.",
+  "feedPhotos": "{count} photos",
+  "@feedPhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedOffers": "{count} offers",
+  "@feedOffers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedMyOffer": "You made an offer",
+  "locationMasked": "The full address is shared once your offer is accepted.",
+  "prepareOffer": "Prepare offer",
+  "viewMyOffer": "View your offer",
+  "jobsEmptyTitle": "No jobs yet",
+  "jobsEmptyBody": "Once an offer is accepted, the job appears here.",
+  "offerFormTitle": "Prepare offer",
+  "laborAmountLabel": "Labour amount",
+  "laborAmountInvalid": "The labour amount must be above 0. Example: 1,200",
+  "materialsEmpty": "Leave empty if there are no materials.",
+  "materialAdd": "Add material item",
+  "materialRemove": "Remove item",
+  "materialDescription": "Material",
+  "materialQuantity": "Quantity",
+  "materialQuantityInvalid": "Quantity must be 1 or more.",
+  "materialUnitPrice": "Unit price",
+  "materialPriceInvalid": "Enter a valid amount. Example: 350",
+  "arrivalHelp": "The arrival window: 1-12 hours, up to 14 days ahead.",
+  "arrivalDay": "Day",
+  "arrivalStart": "Start time",
+  "arrivalLength": "Window length",
+  "hoursShort": "{hours} h",
+  "@hoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "arrivalMissing": "Select the day and start time.",
+  "arrivalPast": "The arrival time must be in the future.",
+  "arrivalTooShort": "The window must be at least 1 hour.",
+  "arrivalTooLong": "The window can be at most 12 hours.",
+  "arrivalTooFar": "Arrival can be at most 14 days ahead.",
+  "offerSummary": "Summary",
+  "serviceFee": "Service fee ({percent}%)",
+  "@serviceFee": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "netEarning": "Your net earning",
+  "offerSend": "Send offer",
+  "offerSentTitle": "Your offer",
+  "offerSentHeadline": "Your offer was sent",
+  "offerSentBody": "The customer will review your offer. Track it in My offers.",
+  "goToMyOffers": "Go to my offers",
+  "backToFeed": "Back to requests",
+  "myOffersTitle": "My offers",
+  "myOffersEmptyTitle": "No offers",
+  "myOffersEmptyBody": "The offers you make appear here.",
+  "withdraw": "Withdraw",
+  "withdrawTitle": "Withdraw this offer?",
+  "withdrawMessage": "The customer will no longer see the offer. This cannot be undone.",
+  "availabilityActive": "You are active",
+  "availabilityBreak": "You are on a break",
+  "availabilityActiveHelp": "Matching new requests show in your feed.",
+  "availabilityBreakHelp": "No new requests match during a break; current jobs continue.",
+  "profileEditTitle": "Edit your profile",
+  "profileBio": "Profile text",
+  "profileSaved": "Profile saved",
+  "workingHours": "Working hours",
+  "hoursFrom": "From",
+  "hoursTo": "To",
+  "hoursAcceptsUrgent": "I also accept urgent jobs",
+  "hoursInvalid": "The end time must be after the start time."
 }

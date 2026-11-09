@@ -25,6 +25,18 @@ const Set<String> _tabPaths = {
 final RegExp _legalRe = RegExp(r'^/legal/[^/]+$');
 final RegExp _chatRe = RegExp(r'^/jobs/[^/]+/chat$');
 
+/// Dalga 2 rotaları (talep, teklif, usta).
+final List<RegExp> _wave2Routes = [
+  RegExp(r'^/c/addresses$'),
+  RegExp(
+    r'^/c/requests/(new|[^/]+(/(edit|cancel|published|offers|compare))?)$',
+  ),
+  RegExp(r'^/c/offers/[^/]+(/decline)?$'),
+  RegExp(r'^/c/pros/[^/]+(/reviews)?$'),
+  RegExp(r'^/p/requests/[^/]+(/offer)?$'),
+  RegExp(r'^/p/offers(/[^/]+/sent)?$'),
+];
+
 /// Uygulamada tanımlı rota mı? Değilse "bulunamadı" ekranı gösterilir.
 bool isKnownPath(String path) =>
     path == '/' ||
@@ -35,7 +47,8 @@ bool isKnownPath(String path) =>
     path == '/settings' ||
     path == '/notifications' ||
     _legalRe.hasMatch(path) ||
-    _chatRe.hasMatch(path);
+    _chatRe.hasMatch(path) ||
+    _wave2Routes.any((r) => r.hasMatch(path));
 
 bool _isPublic(String path) =>
     path == '/' || guestPaths.contains(path) || _legalRe.hasMatch(path);
@@ -136,7 +149,12 @@ String? guardRedirect(SessionState s, Uri uri) {
 
   if (path == '/p/apply') {
     if (pro == null) return null;
-    return approved ? '/p/feed' : '/p/application';
+    if (approved) return '/p/feed';
+    // Eksik belge ve ret durumunda form dolu açılıp yeniden gönderilir.
+    final resubmit =
+        pro.reviewStatus == ReviewStatus.needsDocuments ||
+        pro.reviewStatus == ReviewStatus.rejected;
+    return resubmit ? null : '/p/application';
   }
   if (path == '/p/application') {
     if (pro == null) return '/p/apply';

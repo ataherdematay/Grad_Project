@@ -11,6 +11,7 @@ import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,9 +24,8 @@ class FakeAdapter implements HttpClientAdapter {
   Handler handler;
   final List<RequestOptions> requests = [];
 
-  int count(String method, String path) => requests
-      .where((r) => r.method == method && r.path.endsWith(path))
-      .length;
+  int count(String method, String path) =>
+      requests.where((r) => r.method == method && r.path.endsWith(path)).length;
 
   RequestOptions last(String path) =>
       requests.lastWhere((r) => r.path.endsWith(path));
@@ -54,10 +54,8 @@ ResponseBody json(int status, Object? body) => ResponseBody.fromString(
 
 ResponseBody empty(int status) => ResponseBody.fromString('', status);
 
-ResponseBody apiError(int status, String code, {String? field}) => json(
-  status,
-  {'code': code, 'message': 'dev', 'field': ?field},
-);
+ResponseBody apiError(int status, String code, {String? field}) =>
+    json(status, {'code': code, 'message': 'dev', 'field': ?field});
 
 Map<String, dynamic> meJson({
   bool isAdmin = false,
@@ -125,12 +123,14 @@ class Harness {
   final MemoryTokenStore store;
 
   GoRouter get router => container.read(routerProvider);
+
   /// `push` ile açılan ekranlar dahil, en üstteki ekranın adresi.
   Uri get uri {
     final list = router.routerDelegate.currentConfiguration;
     final last = list.matches.last;
     return last is ImperativeRouteMatch ? last.matches.uri : list.uri;
   }
+
   String get location => uri.toString();
 }
 
@@ -144,6 +144,7 @@ Future<Harness> pumpApp(
   Size size = const Size(390, 844),
   double textScale = 1,
   String locale = 'tr',
+  List<Override> overrides = const [],
 }) async {
   AppTypography.useGoogleFonts = false;
   SharedPreferences.setMockInitialValues({'locale': locale});
@@ -163,6 +164,7 @@ Future<Harness> pumpApp(
       initialLocationProvider.overrideWithValue(initial),
       if (session != null)
         sessionProvider.overrideWith(() => FakeSession(session)),
+      ...overrides,
     ],
   );
   addTearDown(container.dispose);

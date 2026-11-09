@@ -19,9 +19,15 @@ class WelcomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Align(alignment: Alignment.centerRight, child: LanguageSwitch()),
+          const Align(
+            alignment: Alignment.centerRight,
+            child: LanguageSwitch(),
+          ),
           const SizedBox(height: AppSpacing.lg),
-          const Align(alignment: Alignment.centerLeft, child: LogoText(size: 40)),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: LogoText(size: 40),
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(l.welcomeTagline, style: AppTypography.screenTitle),
           const SizedBox(height: AppSpacing.xs),
