@@ -28,6 +28,18 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         this.users = users;
     }
 
+    private static UUID familyOf(Jwt jwt) {
+        String raw = jwt.getClaimAsString(JwtService.FAMILY_CLAIM);
+        if (raw == null) {
+            return null;
+        }
+        try {
+            return UUID.fromString(raw);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
         UUID id;
@@ -48,6 +60,6 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         if (user.isAdmin()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
-        return new UsernamePasswordAuthenticationToken(new AuthPrincipal(user.getId(), user.isAdmin()), jwt, authorities);
+        return new UsernamePasswordAuthenticationToken(new AuthPrincipal(user.getId(), user.isAdmin(), familyOf(jwt)), jwt, authorities);
     }
 }

@@ -193,7 +193,7 @@ public class AuthService {
         token.setExpiresAt(Instant.now().plus(REFRESH_TTL));
         token.setUserAgent(userAgent == null ? null : userAgent.substring(0, Math.min(255, userAgent.length())));
         refreshTokens.saveAndFlush(token);
-        return new AuthResponse(jwt.issueAccessToken(user.getId()), raw,
+        return new AuthResponse(jwt.issueAccessToken(user.getId(), familyId), raw,
                 (int) JwtService.ACCESS_TTL.toSeconds(), accounts.toMe(user));
     }
 

@@ -95,6 +95,35 @@ class AccountTest extends ApiTestBase {
     }
 
     @Test
+    void changePasswordRevokesOtherSessionsButKeepsCurrentFamily() throws Exception {
+        Account first = register();
+        JsonNode second = body(call(HttpMethod.POST, "/api/v1/auth/login", null,
+                Map.of("identifier", first.email(), "password", PASSWORD)).andExpect(status().isOk()));
+
+        call(HttpMethod.POST, ME + "/password", second.get("accessToken").asString(),
+                Map.of("currentPassword", PASSWORD, "newPassword", "YeniParola9"))
+                .andExpect(status().isNoContent());
+
+        call(HttpMethod.POST, "/api/v1/auth/refresh", null, Map.of("refreshToken", first.refresh()))
+                .andExpect(status().isUnauthorized());
+        call(HttpMethod.POST, "/api/v1/auth/refresh", null, Map.of("refreshToken", second.get("refreshToken").asString()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void changePasswordWithoutFamilyClaimRevokesAllSessions() throws Exception {
+        Account a = register();
+        String legacy = jwt.issueAccessToken(java.util.UUID.fromString(a.id()));
+
+        call(HttpMethod.POST, ME + "/password", legacy,
+                Map.of("currentPassword", PASSWORD, "newPassword", "YeniParola9"))
+                .andExpect(status().isNoContent());
+
+        call(HttpMethod.POST, "/api/v1/auth/refresh", null, Map.of("refreshToken", a.refresh()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void deletedAccountIsAnonymizedAndCannotLogIn() throws Exception {
         Account a = register();
         call(HttpMethod.POST, ADDRESSES, a.access(), addressBody("Ev", "Moda Cad. No: 1")).andExpect(status().isCreated());

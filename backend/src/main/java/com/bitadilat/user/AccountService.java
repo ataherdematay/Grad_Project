@@ -75,13 +75,20 @@ public class AccountService {
     }
 
     @Transactional
-    public void changePassword(UUID userId, ChangePasswordRequest request) {
+    public void changePassword(UUID userId, UUID currentFamilyId, ChangePasswordRequest request) {
         User user = load(userId);
         if (!encoder.matches(request.currentPassword(), user.getPasswordHash())) {
             throw ApiException.validation("currentPassword", "Mevcut şifre yanlış.");
         }
         user.setPasswordHash(encoder.encode(request.newPassword()));
         users.save(user);
+        // Diğer cihazlardaki oturumlar kapanır; isteği yapan oturumun ailesi (biliniyorsa) açık kalır.
+        Instant now = Instant.now();
+        if (currentFamilyId == null) {
+            refreshTokens.revokeAllForUser(userId, now);
+        } else {
+            refreshTokens.revokeOtherFamilies(userId, currentFamilyId, now);
+        }
     }
 
     /** Kişisel alanları anonimleştirir, durumu DELETED yapar, tüm oturumları kapatır. */

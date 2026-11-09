@@ -44,19 +44,33 @@ public class JwtService {
         this.decoder = nimbus;
     }
 
+    /** Access token içinde isteği yapan oturumun refresh ailesini gösteren claim. */
+    public static final String FAMILY_CLAIM = "fid";
+
     public String issueAccessToken(UUID userId) {
-        return issueAccessToken(userId, Instant.now());
+        return issueAccessToken(userId, null, Instant.now());
     }
 
-    /** Test için: verilen anda üretilmiş gibi imzalar. */
+    public String issueAccessToken(UUID userId, UUID familyId) {
+        return issueAccessToken(userId, familyId, Instant.now());
+    }
+
+    /** Test için: verilen anda üretilmiş gibi imzalar (aile claim'i olmadan, eski biçim). */
     public String issueAccessToken(UUID userId, Instant issuedAt) {
-        JwtClaimsSet claims = JwtClaimsSet.builder()
+        return issueAccessToken(userId, null, issuedAt);
+    }
+
+    public String issueAccessToken(UUID userId, UUID familyId, Instant issuedAt) {
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                 .issuer(ISSUER)
                 .subject(userId.toString())
                 .issuedAt(issuedAt)
                 .expiresAt(issuedAt.plus(ACCESS_TTL))
-                .id(UUID.randomUUID().toString())
-                .build();
+                .id(UUID.randomUUID().toString());
+        if (familyId != null) {
+            builder.claim(FAMILY_CLAIM, familyId.toString());
+        }
+        JwtClaimsSet claims = builder.build();
         JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
         return encoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
     }

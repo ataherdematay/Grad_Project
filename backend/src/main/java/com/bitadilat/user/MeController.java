@@ -40,7 +40,7 @@ public class MeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@AuthenticationPrincipal AuthPrincipal principal,
                                @Valid @RequestBody ChangePasswordRequest request) {
-        accounts.changePassword(principal.userId(), request);
+        accounts.changePassword(principal.userId(), principal.familyId(), request);
     }
 
     @DeleteMapping
