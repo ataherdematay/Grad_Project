@@ -1,0 +1,8 @@
+name: bitadilat_workspace
+publish_to: none
+environment:
+  sdk: ^3.13.0
+workspace:
+  - packages/bitadilat_ui
+  - packages/bitadilat_api
+  - apps/mobile
