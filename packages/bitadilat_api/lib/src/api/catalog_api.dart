@@ -14,17 +14,21 @@ class CatalogApi {
     final res = await guardApi(
       () => _dio.get<List<dynamic>>('${ApiConfig.prefix}/categories'),
     );
-    return [
-      for (final e in res.data!) Category.fromJson(e as Map<String, dynamic>),
-    ];
+    return decodeApi(
+      () => [
+        for (final e in res.data!) Category.fromJson(e as Map<String, dynamic>),
+      ],
+    );
   }
 
   Future<List<District>> districts() async {
     final res = await guardApi(
       () => _dio.get<List<dynamic>>('${ApiConfig.prefix}/districts'),
     );
-    return [
-      for (final e in res.data!) District.fromJson(e as Map<String, dynamic>),
-    ];
+    return decodeApi(
+      () => [
+        for (final e in res.data!) District.fromJson(e as Map<String, dynamic>),
+      ],
+    );
   }
 }

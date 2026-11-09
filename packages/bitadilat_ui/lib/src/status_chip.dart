@@ -24,7 +24,7 @@ class StatusChip extends StatelessWidget {
     StatusTone.urgent => (const Color(0xFFFDF1E9), AppColors.urgencyText),
     StatusTone.success => (const Color(0xFFE7F3EF), AppColors.success),
     StatusTone.error => (const Color(0xFFF8E7E5), AppColors.error),
-    StatusTone.neutral => (AppColors.disabled, AppColors.textSecondary),
+    StatusTone.neutral => (AppColors.neutralSurface, AppColors.textSecondary),
   };
 
   @override
@@ -46,7 +46,10 @@ class StatusChip extends StatelessWidget {
             Icon(icon, size: 16, color: fg),
             const SizedBox(width: 6),
             Flexible(
-              child: Text(label, style: AppTypography.label.copyWith(color: fg)),
+              child: Text(
+                label,
+                style: AppTypography.label.copyWith(color: fg),
+              ),
             ),
           ],
         ),

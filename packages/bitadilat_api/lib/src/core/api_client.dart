@@ -43,7 +43,11 @@ class ApiClient {
   late final MeApi me;
   late final CatalogApi catalog;
 
-  /// Oturum yenilenemeyince (token'lar silindikten sonra) olay verir.
+  /// Oturum istemcide kapanınca (token'lar silindikten sonra) nedeniyle olay
+  /// verir: refresh reddedildi ya da hesap askıya alındı.
+  Stream<SessionEndReason> get sessionEnded => _auth.sessionEnded;
+
+  /// Yalnız refresh reddedilince olay verir.
   Stream<void> get sessionExpired => _auth.sessionExpired;
 
   Future<void> dispose() async {

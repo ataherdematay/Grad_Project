@@ -15,6 +15,13 @@ abstract final class AppColors {
   static const Color border = Color(0xFFD9E1DD);
   static const Color disabled = Color(0xFFE9EEEB);
 
+  /// Seçili kart zemini; üzerinde ikincil metin AA (4.5:1) geçer.
+  static const Color selectedSurface = Color(0xFFEDF4F5);
+
+  /// Nötr durum etiketi zemini; `disabled` üzerinde ikincil metin 4.46:1
+  /// kalıyordu.
+  static const Color neutralSurface = Color(0xFFEEF2F0);
+
   /// Etiket metni için koyulaştırılmış tonlar (açık zeminde AA kontrast).
   static const Color urgencyText = Color(0xFF9B4500);
   static const Color infoText = Color(0xFF1A5F7F);

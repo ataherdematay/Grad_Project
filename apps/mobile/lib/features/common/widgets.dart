@@ -174,6 +174,7 @@ class SessionNoticeBanner extends ConsumerWidget {
       child: MessageBanner(switch (notice) {
         SessionNotice.adminBlocked => l.noticeAdmin,
         SessionNotice.sessionExpired => l.noticeSessionExpired,
+        SessionNotice.accountSuspended => l.apiErrorAccountSuspended,
       }),
     );
   }

@@ -8,7 +8,7 @@ import '../../core/providers.dart';
 enum SessionStatus { unknown, bootstrapFailed, signedOut, signedIn }
 
 /// Oturum kapanışının kullanıcıya gösterilecek nedeni.
-enum SessionNotice { adminBlocked, sessionExpired }
+enum SessionNotice { adminBlocked, sessionExpired, accountSuspended }
 
 /// Yönetici hesabı mobil uygulamaya giriş yapamaz.
 class AdminAccountException implements Exception {
@@ -30,14 +30,12 @@ class SessionState {
   const SessionState.bootstrapFailed(ApiException error)
     : this._(status: SessionStatus.bootstrapFailed, error: error);
 
-  const SessionState.signedOut({
-    SessionNotice? notice,
-    bool loggedOut = false,
-  }) : this._(
-         status: SessionStatus.signedOut,
-         notice: notice,
-         loggedOut: loggedOut,
-       );
+  const SessionState.signedOut({SessionNotice? notice, bool loggedOut = false})
+    : this._(
+        status: SessionStatus.signedOut,
+        notice: notice,
+        loggedOut: loggedOut,
+      );
 
   const SessionState.signedIn(Me me, {String? landing})
     : this._(status: SessionStatus.signedIn, me: me, landing: landing);
@@ -58,19 +56,23 @@ class SessionState {
 
 /// Oturum durumunu tutar: açılışta `/me`, giriş, kayıt, çıkış, mod değişimi.
 class SessionController extends Notifier<SessionState> {
-  StreamSubscription<void>? _expiredSub;
+  StreamSubscription<SessionEndReason>? _endedSub;
 
   @override
   SessionState build() {
     final client = ref.watch(apiClientProvider);
-    _expiredSub = client.sessionExpired.listen((_) {
-      if (state.status == SessionStatus.signedIn) {
-        state = const SessionState.signedOut(
-          notice: SessionNotice.sessionExpired,
-        );
-      }
+    // Token'lar API katmanında silindi: refresh reddedildi ya da hesap askıya
+    // alındı (NAVIGATION_RULES §3.6). Açılış sürerken gelirse de işlenir.
+    _endedSub = client.sessionEnded.listen((reason) {
+      if (state.status == SessionStatus.signedOut) return;
+      state = SessionState.signedOut(
+        notice: switch (reason) {
+          SessionEndReason.expired => SessionNotice.sessionExpired,
+          SessionEndReason.suspended => SessionNotice.accountSuspended,
+        },
+      );
     });
-    ref.onDispose(() => _expiredSub?.cancel());
+    ref.onDispose(() => _endedSub?.cancel());
     Future.microtask(bootstrap);
     return const SessionState.unknown();
   }
@@ -80,7 +82,17 @@ class SessionController extends Notifier<SessionState> {
   /// Token varsa `GET /me`, yoksa oturumsuz.
   Future<void> bootstrap() async {
     state = const SessionState.unknown();
-    final tokens = await ref.read(tokenStoreProvider).read();
+    final TokenPair? tokens;
+    try {
+      tokens = await ref.read(tokenStoreProvider).read();
+    } catch (_) {
+      // Anahtarlık okunamadı (örn. cihaz açılıştan beri kilitli): açılış
+      // ekranında kalıp sonsuza dek dönmek yerine "Tekrar dene" göster.
+      state = const SessionState.bootstrapFailed(
+        ApiException(code: ApiErrorCode.unknown),
+      );
+      return;
+    }
     if (tokens == null) {
       state = const SessionState.signedOut();
       return;
@@ -89,16 +101,27 @@ class SessionController extends Notifier<SessionState> {
       final me = await _client.me.get();
       if (me.isAdmin) {
         await _dropSession();
-        state = const SessionState.signedOut(notice: SessionNotice.adminBlocked);
+        state = const SessionState.signedOut(
+          notice: SessionNotice.adminBlocked,
+        );
         return;
       }
       state = SessionState.signedIn(me);
     } on ApiException catch (e) {
-      if (e.isNetworkError || (e.statusCode ?? 0) >= 500) {
-        state = SessionState.bootstrapFailed(e);
-      } else {
+      // `sessionEnded` dinleyicisi oturumu zaten kapattıysa dokunma.
+      if (state.status == SessionStatus.signedOut) return;
+      if (e.statusCode == 401) {
+        // Yalnız sunucu oturumu reddederse token silinir.
         await ref.read(tokenStoreProvider).clear();
-        state = const SessionState.signedOut();
+        state = SessionState.signedOut(
+          notice: e.code == ApiErrorCode.accountSuspended
+              ? SessionNotice.accountSuspended
+              : null,
+        );
+      } else {
+        // Ağ, 429, 5xx ve beklenmeyen yanıt geçicidir: token korunur,
+        // açılış ekranında "Tekrar dene" çıkar.
+        state = SessionState.bootstrapFailed(e);
       }
     }
   }

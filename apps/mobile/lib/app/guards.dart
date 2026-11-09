@@ -40,6 +40,14 @@ bool isKnownPath(String path) =>
 bool _isPublic(String path) =>
     path == '/' || guestPaths.contains(path) || _legalRe.hasMatch(path);
 
+String? _guestDeepLink(String? raw) {
+  if (raw == null || !raw.startsWith('/') || raw.startsWith('//')) return null;
+  if (raw.contains('\\')) return null;
+  final uri = Uri.tryParse(raw);
+  if (uri == null || uri.hasScheme || uri.hasAuthority) return null;
+  return guestPaths.contains(uri.path) ? raw : null;
+}
+
 /// Yalnızca uygulama içi, korumalı bir rota `next` olarak kabul edilir.
 String? safeNext(String? raw) {
   if (raw == null || raw.isEmpty) return null;
@@ -51,8 +59,7 @@ String? safeNext(String? raw) {
   final path = uri.path;
   if (path == '/' || guestPaths.contains(path)) return null;
   const prefixes = ['/c/', '/p/', '/jobs/', '/legal/'];
-  final internal =
-      isKnownPath(path) || prefixes.any((p) => path.startsWith(p));
+  final internal = isKnownPath(path) || prefixes.any((p) => path.startsWith(p));
   return internal ? raw : null;
 }
 
@@ -61,7 +68,8 @@ String withNextQuery(String path, String next) =>
 
 /// Kullanıcının etkin modu: usta modu yalnız onaylı usta için geçerli.
 bool isProMode(Me me) =>
-    me.lastMode == UserMode.pro && me.pro?.reviewStatus == ReviewStatus.approved;
+    me.lastMode == UserMode.pro &&
+    me.pro?.reviewStatus == ReviewStatus.approved;
 
 /// Modun ana sekmesi.
 String homeFor(Me me) => isProMode(me) ? '/p/feed' : '/c/home';
@@ -95,17 +103,18 @@ String? guardRedirect(SessionState s, Uri uri) {
   if (!s.isSignedIn) {
     if (path == '/') {
       final raw = uri.queryParameters['next'];
-      // Oturumsuz giriş ekranı derin bağlantısı (örn. /login) korunur.
-      if (raw != null && guestPaths.contains(Uri.tryParse(raw)?.path)) {
-        return raw;
-      }
+      // Oturumsuz giriş ekranı derin bağlantısı (örn. /login) korunur; yalnız
+      // şemasız, sunucusuz iç adres kabul edilir (`//evil/login` değil).
+      final guest = _guestDeepLink(raw);
+      if (guest != null) return guest;
       final next = safeNext(raw);
       return next == null ? '/welcome' : withNextQuery('/welcome', next);
     }
     // Bilinmeyen rota ve genel rotalar olduğu gibi açılır.
     if (!isKnownPath(path) || _isPublic(path)) return null;
-    // Oturum süresi dolduysa ya da kullanıcı çıktıysa `next` taşınmaz.
-    if (s.notice == SessionNotice.sessionExpired || s.loggedOut) {
+    // Oturum kapatıldıysa (süre, askı, yönetici) ya da kullanıcı çıktıysa
+    // `next` taşınmaz.
+    if (s.notice != null || s.loggedOut) {
       return '/welcome';
     }
     return withNextQuery('/welcome', uri.toString());

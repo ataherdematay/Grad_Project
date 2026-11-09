@@ -71,10 +71,7 @@ class ApiException implements Exception {
         statusCode: statusCode,
       );
     }
-    return ApiException(
-      code: ApiErrorCode.unknown,
-      statusCode: statusCode,
-    );
+    return ApiException(code: ApiErrorCode.unknown, statusCode: statusCode);
   }
 
   /// Dio hatasını `ApiException`a çevirir.
@@ -101,5 +98,21 @@ Future<T> guardApi<T>(Future<T> Function() call) async {
     return await call();
   } on DioException catch (e) {
     throw ApiException.fromDio(e);
+  }
+}
+
+/// Yanıt gövdesini modele çevirir. Sözleşmeye uymayan gövde (eksik alan,
+/// bilinmeyen enum, boş yanıt) uygulamayı çökertmez; `ApiException(unknown)`
+/// olur.
+T decodeApi<T>(T Function() parse) {
+  try {
+    return parse();
+  } on ApiException {
+    rethrow;
+  } catch (e) {
+    throw ApiException(
+      code: ApiErrorCode.unknown,
+      message: 'Yanıt çözülemedi: ${e.runtimeType}',
+    );
   }
 }

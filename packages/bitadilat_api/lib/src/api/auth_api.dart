@@ -65,12 +65,9 @@ class AuthApi {
         options: _open,
       ),
     );
-    final auth = AuthResponse.fromJson(res.data!);
+    final auth = decodeApi(() => AuthResponse.fromJson(res.data!));
     await _store.write(
-      TokenPair(
-        accessToken: auth.accessToken,
-        refreshToken: auth.refreshToken,
-      ),
+      TokenPair(accessToken: auth.accessToken, refreshToken: auth.refreshToken),
     );
     return auth;
   }

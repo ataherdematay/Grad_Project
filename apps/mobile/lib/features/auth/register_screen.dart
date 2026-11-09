@@ -303,7 +303,7 @@ class _RoleOption extends StatelessWidget {
       excludeSemantics: true,
       onTap: enabled ? onTap : null,
       child: Material(
-        color: selected ? const Color(0xFFE3EEF0) : AppColors.surface,
+        color: selected ? AppColors.selectedSurface : AppColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.card),
           side: BorderSide(

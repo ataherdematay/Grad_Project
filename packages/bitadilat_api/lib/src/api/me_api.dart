@@ -14,7 +14,7 @@ class MeApi {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>('${ApiConfig.prefix}/me'),
     );
-    return Me.fromJson(res.data!);
+    return decodeApi(() => Me.fromJson(res.data!));
   }
 
   Future<Me> update(UpdateMeRequest body) async {
@@ -24,13 +24,11 @@ class MeApi {
         data: body.toJson(),
       ),
     );
-    return Me.fromJson(res.data!);
+    return decodeApi(() => Me.fromJson(res.data!));
   }
 
   Future<void> changePassword(ChangePasswordRequest body) => guardApi(
-    () => _dio.post<void>(
-      '${ApiConfig.prefix}/me/password',
-      data: body.toJson(),
-    ),
+    () =>
+        _dio.post<void>('${ApiConfig.prefix}/me/password', data: body.toJson()),
   );
 }
