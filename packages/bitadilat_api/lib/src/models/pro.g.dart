@@ -54,11 +54,13 @@ _FeedPage _$FeedPageFromJson(Map<String, dynamic> json) => _FeedPage(
           .toList() ??
       const <FeedItem>[],
   onBreak: json['onBreak'] as bool? ?? false,
+  nextCursor: json['nextCursor'] as String?,
 );
 
 Map<String, dynamic> _$FeedPageToJson(_FeedPage instance) => <String, dynamic>{
   'items': instance.items.map((e) => e.toJson()).toList(),
   'onBreak': instance.onBreak,
+  'nextCursor': instance.nextCursor,
 };
 
 _ProRequestDetail _$ProRequestDetailFromJson(Map<String, dynamic> json) =>

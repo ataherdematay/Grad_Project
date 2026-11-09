@@ -508,6 +508,26 @@ void main() {
       expect(a.requests[1].queryParameters, {'status': 'PENDING'});
     });
 
+    test('liste uç noktaları limit taşır; akış nextCursor okur', () async {
+      final a = FakeAdapter(
+        (o) => o.path.endsWith('/pro/feed')
+            ? jsonBody(200, {
+                'items': [feedItem()],
+                'onBreak': false,
+                'nextCursor': 'c2',
+              })
+            : jsonBody(200, {'items': <Object>[], 'nextCursor': null}),
+      );
+      final c = clientWith(a);
+      final feed = await c.pro.feed(limit: 50);
+      expect(feed.nextCursor, 'c2');
+      await c.pro.offers(limit: 50);
+      await c.pros.reviews('p1', limit: 50);
+      expect(a.requests[0].queryParameters, {'limit': 50});
+      expect(a.requests[1].queryParameters, {'limit': 50});
+      expect(a.requests[2].queryParameters, {'limit': 50});
+    });
+
     test('ProApi.setAvailability gövdesi', () async {
       final a = FakeAdapter(
         (_) => jsonBody(200, {

@@ -57,11 +57,20 @@ class ProApi {
     return decodeApi(() => ProProfile.fromJson(res.data!));
   }
 
-  Future<FeedPage> feed({RequestUrgency? urgency}) async {
+  /// `limit` verilmezse sunucu varsayılanı (20) uygulanır.
+  Future<FeedPage> feed({
+    RequestUrgency? urgency,
+    String? cursor,
+    int? limit,
+  }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
         '$_base/feed',
-        queryParameters: {if (urgency != null) 'urgency': urgency.wire},
+        queryParameters: {
+          if (urgency != null) 'urgency': urgency.wire,
+          'cursor': ?cursor,
+          'limit': ?limit,
+        },
       ),
     );
     return decodeApi(() => FeedPage.fromJson(res.data!));
@@ -93,6 +102,7 @@ class ProApi {
   Future<Paged<ProOfferItem>> offers({
     OfferStatus? status,
     String? cursor,
+    int? limit,
   }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
@@ -100,6 +110,7 @@ class ProApi {
         queryParameters: {
           if (status != null) 'status': status.wire,
           'cursor': ?cursor,
+          'limit': ?limit,
         },
       ),
     );

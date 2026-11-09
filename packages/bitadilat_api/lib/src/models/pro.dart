@@ -39,6 +39,7 @@ abstract class FeedPage with _$FeedPage {
   const factory FeedPage({
     @Default(<FeedItem>[]) List<FeedItem> items,
     @Default(false) bool onBreak,
+    String? nextCursor,
   }) = _FeedPage;
 
   factory FeedPage.fromJson(Map<String, dynamic> json) =>

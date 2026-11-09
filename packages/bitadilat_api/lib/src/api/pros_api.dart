@@ -20,11 +20,15 @@ class ProsApi {
     return decodeApi(() => ProPublicProfile.fromJson(res.data!));
   }
 
-  Future<Paged<ReviewItem>> reviews(String id, {String? cursor}) async {
+  Future<Paged<ReviewItem>> reviews(
+    String id, {
+    String? cursor,
+    int? limit,
+  }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
         '$_base/$id/reviews',
-        queryParameters: {'cursor': ?cursor},
+        queryParameters: {'cursor': ?cursor, 'limit': ?limit},
       ),
     );
     return decodeApi(() => Paged.fromJson(res.data!, ReviewItem.fromJson));

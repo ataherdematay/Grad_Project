@@ -314,7 +314,7 @@ as String?,
 /// @nodoc
 mixin _$FeedPage {
 
- List<FeedItem> get items; bool get onBreak;
+ List<FeedItem> get items; bool get onBreak; String? get nextCursor;
 /// Create a copy of FeedPage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -327,16 +327,16 @@ $FeedPageCopyWith<FeedPage> get copyWith => _$FeedPageCopyWithImpl<FeedPage>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPage&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.onBreak, onBreak) || other.onBreak == onBreak));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPage&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.onBreak, onBreak) || other.onBreak == onBreak)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),onBreak);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),onBreak,nextCursor);
 
 @override
 String toString() {
-  return 'FeedPage(items: $items, onBreak: $onBreak)';
+  return 'FeedPage(items: $items, onBreak: $onBreak, nextCursor: $nextCursor)';
 }
 
 
@@ -347,7 +347,7 @@ abstract mixin class $FeedPageCopyWith<$Res>  {
   factory $FeedPageCopyWith(FeedPage value, $Res Function(FeedPage) _then) = _$FeedPageCopyWithImpl;
 @useResult
 $Res call({
- List<FeedItem> items, bool onBreak
+ List<FeedItem> items, bool onBreak, String? nextCursor
 });
 
 
@@ -364,11 +364,12 @@ class _$FeedPageCopyWithImpl<$Res>
 
 /// Create a copy of FeedPage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? onBreak = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? onBreak = null,Object? nextCursor = freezed,}) {
   return _then(_self.copyWith(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<FeedItem>,onBreak: null == onBreak ? _self.onBreak : onBreak // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,nextCursor: freezed == nextCursor ? _self.nextCursor : nextCursor // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -453,10 +454,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<FeedItem> items,  bool onBreak)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<FeedItem> items,  bool onBreak,  String? nextCursor)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FeedPage() when $default != null:
-return $default(_that.items,_that.onBreak);case _:
+return $default(_that.items,_that.onBreak,_that.nextCursor);case _:
   return orElse();
 
 }
@@ -474,10 +475,10 @@ return $default(_that.items,_that.onBreak);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<FeedItem> items,  bool onBreak)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<FeedItem> items,  bool onBreak,  String? nextCursor)  $default,) {final _that = this;
 switch (_that) {
 case _FeedPage():
-return $default(_that.items,_that.onBreak);case _:
+return $default(_that.items,_that.onBreak,_that.nextCursor);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -494,10 +495,10 @@ return $default(_that.items,_that.onBreak);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<FeedItem> items,  bool onBreak)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<FeedItem> items,  bool onBreak,  String? nextCursor)?  $default,) {final _that = this;
 switch (_that) {
 case _FeedPage() when $default != null:
-return $default(_that.items,_that.onBreak);case _:
+return $default(_that.items,_that.onBreak,_that.nextCursor);case _:
   return null;
 
 }
@@ -509,11 +510,12 @@ return $default(_that.items,_that.onBreak);case _:
 @JsonSerializable()
 
 class _FeedPage implements FeedPage {
-  const _FeedPage({this.items = const <FeedItem>[], this.onBreak = false});
+  const _FeedPage({this.items = const <FeedItem>[], this.onBreak = false, this.nextCursor});
   factory _FeedPage.fromJson(Map<String, dynamic> json) => _$FeedPageFromJson(json);
 
 @override@JsonKey() final  List<FeedItem> items;
 @override@JsonKey() final  bool onBreak;
+@override final  String? nextCursor;
 
 /// Create a copy of FeedPage
 /// with the given fields replaced by the non-null parameter values.
@@ -528,16 +530,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedPage&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.onBreak, onBreak) || other.onBreak == onBreak));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedPage&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.onBreak, onBreak) || other.onBreak == onBreak)&&(identical(other.nextCursor, nextCursor) || other.nextCursor == nextCursor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),onBreak);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),onBreak,nextCursor);
 
 @override
 String toString() {
-  return 'FeedPage(items: $items, onBreak: $onBreak)';
+  return 'FeedPage(items: $items, onBreak: $onBreak, nextCursor: $nextCursor)';
 }
 
 
@@ -548,7 +550,7 @@ abstract mixin class _$FeedPageCopyWith<$Res> implements $FeedPageCopyWith<$Res>
   factory _$FeedPageCopyWith(_FeedPage value, $Res Function(_FeedPage) _then) = __$FeedPageCopyWithImpl;
 @override @useResult
 $Res call({
- List<FeedItem> items, bool onBreak
+ List<FeedItem> items, bool onBreak, String? nextCursor
 });
 
 
@@ -565,11 +567,12 @@ class __$FeedPageCopyWithImpl<$Res>
 
 /// Create a copy of FeedPage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? onBreak = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? onBreak = null,Object? nextCursor = freezed,}) {
   return _then(_FeedPage(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<FeedItem>,onBreak: null == onBreak ? _self.onBreak : onBreak // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,nextCursor: freezed == nextCursor ? _self.nextCursor : nextCursor // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
