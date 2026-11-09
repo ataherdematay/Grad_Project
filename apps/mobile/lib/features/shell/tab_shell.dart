@@ -141,6 +141,15 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                 ),
               ),
             const SizedBox(height: AppSpacing.md),
+            if (!widget.proMode) ...[
+              AppButton(
+                label: l.addressesTitle,
+                icon: Icons.home_outlined,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => context.push('/c/addresses'),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
             AppButton(
               label: l.profileSettings,
               icon: Icons.settings_outlined,

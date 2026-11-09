@@ -411,4 +411,1100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get apiErrorUnknown => 'Something went wrong. Try again.';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get searchLabel => 'Search';
+
+  @override
+  String get noSearchResults => 'No results';
+
+  @override
+  String get pickerNone => 'Select';
+
+  @override
+  String get photoLoadFailed => 'Photo could not be loaded';
+
+  @override
+  String get goHome => 'Go to home';
+
+  @override
+  String get goToMyRequests => 'Go to my requests';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get reasonRequired => 'Select a reason to continue.';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get labor => 'Labour';
+
+  @override
+  String get materials => 'Materials';
+
+  @override
+  String get totalVatIncluded => 'Total (VAT incl.)';
+
+  @override
+  String get vatIncluded => 'VAT incl.';
+
+  @override
+  String get warranty => 'Workmanship warranty';
+
+  @override
+  String get warrantyNone => 'None';
+
+  @override
+  String warrantyMonths(int months) {
+    return '$months months';
+  }
+
+  @override
+  String get warrantyHelp =>
+      'The platform gives no warranty; the warranty is yours.';
+
+  @override
+  String get arrival => 'Arrival window';
+
+  @override
+  String get urgencyUrgent => 'Urgent repair';
+
+  @override
+  String get urgencyPlanned => 'Planned job';
+
+  @override
+  String get tabActive => 'Active';
+
+  @override
+  String get tabPast => 'Past';
+
+  @override
+  String get dateToday => 'Today';
+
+  @override
+  String get dateTomorrow => 'Tomorrow';
+
+  @override
+  String get requestAwaitingOffers => 'Awaiting offers';
+
+  @override
+  String requestOffersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get requestAssigned => 'Pro selected';
+
+  @override
+  String get requestCancelled => 'Cancelled';
+
+  @override
+  String get requestExpired => 'Expired';
+
+  @override
+  String get offerPending => 'Pending';
+
+  @override
+  String get offerAccepted => 'Accepted';
+
+  @override
+  String get offerDeclined => 'Declined';
+
+  @override
+  String get offerWithdrawn => 'Withdrawn';
+
+  @override
+  String get offerSuperseded => 'Another offer chosen';
+
+  @override
+  String get offerExpired => 'Expired';
+
+  @override
+  String get statusApproved => 'Verified';
+
+  @override
+  String get proVerified => 'Verified';
+
+  @override
+  String get photoAdd => 'Add photo';
+
+  @override
+  String get photoFromCamera => 'Take a photo';
+
+  @override
+  String get photoFromGallery => 'Choose from gallery';
+
+  @override
+  String get photoRemove => 'Remove photo';
+
+  @override
+  String get photoUploading => 'Uploading';
+
+  @override
+  String get photoUploaded => 'Uploaded';
+
+  @override
+  String photoLimitReached(int count) {
+    return 'You can add up to $count photos';
+  }
+
+  @override
+  String get photoTooLarge =>
+      'The photo is over the 1.5 MB limit. Choose a smaller one.';
+
+  @override
+  String get addressesTitle => 'My addresses';
+
+  @override
+  String get addressAdd => 'Add address';
+
+  @override
+  String get addressDefault => 'Default';
+
+  @override
+  String get addressMakeDefault => 'Make default';
+
+  @override
+  String get addressesEmptyTitle => 'You have no saved addresses';
+
+  @override
+  String get addressesEmptyBody =>
+      'Add an address to use when creating a request.';
+
+  @override
+  String get addressDeleteTitle => 'Delete this address?';
+
+  @override
+  String addressDeleteMessage(String label) {
+    return 'The address \"$label\" will be deleted. This cannot be undone.';
+  }
+
+  @override
+  String get addressLabelField => 'Address name';
+
+  @override
+  String get addressLabelHint => 'E.g. Home, Work';
+
+  @override
+  String get addressDistrict => 'District';
+
+  @override
+  String get addressNeighborhood => 'Neighbourhood';
+
+  @override
+  String get addressLine => 'Full address';
+
+  @override
+  String get addressLineHint => 'Street, building and flat number';
+
+  @override
+  String get addressDoorNote => 'Door note (optional)';
+
+  @override
+  String get addressDoorNoteHelp =>
+      'The full address and door note are shared only after a pro is chosen.';
+
+  @override
+  String get createRequest => 'Create request';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hello $name';
+  }
+
+  @override
+  String get homeActiveRequest => 'Your active request';
+
+  @override
+  String get homeNoActiveTitle => 'No active request';
+
+  @override
+  String get homeNoActiveBody =>
+      'Open a request for your home repair and get offers from pros.';
+
+  @override
+  String seeOffers(int count) {
+    return 'See offers ($count)';
+  }
+
+  @override
+  String offerRange(String min, String max) {
+    return '$min - $max';
+  }
+
+  @override
+  String get requestsEmptyActiveTitle => 'No active requests';
+
+  @override
+  String get requestsEmptyActiveBody =>
+      'Create a request to get offers from pros.';
+
+  @override
+  String get requestsEmptyPastTitle => 'No past requests';
+
+  @override
+  String get requestsEmptyPastBody =>
+      'Cancelled or expired requests appear here.';
+
+  @override
+  String get requestDetailTitle => 'Request details';
+
+  @override
+  String get requestCode => 'Request code';
+
+  @override
+  String get requestLocation => 'Location';
+
+  @override
+  String get requestExpiresOn => 'Expires';
+
+  @override
+  String get requestAnswers => 'Answers';
+
+  @override
+  String get requestPhotos => 'Photos';
+
+  @override
+  String get requestCancel => 'Cancel request';
+
+  @override
+  String get keepRequest => 'Keep the request';
+
+  @override
+  String get cancelReasonTitle => 'Reason for cancelling';
+
+  @override
+  String get cancelReasonPlansChanged => 'My plans changed';
+
+  @override
+  String get cancelReasonSolved => 'I solved the problem';
+
+  @override
+  String get cancelReasonNoSuitableOffer => 'No suitable offer';
+
+  @override
+  String get cancelReasonOther => 'Other';
+
+  @override
+  String get cancelConfirmTitle => 'Cancel this request?';
+
+  @override
+  String get cancelConfirmMessage =>
+      'All pending offers will close. This cannot be undone.';
+
+  @override
+  String get publishedTitle => 'Request published';
+
+  @override
+  String publishedMatchTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pros matched',
+      one: '1 pro matched',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get publishedMatchBody =>
+      'Matching pros were notified. Offers will appear in My requests.';
+
+  @override
+  String get publishedNoMatchTitle => 'No matching pros right now';
+
+  @override
+  String get publishedNoMatchBody =>
+      'If you keep the request open, new pros in your area can see it. Or edit it to change the category or location.';
+
+  @override
+  String get matchReasons => 'Why they matched';
+
+  @override
+  String get matchCategory => 'Works in your category';
+
+  @override
+  String get matchDistrict => 'Serves your district';
+
+  @override
+  String get matchAvailability => 'Currently available';
+
+  @override
+  String get keepOpen => 'Keep open';
+
+  @override
+  String get wizTitle => 'New request';
+
+  @override
+  String get wizEditTitle => 'Edit request';
+
+  @override
+  String wizStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get wizContinue => 'Continue';
+
+  @override
+  String get wizBackToReview => 'Review';
+
+  @override
+  String get wizPublish => 'Publish request';
+
+  @override
+  String get wizSaveChanges => 'Save changes';
+
+  @override
+  String get wizStep1Title => 'Category and urgency';
+
+  @override
+  String get wizStep2Title => 'Location and details';
+
+  @override
+  String get wizStep3Title => 'Photos and description';
+
+  @override
+  String get wizStep4Title => 'Review';
+
+  @override
+  String get wizCategory => 'Category';
+
+  @override
+  String get wizUrgency => 'Urgency';
+
+  @override
+  String get wizUrgentHint => 'As soon as possible';
+
+  @override
+  String get wizPlannedHint => 'Pick the dates that suit you';
+
+  @override
+  String get wizDates => 'Date range';
+
+  @override
+  String get wizDateFrom => 'Earliest';
+
+  @override
+  String get wizDateTo => 'Latest';
+
+  @override
+  String get wizAddress => 'Address';
+
+  @override
+  String get wizAddAddress => 'Add a new address';
+
+  @override
+  String get wizFieldTitle => 'Title';
+
+  @override
+  String get wizFieldTitleHint => 'E.g. Kitchen tap is dripping';
+
+  @override
+  String get wizFieldDescription => 'Description';
+
+  @override
+  String get wizFieldDescriptionHint =>
+      'Describe the problem and what the pro should know';
+
+  @override
+  String wizDescriptionCount(int count, int min) {
+    return '$count / at least $min characters';
+  }
+
+  @override
+  String wizPhotos(int max) {
+    return 'Photos (up to $max)';
+  }
+
+  @override
+  String get wizPhotosHint =>
+      'Clear photos of the problem help you get offers.';
+
+  @override
+  String get wizPhotosCount => 'Number of photos';
+
+  @override
+  String get wizReviewNote => 'Matching pros are notified when you publish.';
+
+  @override
+  String get wizErrCategory => 'Select a category to continue.';
+
+  @override
+  String get wizErrDateFrom => 'Select the earliest date.';
+
+  @override
+  String get wizErrDateTo => 'Select the latest date.';
+
+  @override
+  String get wizErrDateOrder => 'The end must be after the start.';
+
+  @override
+  String get wizErrDatePast => 'The start must be in the future.';
+
+  @override
+  String get wizErrDateRange => 'The date range can be at most 30 days ahead.';
+
+  @override
+  String get wizErrAddress => 'Select an address or add a new one.';
+
+  @override
+  String get wizErrAnswers => 'Answer all the questions.';
+
+  @override
+  String wizErrTitle(int min, int max) {
+    return 'The title must be $min-$max characters.';
+  }
+
+  @override
+  String wizErrDescription(int min) {
+    return 'The description must be at least $min characters.';
+  }
+
+  @override
+  String get wizErrPhotosBusy => 'Wait for the photos to finish uploading.';
+
+  @override
+  String get wizErrPhotosFailed =>
+      'Retry or remove the photo that failed to upload.';
+
+  @override
+  String get offersTitle => 'Offers';
+
+  @override
+  String offersResultCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String offersDeclinedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You declined $count offers.',
+      one: 'You declined 1 offer.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get offersEmptyTitle => 'No offers yet';
+
+  @override
+  String get offersEmptyBody => 'Offers from pros will appear here.';
+
+  @override
+  String get offersEmptyFilteredTitle => 'No offers match your filters';
+
+  @override
+  String get offersEmptyFilteredBody => 'Loosen the filters and try again.';
+
+  @override
+  String get offersClearFilters => 'Clear filters';
+
+  @override
+  String get offersFilterTitle => 'Filter and sort';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get sortRecommended => 'Recommended';
+
+  @override
+  String get sortPrice => 'Lowest price';
+
+  @override
+  String get sortRating => 'Highest rating';
+
+  @override
+  String get sortArrival => 'Earliest arrival';
+
+  @override
+  String get filterMaxPrice => 'Maximum price';
+
+  @override
+  String get filterMaxPriceLabel => 'Up to (₺)';
+
+  @override
+  String get filterMaxPriceHelp =>
+      'Labour and materials included. Leave empty for no limit.';
+
+  @override
+  String get filterMinRating => 'Pro rating';
+
+  @override
+  String get filterAnyRating => 'Any';
+
+  @override
+  String filterRatingOrMore(String rating) {
+    return '$rating+';
+  }
+
+  @override
+  String get applyFilters => 'Apply';
+
+  @override
+  String get compare => 'Compare';
+
+  @override
+  String get compareCancel => 'Cancel';
+
+  @override
+  String get compareHint => 'Select 2 or 3 offers.';
+
+  @override
+  String compareSelected(int count) {
+    return 'Compare ($count)';
+  }
+
+  @override
+  String get compareTitle => 'Comparison';
+
+  @override
+  String get compareTotal => 'Total (VAT incl.)';
+
+  @override
+  String get compareGoneTitle => 'These offers are no longer listed';
+
+  @override
+  String get compareGoneBody =>
+      'The offers may have been withdrawn or expired.';
+
+  @override
+  String get compareBackToOffers => 'Back to offers';
+
+  @override
+  String get viewOffer => 'View offer';
+
+  @override
+  String get proRating => 'Rating';
+
+  @override
+  String get proCompletedJobs => 'Completed jobs';
+
+  @override
+  String get noRatingYet => 'No rating yet';
+
+  @override
+  String ratingWithCount(String avg, int count) {
+    return '$avg ($count)';
+  }
+
+  @override
+  String get offerDetailTitle => 'Offer';
+
+  @override
+  String get offerBreakdown => 'Offer breakdown';
+
+  @override
+  String get offerNote => 'Pro note';
+
+  @override
+  String get offerValidUntil => 'Valid until';
+
+  @override
+  String get offerAccept => 'Accept offer';
+
+  @override
+  String get offerDecline => 'Decline offer';
+
+  @override
+  String get viewProfile => 'View profile';
+
+  @override
+  String declineIntro(String pro, String amount) {
+    return 'You are about to decline the $amount offer from $pro.';
+  }
+
+  @override
+  String get declineIrreversible =>
+      'This cannot be undone and does not affect the pro\'s profile.';
+
+  @override
+  String get declineReasonTitle => 'Reason';
+
+  @override
+  String get declineReasonPrice => 'The price is over my budget';
+
+  @override
+  String get declineReasonSchedule => 'The timing does not suit me';
+
+  @override
+  String get declineReasonOtherOffer => 'I chose another offer';
+
+  @override
+  String get declineReasonNotNeeded => 'I no longer need this service';
+
+  @override
+  String get declineReasonOther => 'Other';
+
+  @override
+  String get declineKeepOpen => 'Keep my request open';
+
+  @override
+  String get declineKeepOpenHelp => 'If off, your request is cancelled too.';
+
+  @override
+  String get declineCloseNeedsReason =>
+      'To close the request, select \"I no longer need this service\" or \"Other\".';
+
+  @override
+  String get declineConfirmTitle => 'Decline this offer?';
+
+  @override
+  String get declineConfirmKeepOpen =>
+      'The offer is declined and your request stays open. This cannot be undone.';
+
+  @override
+  String get declineConfirmClose =>
+      'The offer is declined and your request is cancelled. This cannot be undone.';
+
+  @override
+  String get declineBack => 'Back to the offer';
+
+  @override
+  String get proProfileTitle => 'Pro profile';
+
+  @override
+  String get proReviews => 'Reviews';
+
+  @override
+  String get proAbout => 'About';
+
+  @override
+  String get proExperience => 'Experience';
+
+  @override
+  String experienceYears(int years) {
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years',
+      one: '1 year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proMemberSince => 'Member since';
+
+  @override
+  String get proVerifiedDocuments => 'Verified documents';
+
+  @override
+  String get proNoVerifiedDocs => 'No verified documents yet.';
+
+  @override
+  String get proCategories => 'Categories';
+
+  @override
+  String get proServiceAreas => 'Service areas';
+
+  @override
+  String get docIdentity => 'Identity';
+
+  @override
+  String get docTradeCert => 'Trade certificate';
+
+  @override
+  String get docTax => 'Tax certificate';
+
+  @override
+  String get docCriminalRecord => 'Criminal record';
+
+  @override
+  String get reviewsEmptyTitle => 'No reviews yet';
+
+  @override
+  String get reviewsEmptyBody =>
+      'Reviews appear here once customers complete jobs.';
+
+  @override
+  String starsOutOf5(int rating) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rating,
+      locale: localeName,
+      other: '$rating out of 5 stars',
+      one: '1 out of 5 stars',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get anonymous => 'Anonymous';
+
+  @override
+  String get applyIntro =>
+      'Send your business details and documents; our team will review them.';
+
+  @override
+  String get applyBusinessName => 'Business name';
+
+  @override
+  String get applyBusinessNameInvalid =>
+      'The business name must be at least 2 characters.';
+
+  @override
+  String get applyAbout => 'About (optional)';
+
+  @override
+  String get applyExperience => 'Experience (years)';
+
+  @override
+  String get applyExperienceInvalid =>
+      'Experience must be between 0 and 60 years.';
+
+  @override
+  String get applyCategories => 'Categories';
+
+  @override
+  String get applyDistricts => 'Districts you serve';
+
+  @override
+  String get applyDocuments => 'Documents';
+
+  @override
+  String get applyDocumentsHelp =>
+      'Upload a photo of each document. Identity and trade certificate are required.';
+
+  @override
+  String docRequired(String doc) {
+    return '$doc (required)';
+  }
+
+  @override
+  String docOptional(String doc) {
+    return '$doc (optional)';
+  }
+
+  @override
+  String docMissing(String doc) {
+    return 'Upload your $doc.';
+  }
+
+  @override
+  String get applySubmit => 'Submit application';
+
+  @override
+  String get applyResubmit => 'Update documents and resubmit';
+
+  @override
+  String get applicationPendingBody =>
+      'Our team is reviewing your documents and profile. Your status updates here.';
+
+  @override
+  String get applicationNeedsBody =>
+      'Some documents are missing or unreadable. Open the form, update them and resubmit.';
+
+  @override
+  String get applicationRejectedBody =>
+      'Your application was not accepted. Read the note, fix your documents and apply again.';
+
+  @override
+  String get applicationSuspendedBody =>
+      'Your account is suspended. Contact support.';
+
+  @override
+  String get adminNote => 'Review note';
+
+  @override
+  String get docStatusPending => 'Under review';
+
+  @override
+  String get docStatusAccepted => 'Accepted';
+
+  @override
+  String get docStatusRejected => 'Rejected';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterUrgent => 'Urgent';
+
+  @override
+  String get filterPlanned => 'Planned';
+
+  @override
+  String get feedOnBreakTitle => 'You are on a break';
+
+  @override
+  String get feedOnBreakBody =>
+      'No new requests arrive during a break. Activate again when you are ready.';
+
+  @override
+  String get feedActivate => 'Go active';
+
+  @override
+  String get feedEmptyTitle => 'No matching requests right now';
+
+  @override
+  String get feedEmptyBody =>
+      'New requests in your categories and districts appear here.';
+
+  @override
+  String feedPhotos(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String feedOffers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get feedMyOffer => 'You made an offer';
+
+  @override
+  String get locationMasked =>
+      'The full address is shared once your offer is accepted.';
+
+  @override
+  String get prepareOffer => 'Prepare offer';
+
+  @override
+  String get viewMyOffer => 'View your offer';
+
+  @override
+  String get jobsEmptyTitle => 'No jobs yet';
+
+  @override
+  String get jobsEmptyBody =>
+      'Once an offer is accepted, the job appears here.';
+
+  @override
+  String get offerFormTitle => 'Prepare offer';
+
+  @override
+  String get laborAmountLabel => 'Labour amount';
+
+  @override
+  String get laborAmountInvalid =>
+      'The labour amount must be above 0. Example: 1,200';
+
+  @override
+  String get materialsEmpty => 'Leave empty if there are no materials.';
+
+  @override
+  String get materialAdd => 'Add material item';
+
+  @override
+  String get materialRemove => 'Remove item';
+
+  @override
+  String get materialDescription => 'Material';
+
+  @override
+  String get materialQuantity => 'Quantity';
+
+  @override
+  String get materialQuantityInvalid => 'Quantity must be 1 or more.';
+
+  @override
+  String get materialUnitPrice => 'Unit price';
+
+  @override
+  String get materialPriceInvalid => 'Enter a valid amount. Example: 350';
+
+  @override
+  String get arrivalHelp =>
+      'The arrival window: 1-12 hours, up to 14 days ahead.';
+
+  @override
+  String get arrivalDay => 'Day';
+
+  @override
+  String get arrivalStart => 'Start time';
+
+  @override
+  String get arrivalLength => 'Window length';
+
+  @override
+  String hoursShort(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String get arrivalMissing => 'Select the day and start time.';
+
+  @override
+  String get arrivalPast => 'The arrival time must be in the future.';
+
+  @override
+  String get arrivalTooShort => 'The window must be at least 1 hour.';
+
+  @override
+  String get arrivalTooLong => 'The window can be at most 12 hours.';
+
+  @override
+  String get arrivalTooFar => 'Arrival can be at most 14 days ahead.';
+
+  @override
+  String get offerSummary => 'Summary';
+
+  @override
+  String serviceFee(int percent) {
+    return 'Service fee ($percent%)';
+  }
+
+  @override
+  String get netEarning => 'Your net earning';
+
+  @override
+  String get offerSend => 'Send offer';
+
+  @override
+  String get offerSentTitle => 'Your offer';
+
+  @override
+  String get offerSentHeadline => 'Your offer was sent';
+
+  @override
+  String get offerSentBody =>
+      'The customer will review your offer. Track it in My offers.';
+
+  @override
+  String get goToMyOffers => 'Go to my offers';
+
+  @override
+  String get backToFeed => 'Back to requests';
+
+  @override
+  String get myOffersTitle => 'My offers';
+
+  @override
+  String get myOffersEmptyTitle => 'No offers';
+
+  @override
+  String get myOffersEmptyBody => 'The offers you make appear here.';
+
+  @override
+  String get withdraw => 'Withdraw';
+
+  @override
+  String get withdrawTitle => 'Withdraw this offer?';
+
+  @override
+  String get withdrawMessage =>
+      'The customer will no longer see the offer. This cannot be undone.';
+
+  @override
+  String get availabilityActive => 'You are active';
+
+  @override
+  String get availabilityBreak => 'You are on a break';
+
+  @override
+  String get availabilityActiveHelp =>
+      'Matching new requests show in your feed.';
+
+  @override
+  String get availabilityBreakHelp =>
+      'No new requests match during a break; current jobs continue.';
+
+  @override
+  String get profileEditTitle => 'Edit your profile';
+
+  @override
+  String get profileBio => 'Profile text';
+
+  @override
+  String get profileSaved => 'Profile saved';
+
+  @override
+  String get workingHours => 'Working hours';
+
+  @override
+  String get hoursFrom => 'From';
+
+  @override
+  String get hoursTo => 'To';
+
+  @override
+  String get hoursAcceptsUrgent => 'I also accept urgent jobs';
+
+  @override
+  String get hoursInvalid => 'The end time must be after the start time.';
+
+  @override
+  String wizErrServerField(String field) {
+    return '“$field” was not accepted. Check it and try again.';
+  }
+
+  @override
+  String get wizEditOffersTitle => 'Save your changes?';
+
+  @override
+  String wizEditOffersMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your $count pending offers will expire.',
+      one: 'Your pending offer will expire.',
+    );
+    return '$_temp0 Pros can send new offers for your updated request. This can\'t be undone.';
+  }
+
+  @override
+  String get photoDuplicate => 'You already added this photo.';
+
+  @override
+  String get feedEditProfile => 'Edit your categories and districts';
+
+  @override
+  String get arrivalServerInvalid =>
+      'The arrival window was not accepted. Check the day and times and try again.';
+
+  @override
+  String get offerItemsServerInvalid =>
+      'The item totals don\'t add up. Check the material items and try again.';
 }

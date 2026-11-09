@@ -11,7 +11,8 @@ Future<void> pumpNarrow(WidgetTester tester, Widget child) async {
     MaterialApp(
       theme: AppTheme.light(),
       builder: (context, c) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(2)),
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: const TextScaler.linear(2)),
         child: c!,
       ),
       home: Scaffold(
@@ -58,11 +59,16 @@ void main() {
       MaterialApp(
         theme: AppTheme.light(),
         home: const Scaffold(
-          body: Center(child: AppButton(label: 'Giriş yap', onPressed: _noop)),
+          body: Center(
+            child: AppButton(label: 'Giriş yap', onPressed: _noop),
+          ),
         ),
       ),
     );
-    expect(t.getSize(find.byType(FilledButton)).height, greaterThanOrEqualTo(52));
+    expect(
+      t.getSize(find.byType(FilledButton)).height,
+      greaterThanOrEqualTo(52),
+    );
   });
 
   testWidgets('AppButton yüklemede ikinci basışı yok sayar', (t) async {
@@ -94,7 +100,9 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('AppTextField 320px/2x taşmaz, hata gösterir, şifre aç-kapa', (t) async {
+  testWidgets('AppTextField 320px/2x taşmaz, hata gösterir, şifre aç-kapa', (
+    t,
+  ) async {
     await pumpNarrow(
       t,
       const Column(
@@ -129,14 +137,14 @@ void main() {
         home: const Scaffold(body: AppTextField(label: 'E-posta')),
       ),
     );
-    expect(t.getSize(find.byType(TextFormField)).height, greaterThanOrEqualTo(52));
+    expect(
+      t.getSize(find.byType(TextFormField)).height,
+      greaterThanOrEqualTo(52),
+    );
   });
 
   testWidgets('AppCard taşmaz', (t) async {
-    await pumpNarrow(
-      t,
-      const AppCard(onTap: _noop, child: Text(long)),
-    );
+    await pumpNarrow(t, const AppCard(onTap: _noop, child: Text(long)));
     expect(t.takeException(), isNull);
   });
 
@@ -145,8 +153,16 @@ void main() {
       t,
       const Column(
         children: [
-          StatusChip(label: long, icon: Icons.schedule, tone: StatusTone.urgent),
-          StatusChip(label: 'Doğrulandı', icon: Icons.verified, tone: StatusTone.success),
+          StatusChip(
+            label: long,
+            icon: Icons.schedule,
+            tone: StatusTone.urgent,
+          ),
+          StatusChip(
+            label: 'Doğrulandı',
+            icon: Icons.verified,
+            tone: StatusTone.success,
+          ),
         ],
       ),
     );
@@ -165,7 +181,8 @@ void main() {
       MaterialApp(
         theme: AppTheme.light(),
         builder: (context, c) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(2)),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(2)),
           child: c!,
         ),
         home: Scaffold(
@@ -200,7 +217,9 @@ void main() {
     expect(result, isTrue);
   });
 
-  testWidgets('EmptyState ve ErrorState taşmaz; tekrar dene çalışır', (t) async {
+  testWidgets('EmptyState ve ErrorState taşmaz; tekrar dene çalışır', (
+    t,
+  ) async {
     var retried = 0;
     await pumpNarrow(
       t,
@@ -241,7 +260,11 @@ void main() {
         theme: AppTheme.light(),
         home: const Scaffold(
           body: Center(
-            child: AppIconButton(icon: Icons.close, tooltip: 'Kapat', onPressed: _noop),
+            child: AppIconButton(
+              icon: Icons.close,
+              tooltip: 'Kapat',
+              onPressed: _noop,
+            ),
           ),
         ),
       ),

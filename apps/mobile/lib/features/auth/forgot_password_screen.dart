@@ -48,9 +48,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     try {
       await ref.read(apiClientProvider).auth.forgotPassword(email);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.forgotSent)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.forgotSent)));
       // E-posta URL'ye değil `extra` ile taşınır.
       context.push('/reset-password', extra: email);
     } on ApiException catch (e) {

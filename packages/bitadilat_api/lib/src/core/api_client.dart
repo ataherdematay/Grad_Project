@@ -3,6 +3,11 @@ import 'package:dio/dio.dart';
 import '../api/auth_api.dart';
 import '../api/catalog_api.dart';
 import '../api/me_api.dart';
+import '../api/media_api.dart';
+import '../api/offers_api.dart';
+import '../api/pro_api.dart';
+import '../api/pros_api.dart';
+import '../api/requests_api.dart';
 import 'api_config.dart';
 import 'auth_interceptor.dart';
 import 'token_store.dart';
@@ -33,6 +38,11 @@ class ApiClient {
     auth = AuthApi(this.dio, tokenStore);
     me = MeApi(this.dio);
     catalog = CatalogApi(this.dio);
+    media = MediaApi(this.dio);
+    requests = RequestsApi(this.dio);
+    offers = OffersApi(this.dio);
+    pros = ProsApi(this.dio);
+    pro = ProApi(this.dio);
   }
 
   final ApiConfig config;
@@ -42,6 +52,11 @@ class ApiClient {
   late final AuthApi auth;
   late final MeApi me;
   late final CatalogApi catalog;
+  late final MediaApi media;
+  late final RequestsApi requests;
+  late final OffersApi offers;
+  late final ProsApi pros;
+  late final ProApi pro;
 
   /// Oturum istemcide kapanınca (token'lar silindikten sonra) nedeniyle olay
   /// verir: refresh reddedildi ya da hesap askıya alındı.

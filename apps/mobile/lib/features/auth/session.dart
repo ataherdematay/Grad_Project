@@ -175,6 +175,17 @@ class SessionController extends Notifier<SessionState> {
     state = const SessionState.signedOut(loggedOut: true);
   }
 
+  /// `GET /me` ile kullanıcıyı yeniler (başvuru ve müsaitlik değişince).
+  Future<void> refreshMe() async {
+    if (!state.isSignedIn) return;
+    try {
+      final me = await _client.me.get();
+      state = SessionState.signedIn(me);
+    } on ApiException {
+      // Mevcut durum korunur.
+    }
+  }
+
   /// `PATCH /me` ile son modu kaydeder; başarılıysa durum güncellenir.
   Future<void> switchMode(UserMode mode) async {
     final me = await _client.me.update(UpdateMeRequest(lastMode: mode));

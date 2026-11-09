@@ -122,5 +122,547 @@
   "apiErrorGatewayError": "Ödeme sistemine şu an ulaşılamıyor. Birkaç dakika sonra tekrar dene.",
   "apiErrorInternalError": "Beklenmeyen bir sorun oluştu. Biraz sonra tekrar dene.",
   "apiErrorNetworkError": "İnternet bağlantına ulaşılamıyor. Bağlantını kontrol edip tekrar dene. Girdiğin bilgiler korundu.",
-  "apiErrorUnknown": "Bir sorun oluştu. Tekrar dene."
+  "apiErrorUnknown": "Bir sorun oluştu. Tekrar dene.",
+  "save": "Kaydet",
+  "edit": "Düzenle",
+  "delete": "Sil",
+  "close": "Kapat",
+  "done": "Bitti",
+  "yes": "Evet",
+  "no": "Hayır",
+  "searchLabel": "Ara",
+  "noSearchResults": "Sonuç bulunamadı",
+  "pickerNone": "Seç",
+  "photoLoadFailed": "Fotoğraf yüklenemedi",
+  "goHome": "Ana sayfaya git",
+  "goToMyRequests": "Taleplerime git",
+  "noteOptional": "Not (isteğe bağlı)",
+  "reasonRequired": "Devam etmek için bir gerekçe seç.",
+  "total": "Toplam",
+  "labor": "İşçilik",
+  "materials": "Malzeme",
+  "totalVatIncluded": "Toplam tutar (KDV dahil)",
+  "vatIncluded": "KDV dahil",
+  "warranty": "İşçilik garantisi",
+  "warrantyNone": "Yok",
+  "warrantyMonths": "{months} ay",
+  "@warrantyMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "warrantyHelp": "Platform garanti vermez; garantiyi sen verirsin.",
+  "arrival": "Varış aralığı",
+  "urgencyUrgent": "Acil onarım",
+  "urgencyPlanned": "Planlı iş",
+  "tabActive": "Aktif",
+  "tabPast": "Geçmiş",
+  "dateToday": "Bugün",
+  "dateTomorrow": "Yarın",
+  "requestAwaitingOffers": "Teklif bekleniyor",
+  "requestOffersCount": "{count} teklif geldi",
+  "@requestOffersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "requestAssigned": "Usta seçildi",
+  "requestCancelled": "İptal edildi",
+  "requestExpired": "Süresi doldu",
+  "offerPending": "Bekliyor",
+  "offerAccepted": "Kabul edildi",
+  "offerDeclined": "Reddedildi",
+  "offerWithdrawn": "Geri çekildi",
+  "offerSuperseded": "Başka teklif seçildi",
+  "offerExpired": "Süresi doldu",
+  "statusApproved": "Doğrulandı",
+  "proVerified": "Doğrulandı",
+  "photoAdd": "Fotoğraf ekle",
+  "photoFromCamera": "Kamerayla çek",
+  "photoFromGallery": "Galeriden seç",
+  "photoRemove": "Fotoğrafı kaldır",
+  "photoUploading": "Yükleniyor",
+  "photoUploaded": "Yüklendi",
+  "photoLimitReached": "En fazla {count} fotoğraf eklenebilir",
+  "@photoLimitReached": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photoTooLarge": "Fotoğraf 1,5 MB sınırını aşıyor. Daha küçük bir fotoğraf seç.",
+  "addressesTitle": "Adreslerim",
+  "addressAdd": "Adres ekle",
+  "addressDefault": "Varsayılan",
+  "addressMakeDefault": "Varsayılan yap",
+  "addressesEmptyTitle": "Kayıtlı adresin yok",
+  "addressesEmptyBody": "Talep oluştururken kullanmak için bir adres ekle.",
+  "addressDeleteTitle": "Adres silinsin mi?",
+  "addressDeleteMessage": "\"{label}\" adresi silinir. Bu işlem geri alınamaz.",
+  "@addressDeleteMessage": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "addressLabelField": "Adres adı",
+  "addressLabelHint": "Örn. Ev, İş",
+  "addressDistrict": "İlçe",
+  "addressNeighborhood": "Mahalle",
+  "addressLine": "Açık adres",
+  "addressLineHint": "Cadde, sokak, bina ve daire no",
+  "addressDoorNote": "Kapı notu (isteğe bağlı)",
+  "addressDoorNoteHelp": "Tam adres ve kapı notu yalnızca usta seçildikten sonra paylaşılır.",
+  "createRequest": "Talep oluştur",
+  "homeGreeting": "Merhaba {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeActiveRequest": "Aktif talebin",
+  "homeNoActiveTitle": "Aktif talebin yok",
+  "homeNoActiveBody": "Evdeki tamir işi için talep aç, ustalardan teklif gelsin.",
+  "seeOffers": "Teklifleri gör ({count})",
+  "@seeOffers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offerRange": "{min} - {max}",
+  "@offerRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "requestsEmptyActiveTitle": "Aktif talebin yok",
+  "requestsEmptyActiveBody": "Yeni bir talep açarak ustalardan teklif alabilirsin.",
+  "requestsEmptyPastTitle": "Geçmiş talebin yok",
+  "requestsEmptyPastBody": "İptal ettiğin ya da süresi dolan talepler burada görünür.",
+  "requestDetailTitle": "Talep detayı",
+  "requestCode": "Talep kodu",
+  "requestLocation": "Konum",
+  "requestExpiresOn": "Son gün",
+  "requestAnswers": "Cevapların",
+  "requestPhotos": "Fotoğraflar",
+  "requestCancel": "Talebi iptal et",
+  "keepRequest": "Vazgeç, talebi koru",
+  "cancelReasonTitle": "İptal gerekçesi",
+  "cancelReasonPlansChanged": "Planlarım değişti",
+  "cancelReasonSolved": "Sorunu çözdüm",
+  "cancelReasonNoSuitableOffer": "Uygun teklif gelmedi",
+  "cancelReasonOther": "Diğer",
+  "cancelConfirmTitle": "Talep iptal edilsin mi?",
+  "cancelConfirmMessage": "Bekleyen tüm teklifler kapanır. Bu işlem geri alınamaz.",
+  "publishedTitle": "Talebin yayınlandı",
+  "publishedMatchTitle": "{count} usta eşleşti",
+  "@publishedMatchTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "publishedMatchBody": "Eşleşen ustalara bildirim gitti. Teklifler geldikçe Taleplerim sekmesinde göreceksin.",
+  "publishedNoMatchTitle": "Şu an eşleşen usta yok",
+  "publishedNoMatchBody": "Talebin açık kalırsa bölgene yeni ustalar katıldığında görebilir. İstersen talebi düzenleyip kategori ya da konumu değiştir.",
+  "matchReasons": "Neden eşleşti",
+  "matchCategory": "Kategoriye uygun",
+  "matchDistrict": "İlçende hizmet veriyor",
+  "matchAvailability": "Şu an müsait",
+  "keepOpen": "Açık tut",
+  "wizTitle": "Yeni talep",
+  "wizEditTitle": "Talebi düzenle",
+  "wizStepOf": "Adım {step} / {total}",
+  "@wizStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "wizContinue": "Devam",
+  "wizBackToReview": "Gözden geçir",
+  "wizPublish": "Talebi yayınla",
+  "wizSaveChanges": "Değişiklikleri kaydet",
+  "wizStep1Title": "Kategori ve aciliyet",
+  "wizStep2Title": "Konum ve detaylar",
+  "wizStep3Title": "Fotoğraf ve açıklama",
+  "wizStep4Title": "Gözden geçir",
+  "wizCategory": "Kategori",
+  "wizUrgency": "Aciliyet",
+  "wizUrgentHint": "Mümkün olan en kısa sürede",
+  "wizPlannedHint": "Uygun olduğun tarih aralığını seç",
+  "wizDates": "Tarih aralığı",
+  "wizDateFrom": "En erken",
+  "wizDateTo": "En geç",
+  "wizAddress": "Adres",
+  "wizAddAddress": "Yeni adres ekle",
+  "wizFieldTitle": "Başlık",
+  "wizFieldTitleHint": "Örn. Mutfak musluğu damlatıyor",
+  "wizFieldDescription": "Açıklama",
+  "wizFieldDescriptionHint": "Sorunu ve ustanın bilmesi gerekenleri yaz",
+  "wizDescriptionCount": "{count} / en az {min} karakter",
+  "@wizDescriptionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "wizPhotos": "Fotoğraflar (en fazla {max})",
+  "@wizPhotos": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "wizPhotosHint": "Sorunu gösteren net fotoğraflar teklif almanı kolaylaştırır.",
+  "wizPhotosCount": "Fotoğraf sayısı",
+  "wizReviewNote": "Yayınladığında eşleşen ustalara bildirim gider.",
+  "wizErrCategory": "Devam etmek için bir kategori seç.",
+  "wizErrDateFrom": "En erken tarihi seç.",
+  "wizErrDateTo": "En geç tarihi seç.",
+  "wizErrDateOrder": "Bitiş, başlangıçtan sonra olmalı.",
+  "wizErrDatePast": "Başlangıç ileri bir zamanda olmalı.",
+  "wizErrDateRange": "Tarih aralığı en fazla 30 gün sonrasına kadar olabilir.",
+  "wizErrAddress": "Bir adres seç ya da yeni adres ekle.",
+  "wizErrAnswers": "Tüm soruları cevapla.",
+  "wizErrTitle": "Başlık {min}-{max} karakter olmalı.",
+  "@wizErrTitle": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "wizErrDescription": "Açıklama en az {min} karakter olmalı.",
+  "@wizErrDescription": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "wizErrPhotosBusy": "Fotoğraflar yüklenirken bekle.",
+  "wizErrPhotosFailed": "Yüklenemeyen fotoğrafı yeniden dene ya da kaldır.",
+  "offersTitle": "Gelen teklifler",
+  "offersResultCount": "{count} teklif",
+  "@offersResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offersDeclinedCount": "{count} teklifi reddettin.",
+  "@offersDeclinedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offersEmptyTitle": "Henüz teklif yok",
+  "offersEmptyBody": "Ustalar teklif verdikçe burada göreceksin.",
+  "offersEmptyFilteredTitle": "Filtreye uyan teklif yok",
+  "offersEmptyFilteredBody": "Filtreleri gevşetip tekrar dene.",
+  "offersClearFilters": "Filtreleri temizle",
+  "offersFilterTitle": "Filtrele ve sırala",
+  "sortBy": "Sıralama",
+  "sortRecommended": "Önerilen",
+  "sortPrice": "En düşük fiyat",
+  "sortRating": "En yüksek puan",
+  "sortArrival": "En hızlı varış",
+  "filterMaxPrice": "Üst fiyat sınırı",
+  "filterMaxPriceLabel": "En çok (₺)",
+  "filterMaxPriceHelp": "İşçilik ve malzeme dahil. Boş bırakırsan sınır olmaz.",
+  "filterMinRating": "Usta puanı",
+  "filterAnyRating": "Hepsi",
+  "filterRatingOrMore": "{rating}+",
+  "@filterRatingOrMore": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "applyFilters": "Sonuçları uygula",
+  "compare": "Karşılaştır",
+  "compareCancel": "Vazgeç",
+  "compareHint": "2 ya da 3 teklif seç.",
+  "compareSelected": "Karşılaştır ({count})",
+  "@compareSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "compareTitle": "Karşılaştırma",
+  "compareTotal": "Toplam (KDV dahil)",
+  "compareGoneTitle": "Teklifler artık listede yok",
+  "compareGoneBody": "Teklifler geri çekilmiş ya da süresi dolmuş olabilir.",
+  "compareBackToOffers": "Tekliflere dön",
+  "viewOffer": "Teklifi gör",
+  "proRating": "Puan",
+  "proCompletedJobs": "Tamamlanan iş",
+  "noRatingYet": "Henüz puan yok",
+  "ratingWithCount": "{avg} ({count})",
+  "@ratingWithCount": {
+    "placeholders": {
+      "avg": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offerDetailTitle": "Teklif",
+  "offerBreakdown": "Teklif dökümü",
+  "offerNote": "Usta notu",
+  "offerValidUntil": "Geçerlilik",
+  "offerAccept": "Teklifi kabul et",
+  "offerDecline": "Teklifi reddet",
+  "viewProfile": "Profili görüntüle",
+  "declineIntro": "{pro} tarafından gelen {amount} tutarındaki teklifi reddetmek üzeresin.",
+  "@declineIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "declineIrreversible": "Bu işlem geri alınamaz; ustanın profiline olumsuz yansımaz.",
+  "declineReasonTitle": "Reddetme sebebi",
+  "declineReasonPrice": "Fiyat bütçeme uygun değil",
+  "declineReasonSchedule": "Zamanlama planıma uymuyor",
+  "declineReasonOtherOffer": "Başka bir teklifle ilerlemeye karar verdim",
+  "declineReasonNotNeeded": "Artık bu hizmete ihtiyacım kalmadı",
+  "declineReasonOther": "Diğer",
+  "declineKeepOpen": "Talebim açık kalsın",
+  "declineKeepOpenHelp": "Kapalıysa talebin de iptal edilir.",
+  "declineCloseNeedsReason": "Talebi kapatmak için \"Artık ihtiyacım kalmadı\" ya da \"Diğer\" seç.",
+  "declineConfirmTitle": "Teklif reddedilsin mi?",
+  "declineConfirmKeepOpen": "Teklif reddedilir, talebin açık kalır. Bu işlem geri alınamaz.",
+  "declineConfirmClose": "Teklif reddedilir ve talebin iptal edilir. Bu işlem geri alınamaz.",
+  "declineBack": "Vazgeç, teklife dön",
+  "proProfileTitle": "Usta profili",
+  "proReviews": "Değerlendirmeler",
+  "proAbout": "Hakkında",
+  "proExperience": "Deneyim",
+  "experienceYears": "{years} yıl",
+  "@experienceYears": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "proMemberSince": "Üyelik",
+  "proVerifiedDocuments": "Doğrulanmış belgeler",
+  "proNoVerifiedDocs": "Henüz doğrulanmış belge yok.",
+  "proCategories": "Kategoriler",
+  "proServiceAreas": "Hizmet bölgeleri",
+  "docIdentity": "Kimlik",
+  "docTradeCert": "Mesleki yeterlilik",
+  "docTax": "Vergi levhası",
+  "docCriminalRecord": "Adli sicil kaydı",
+  "reviewsEmptyTitle": "Henüz değerlendirme yok",
+  "reviewsEmptyBody": "Müşteriler işi tamamlayınca değerlendirmeler burada görünür.",
+  "starsOutOf5": "5 üzerinden {rating} yıldız",
+  "@starsOutOf5": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "anonymous": "Anonim",
+  "applyIntro": "İşletme bilgilerini ve belgelerini gönder; ekibimiz inceleyip dönüş yapar.",
+  "applyBusinessName": "İşletme adı",
+  "applyBusinessNameInvalid": "İşletme adı en az 2 karakter olmalı.",
+  "applyAbout": "Hakkında (isteğe bağlı)",
+  "applyExperience": "Deneyim (yıl)",
+  "applyExperienceInvalid": "Deneyim 0 ile 60 yıl arasında olmalı.",
+  "applyCategories": "Kategoriler",
+  "applyDistricts": "Hizmet verdiğin ilçeler",
+  "applyDocuments": "Belgeler",
+  "applyDocumentsHelp": "Belgelerin fotoğrafını yükle. Kimlik ve mesleki yeterlilik zorunlu.",
+  "docRequired": "{doc} (zorunlu)",
+  "@docRequired": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "docOptional": "{doc} (isteğe bağlı)",
+  "@docOptional": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "docMissing": "{doc} belgesini yükle.",
+  "@docMissing": {
+    "placeholders": {
+      "doc": {
+        "type": "String"
+      }
+    }
+  },
+  "applySubmit": "Başvuruyu gönder",
+  "applyResubmit": "Belgeleri güncelle ve yeniden gönder",
+  "applicationPendingBody": "Belgelerin ve profilin kalite ekibimiz tarafından inceleniyor. Sonuç çıkınca durumun burada güncellenir.",
+  "applicationNeedsBody": "Bazı belgelerin eksik ya da okunmuyor. Formu açıp belgeleri güncelleyerek yeniden gönder.",
+  "applicationRejectedBody": "Başvurun kabul edilmedi. Notu okuyup belgelerini düzelterek yeniden başvurabilirsin.",
+  "applicationSuspendedBody": "Hesabın askıya alındı. Destek ekibiyle iletişime geç.",
+  "adminNote": "İnceleme notu",
+  "docStatusPending": "İnceleniyor",
+  "docStatusAccepted": "Kabul edildi",
+  "docStatusRejected": "Reddedildi",
+  "filterAll": "Tümü",
+  "filterUrgent": "Acil",
+  "filterPlanned": "Planlı",
+  "feedOnBreakTitle": "Moladasın",
+  "feedOnBreakBody": "Mola sırasında yeni talepler gelmez. Hazır olduğunda tekrar aktif ol.",
+  "feedActivate": "Aktif ol",
+  "feedEmptyTitle": "Şu an uygun talep yok",
+  "feedEmptyBody": "Kategorine ve ilçelerine uyan yeni talepler burada görünür.",
+  "feedPhotos": "{count} fotoğraf",
+  "@feedPhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedOffers": "{count} teklif",
+  "@feedOffers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedMyOffer": "Teklif verdin",
+  "locationMasked": "Tam adres, teklifin kabul edilince paylaşılır.",
+  "prepareOffer": "Teklif hazırla",
+  "viewMyOffer": "Teklifini gör",
+  "jobsEmptyTitle": "Henüz işin yok",
+  "jobsEmptyBody": "Bir teklifin kabul edilince iş burada görünür.",
+  "offerFormTitle": "Teklif hazırla",
+  "laborAmountLabel": "İşçilik tutarı",
+  "laborAmountInvalid": "İşçilik tutarı 0'dan büyük olmalı. Örnek: 1.200",
+  "materialsEmpty": "Malzeme eklemediysen boş bırakabilirsin.",
+  "materialAdd": "Malzeme kalemi ekle",
+  "materialRemove": "Kalemi sil",
+  "materialDescription": "Malzeme",
+  "materialQuantity": "Adet",
+  "materialQuantityInvalid": "Adet 1 ya da daha fazla olmalı.",
+  "materialUnitPrice": "Birim fiyat",
+  "materialPriceInvalid": "Geçerli bir tutar gir. Örnek: 350",
+  "arrivalHelp": "Müşterinin seçeceği varış aralığı: 1-12 saat, en geç 14 gün sonrası.",
+  "arrivalDay": "Gün",
+  "arrivalStart": "Başlangıç saati",
+  "arrivalLength": "Aralık uzunluğu",
+  "hoursShort": "{hours} sa",
+  "@hoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "arrivalMissing": "Gün ve başlangıç saatini seç.",
+  "arrivalPast": "Varış zamanı ileri bir tarih olmalı.",
+  "arrivalTooShort": "Aralık en az 1 saat olmalı.",
+  "arrivalTooLong": "Aralık en fazla 12 saat olabilir.",
+  "arrivalTooFar": "Varış en geç 14 gün sonrası olabilir.",
+  "offerSummary": "Özet",
+  "serviceFee": "Hizmet bedeli (%{percent})",
+  "@serviceFee": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "netEarning": "Net kazancın",
+  "offerSend": "Teklifi gönder",
+  "offerSentTitle": "Teklifin",
+  "offerSentHeadline": "Teklifin gönderildi",
+  "offerSentBody": "Müşteri teklifini inceleyecek. Durumu Tekliflerim ekranından takip edebilirsin.",
+  "goToMyOffers": "Tekliflerime git",
+  "backToFeed": "Taleplere dön",
+  "myOffersTitle": "Tekliflerim",
+  "myOffersEmptyTitle": "Teklif yok",
+  "myOffersEmptyBody": "Verdiğin teklifler burada görünür.",
+  "withdraw": "Geri çek",
+  "withdrawTitle": "Teklif geri çekilsin mi?",
+  "withdrawMessage": "Teklif müşteriye artık görünmez. Bu işlem geri alınamaz.",
+  "availabilityActive": "Aktifsin",
+  "availabilityBreak": "Moladasın",
+  "availabilityActiveHelp": "Eşleşen yeni talepler akışında görünür.",
+  "availabilityBreakHelp": "Mola sırasında yeni talep eşleşmez; mevcut işlerin sürer.",
+  "profileEditTitle": "Profilini düzenle",
+  "profileBio": "Profil yazısı",
+  "profileSaved": "Profilin kaydedildi",
+  "workingHours": "Çalışma saatleri",
+  "hoursFrom": "Başlangıç",
+  "hoursTo": "Bitiş",
+  "hoursAcceptsUrgent": "Acil işleri de kabul ederim",
+  "hoursInvalid": "Bitiş saati başlangıçtan sonra olmalı.",
+  "wizErrServerField": "“{field}” bilgisi kabul edilmedi. Kontrol edip tekrar dene.",
+  "@wizErrServerField": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "wizEditOffersTitle": "Değişiklikler kaydedilsin mi?",
+  "wizEditOffersMessage": "{count} bekleyen teklifin geçersiz olur. Ustalar güncel talebine yeniden teklif verebilir. Bu işlem geri alınamaz.",
+  "@wizEditOffersMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photoDuplicate": "Bu fotoğrafı zaten ekledin.",
+  "feedEditProfile": "Kategori ve ilçelerini düzenle",
+  "arrivalServerInvalid": "Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.",
+  "offerItemsServerInvalid": "Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene."
 }

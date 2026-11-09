@@ -21,3 +21,20 @@ abstract class Address with _$Address {
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);
 }
+
+/// `POST` ve `PATCH /me/addresses` gövdesi. `PATCH`te boş `doorNote` notu
+/// temizler.
+@freezed
+abstract class AddressInput with _$AddressInput {
+  const factory AddressInput({
+    required String label,
+    @JsonKey(fromJson: idFromJson, toJson: wireId) required String districtId,
+    required String neighborhood,
+    required String lineFull,
+    @JsonKey(includeIfNull: false) String? doorNote,
+    @JsonKey(includeIfNull: false) bool? isDefault,
+  }) = _AddressInput;
+
+  factory AddressInput.fromJson(Map<String, dynamic> json) =>
+      _$AddressInputFromJson(json);
+}

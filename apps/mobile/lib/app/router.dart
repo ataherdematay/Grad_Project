@@ -10,6 +10,15 @@ import '../features/auth/session.dart';
 import '../features/auth/splash_screen.dart';
 import '../features/auth/welcome_screen.dart';
 import '../features/common/misc_screens.dart';
+import '../features/customer/addresses.dart';
+import '../features/customer/offers_screens.dart';
+import '../features/customer/pro_profile_screens.dart';
+import '../features/customer/requests_screens.dart';
+import '../features/customer/wizard_screen.dart';
+import '../features/pro/pro_apply.dart';
+import '../features/pro/pro_feed.dart';
+import '../features/pro/pro_profile.dart';
+import '../features/pro/pro_requests.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/shell/tab_shell.dart';
 import '../l10n/app_localizations.dart';
@@ -71,13 +80,86 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, _) =>
             PlaceholderScreen(title: AppLocalizations.of(context).chatTitle),
       ),
-      GoRoute(
-        path: '/p/apply',
-        builder: (_, _) => const ProApplicationPlaceholder(apply: true),
-      ),
+      GoRoute(path: '/p/apply', builder: (_, _) => const ProApplyScreen()),
       GoRoute(
         path: '/p/application',
-        builder: (_, _) => const ProApplicationPlaceholder(apply: false),
+        builder: (_, _) => const ProApplicationScreen(),
+      ),
+      // Müşteri: kabuğun üstünde açılan tam ekran rotalar.
+      GoRoute(path: '/c/addresses', builder: (_, _) => const AddressesScreen()),
+      GoRoute(
+        path: '/c/requests/new',
+        builder: (_, _) => const RequestWizardScreen(),
+      ),
+      GoRoute(
+        path: '/c/requests/:id',
+        builder: (_, state) =>
+            RequestDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/requests/:id/edit',
+        builder: (_, state) =>
+            RequestWizardScreen(editId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: '/c/requests/:id/cancel',
+        builder: (_, state) =>
+            CancelRequestScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/requests/:id/published',
+        builder: (_, state) => PublishedScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/requests/:id/offers',
+        builder: (_, state) =>
+            RequestOffersScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/requests/:id/compare',
+        builder: (_, state) => CompareOffersScreen(
+          id: state.pathParameters['id']!,
+          ids: (state.uri.queryParameters['ids'] ?? '')
+              .split(',')
+              .where((e) => e.isNotEmpty)
+              .toList(),
+        ),
+      ),
+      GoRoute(
+        path: '/c/offers/:id',
+        builder: (_, state) =>
+            OfferDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/offers/:id/decline',
+        builder: (_, state) =>
+            DeclineOfferScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/pros/:id',
+        builder: (_, state) =>
+            ProPublicProfileScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/c/pros/:id/reviews',
+        builder: (_, state) =>
+            ProReviewsScreen(id: state.pathParameters['id']!),
+      ),
+      // Usta
+      GoRoute(
+        path: '/p/requests/:id',
+        builder: (_, state) =>
+            ProRequestScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/p/requests/:id/offer',
+        builder: (_, state) =>
+            OfferFormScreen(requestId: state.pathParameters['id']!),
+      ),
+      GoRoute(path: '/p/offers', builder: (_, _) => const ProOffersScreen()),
+      GoRoute(
+        path: '/p/offers/:id/sent',
+        builder: (_, state) => OfferSentScreen(id: state.pathParameters['id']!),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) {
@@ -101,11 +183,22 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
         branches: [
-          _tab(
-            '/c/home',
-            (l) => l.tabHome,
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/c/home',
+                builder: (_, _) => const CustomerHomeScreen(),
+              ),
+            ],
           ),
-          _tab('/c/requests', (l) => l.tabRequests),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/c/requests',
+                builder: (_, _) => const RequestsScreen(),
+              ),
+            ],
+          ),
           _tab('/c/messages', (l) => l.tabMessages),
           StatefulShellBranch(
             routes: [
@@ -135,14 +228,28 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
         branches: [
-          _tab('/p/feed', (l) => l.tabFeed),
-          _tab('/p/jobs', (l) => l.tabJobs),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/p/feed',
+                builder: (_, _) => const ProFeedScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/p/jobs',
+                builder: (_, _) => const ProJobsScreen(),
+              ),
+            ],
+          ),
           _tab('/p/messages', (l) => l.tabMessages),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/p/profile',
-                builder: (_, _) => const ProfileTab(proMode: true),
+                builder: (_, _) => const ProProfileScreen(),
               ),
             ],
           ),

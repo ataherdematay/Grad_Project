@@ -8,6 +8,9 @@ import 'api_error.dart';
 import 'token_store.dart';
 
 /// İstek `extra` anahtarı: Bearer eklenmez ve 401'de yenileme denenmez.
+/// `Options.extra` anahtarı: gövdeyi yeniden üreten işlev (multipart için).
+const String rebuildBodyKey = 'rebuildBody';
+
 const String skipAuthKey = 'skipAuth';
 
 const String _retriedKey = 'authRetried';
@@ -114,6 +117,9 @@ class AuthInterceptor extends Interceptor {
 
     try {
       options.extra[_retriedKey] = true;
+      // Multipart gövde bir kez okunabilir; yeniden denemede baştan kurulur.
+      final rebuild = options.extra[rebuildBodyKey];
+      if (rebuild is Object Function()) options.data = rebuild();
       final response = await dio.fetch<dynamic>(options);
       handler.resolve(response);
     } on DioException catch (e) {

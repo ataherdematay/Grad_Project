@@ -11,7 +11,9 @@ import 'support/harness.dart';
 
 void main() {
   group('Koruma matrisi (router)', () {
-    testWidgets('oturumsuz /c/requests -> /welcome?next=/c/requests', (t) async {
+    testWidgets('oturumsuz /c/requests -> /welcome?next=/c/requests', (
+      t,
+    ) async {
       final h = await pumpApp(
         t,
         session: const SessionState.signedOut(),
@@ -21,8 +23,7 @@ void main() {
       expect(h.uri.queryParameters['next'], '/c/requests');
     });
 
-    testWidgets('girişten sonra next (/c/requests) açılır',
-        (t) async {
+    testWidgets('girişten sonra next (/c/requests) açılır', (t) async {
       final h = await pumpApp(
         t,
         initial: '/c/requests',
@@ -46,7 +47,6 @@ void main() {
 
       expect(h.location, '/c/requests');
       expect(find.text('Taleplerim'), findsWidgets);
-      expect(find.text('Bu bölüm hazırlanıyor'), findsOneWidget);
       expect((await h.store.read())?.accessToken, 'ACCESS');
     });
 
@@ -122,15 +122,17 @@ void main() {
       expect(h.location, '/p/jobs');
     });
 
-    testWidgets('rol sınırı: müşteri modunda onaylı usta /p/profile -> /c/profile',
-        (t) async {
-      final h = await pumpApp(
-        t,
-        session: SessionState.signedIn(testMe(proStatus: 'APPROVED')),
-        initial: '/p/profile',
-      );
-      expect(h.location, '/c/profile');
-    });
+    testWidgets(
+      'rol sınırı: müşteri modunda onaylı usta /p/profile -> /c/profile',
+      (t) async {
+        final h = await pumpApp(
+          t,
+          session: SessionState.signedIn(testMe(proStatus: 'APPROVED')),
+          initial: '/p/profile',
+        );
+        expect(h.location, '/c/profile');
+      },
+    );
 
     testWidgets('müşteri /p/apply açabilir', (t) async {
       final h = await pumpApp(
@@ -163,7 +165,9 @@ void main() {
       expect(find.text('Sayfa bulunamadı'), findsOneWidget);
     });
 
-    testWidgets('next dış adres olamaz: açık yönlendirme engellenir', (t) async {
+    testWidgets('next dış adres olamaz: açık yönlendirme engellenir', (
+      t,
+    ) async {
       final h = await pumpApp(
         t,
         session: SessionState.signedIn(testMe()),
@@ -210,8 +214,9 @@ void main() {
       expect(h.location, '/c/home');
     });
 
-    testWidgets('açılışta /me admin dönerse oturum kapanır ve mesaj çıkar',
-        (t) async {
+    testWidgets('açılışta /me admin dönerse oturum kapanır ve mesaj çıkar', (
+      t,
+    ) async {
       final h = await pumpApp(
         t,
         tokens: const TokenPair(accessToken: 'A', refreshToken: 'R'),
@@ -237,7 +242,10 @@ void main() {
         handler: (o) {
           if (o.path.endsWith('/me')) {
             if (fail) {
-              throw DioException.connectionError(requestOptions: o, reason: 'x');
+              throw DioException.connectionError(
+                requestOptions: o,
+                reason: 'x',
+              );
             }
             return json(200, meJson());
           }
@@ -328,8 +336,9 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
     });
 
-    testWidgets('sekmeler arası geçiş ve Android geri ilk sekmeye döner',
-        (t) async {
+    testWidgets('sekmeler arası geçiş ve Android geri ilk sekmeye döner', (
+      t,
+    ) async {
       final h = await pumpApp(
         t,
         session: SessionState.signedIn(testMe()),

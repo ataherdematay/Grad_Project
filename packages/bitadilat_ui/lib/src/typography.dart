@@ -26,8 +26,7 @@ abstract final class AppTypography {
   }
 
   /// Ekran başlığı: 28 semibold.
-  static TextStyle get screenTitle =>
-      _style(28, FontWeight.w600, height: 1.2);
+  static TextStyle get screenTitle => _style(28, FontWeight.w600, height: 1.2);
 
   /// Bölüm başlığı: 20 semibold.
   static TextStyle get section => _style(20, FontWeight.w600, height: 1.3);
@@ -42,12 +41,8 @@ abstract final class AppTypography {
   static TextStyle get body => _style(16, FontWeight.w400, height: 1.45);
 
   /// İkincil gövde.
-  static TextStyle get bodySecondary => _style(
-    16,
-    FontWeight.w400,
-    height: 1.45,
-    color: AppColors.textSecondary,
-  );
+  static TextStyle get bodySecondary =>
+      _style(16, FontWeight.w400, height: 1.45, color: AppColors.textSecondary);
 
   /// Etiket: 14 medium.
   static TextStyle get label => _style(14, FontWeight.w500, height: 1.3);

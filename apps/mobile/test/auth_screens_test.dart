@@ -65,25 +65,27 @@ void main() {
       });
     });
 
-    testWidgets('BAD_CREDENTIALS yerelleştirilmiş mesaj gösterir, veri korunur',
-        (t) async {
-      await pumpApp(
-        t,
-        initial: '/login',
-        handler: (_) => apiError(401, 'BAD_CREDENTIALS'),
-      );
-      await t.enterText(input('E-posta veya telefon'), 'a@b.co');
-      await t.enterText(input('Şifre'), 'yanlis123');
-      await t.tap(button('Giriş yap'));
-      await t.pumpAndSettle();
-      expect(
-        find.text(
-          'E-posta, telefon veya şifre hatalı. Bilgilerini kontrol edip tekrar dene.',
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('a@b.co'), findsOneWidget);
-    });
+    testWidgets(
+      'BAD_CREDENTIALS yerelleştirilmiş mesaj gösterir, veri korunur',
+      (t) async {
+        await pumpApp(
+          t,
+          initial: '/login',
+          handler: (_) => apiError(401, 'BAD_CREDENTIALS'),
+        );
+        await t.enterText(input('E-posta veya telefon'), 'a@b.co');
+        await t.enterText(input('Şifre'), 'yanlis123');
+        await t.tap(button('Giriş yap'));
+        await t.pumpAndSettle();
+        expect(
+          find.text(
+            'E-posta, telefon veya şifre hatalı. Bilgilerini kontrol edip tekrar dene.',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('a@b.co'), findsOneWidget);
+      },
+    );
 
     testWidgets('ağ hatasında form verisi kaybolmaz', (t) async {
       await pumpApp(
@@ -96,33 +98,38 @@ void main() {
       await t.enterText(input('Şifre'), 'abcd1234');
       await t.tap(button('Giriş yap'));
       await t.pumpAndSettle();
-      expect(find.textContaining('İnternet bağlantına ulaşılamıyor'), findsOneWidget);
+      expect(
+        find.textContaining('İnternet bağlantına ulaşılamıyor'),
+        findsOneWidget,
+      );
       expect(find.text('a@b.co'), findsOneWidget);
       final password = t.widget<TextFormField>(input('Şifre'));
       expect(password.controller!.text, 'abcd1234');
     });
 
-    testWidgets('istek sürerken düğme kilitli; ikinci dokunuş ikinci istek üretmez',
-        (t) async {
-      final completer = Completer<ResponseBody>();
-      final h = await pumpApp(
-        t,
-        initial: '/login',
-        handler: (o) => completer.future,
-      );
-      await t.enterText(input('E-posta veya telefon'), 'a@b.co');
-      await t.enterText(input('Şifre'), 'abcd1234');
-      await t.tap(button('Giriş yap'));
-      await t.pump();
-      await t.pump(const Duration(milliseconds: 50));
-      await t.tap(find.byType(FilledButton), warnIfMissed: false);
-      await t.pump(const Duration(milliseconds: 50));
-      expect(h.adapter.count('POST', '/auth/login'), 1);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      completer.complete(apiError(401, 'BAD_CREDENTIALS'));
-      await t.pumpAndSettle();
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-    });
+    testWidgets(
+      'istek sürerken düğme kilitli; ikinci dokunuş ikinci istek üretmez',
+      (t) async {
+        final completer = Completer<ResponseBody>();
+        final h = await pumpApp(
+          t,
+          initial: '/login',
+          handler: (o) => completer.future,
+        );
+        await t.enterText(input('E-posta veya telefon'), 'a@b.co');
+        await t.enterText(input('Şifre'), 'abcd1234');
+        await t.tap(button('Giriş yap'));
+        await t.pump();
+        await t.pump(const Duration(milliseconds: 50));
+        await t.tap(find.byType(FilledButton), warnIfMissed: false);
+        await t.pump(const Duration(milliseconds: 50));
+        expect(h.adapter.count('POST', '/auth/login'), 1);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        completer.complete(apiError(401, 'BAD_CREDENTIALS'));
+        await t.pumpAndSettle();
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+      },
+    );
 
     testWidgets('şifre göster/gizle', (t) async {
       await pumpApp(
@@ -130,10 +137,30 @@ void main() {
         session: const SessionState.signedOut(),
         initial: '/login',
       );
-      expect(t.widget<TextField>(find.descendant(of: field('Şifre'), matching: find.byType(TextField))).obscureText, isTrue);
+      expect(
+        t
+            .widget<TextField>(
+              find.descendant(
+                of: field('Şifre'),
+                matching: find.byType(TextField),
+              ),
+            )
+            .obscureText,
+        isTrue,
+      );
       await t.tap(find.byTooltip('Şifreyi göster'));
       await t.pump();
-      expect(t.widget<TextField>(find.descendant(of: field('Şifre'), matching: find.byType(TextField))).obscureText, isFalse);
+      expect(
+        t
+            .widget<TextField>(
+              find.descendant(
+                of: field('Şifre'),
+                matching: find.byType(TextField),
+              ),
+            )
+            .obscureText,
+        isFalse,
+      );
     });
   });
 
@@ -160,8 +187,9 @@ void main() {
       await t.pumpAndSettle();
     }
 
-    testWidgets('varsayılan rol yok; boş gönderimde tüm doğrulamalar çıkar',
-        (t) async {
+    testWidgets('varsayılan rol yok; boş gönderimde tüm doğrulamalar çıkar', (
+      t,
+    ) async {
       final h = await pumpApp(
         t,
         session: const SessionState.signedOut(),
@@ -171,10 +199,16 @@ void main() {
       await t.ensureVisible(button('Hesap oluştur'));
       await t.tap(button('Hesap oluştur'));
       await t.pumpAndSettle();
-      expect(find.text('Devam etmek için bir seçenek belirle.'), findsOneWidget);
+      expect(
+        find.text('Devam etmek için bir seçenek belirle.'),
+        findsOneWidget,
+      );
       expect(find.text('Bu alanı doldur.'), findsWidgets);
       await t.ensureVisible(find.byKey(const Key('consent-terms')));
-      expect(find.text('Devam etmek için bu onayı vermelisin.'), findsNWidgets(2));
+      expect(
+        find.text('Devam etmek için bu onayı vermelisin.'),
+        findsNWidgets(2),
+      );
       expect(h.adapter.requests, isEmpty);
     });
 
@@ -192,9 +226,14 @@ void main() {
       await t.tap(button('Hesap oluştur'));
       await t.pumpAndSettle();
       expect(find.text('Adını ve soyadını gir.'), findsOneWidget);
-      expect(find.text('E-posta adresi hatalı. Örnek: ad@ornek.com'), findsOneWidget);
       expect(
-        find.text('Telefon numarası eksik. 5XX XXX XX XX biçiminde 10 hane gir.'),
+        find.text('E-posta adresi hatalı. Örnek: ad@ornek.com'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Telefon numarası eksik. 5XX XXX XX XX biçiminde 10 hane gir.',
+        ),
         findsOneWidget,
       );
       expect(
@@ -203,38 +242,40 @@ void main() {
       );
     });
 
-    testWidgets('EMAIL_TAKEN + field=email hatası e-posta alanının altında görünür',
-        (t) async {
-      final h = await pumpApp(
-        t,
-        initial: '/register',
-        handler: (o) => o.path.endsWith('/auth/register')
-            ? apiError(409, 'EMAIL_TAKEN', field: 'email')
-            : apiError(404, 'NOT_FOUND'),
-      );
-      await t.tap(find.text('Müşteri'));
-      await t.pump();
-      await fillValid(t);
-      await consentAndSubmit(t);
+    testWidgets(
+      'EMAIL_TAKEN + field=email hatası e-posta alanının altında görünür',
+      (t) async {
+        final h = await pumpApp(
+          t,
+          initial: '/register',
+          handler: (o) => o.path.endsWith('/auth/register')
+              ? apiError(409, 'EMAIL_TAKEN', field: 'email')
+              : apiError(404, 'NOT_FOUND'),
+        );
+        await t.tap(find.text('Müşteri'));
+        await t.pump();
+        await fillValid(t);
+        await consentAndSubmit(t);
 
-      const msg =
-          'Bu e-posta adresi zaten kayıtlı. Giriş yap ya da başka bir e-posta kullan.';
-      expect(find.text(msg), findsOneWidget);
-      final owner = find.ancestor(
-        of: find.text(msg),
-        matching: find.byType(AppTextField),
-      );
-      expect(owner, findsOneWidget);
-      expect(t.widget<AppTextField>(owner).label, 'E-posta');
-      // Form verisi korunur, kullanıcı oturumsuz kalır.
-      expect(find.text('ayse@example.com'), findsOneWidget);
-      expect(h.uri.path, '/register');
+        const msg =
+            'Bu e-posta adresi zaten kayıtlı. Giriş yap ya da başka bir e-posta kullan.';
+        expect(find.text(msg), findsOneWidget);
+        final owner = find.ancestor(
+          of: find.text(msg),
+          matching: find.byType(AppTextField),
+        );
+        expect(owner, findsOneWidget);
+        expect(t.widget<AppTextField>(owner).label, 'E-posta');
+        // Form verisi korunur, kullanıcı oturumsuz kalır.
+        expect(find.text('ayse@example.com'), findsOneWidget);
+        expect(h.uri.path, '/register');
 
-      // E-postayı düzeltince alan hatası kalkar.
-      await t.enterText(input('E-posta'), 'baska@example.com');
-      await t.pump();
-      expect(find.text(msg), findsNothing);
-    });
+        // E-postayı düzeltince alan hatası kalkar.
+        await t.enterText(input('E-posta'), 'baska@example.com');
+        await t.pump();
+        expect(find.text(msg), findsNothing);
+      },
+    );
 
     testWidgets('müşteri kaydı -> /c/home; gövde sözleşmeye uyar', (t) async {
       final h = await pumpApp(
@@ -295,53 +336,58 @@ void main() {
   });
 
   group('Şifre sıfırlama', () {
-    testWidgets('istek -> kod ve yeni şifre -> giriş ekranı, geri tuşu forma dönmez',
-        (t) async {
-      final h = await pumpApp(
-        t,
-        session: const SessionState.signedOut(),
-        initial: '/forgot-password',
-        handler: (o) {
-          if (o.path.endsWith('/password/forgot')) return empty(202);
-          if (o.path.endsWith('/password/reset')) return empty(204);
-          return apiError(404, 'NOT_FOUND');
-        },
-      );
-      await t.tap(button('Kod gönder'));
-      await t.pumpAndSettle();
-      expect(find.text('Bu alanı doldur.'), findsOneWidget);
+    testWidgets(
+      'istek -> kod ve yeni şifre -> giriş ekranı, geri tuşu forma dönmez',
+      (t) async {
+        final h = await pumpApp(
+          t,
+          session: const SessionState.signedOut(),
+          initial: '/forgot-password',
+          handler: (o) {
+            if (o.path.endsWith('/password/forgot')) return empty(202);
+            if (o.path.endsWith('/password/reset')) return empty(204);
+            return apiError(404, 'NOT_FOUND');
+          },
+        );
+        await t.tap(button('Kod gönder'));
+        await t.pumpAndSettle();
+        expect(find.text('Bu alanı doldur.'), findsOneWidget);
 
-      await t.enterText(input('E-posta'), 'ayse@example.com');
-      await t.tap(button('Kod gönder'));
-      await t.pumpAndSettle();
-      expect(h.location, '/reset-password');
-      expect(h.adapter.last('/password/forgot').data, {
-        'email': 'ayse@example.com',
-      });
-      // E-posta URL'de değil.
-      expect(h.location.contains('ayse'), isFalse);
-      expect(
-        t.widget<TextFormField>(input('E-posta')).controller!.text,
-        'ayse@example.com',
-      );
+        await t.enterText(input('E-posta'), 'ayse@example.com');
+        await t.tap(button('Kod gönder'));
+        await t.pumpAndSettle();
+        expect(h.location, '/reset-password');
+        expect(h.adapter.last('/password/forgot').data, {
+          'email': 'ayse@example.com',
+        });
+        // E-posta URL'de değil.
+        expect(h.location.contains('ayse'), isFalse);
+        expect(
+          t.widget<TextFormField>(input('E-posta')).controller!.text,
+          'ayse@example.com',
+        );
 
-      await t.enterText(input('6 haneli kod'), '12345');
-      await t.enterText(input('Yeni şifre'), 'abcd1234');
-      await t.tap(button('Şifreyi değiştir'));
-      await t.pumpAndSettle();
-      expect(find.text('Kod 6 haneli olmalı. E-postanı kontrol et.'), findsOneWidget);
+        await t.enterText(input('6 haneli kod'), '12345');
+        await t.enterText(input('Yeni şifre'), 'abcd1234');
+        await t.tap(button('Şifreyi değiştir'));
+        await t.pumpAndSettle();
+        expect(
+          find.text('Kod 6 haneli olmalı. E-postanı kontrol et.'),
+          findsOneWidget,
+        );
 
-      await t.enterText(input('6 haneli kod'), '123456');
-      await t.tap(button('Şifreyi değiştir'));
-      await t.pumpAndSettle();
-      expect(h.adapter.last('/password/reset').data, {
-        'email': 'ayse@example.com',
-        'code': '123456',
-        'newPassword': 'abcd1234',
-      });
-      expect(h.location, '/login');
-      expect(h.router.canPop(), isFalse);
-    });
+        await t.enterText(input('6 haneli kod'), '123456');
+        await t.tap(button('Şifreyi değiştir'));
+        await t.pumpAndSettle();
+        expect(h.adapter.last('/password/reset').data, {
+          'email': 'ayse@example.com',
+          'code': '123456',
+          'newPassword': 'abcd1234',
+        });
+        expect(h.location, '/login');
+        expect(h.router.canPop(), isFalse);
+      },
+    );
 
     testWidgets('yanlış kod alan altında görünür', (t) async {
       await pumpApp(
@@ -398,41 +444,48 @@ void main() {
       expect(find.text('Fill in this field.'), findsNWidgets(2));
     });
 
-    testWidgets('ayarlar: çıkış onay diyaloğu, logout çağrısı, yığın sıfırlanır',
-        (t) async {
-      final h = await pumpApp(
-        t,
-        tokens: const TokenPair(accessToken: 'A', refreshToken: 'R1'),
-        initial: '/c/profile',
-        handler: (o) {
-          if (o.path.endsWith('/me')) return json(200, meJson());
-          if (o.path.endsWith('/auth/logout')) return empty(204);
-          return apiError(404, 'NOT_FOUND');
-        },
-      );
-      await t.tap(find.text('Ayarlar'));
-      await t.pumpAndSettle();
-      expect(h.location, '/settings');
+    testWidgets(
+      'ayarlar: çıkış onay diyaloğu, logout çağrısı, yığın sıfırlanır',
+      (t) async {
+        final h = await pumpApp(
+          t,
+          tokens: const TokenPair(accessToken: 'A', refreshToken: 'R1'),
+          initial: '/c/profile',
+          handler: (o) {
+            if (o.path.endsWith('/me')) return json(200, meJson());
+            if (o.path.endsWith('/auth/logout')) return empty(204);
+            return apiError(404, 'NOT_FOUND');
+          },
+        );
+        await t.tap(find.text('Ayarlar'));
+        await t.pumpAndSettle();
+        expect(h.location, '/settings');
 
-      await t.tap(button('Çıkış yap'));
-      await t.pumpAndSettle();
-      expect(find.text('Çıkış yapılsın mı?'), findsOneWidget);
+        await t.tap(button('Çıkış yap'));
+        await t.pumpAndSettle();
+        expect(find.text('Çıkış yapılsın mı?'), findsOneWidget);
 
-      // Vazgeç: hiçbir şey olmaz.
-      await t.tap(find.text('Vazgeç'));
-      await t.pumpAndSettle();
-      expect(h.location, '/settings');
-      expect(h.adapter.count('POST', '/auth/logout'), 0);
+        // Vazgeç: hiçbir şey olmaz.
+        await t.tap(find.text('Vazgeç'));
+        await t.pumpAndSettle();
+        expect(h.location, '/settings');
+        expect(h.adapter.count('POST', '/auth/logout'), 0);
 
-      await t.tap(button('Çıkış yap'));
-      await t.pumpAndSettle();
-      await t.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('Çıkış yap')));
-      await t.pumpAndSettle();
-      expect(h.adapter.last('/auth/logout').data, {'refreshToken': 'R1'});
-      expect(h.location, '/welcome');
-      expect(h.router.canPop(), isFalse);
-      expect(await h.store.read(), isNull);
-    });
+        await t.tap(button('Çıkış yap'));
+        await t.pumpAndSettle();
+        await t.tap(
+          find.descendant(
+            of: find.byType(AlertDialog),
+            matching: find.text('Çıkış yap'),
+          ),
+        );
+        await t.pumpAndSettle();
+        expect(h.adapter.last('/auth/logout').data, {'refreshToken': 'R1'});
+        expect(h.location, '/welcome');
+        expect(h.router.canPop(), isFalse);
+        expect(await h.store.read(), isNull);
+      },
+    );
   });
 
   group('Taşma (320 px, 2x yazı)', () {
@@ -474,8 +527,8 @@ void main() {
       expect(t.takeException(), isNull);
     });
 
-    testWidgets('sekmeler, profil ve ayarlar 320 px/2x', (t) async {
-      for (final route in ['/c/home', '/c/profile', '/settings', '/p/apply']) {
+    for (final route in ['/c/home', '/c/profile', '/settings', '/p/apply']) {
+      testWidgets('$route 320 px/2x', (t) async {
         await pumpApp(
           t,
           session: SessionState.signedIn(testMe()),
@@ -484,8 +537,8 @@ void main() {
           textScale: 2,
         );
         expect(t.takeException(), isNull, reason: route);
-      }
-    });
+      });
+    }
   });
 
   group('Hata mesajları', () {
@@ -493,10 +546,21 @@ void main() {
       final tr = lookupAppLocalizations(const Locale('tr'));
       final en = lookupAppLocalizations(const Locale('en'));
       for (final code in ApiErrorCode.values) {
-        expect(apiErrorMessage(tr, code).trim(), isNotEmpty, reason: '$code tr');
-        expect(apiErrorMessage(en, code).trim(), isNotEmpty, reason: '$code en');
-        expect(apiErrorMessage(tr, code), isNot(apiErrorMessage(en, code)),
-            reason: '$code TR ve EN farklı olmalı');
+        expect(
+          apiErrorMessage(tr, code).trim(),
+          isNotEmpty,
+          reason: '$code tr',
+        );
+        expect(
+          apiErrorMessage(en, code).trim(),
+          isNotEmpty,
+          reason: '$code en',
+        );
+        expect(
+          apiErrorMessage(tr, code),
+          isNot(apiErrorMessage(en, code)),
+          reason: '$code TR ve EN farklı olmalı',
+        );
       }
     });
   });

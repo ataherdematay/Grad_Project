@@ -835,6 +835,1890 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bir sorun oluştu. Tekrar dene.'**
   String get apiErrorUnknown;
+
+  /// No description provided for @save.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kaydet'**
+  String get save;
+
+  /// No description provided for @edit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Düzenle'**
+  String get edit;
+
+  /// No description provided for @delete.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sil'**
+  String get delete;
+
+  /// No description provided for @close.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kapat'**
+  String get close;
+
+  /// No description provided for @done.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitti'**
+  String get done;
+
+  /// No description provided for @yes.
+  ///
+  /// In tr, this message translates to:
+  /// **'Evet'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hayır'**
+  String get no;
+
+  /// No description provided for @searchLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ara'**
+  String get searchLabel;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sonuç bulunamadı'**
+  String get noSearchResults;
+
+  /// No description provided for @pickerNone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Seç'**
+  String get pickerNone;
+
+  /// No description provided for @photoLoadFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf yüklenemedi'**
+  String get photoLoadFailed;
+
+  /// No description provided for @goHome.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ana sayfaya git'**
+  String get goHome;
+
+  /// No description provided for @goToMyRequests.
+  ///
+  /// In tr, this message translates to:
+  /// **'Taleplerime git'**
+  String get goToMyRequests;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In tr, this message translates to:
+  /// **'Not (isteğe bağlı)'**
+  String get noteOptional;
+
+  /// No description provided for @reasonRequired.
+  ///
+  /// In tr, this message translates to:
+  /// **'Devam etmek için bir gerekçe seç.'**
+  String get reasonRequired;
+
+  /// No description provided for @total.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam'**
+  String get total;
+
+  /// No description provided for @labor.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşçilik'**
+  String get labor;
+
+  /// No description provided for @materials.
+  ///
+  /// In tr, this message translates to:
+  /// **'Malzeme'**
+  String get materials;
+
+  /// No description provided for @totalVatIncluded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam tutar (KDV dahil)'**
+  String get totalVatIncluded;
+
+  /// No description provided for @vatIncluded.
+  ///
+  /// In tr, this message translates to:
+  /// **'KDV dahil'**
+  String get vatIncluded;
+
+  /// No description provided for @warranty.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşçilik garantisi'**
+  String get warranty;
+
+  /// No description provided for @warrantyNone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yok'**
+  String get warrantyNone;
+
+  /// No description provided for @warrantyMonths.
+  ///
+  /// In tr, this message translates to:
+  /// **'{months} ay'**
+  String warrantyMonths(int months);
+
+  /// No description provided for @warrantyHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Platform garanti vermez; garantiyi sen verirsin.'**
+  String get warrantyHelp;
+
+  /// No description provided for @arrival.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varış aralığı'**
+  String get arrival;
+
+  /// No description provided for @urgencyUrgent.
+  ///
+  /// In tr, this message translates to:
+  /// **'Acil onarım'**
+  String get urgencyUrgent;
+
+  /// No description provided for @urgencyPlanned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Planlı iş'**
+  String get urgencyPlanned;
+
+  /// No description provided for @tabActive.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif'**
+  String get tabActive;
+
+  /// No description provided for @tabPast.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçmiş'**
+  String get tabPast;
+
+  /// No description provided for @dateToday.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bugün'**
+  String get dateToday;
+
+  /// No description provided for @dateTomorrow.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yarın'**
+  String get dateTomorrow;
+
+  /// No description provided for @requestAwaitingOffers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif bekleniyor'**
+  String get requestAwaitingOffers;
+
+  /// No description provided for @requestOffersCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} teklif geldi'**
+  String requestOffersCount(int count);
+
+  /// No description provided for @requestAssigned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta seçildi'**
+  String get requestAssigned;
+
+  /// No description provided for @requestCancelled.
+  ///
+  /// In tr, this message translates to:
+  /// **'İptal edildi'**
+  String get requestCancelled;
+
+  /// No description provided for @requestExpired.
+  ///
+  /// In tr, this message translates to:
+  /// **'Süresi doldu'**
+  String get requestExpired;
+
+  /// No description provided for @offerPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bekliyor'**
+  String get offerPending;
+
+  /// No description provided for @offerAccepted.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kabul edildi'**
+  String get offerAccepted;
+
+  /// No description provided for @offerDeclined.
+  ///
+  /// In tr, this message translates to:
+  /// **'Reddedildi'**
+  String get offerDeclined;
+
+  /// No description provided for @offerWithdrawn.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geri çekildi'**
+  String get offerWithdrawn;
+
+  /// No description provided for @offerSuperseded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başka teklif seçildi'**
+  String get offerSuperseded;
+
+  /// No description provided for @offerExpired.
+  ///
+  /// In tr, this message translates to:
+  /// **'Süresi doldu'**
+  String get offerExpired;
+
+  /// No description provided for @statusApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Doğrulandı'**
+  String get statusApproved;
+
+  /// No description provided for @proVerified.
+  ///
+  /// In tr, this message translates to:
+  /// **'Doğrulandı'**
+  String get proVerified;
+
+  /// No description provided for @photoAdd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf ekle'**
+  String get photoAdd;
+
+  /// No description provided for @photoFromCamera.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kamerayla çek'**
+  String get photoFromCamera;
+
+  /// No description provided for @photoFromGallery.
+  ///
+  /// In tr, this message translates to:
+  /// **'Galeriden seç'**
+  String get photoFromGallery;
+
+  /// No description provided for @photoRemove.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğrafı kaldır'**
+  String get photoRemove;
+
+  /// No description provided for @photoUploading.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yükleniyor'**
+  String get photoUploading;
+
+  /// No description provided for @photoUploaded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yüklendi'**
+  String get photoUploaded;
+
+  /// No description provided for @photoLimitReached.
+  ///
+  /// In tr, this message translates to:
+  /// **'En fazla {count} fotoğraf eklenebilir'**
+  String photoLimitReached(int count);
+
+  /// No description provided for @photoTooLarge.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf 1,5 MB sınırını aşıyor. Daha küçük bir fotoğraf seç.'**
+  String get photoTooLarge;
+
+  /// No description provided for @addressesTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adreslerim'**
+  String get addressesTitle;
+
+  /// No description provided for @addressAdd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adres ekle'**
+  String get addressAdd;
+
+  /// No description provided for @addressDefault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varsayılan'**
+  String get addressDefault;
+
+  /// No description provided for @addressMakeDefault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varsayılan yap'**
+  String get addressMakeDefault;
+
+  /// No description provided for @addressesEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kayıtlı adresin yok'**
+  String get addressesEmptyTitle;
+
+  /// No description provided for @addressesEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep oluştururken kullanmak için bir adres ekle.'**
+  String get addressesEmptyBody;
+
+  /// No description provided for @addressDeleteTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adres silinsin mi?'**
+  String get addressDeleteTitle;
+
+  /// No description provided for @addressDeleteMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'\"{label}\" adresi silinir. Bu işlem geri alınamaz.'**
+  String addressDeleteMessage(String label);
+
+  /// No description provided for @addressLabelField.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adres adı'**
+  String get addressLabelField;
+
+  /// No description provided for @addressLabelHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Örn. Ev, İş'**
+  String get addressLabelHint;
+
+  /// No description provided for @addressDistrict.
+  ///
+  /// In tr, this message translates to:
+  /// **'İlçe'**
+  String get addressDistrict;
+
+  /// No description provided for @addressNeighborhood.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mahalle'**
+  String get addressNeighborhood;
+
+  /// No description provided for @addressLine.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık adres'**
+  String get addressLine;
+
+  /// No description provided for @addressLineHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cadde, sokak, bina ve daire no'**
+  String get addressLineHint;
+
+  /// No description provided for @addressDoorNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kapı notu (isteğe bağlı)'**
+  String get addressDoorNote;
+
+  /// No description provided for @addressDoorNoteHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tam adres ve kapı notu yalnızca usta seçildikten sonra paylaşılır.'**
+  String get addressDoorNoteHelp;
+
+  /// No description provided for @createRequest.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep oluştur'**
+  String get createRequest;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In tr, this message translates to:
+  /// **'Merhaba {name}'**
+  String homeGreeting(String name);
+
+  /// No description provided for @homeActiveRequest.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif talebin'**
+  String get homeActiveRequest;
+
+  /// No description provided for @homeNoActiveTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif talebin yok'**
+  String get homeNoActiveTitle;
+
+  /// No description provided for @homeNoActiveBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Evdeki tamir işi için talep aç, ustalardan teklif gelsin.'**
+  String get homeNoActiveBody;
+
+  /// No description provided for @seeOffers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifleri gör ({count})'**
+  String seeOffers(int count);
+
+  /// No description provided for @offerRange.
+  ///
+  /// In tr, this message translates to:
+  /// **'{min} - {max}'**
+  String offerRange(String min, String max);
+
+  /// No description provided for @requestsEmptyActiveTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif talebin yok'**
+  String get requestsEmptyActiveTitle;
+
+  /// No description provided for @requestsEmptyActiveBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni bir talep açarak ustalardan teklif alabilirsin.'**
+  String get requestsEmptyActiveBody;
+
+  /// No description provided for @requestsEmptyPastTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçmiş talebin yok'**
+  String get requestsEmptyPastTitle;
+
+  /// No description provided for @requestsEmptyPastBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'İptal ettiğin ya da süresi dolan talepler burada görünür.'**
+  String get requestsEmptyPastBody;
+
+  /// No description provided for @requestDetailTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep detayı'**
+  String get requestDetailTitle;
+
+  /// No description provided for @requestCode.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep kodu'**
+  String get requestCode;
+
+  /// No description provided for @requestLocation.
+  ///
+  /// In tr, this message translates to:
+  /// **'Konum'**
+  String get requestLocation;
+
+  /// No description provided for @requestExpiresOn.
+  ///
+  /// In tr, this message translates to:
+  /// **'Son gün'**
+  String get requestExpiresOn;
+
+  /// No description provided for @requestAnswers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cevapların'**
+  String get requestAnswers;
+
+  /// No description provided for @requestPhotos.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraflar'**
+  String get requestPhotos;
+
+  /// No description provided for @requestCancel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebi iptal et'**
+  String get requestCancel;
+
+  /// No description provided for @keepRequest.
+  ///
+  /// In tr, this message translates to:
+  /// **'Vazgeç, talebi koru'**
+  String get keepRequest;
+
+  /// No description provided for @cancelReasonTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'İptal gerekçesi'**
+  String get cancelReasonTitle;
+
+  /// No description provided for @cancelReasonPlansChanged.
+  ///
+  /// In tr, this message translates to:
+  /// **'Planlarım değişti'**
+  String get cancelReasonPlansChanged;
+
+  /// No description provided for @cancelReasonSolved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sorunu çözdüm'**
+  String get cancelReasonSolved;
+
+  /// No description provided for @cancelReasonNoSuitableOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Uygun teklif gelmedi'**
+  String get cancelReasonNoSuitableOffer;
+
+  /// No description provided for @cancelReasonOther.
+  ///
+  /// In tr, this message translates to:
+  /// **'Diğer'**
+  String get cancelReasonOther;
+
+  /// No description provided for @cancelConfirmTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep iptal edilsin mi?'**
+  String get cancelConfirmTitle;
+
+  /// No description provided for @cancelConfirmMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bekleyen tüm teklifler kapanır. Bu işlem geri alınamaz.'**
+  String get cancelConfirmMessage;
+
+  /// No description provided for @publishedTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebin yayınlandı'**
+  String get publishedTitle;
+
+  /// No description provided for @publishedMatchTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} usta eşleşti'**
+  String publishedMatchTitle(int count);
+
+  /// No description provided for @publishedMatchBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eşleşen ustalara bildirim gitti. Teklifler geldikçe Taleplerim sekmesinde göreceksin.'**
+  String get publishedMatchBody;
+
+  /// No description provided for @publishedNoMatchTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şu an eşleşen usta yok'**
+  String get publishedNoMatchTitle;
+
+  /// No description provided for @publishedNoMatchBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebin açık kalırsa bölgene yeni ustalar katıldığında görebilir. İstersen talebi düzenleyip kategori ya da konumu değiştir.'**
+  String get publishedNoMatchBody;
+
+  /// No description provided for @matchReasons.
+  ///
+  /// In tr, this message translates to:
+  /// **'Neden eşleşti'**
+  String get matchReasons;
+
+  /// No description provided for @matchCategory.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategoriye uygun'**
+  String get matchCategory;
+
+  /// No description provided for @matchDistrict.
+  ///
+  /// In tr, this message translates to:
+  /// **'İlçende hizmet veriyor'**
+  String get matchDistrict;
+
+  /// No description provided for @matchAvailability.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şu an müsait'**
+  String get matchAvailability;
+
+  /// No description provided for @keepOpen.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık tut'**
+  String get keepOpen;
+
+  /// No description provided for @wizTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni talep'**
+  String get wizTitle;
+
+  /// No description provided for @wizEditTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebi düzenle'**
+  String get wizEditTitle;
+
+  /// No description provided for @wizStepOf.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adım {step} / {total}'**
+  String wizStepOf(int step, int total);
+
+  /// No description provided for @wizContinue.
+  ///
+  /// In tr, this message translates to:
+  /// **'Devam'**
+  String get wizContinue;
+
+  /// No description provided for @wizBackToReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gözden geçir'**
+  String get wizBackToReview;
+
+  /// No description provided for @wizPublish.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebi yayınla'**
+  String get wizPublish;
+
+  /// No description provided for @wizSaveChanges.
+  ///
+  /// In tr, this message translates to:
+  /// **'Değişiklikleri kaydet'**
+  String get wizSaveChanges;
+
+  /// No description provided for @wizStep1Title.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategori ve aciliyet'**
+  String get wizStep1Title;
+
+  /// No description provided for @wizStep2Title.
+  ///
+  /// In tr, this message translates to:
+  /// **'Konum ve detaylar'**
+  String get wizStep2Title;
+
+  /// No description provided for @wizStep3Title.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf ve açıklama'**
+  String get wizStep3Title;
+
+  /// No description provided for @wizStep4Title.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gözden geçir'**
+  String get wizStep4Title;
+
+  /// No description provided for @wizCategory.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategori'**
+  String get wizCategory;
+
+  /// No description provided for @wizUrgency.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aciliyet'**
+  String get wizUrgency;
+
+  /// No description provided for @wizUrgentHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mümkün olan en kısa sürede'**
+  String get wizUrgentHint;
+
+  /// No description provided for @wizPlannedHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Uygun olduğun tarih aralığını seç'**
+  String get wizPlannedHint;
+
+  /// No description provided for @wizDates.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tarih aralığı'**
+  String get wizDates;
+
+  /// No description provided for @wizDateFrom.
+  ///
+  /// In tr, this message translates to:
+  /// **'En erken'**
+  String get wizDateFrom;
+
+  /// No description provided for @wizDateTo.
+  ///
+  /// In tr, this message translates to:
+  /// **'En geç'**
+  String get wizDateTo;
+
+  /// No description provided for @wizAddress.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adres'**
+  String get wizAddress;
+
+  /// No description provided for @wizAddAddress.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni adres ekle'**
+  String get wizAddAddress;
+
+  /// No description provided for @wizFieldTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlık'**
+  String get wizFieldTitle;
+
+  /// No description provided for @wizFieldTitleHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Örn. Mutfak musluğu damlatıyor'**
+  String get wizFieldTitleHint;
+
+  /// No description provided for @wizFieldDescription.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açıklama'**
+  String get wizFieldDescription;
+
+  /// No description provided for @wizFieldDescriptionHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sorunu ve ustanın bilmesi gerekenleri yaz'**
+  String get wizFieldDescriptionHint;
+
+  /// No description provided for @wizDescriptionCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} / en az {min} karakter'**
+  String wizDescriptionCount(int count, int min);
+
+  /// No description provided for @wizPhotos.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraflar (en fazla {max})'**
+  String wizPhotos(int max);
+
+  /// No description provided for @wizPhotosHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sorunu gösteren net fotoğraflar teklif almanı kolaylaştırır.'**
+  String get wizPhotosHint;
+
+  /// No description provided for @wizPhotosCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraf sayısı'**
+  String get wizPhotosCount;
+
+  /// No description provided for @wizReviewNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yayınladığında eşleşen ustalara bildirim gider.'**
+  String get wizReviewNote;
+
+  /// No description provided for @wizErrCategory.
+  ///
+  /// In tr, this message translates to:
+  /// **'Devam etmek için bir kategori seç.'**
+  String get wizErrCategory;
+
+  /// No description provided for @wizErrDateFrom.
+  ///
+  /// In tr, this message translates to:
+  /// **'En erken tarihi seç.'**
+  String get wizErrDateFrom;
+
+  /// No description provided for @wizErrDateTo.
+  ///
+  /// In tr, this message translates to:
+  /// **'En geç tarihi seç.'**
+  String get wizErrDateTo;
+
+  /// No description provided for @wizErrDateOrder.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitiş, başlangıçtan sonra olmalı.'**
+  String get wizErrDateOrder;
+
+  /// No description provided for @wizErrDatePast.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlangıç ileri bir zamanda olmalı.'**
+  String get wizErrDatePast;
+
+  /// No description provided for @wizErrDateRange.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tarih aralığı en fazla 30 gün sonrasına kadar olabilir.'**
+  String get wizErrDateRange;
+
+  /// No description provided for @wizErrAddress.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir adres seç ya da yeni adres ekle.'**
+  String get wizErrAddress;
+
+  /// No description provided for @wizErrAnswers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tüm soruları cevapla.'**
+  String get wizErrAnswers;
+
+  /// No description provided for @wizErrTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlık {min}-{max} karakter olmalı.'**
+  String wizErrTitle(int min, int max);
+
+  /// No description provided for @wizErrDescription.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açıklama en az {min} karakter olmalı.'**
+  String wizErrDescription(int min);
+
+  /// No description provided for @wizErrPhotosBusy.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fotoğraflar yüklenirken bekle.'**
+  String get wizErrPhotosBusy;
+
+  /// No description provided for @wizErrPhotosFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yüklenemeyen fotoğrafı yeniden dene ya da kaldır.'**
+  String get wizErrPhotosFailed;
+
+  /// No description provided for @offersTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gelen teklifler'**
+  String get offersTitle;
+
+  /// No description provided for @offersResultCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} teklif'**
+  String offersResultCount(int count);
+
+  /// No description provided for @offersDeclinedCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} teklifi reddettin.'**
+  String offersDeclinedCount(int count);
+
+  /// No description provided for @offersEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz teklif yok'**
+  String get offersEmptyTitle;
+
+  /// No description provided for @offersEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustalar teklif verdikçe burada göreceksin.'**
+  String get offersEmptyBody;
+
+  /// No description provided for @offersEmptyFilteredTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Filtreye uyan teklif yok'**
+  String get offersEmptyFilteredTitle;
+
+  /// No description provided for @offersEmptyFilteredBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Filtreleri gevşetip tekrar dene.'**
+  String get offersEmptyFilteredBody;
+
+  /// No description provided for @offersClearFilters.
+  ///
+  /// In tr, this message translates to:
+  /// **'Filtreleri temizle'**
+  String get offersClearFilters;
+
+  /// No description provided for @offersFilterTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Filtrele ve sırala'**
+  String get offersFilterTitle;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sıralama'**
+  String get sortBy;
+
+  /// No description provided for @sortRecommended.
+  ///
+  /// In tr, this message translates to:
+  /// **'Önerilen'**
+  String get sortRecommended;
+
+  /// No description provided for @sortPrice.
+  ///
+  /// In tr, this message translates to:
+  /// **'En düşük fiyat'**
+  String get sortPrice;
+
+  /// No description provided for @sortRating.
+  ///
+  /// In tr, this message translates to:
+  /// **'En yüksek puan'**
+  String get sortRating;
+
+  /// No description provided for @sortArrival.
+  ///
+  /// In tr, this message translates to:
+  /// **'En hızlı varış'**
+  String get sortArrival;
+
+  /// No description provided for @filterMaxPrice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Üst fiyat sınırı'**
+  String get filterMaxPrice;
+
+  /// No description provided for @filterMaxPriceLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'En çok (₺)'**
+  String get filterMaxPriceLabel;
+
+  /// No description provided for @filterMaxPriceHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşçilik ve malzeme dahil. Boş bırakırsan sınır olmaz.'**
+  String get filterMaxPriceHelp;
+
+  /// No description provided for @filterMinRating.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta puanı'**
+  String get filterMinRating;
+
+  /// No description provided for @filterAnyRating.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hepsi'**
+  String get filterAnyRating;
+
+  /// No description provided for @filterRatingOrMore.
+  ///
+  /// In tr, this message translates to:
+  /// **'{rating}+'**
+  String filterRatingOrMore(String rating);
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sonuçları uygula'**
+  String get applyFilters;
+
+  /// No description provided for @compare.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karşılaştır'**
+  String get compare;
+
+  /// No description provided for @compareCancel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Vazgeç'**
+  String get compareCancel;
+
+  /// No description provided for @compareHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'2 ya da 3 teklif seç.'**
+  String get compareHint;
+
+  /// No description provided for @compareSelected.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karşılaştır ({count})'**
+  String compareSelected(int count);
+
+  /// No description provided for @compareTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karşılaştırma'**
+  String get compareTitle;
+
+  /// No description provided for @compareTotal.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam (KDV dahil)'**
+  String get compareTotal;
+
+  /// No description provided for @compareGoneTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifler artık listede yok'**
+  String get compareGoneTitle;
+
+  /// No description provided for @compareGoneBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifler geri çekilmiş ya da süresi dolmuş olabilir.'**
+  String get compareGoneBody;
+
+  /// No description provided for @compareBackToOffers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tekliflere dön'**
+  String get compareBackToOffers;
+
+  /// No description provided for @viewOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifi gör'**
+  String get viewOffer;
+
+  /// No description provided for @proRating.
+  ///
+  /// In tr, this message translates to:
+  /// **'Puan'**
+  String get proRating;
+
+  /// No description provided for @proCompletedJobs.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tamamlanan iş'**
+  String get proCompletedJobs;
+
+  /// No description provided for @noRatingYet.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz puan yok'**
+  String get noRatingYet;
+
+  /// No description provided for @ratingWithCount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{avg} ({count})'**
+  String ratingWithCount(String avg, int count);
+
+  /// No description provided for @offerDetailTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif'**
+  String get offerDetailTitle;
+
+  /// No description provided for @offerBreakdown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif dökümü'**
+  String get offerBreakdown;
+
+  /// No description provided for @offerNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta notu'**
+  String get offerNote;
+
+  /// No description provided for @offerValidUntil.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçerlilik'**
+  String get offerValidUntil;
+
+  /// No description provided for @offerAccept.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifi kabul et'**
+  String get offerAccept;
+
+  /// No description provided for @offerDecline.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifi reddet'**
+  String get offerDecline;
+
+  /// No description provided for @viewProfile.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profili görüntüle'**
+  String get viewProfile;
+
+  /// No description provided for @declineIntro.
+  ///
+  /// In tr, this message translates to:
+  /// **'{pro} tarafından gelen {amount} tutarındaki teklifi reddetmek üzeresin.'**
+  String declineIntro(String pro, String amount);
+
+  /// No description provided for @declineIrreversible.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu işlem geri alınamaz; ustanın profiline olumsuz yansımaz.'**
+  String get declineIrreversible;
+
+  /// No description provided for @declineReasonTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Reddetme sebebi'**
+  String get declineReasonTitle;
+
+  /// No description provided for @declineReasonPrice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Fiyat bütçeme uygun değil'**
+  String get declineReasonPrice;
+
+  /// No description provided for @declineReasonSchedule.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zamanlama planıma uymuyor'**
+  String get declineReasonSchedule;
+
+  /// No description provided for @declineReasonOtherOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başka bir teklifle ilerlemeye karar verdim'**
+  String get declineReasonOtherOffer;
+
+  /// No description provided for @declineReasonNotNeeded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Artık bu hizmete ihtiyacım kalmadı'**
+  String get declineReasonNotNeeded;
+
+  /// No description provided for @declineReasonOther.
+  ///
+  /// In tr, this message translates to:
+  /// **'Diğer'**
+  String get declineReasonOther;
+
+  /// No description provided for @declineKeepOpen.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebim açık kalsın'**
+  String get declineKeepOpen;
+
+  /// No description provided for @declineKeepOpenHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kapalıysa talebin de iptal edilir.'**
+  String get declineKeepOpenHelp;
+
+  /// No description provided for @declineCloseNeedsReason.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talebi kapatmak için \"Artık ihtiyacım kalmadı\" ya da \"Diğer\" seç.'**
+  String get declineCloseNeedsReason;
+
+  /// No description provided for @declineConfirmTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif reddedilsin mi?'**
+  String get declineConfirmTitle;
+
+  /// No description provided for @declineConfirmKeepOpen.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif reddedilir, talebin açık kalır. Bu işlem geri alınamaz.'**
+  String get declineConfirmKeepOpen;
+
+  /// No description provided for @declineConfirmClose.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif reddedilir ve talebin iptal edilir. Bu işlem geri alınamaz.'**
+  String get declineConfirmClose;
+
+  /// No description provided for @declineBack.
+  ///
+  /// In tr, this message translates to:
+  /// **'Vazgeç, teklife dön'**
+  String get declineBack;
+
+  /// No description provided for @proProfileTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profili'**
+  String get proProfileTitle;
+
+  /// No description provided for @proReviews.
+  ///
+  /// In tr, this message translates to:
+  /// **'Değerlendirmeler'**
+  String get proReviews;
+
+  /// No description provided for @proAbout.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hakkında'**
+  String get proAbout;
+
+  /// No description provided for @proExperience.
+  ///
+  /// In tr, this message translates to:
+  /// **'Deneyim'**
+  String get proExperience;
+
+  /// No description provided for @experienceYears.
+  ///
+  /// In tr, this message translates to:
+  /// **'{years} yıl'**
+  String experienceYears(int years);
+
+  /// No description provided for @proMemberSince.
+  ///
+  /// In tr, this message translates to:
+  /// **'Üyelik'**
+  String get proMemberSince;
+
+  /// No description provided for @proVerifiedDocuments.
+  ///
+  /// In tr, this message translates to:
+  /// **'Doğrulanmış belgeler'**
+  String get proVerifiedDocuments;
+
+  /// No description provided for @proNoVerifiedDocs.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz doğrulanmış belge yok.'**
+  String get proNoVerifiedDocs;
+
+  /// No description provided for @proCategories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategoriler'**
+  String get proCategories;
+
+  /// No description provided for @proServiceAreas.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hizmet bölgeleri'**
+  String get proServiceAreas;
+
+  /// No description provided for @docIdentity.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kimlik'**
+  String get docIdentity;
+
+  /// No description provided for @docTradeCert.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mesleki yeterlilik'**
+  String get docTradeCert;
+
+  /// No description provided for @docTax.
+  ///
+  /// In tr, this message translates to:
+  /// **'Vergi levhası'**
+  String get docTax;
+
+  /// No description provided for @docCriminalRecord.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adli sicil kaydı'**
+  String get docCriminalRecord;
+
+  /// No description provided for @reviewsEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz değerlendirme yok'**
+  String get reviewsEmptyTitle;
+
+  /// No description provided for @reviewsEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteriler işi tamamlayınca değerlendirmeler burada görünür.'**
+  String get reviewsEmptyBody;
+
+  /// No description provided for @starsOutOf5.
+  ///
+  /// In tr, this message translates to:
+  /// **'5 üzerinden {rating} yıldız'**
+  String starsOutOf5(int rating);
+
+  /// No description provided for @anonymous.
+  ///
+  /// In tr, this message translates to:
+  /// **'Anonim'**
+  String get anonymous;
+
+  /// No description provided for @applyIntro.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşletme bilgilerini ve belgelerini gönder; ekibimiz inceleyip dönüş yapar.'**
+  String get applyIntro;
+
+  /// No description provided for @applyBusinessName.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşletme adı'**
+  String get applyBusinessName;
+
+  /// No description provided for @applyBusinessNameInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşletme adı en az 2 karakter olmalı.'**
+  String get applyBusinessNameInvalid;
+
+  /// No description provided for @applyAbout.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hakkında (isteğe bağlı)'**
+  String get applyAbout;
+
+  /// No description provided for @applyExperience.
+  ///
+  /// In tr, this message translates to:
+  /// **'Deneyim (yıl)'**
+  String get applyExperience;
+
+  /// No description provided for @applyExperienceInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Deneyim 0 ile 60 yıl arasında olmalı.'**
+  String get applyExperienceInvalid;
+
+  /// No description provided for @applyCategories.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategoriler'**
+  String get applyCategories;
+
+  /// No description provided for @applyDistricts.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hizmet verdiğin ilçeler'**
+  String get applyDistricts;
+
+  /// No description provided for @applyDocuments.
+  ///
+  /// In tr, this message translates to:
+  /// **'Belgeler'**
+  String get applyDocuments;
+
+  /// No description provided for @applyDocumentsHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Belgelerin fotoğrafını yükle. Kimlik ve mesleki yeterlilik zorunlu.'**
+  String get applyDocumentsHelp;
+
+  /// No description provided for @docRequired.
+  ///
+  /// In tr, this message translates to:
+  /// **'{doc} (zorunlu)'**
+  String docRequired(String doc);
+
+  /// No description provided for @docOptional.
+  ///
+  /// In tr, this message translates to:
+  /// **'{doc} (isteğe bağlı)'**
+  String docOptional(String doc);
+
+  /// No description provided for @docMissing.
+  ///
+  /// In tr, this message translates to:
+  /// **'{doc} belgesini yükle.'**
+  String docMissing(String doc);
+
+  /// No description provided for @applySubmit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başvuruyu gönder'**
+  String get applySubmit;
+
+  /// No description provided for @applyResubmit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Belgeleri güncelle ve yeniden gönder'**
+  String get applyResubmit;
+
+  /// No description provided for @applicationPendingBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Belgelerin ve profilin kalite ekibimiz tarafından inceleniyor. Sonuç çıkınca durumun burada güncellenir.'**
+  String get applicationPendingBody;
+
+  /// No description provided for @applicationNeedsBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bazı belgelerin eksik ya da okunmuyor. Formu açıp belgeleri güncelleyerek yeniden gönder.'**
+  String get applicationNeedsBody;
+
+  /// No description provided for @applicationRejectedBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başvurun kabul edilmedi. Notu okuyup belgelerini düzelterek yeniden başvurabilirsin.'**
+  String get applicationRejectedBody;
+
+  /// No description provided for @applicationSuspendedBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın askıya alındı. Destek ekibiyle iletişime geç.'**
+  String get applicationSuspendedBody;
+
+  /// No description provided for @adminNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'İnceleme notu'**
+  String get adminNote;
+
+  /// No description provided for @docStatusPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'İnceleniyor'**
+  String get docStatusPending;
+
+  /// No description provided for @docStatusAccepted.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kabul edildi'**
+  String get docStatusAccepted;
+
+  /// No description provided for @docStatusRejected.
+  ///
+  /// In tr, this message translates to:
+  /// **'Reddedildi'**
+  String get docStatusRejected;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tümü'**
+  String get filterAll;
+
+  /// No description provided for @filterUrgent.
+  ///
+  /// In tr, this message translates to:
+  /// **'Acil'**
+  String get filterUrgent;
+
+  /// No description provided for @filterPlanned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Planlı'**
+  String get filterPlanned;
+
+  /// No description provided for @feedOnBreakTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Moladasın'**
+  String get feedOnBreakTitle;
+
+  /// No description provided for @feedOnBreakBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mola sırasında yeni talepler gelmez. Hazır olduğunda tekrar aktif ol.'**
+  String get feedOnBreakBody;
+
+  /// No description provided for @feedActivate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif ol'**
+  String get feedActivate;
+
+  /// No description provided for @feedEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şu an uygun talep yok'**
+  String get feedEmptyTitle;
+
+  /// No description provided for @feedEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategorine ve ilçelerine uyan yeni talepler burada görünür.'**
+  String get feedEmptyBody;
+
+  /// No description provided for @feedPhotos.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} fotoğraf'**
+  String feedPhotos(int count);
+
+  /// No description provided for @feedOffers.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} teklif'**
+  String feedOffers(int count);
+
+  /// No description provided for @feedMyOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif verdin'**
+  String get feedMyOffer;
+
+  /// No description provided for @locationMasked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tam adres, teklifin kabul edilince paylaşılır.'**
+  String get locationMasked;
+
+  /// No description provided for @prepareOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif hazırla'**
+  String get prepareOffer;
+
+  /// No description provided for @viewMyOffer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifini gör'**
+  String get viewMyOffer;
+
+  /// No description provided for @jobsEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz işin yok'**
+  String get jobsEmptyTitle;
+
+  /// No description provided for @jobsEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir teklifin kabul edilince iş burada görünür.'**
+  String get jobsEmptyBody;
+
+  /// No description provided for @offerFormTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif hazırla'**
+  String get offerFormTitle;
+
+  /// No description provided for @laborAmountLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşçilik tutarı'**
+  String get laborAmountLabel;
+
+  /// No description provided for @laborAmountInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşçilik tutarı 0\'dan büyük olmalı. Örnek: 1.200'**
+  String get laborAmountInvalid;
+
+  /// No description provided for @materialsEmpty.
+  ///
+  /// In tr, this message translates to:
+  /// **'Malzeme eklemediysen boş bırakabilirsin.'**
+  String get materialsEmpty;
+
+  /// No description provided for @materialAdd.
+  ///
+  /// In tr, this message translates to:
+  /// **'Malzeme kalemi ekle'**
+  String get materialAdd;
+
+  /// No description provided for @materialRemove.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalemi sil'**
+  String get materialRemove;
+
+  /// No description provided for @materialDescription.
+  ///
+  /// In tr, this message translates to:
+  /// **'Malzeme'**
+  String get materialDescription;
+
+  /// No description provided for @materialQuantity.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adet'**
+  String get materialQuantity;
+
+  /// No description provided for @materialQuantityInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Adet 1 ya da daha fazla olmalı.'**
+  String get materialQuantityInvalid;
+
+  /// No description provided for @materialUnitPrice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Birim fiyat'**
+  String get materialUnitPrice;
+
+  /// No description provided for @materialPriceInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geçerli bir tutar gir. Örnek: 350'**
+  String get materialPriceInvalid;
+
+  /// No description provided for @arrivalHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşterinin seçeceği varış aralığı: 1-12 saat, en geç 14 gün sonrası.'**
+  String get arrivalHelp;
+
+  /// No description provided for @arrivalDay.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gün'**
+  String get arrivalDay;
+
+  /// No description provided for @arrivalStart.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlangıç saati'**
+  String get arrivalStart;
+
+  /// No description provided for @arrivalLength.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aralık uzunluğu'**
+  String get arrivalLength;
+
+  /// No description provided for @hoursShort.
+  ///
+  /// In tr, this message translates to:
+  /// **'{hours} sa'**
+  String hoursShort(int hours);
+
+  /// No description provided for @arrivalMissing.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gün ve başlangıç saatini seç.'**
+  String get arrivalMissing;
+
+  /// No description provided for @arrivalPast.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varış zamanı ileri bir tarih olmalı.'**
+  String get arrivalPast;
+
+  /// No description provided for @arrivalTooShort.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aralık en az 1 saat olmalı.'**
+  String get arrivalTooShort;
+
+  /// No description provided for @arrivalTooLong.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aralık en fazla 12 saat olabilir.'**
+  String get arrivalTooLong;
+
+  /// No description provided for @arrivalTooFar.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varış en geç 14 gün sonrası olabilir.'**
+  String get arrivalTooFar;
+
+  /// No description provided for @offerSummary.
+  ///
+  /// In tr, this message translates to:
+  /// **'Özet'**
+  String get offerSummary;
+
+  /// No description provided for @serviceFee.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hizmet bedeli (%{percent})'**
+  String serviceFee(int percent);
+
+  /// No description provided for @netEarning.
+  ///
+  /// In tr, this message translates to:
+  /// **'Net kazancın'**
+  String get netEarning;
+
+  /// No description provided for @offerSend.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifi gönder'**
+  String get offerSend;
+
+  /// No description provided for @offerSentTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifin'**
+  String get offerSentTitle;
+
+  /// No description provided for @offerSentHeadline.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifin gönderildi'**
+  String get offerSentHeadline;
+
+  /// No description provided for @offerSentBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri teklifini inceleyecek. Durumu Tekliflerim ekranından takip edebilirsin.'**
+  String get offerSentBody;
+
+  /// No description provided for @goToMyOffers.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tekliflerime git'**
+  String get goToMyOffers;
+
+  /// No description provided for @backToFeed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Taleplere dön'**
+  String get backToFeed;
+
+  /// No description provided for @myOffersTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tekliflerim'**
+  String get myOffersTitle;
+
+  /// No description provided for @myOffersEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif yok'**
+  String get myOffersEmptyTitle;
+
+  /// No description provided for @myOffersEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Verdiğin teklifler burada görünür.'**
+  String get myOffersEmptyBody;
+
+  /// No description provided for @withdraw.
+  ///
+  /// In tr, this message translates to:
+  /// **'Geri çek'**
+  String get withdraw;
+
+  /// No description provided for @withdrawTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif geri çekilsin mi?'**
+  String get withdrawTitle;
+
+  /// No description provided for @withdrawMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklif müşteriye artık görünmez. Bu işlem geri alınamaz.'**
+  String get withdrawMessage;
+
+  /// No description provided for @availabilityActive.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktifsin'**
+  String get availabilityActive;
+
+  /// No description provided for @availabilityBreak.
+  ///
+  /// In tr, this message translates to:
+  /// **'Moladasın'**
+  String get availabilityBreak;
+
+  /// No description provided for @availabilityActiveHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Eşleşen yeni talepler akışında görünür.'**
+  String get availabilityActiveHelp;
+
+  /// No description provided for @availabilityBreakHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mola sırasında yeni talep eşleşmez; mevcut işlerin sürer.'**
+  String get availabilityBreakHelp;
+
+  /// No description provided for @profileEditTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profilini düzenle'**
+  String get profileEditTitle;
+
+  /// No description provided for @profileBio.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profil yazısı'**
+  String get profileBio;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profilin kaydedildi'**
+  String get profileSaved;
+
+  /// No description provided for @workingHours.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çalışma saatleri'**
+  String get workingHours;
+
+  /// No description provided for @hoursFrom.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başlangıç'**
+  String get hoursFrom;
+
+  /// No description provided for @hoursTo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitiş'**
+  String get hoursTo;
+
+  /// No description provided for @hoursAcceptsUrgent.
+  ///
+  /// In tr, this message translates to:
+  /// **'Acil işleri de kabul ederim'**
+  String get hoursAcceptsUrgent;
+
+  /// No description provided for @hoursInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bitiş saati başlangıçtan sonra olmalı.'**
+  String get hoursInvalid;
+
+  /// No description provided for @wizErrServerField.
+  ///
+  /// In tr, this message translates to:
+  /// **'“{field}” bilgisi kabul edilmedi. Kontrol edip tekrar dene.'**
+  String wizErrServerField(String field);
+
+  /// No description provided for @wizEditOffersTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Değişiklikler kaydedilsin mi?'**
+  String get wizEditOffersTitle;
+
+  /// No description provided for @wizEditOffersMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} bekleyen teklifin geçersiz olur. Ustalar güncel talebine yeniden teklif verebilir. Bu işlem geri alınamaz.'**
+  String wizEditOffersMessage(int count);
+
+  /// No description provided for @photoDuplicate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu fotoğrafı zaten ekledin.'**
+  String get photoDuplicate;
+
+  /// No description provided for @feedEditProfile.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategori ve ilçelerini düzenle'**
+  String get feedEditProfile;
+
+  /// No description provided for @arrivalServerInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.'**
+  String get arrivalServerInvalid;
+
+  /// No description provided for @offerItemsServerInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene.'**
+  String get offerItemsServerInvalid;
 }
 
 class _AppLocalizationsDelegate
