@@ -185,7 +185,7 @@ Kapsamlı PM & QA denetiminde tespit edilip bu sürümde tamamen çözülen krit
 
 ## 📱 Mobil Uygulama (Flutter)
 
-Eski Flutter denemesi kaldırıldı, uygulama sıfırdan yazılacak. Ayrıntılar ve eski koda erişim: `docs/FLUTTER_RESTART_NOTES.md`. Akışların güncel referansı HTML prototiptir.
+Eski Flutter denemesi kaldırıldı. Uygulama `feature/flutter-app` dalında sıfırdan yazılıyor: mobil (`apps/mobile`, önce iOS), admin paneli (Flutter Web, `apps/admin`) ve ortak paketler. Akışların kaynağı `docs/spec/` altındaki şartnamedir; HTML prototip görsel referanstır. Eski koda erişim: `docs/FLUTTER_RESTART_NOTES.md`.
 
 ---
 
@@ -202,7 +202,17 @@ Backend ekibinin PostgreSQL şemalarını kurması ve REST uç noktalarını gel
 
 HTML prototipteki ödeme akışı gerçek Craftgate **sandbox** ortamına bağlıdır: kart girişi, 3-D Secure, güvence havuzu ve iade. Gerçek para çekilmez.
 
-**Gereksinimler:** Java 17+, Craftgate sandbox anahtarları (ortam değişkeni olarak, koda veya depoya yazmayın).
+**Gereksinimler:** Java 21+, PostgreSQL 16, Craftgate sandbox anahtarları (ortam değişkeni olarak, koda veya depoya yazmayın). Backend Spring Boot 4.1 üzerindedir; şema Flyway migration'larıyla (`backend/src/main/resources/db/migration`) kurulur.
+
+```bash
+createdb bitadilat
+```
+
+```bash
+createdb bitadilat_test
+```
+
+Varsayılan `dev` profili yerel `bitadilat` veritabanına macOS kullanıcı adınızla bağlanır; farklıysa `DB_URL`, `DB_USER`, `DB_PASSWORD` verin. Testler Docker açıksa Testcontainers, değilse yerel `bitadilat_test` veritabanını kullanır ve her çalıştırmada şemayı sıfırlar.
 
 ```bash
 export CRAFTGATE_API_KEY=...

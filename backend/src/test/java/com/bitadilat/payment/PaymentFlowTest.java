@@ -19,8 +19,8 @@ import com.bitadilat.payment.gateway.PaymentGateway;
 import com.bitadilat.payment.gateway.PaymentGateway.GatewayPayment;
 import com.bitadilat.payment.gateway.PaymentGateway.Status;
 import com.bitadilat.payment.gateway.PaymentGateway.ThreeDsRequest;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,9 +29,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 /** Ödeme akışını HTTP katmanından sağlayıcıya kadar çalıştırır; yalnızca Craftgate sahtedir. */
 @SpringBootTest
+@Import(TestDatabaseConfig.class)
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension.class)
 class PaymentFlowTest {
@@ -58,7 +60,7 @@ class PaymentFlowTest {
     @Autowired
     private ObjectMapper json;
 
-    @MockBean
+    @MockitoBean
     private PaymentGateway gateway;
 
     private long paymentId;
@@ -149,7 +151,7 @@ class PaymentFlowTest {
                 .andExpect(jsonPath("$.code").value("PAYMENT_DECLINED"))
                 .andReturn().getResponse().getContentAsString();
 
-        String declinedRef = json.readTree(response).get("ref").asText();
+        String declinedRef = json.readTree(response).get("ref").asString();
         mvc.perform(get("/api/payments/" + declinedRef))
                 .andExpect(jsonPath("$.status").value("FAILED"))
                 .andExpect(jsonPath("$.errorMessage").value("Kartınızın bakiyesi yetersiz."));
@@ -165,7 +167,7 @@ class PaymentFlowTest {
         assertThat(output.getAll()).doesNotContain(CARD_NUMBER).doesNotContain("\"" + CVC + "\"");
         assertThat(response).doesNotContain(CARD_NUMBER);
 
-        String declinedRef = json.readTree(response).get("ref").asText();
+        String declinedRef = json.readTree(response).get("ref").asString();
         String view = mvc.perform(get("/api/payments/" + declinedRef)).andReturn().getResponse().getContentAsString();
         assertThat(view).doesNotContain(CARD_NUMBER).doesNotContain(CVC).contains("\"cardLast4\":\"0001\"");
     }
@@ -524,7 +526,7 @@ class PaymentFlowTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         JsonNode node = json.readTree(response);
-        ref = node.get("ref").asText();
+        ref = node.get("ref").asString();
 
         ArgumentCaptor<ThreeDsRequest> sent = ArgumentCaptor.forClass(ThreeDsRequest.class);
         verify(gateway).init3ds(sent.capture());

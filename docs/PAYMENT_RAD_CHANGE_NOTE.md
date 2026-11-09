@@ -31,7 +31,7 @@ Yeni use case numarası açmak yerine mevcutları genişletmeyi öneriyorum:
 
 ### 3. Sınıf modeli (RAD:204)
 
-Yeni sınıf: `EscrowPayment`. Alanlar: `ref`, `offerId`, `jobRef`, `totalAmount`, `commission`, `proPayout`, `refundedAmount`, `status`, `craftgatePaymentId`, `conversationId`, `cardLast4`, `errorMessage`.
+Yeni sınıf: `EscrowPayment`. Alanlar: `ref`, `offerId`, `jobRef`, `totalAmount`, `commission`, `proPayout`, `refundedAmount`, `status`, `craftgatePaymentId`, `conversationId`, `cardLast4`, `errorMessage`. Yeniden yazımla eklenecekler: `requestId`, `customerId`, `proId`, `jobId`, `channel` (`docs/spec/DATA_MODEL.md`).
 
 Kart numarası ve CVC modele dahil değildir, hiçbir yerde saklanmaz.
 
@@ -51,13 +51,30 @@ DISPUTED → SPLIT_SETTLED veya RELEASED_TO_PRO
 
 Adım 19 artık sahte banka ekranı değil, kart formudur. Banka adımı Craftgate'in gerçek sandbox sayfasında, tam sayfa olarak açılır. RAD'daki ekran görüntüsü ve navigasyon diyagramı buna göre güncellenmeli.
 
-## Karar bekleyen kurallar
+### 6. Yeniden yazımla gelen diğer değişiklikler (9 Kasım 2026)
 
-| Konu | Şu anki durum | Karar veren |
+Flutter uygulaması ve backend sıfırdan yazılıyor (`docs/FLUTTER_RESTART_NOTES.md`). Aşağıdakiler RAD'a işlenmeli; ayrıntı `docs/spec/` altında.
+
+| RAD yeri | Değişiklik | Şartname |
 |---|---|---|
-| %50/%50 uzlaşmada komisyon | Komisyon alınmıyor; 1.225 ₺ iade, 1.225 ₺ usta (adım 46'daki metne uyuldu). Bu bir varsayım | Takım |
-| Hakem "ustaya aktarım" kararı | Normal %10 komisyon kesiliyor (2.205 ₺), oysa adım 46 "₺2.450,00 Ustaya Ödeme" yazıyor | Takım |
-| 48 saat sonra otomatik serbest bırakma | Uygulanmadı, yalnızca adım 43'te metin olarak var | Takım |
+| RAD:208, 671, 683 | Üç farklı durum seti teke indirildi; eski adlarla eşleme tablosu var | `STATE_MACHINES.md` §7 |
+| RAD:220-236 (UC01) | E-posta veya telefon + şifre korunuyor. Kayıt, şifre sıfırlama (e-posta kodu) ve hesap silme eklendi | `API_V1.md` |
+| UC06 | Usta randevuyu onaylar ya da yeni aralık önerir | `STATE_MACHINES.md` §4 |
+| UC08 | Aşamalar: adrese ulaşıldı, iş başladı, iş bitti | `STATE_MACHINES.md` §4 |
+| UC11 | İptal yalnızca iş başlamadan; şikayet açıkken iptal ve iade kapalı | `STATE_MACHINES.md` §4 |
+| RAD:204 | Sınıf modeli tablo düzeyinde tanımlandı | `DATA_MODEL.md` |
+| RAD:182 | Teknoloji: Flutter, Spring Boot 4.1, PostgreSQL 16 | — |
+| RAD:170 | Dokunma alanı 48 dp (tasarım belgesindeki 44 pt yerine RAD esas alındı) | — |
+
+## Kurallar için verilen kararlar
+
+Takımın itirazı yoksa aşağıdaki gibi uygulanır.
+
+| Konu | Karar |
+|---|---|
+| %50/%50 uzlaşmada komisyon | Alınmaz; 1.225 ₺ iade, 1.225 ₺ usta |
+| Hakem "ustaya aktarım" kararı | Normal %10 hizmet bedeli kesilir (2.205 ₺ usta). Ekranlar gerçek tutarı gösterir; adım 46'daki "₺2.450,00 Ustaya Ödeme" metni yeni uygulamada yok |
+| 48 saat sonra otomatik serbest bırakma | Uygulanacak: usta işi bitirdikten 48 saat sonra, açık şikayet yoksa |
 
 ## Ekranlarda kalan çelişkili metinler
 
@@ -78,4 +95,4 @@ Adım 19, 20 ve 46'daki lisans iddiaları kaldırıldı, çünkü bu ekranlar ar
 - Usta aktarımı defter kaydıdır, gerçek para hareketi olmaz.
 - Kart verisi tarayıcıdan backend'e geçer. Canlıya çıkılsaydı PCI kapsamı nedeniyle Craftgate'in ortak ödeme formu kullanılmalıydı.
 - Prototipte gerçek kimlik doğrulama yoktur. Ödeme kaydına erişim tahmin edilemez bir UUID ile yapılır ve sunucu yalnızca yerelde dinler.
-- Ödeme yalnızca HTML prototipte vardır. Eski Flutter uygulaması kaldırıldı, sıfırdan yazılacak (`docs/FLUTTER_RESTART_NOTES.md`).
+- Ödeme şu an HTML prototipte çalışıyor. Yeni Flutter uygulaması aynı servisi 3-D Secure WebView ile kullanacak (`docs/FLUTTER_RESTART_NOTES.md`).

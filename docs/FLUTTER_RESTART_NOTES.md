@@ -1,14 +1,43 @@
 # Flutter Yeniden Başlangıç Notları
 
-**Karar (5 Kasım 2026):** eski `mobile/` klasörü silindi. Mobil uygulama ileride Flutter ile sıfırdan yazılacak. Şimdilik akışların referansı HTML prototiptir (`preview/`).
+**Karar (5 Kasım 2026):** eski `mobile/` klasörü silindi. Mobil uygulama Flutter ile sıfırdan yazılıyor.
+
+**Plan onayı (9 Kasım 2026):** yeni uygulama `feature/flutter-app` dalında yazılıyor. Akışların kaynağı artık `docs/spec/` altındaki şartname; HTML prototip (`preview/`) görsel referans olarak kalıyor.
+
+## Verilen kararlar
+
+| Konu | Karar |
+|---|---|
+| Ödeme | Craftgate sandbox, gerçek 3-D Secure; güvence havuzu backend defterinde |
+| Giriş | E-posta veya telefon + şifre; şifre sıfırlama e-posta koduyla |
+| Admin paneli | Flutter Web, aynı depoda (`apps/admin`) |
+| Platform | Önce iOS (Claude iOS Simulator); Android sonra |
+| Backend | `backend/` genişletiliyor: Spring Boot 4.1, Java 21, PostgreSQL 16, Flyway |
+| Otomatik aktarım | Usta işi bitirdikten 48 saat sonra, şikayet yoksa |
+| Hedef | Önce RAD tarihleri (çekirdek 4 Aralık, test 25 Aralık, son kod 2 Ocak), sonra mağaza |
+
+## Depo yapısı
+
+```
+backend/                  Spring Boot API
+apps/mobile/              Flutter iOS/Android
+apps/admin/               Flutter Web admin
+packages/bitadilat_api/   Saf Dart: modeller, API istemcisi
+packages/bitadilat_ui/    Tema, token'lar, ortak bileşenler
+pubspec.yaml              Dart pub workspace kökü
+```
+
+**Flutter paketleri:** Riverpod 3, go_router, dio, freezed ve json_serializable, flutter_secure_storage, webview_flutter (3DS), image_picker, intl ve gen-l10n.
 
 ## Eski koda erişim
 
-Son hali `69607a0` commit'inde duruyor. Silme commit'lendikten sonra bile geri alınabilir:
+Son hali `69607a0` commit'inde duruyor:
 
 ```bash
 git restore --source=69607a0 -- mobile
 ```
+
+Yeniden kullanılabilecek tek parça tema token'larıdır: `git show 69607a0:mobile/lib/core/theme/app_colors.dart`.
 
 ## Silinen sürüm neydi?
 
@@ -18,34 +47,23 @@ git restore --source=69607a0 -- mobile
 
 ## Yeni sürümde tekrarlanmaması gerekenler
 
-| Eski sorun | Yeni sürümde |
-|---|---|
-| Veri ekranlar arasında taşınmıyordu | Tek iş modeli ve durum makinesi, kimlikli rotalar (`/jobs/:id`), numaralı `/step/N` yok |
-| Müşteri ve usta birbirini etkilemiyordu | Durum backend'de tutulur, iki taraf aynı kaydı görür |
-| Her teklif aynı detayı açıyordu | Detay ekranları kimlikle veri yükler |
-| Oturum ve rota koruması yoktu | Gerçek OTP, oturum, role göre yönlendirme |
-| Rol sızıntısı (usta müşteri ekranına düşüyordu) | Rol başına ayrı sekme yapısı (`ShellRoute`), role özel sohbet ve şikayet |
-| Geri tuşu gönderilmiş forma dönüyordu | Kayıttan sonra yığın değiştirilir; sekme köklerinde geri oku olmaz |
-| Boş düğmeler, doğrulamasız formlar | Çalışmayan öğe yayınlanmaz; form doğrulaması zorunlu |
-| Dil seçimi işlevsizdi | Baştan Flutter yerelleştirmesi, sabit metin yok |
-| 390 px sınırı, klavye ve taşma sorunları | Duyarlı yerleşim, küçük ekran ve büyük yazı testi |
-| Yayın derlemesinde `INTERNET` izni ve imza eksikti | Baştan doğru uygulama adı, izinler ve imza |
+| Eski sorun | Yeni sürümde | Şartname |
+|---|---|---|
+| Veri ekranlar arasında taşınmıyordu | Tek iş modeli, kimlikli rotalar (`/jobs/:id`) | `STATE_MACHINES.md`, `ROLE_SCREEN_MAP.md` |
+| Müşteri ve usta birbirini etkilemiyordu | Durum backend'de, iki taraf aynı kaydı görür | `STATE_MACHINES.md` |
+| Her teklif aynı detayı açıyordu | Detay ekranları kimlikle veri yükler | `API_V1.md` |
+| Oturum ve rota koruması yoktu | Oturum, role göre yönlendirme | `NAVIGATION_RULES.md` §3 |
+| Rol sızıntısı | Rol başına sekme yapısı, ortak ekran rolü değiştirmez | `NAVIGATION_RULES.md` §2 |
+| Geri tuşu gönderilmiş forma dönüyordu | Kayıttan sonra yığın değişir | `NAVIGATION_RULES.md` §1 |
+| Boş düğmeler, doğrulamasız formlar | Çalışmayan öğe yayınlanmaz; form doğrulaması zorunlu | `NAVIGATION_RULES.md` §5-6 |
+| Dil seçimi işlevsizdi | Baştan gen-l10n, TR ve EN | `GLOSSARY.md` |
+| 390 px sınırı, taşmalar | Duyarlı yerleşim, 320 px ve 2x yazı testi | — |
+| `INTERNET` izni, ad ve imza eksikti | Bundle id `com.bitadilat.app`, ad "BiTadilat", iOS 16+ | — |
 
 Silinen sürümün test kanıtları ve kabul kriterleri: `docs/MOBILE_APP_AUDIT.md`, Bölüm 6.
 
-## Başlamadan önce gereken kararlar
+## Test ortamı
 
-Gerçek ürün kapsamı, emanet modeli, iptal ve komisyon kuralları, admin paneli yeri, backend kapsamı ve takvim.
-
-## İlk teslimat için asgari kapsam
-
-1. Akış şartnamesi: iş durum makinesi, rol-ekran haritası, terim sözlüğü, geri kuralları.
-2. Backend: iş, teklif, randevu ve mesaj API'leri, oturum, PostgreSQL.
-3. Flutter temeli: tema, yönlendirme, oturum, API katmanı, yolculuk testleri.
-4. Müşteri ve usta yolculuğu uçtan uca; ödeme için 3-D Secure WebView.
-
-Tasarım dili için `BiTadilatDESIGN.md` ve prototip ekranları kullanılabilir. Backend ödeme servisi (`backend/`) korunur.
-
-## Test ortamı notu
-
-Bu bilgisayarda Xcode ve Android emülatörü yoktu. Yeni sürüm gerçek cihazda veya emülatörde de test edilmeli.
+- iOS Simulator için tam Xcode gerekir. 9 Kasım'da bu bilgisayarda yalnızca Command Line Tools vardı; kurulum adımları plan dosyasında.
+- Simulator Mac'in ağını kullanır, bu yüzden backend `http://localhost:8090` adresinden erişilebilir. Gerçek cihazda 3DS dönüşü için tünel (`cloudflared`) gerekir.
+- Android emülatörü sonraki aşamada kurulacak.
