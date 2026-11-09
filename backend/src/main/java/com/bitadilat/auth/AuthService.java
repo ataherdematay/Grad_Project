@@ -88,7 +88,7 @@ public class AuthService {
             user = users.saveAndFlush(user);
         } catch (DataIntegrityViolationException e) {
             // Eşzamanlı kayıt yarışı: veritabanı benzersizlik kısıtı son sözü söyler.
-            throw e.getMessage() != null && e.getMessage().contains("phone") ? phoneTaken() : emailTaken();
+            throw conflictFor(e);
         }
         return issueSession(user, UUID.randomUUID(), userAgent);
     }
@@ -100,9 +100,15 @@ public class AuthService {
         String identifier = r.identifier().trim();
         boolean byEmail = identifier.contains("@");
         String phone = byEmail ? null : PhoneNumbers.normalize(identifier);
-        String key = byEmail ? identifier.toLowerCase(Locale.ROOT) : (phone != null ? phone : identifier.toLowerCase(Locale.ROOT));
+        Optional<User> found = byEmail ? users.findByEmailIgnoreCase(identifier)
+                : (phone != null ? users.findByPhone(phone) : Optional.empty());
+        // Sayaç anahtarı: hesap bulunduysa hesabın kendisi (e-posta, telefon ve tüm yazımlar tek sayaç),
+        // bulunamadıysa normalleştirilmiş tanımlayıcı.
+        String key = found.map(u -> "user:" + u.getId())
+                .orElse("id:" + (phone != null ? phone : identifier.toLowerCase(Locale.ROOT)));
         String hash = Hashing.sha256Hex(key);
 
+        attempts.lockIdentifier(hash);
         long failures = attempts.countByIdentifierHashAndSuccessFalseAndCreatedAtAfter(
                 hash, Instant.now().minus(LOGIN_WINDOW));
         if (failures >= MAX_FAILED_LOGINS) {
@@ -110,8 +116,6 @@ public class AuthService {
                     "Çok fazla başarısız deneme. Bir süre sonra tekrar dene.");
         }
 
-        Optional<User> found = byEmail ? users.findByEmailIgnoreCase(identifier)
-                : (phone != null ? users.findByPhone(phone) : Optional.empty());
         // Kullanıcı yoksa da hash karşılaştırması yapılır: yanıt süresi hesap varlığını sızdırmasın.
         boolean passwordOk = encoder.matches(r.password(), found.map(User::getPasswordHash).orElse(dummyHash));
         User user = found.filter(u -> passwordOk && u.getStatus() != UserStatus.DELETED).orElse(null);
@@ -149,7 +153,8 @@ public class AuthService {
             throw ApiException.unauthenticated("Refresh token geçersiz.");
         }
         if (current.getExpiresAt().isBefore(now)) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "TOKEN_EXPIRED", "Refresh token'ın süresi doldu.");
+            // TOKEN_EXPIRED yalnızca access token içindir (istemci onu görünce yeniler); burada yeniden giriş gerekir.
+            throw ApiException.unauthenticated("Refresh token'ın süresi doldu.");
         }
         User user = users.findById(current.getUserId())
                 .orElseThrow(() -> ApiException.unauthenticated("Refresh token geçersiz."));
@@ -190,6 +195,15 @@ public class AuthService {
         refreshTokens.saveAndFlush(token);
         return new AuthResponse(jwt.issueAccessToken(user.getId()), raw,
                 (int) JwtService.ACCESS_TTL.toSeconds(), accounts.toMe(user));
+    }
+
+    /**
+     * Eşzamanlı kayıt yarışında hangi benzersizlik kısıtının çiğnendiğini bulur. Hibernate mesajı SQL'i de içerdiği
+     * için ("insert into users (..., phone, ...)") sütun adına değil kısıt adına bakılır.
+     */
+    static ApiException conflictFor(DataIntegrityViolationException e) {
+        String message = e.getMostSpecificCause().getMessage();
+        return message != null && message.contains("users_phone_key") ? phoneTaken() : emailTaken();
     }
 
     private static ApiException emailTaken() {

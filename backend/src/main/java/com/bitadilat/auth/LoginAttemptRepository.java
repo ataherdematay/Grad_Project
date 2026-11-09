@@ -9,6 +9,13 @@ import org.springframework.data.repository.query.Param;
 
 public interface LoginAttemptRepository extends JpaRepository<LoginAttempt, UUID> {
 
+    /**
+     * Aynı tanımlayıcı için girişleri işlem sonuna kadar sıraya sokar (Postgres advisory lock). Böylece paralel
+     * istekler sayaç kontrolünü aynı anda geçip sınırı aşamaz.
+     */
+    @Query(value = "select 1 from pg_advisory_xact_lock(hashtextextended(:hash, 0))", nativeQuery = true)
+    Integer lockIdentifier(@Param("hash") String hash);
+
     long countByIdentifierHashAndSuccessFalseAndCreatedAtAfter(String identifierHash, Instant since);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)

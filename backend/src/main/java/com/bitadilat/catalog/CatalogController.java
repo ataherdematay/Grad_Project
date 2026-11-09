@@ -1,7 +1,10 @@
 package com.bitadilat.catalog;
 
 import com.bitadilat.common.ApiException;
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +38,10 @@ public class CatalogController {
 
     @GetMapping("/districts")
     public List<DistrictView> districts() {
+        // Sıralama Türk alfabesine göre Java'da yapılır; veritabanı harmanlaması (C, en_US, macOS) Ç/Ş/Ü'yü yanlış dizer.
+        Collator turkish = Collator.getInstance(Locale.forLanguageTag("tr-TR"));
         return districts.findByActiveTrueOrderByNameAsc().stream()
+                .sorted(Comparator.comparing(District::getName, turkish))
                 .map(d -> new DistrictView(d.getId(), d.getName(), d.getSide()))
                 .toList();
     }

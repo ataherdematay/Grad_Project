@@ -110,7 +110,8 @@ public class DevDataService {
     /** Katalog (kategori, ilçe) hariç tüm verileri siler ve seti yeniden yükler. */
     @Transactional
     public void resetAndSeed() {
-        jdbc.execute("TRUNCATE TABLE users, media, escrow_payment, payout_ledger, admin_actions "
+        // login_attempts users'a bağlı değil (yalnız tanımlayıcı özeti); açıkça boşaltılmazsa giriş kilidi taşınır.
+        jdbc.execute("TRUNCATE TABLE users, media, escrow_payment, payout_ledger, admin_actions, login_attempts "
                 + "RESTART IDENTITY CASCADE");
         seed();
     }

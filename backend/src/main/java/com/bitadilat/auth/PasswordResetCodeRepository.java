@@ -15,6 +15,8 @@ public interface PasswordResetCodeRepository extends JpaRepository<PasswordReset
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<PasswordResetCode> findFirstByUserIdAndUsedAtIsNullOrderByCreatedAtDesc(UUID userId);
 
+    long countByUserIdAndCreatedAtAfter(UUID userId, Instant since);
+
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update PasswordResetCode c set c.usedAt = :now where c.userId = :userId and c.usedAt is null")
     int invalidateAll(@Param("userId") UUID userId, @Param("now") Instant now);

@@ -96,6 +96,21 @@ class DevSeedTest extends ApiTestBase {
     }
 
     @Test
+    void resetClearsLoginThrottling() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            call(HttpMethod.POST, "/api/v1/auth/login", null,
+                    Map.of("identifier", "ali@bitadilat.test", "password", "Yanlis123"))
+                    .andExpect(status().isUnauthorized());
+        }
+        call(HttpMethod.POST, "/api/v1/auth/login", null, Map.of("identifier", "ali@bitadilat.test", "password", DEMO))
+                .andExpect(status().isTooManyRequests());
+
+        // Entegrasyon testleri her senaryodan önce reset çağırır; önceki senaryonun kilidi taşınmamalı.
+        mvc.perform(post("/api/v1/dev/reset")).andExpect(status().isNoContent());
+        login("ali@bitadilat.test");
+    }
+
+    @Test
     void resetIsRefusedFromNonLoopbackAddress() throws Exception {
         mvc.perform(post("/api/v1/dev/reset").with(request -> {
                     request.setRemoteAddr("10.1.2.3");

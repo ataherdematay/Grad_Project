@@ -1,6 +1,7 @@
 package com.bitadilat.payment.exception;
 
 import com.bitadilat.common.ApiException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * Tüm API hatalarını tek biçimde döner. Doğrulama ve okuma hatalarında gelen değerler yanıta ve
@@ -90,9 +92,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    /** Okunamayan gövde. v1 sözleşmesinde 400 kodu VALIDATION_FAILED'dır; eski uç noktalar BAD_REQUEST'te kalır. */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> unreadable(HttpMessageNotReadableException e) {
-        return ResponseEntity.badRequest().body(body("BAD_REQUEST", BAD_REQUEST));
+    public ResponseEntity<Map<String, Object>> unreadable(HttpMessageNotReadableException e,
+                                                          HttpServletRequest request) {
+        String code = request.getRequestURI().startsWith("/api/v1/") ? "VALIDATION_FAILED" : "BAD_REQUEST";
+        return ResponseEntity.badRequest().body(body(code, BAD_REQUEST));
+    }
+
+    /**
+     * Yol veya sorgu parametresi türüne uymuyor (ör. UUID beklenen yerde "abc"). Yol kimliğinde kayıt "yok" sayılır
+     * (404, varlık sızdırılmaz); diğer parametrelerde 400 + alan adı. Önceden genel işleyiciye düşüp 500 dönüyordu.
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> typeMismatch(MethodArgumentTypeMismatchException e) {
+        if (e.getParameter().hasParameterAnnotation(org.springframework.web.bind.annotation.PathVariable.class)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body("NOT_FOUND", "Kayıt bulunamadı."));
+        }
+        Map<String, Object> body = body("VALIDATION_FAILED", BAD_REQUEST);
+        body.put("field", e.getName());
+        return ResponseEntity.badRequest().body(body);
     }
 
     @ExceptionHandler(Exception.class)

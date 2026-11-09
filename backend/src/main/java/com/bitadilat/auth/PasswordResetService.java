@@ -15,13 +15,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** 6 haneli kod, 15 dakika geçerli, 5 hatalı denemede geçersiz. */
+/**
+ * 6 haneli kod, 15 dakika geçerli, 5 hatalı denemede geçersiz. Hesap başına saatte en fazla 5 kod üretilir:
+ * aksi halde her yeni kodla 5 deneme daha kazanılır ve 10^6'lık alan sınırsız taranabilir (ayrıca e-posta bombası).
+ */
 @Slf4j
 @Service
 public class PasswordResetService {
 
     static final Duration CODE_TTL = Duration.ofMinutes(15);
     static final int MAX_ATTEMPTS = 5;
+    static final int MAX_CODES_PER_WINDOW = 5;
+    static final Duration CODE_WINDOW = Duration.ofHours(1);
 
     private final UserRepository users;
     private final PasswordResetCodeRepository codes;
@@ -50,6 +55,11 @@ public class PasswordResetService {
 
     private void issueCode(User user) {
         Instant now = Instant.now();
+        if (codes.countByUserIdAndCreatedAtAfter(user.getId(), now.minus(CODE_WINDOW)) >= MAX_CODES_PER_WINDOW) {
+            // Yanıt yine 202; sınır aşımı dışarıdan görünmez.
+            log.warn("Şifre sıfırlama kodu sınırı aşıldı. kullanıcı={}", user.getId());
+            return;
+        }
         codes.invalidateAll(user.getId(), now);
         String code = String.format("%06d", random.nextInt(1_000_000));
         PasswordResetCode row = new PasswordResetCode();

@@ -223,6 +223,16 @@ class AccountTest extends ApiTestBase {
     }
 
     @Test
+    void malformedAddressIdIsNotFoundNotServerError() throws Exception {
+        Account a = register();
+        call(HttpMethod.GET, ADDRESSES + "/uuid-degil", a.access(), null)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("NOT_FOUND"));
+        call(HttpMethod.DELETE, ADDRESSES + "/123", a.access(), null)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void addressValidation() throws Exception {
         Account a = register();
         Map<String, Object> bad = addressBody("Ev", "Adres");

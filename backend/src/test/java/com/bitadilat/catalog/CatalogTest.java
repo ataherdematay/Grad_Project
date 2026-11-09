@@ -54,6 +54,27 @@ class CatalogTest extends ApiTestBase {
     }
 
     @Test
+    void districtsAreCompleteCorrectlySpelledAndInTurkishAlphabeticalOrder() throws Exception {
+        List<String> anadolu = List.of("Adalar", "Ataşehir", "Beykoz", "Çekmeköy", "Kadıköy", "Kartal", "Maltepe",
+                "Pendik", "Sancaktepe", "Sultanbeyli", "Şile", "Tuzla", "Ümraniye", "Üsküdar");
+        // Türk alfabesi sırası (ç c'den, ş s'den, ü u'dan sonra), veritabanı harmanlamasından bağımsız.
+        List<String> expected = List.of("Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler",
+                "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece",
+                "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören",
+                "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer",
+                "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar",
+                "Zeytinburnu");
+        JsonNode list = body(call(HttpMethod.GET, "/api/v1/districts", null, null).andExpect(status().isOk()));
+        List<String> names = new ArrayList<>();
+        for (JsonNode d : list) {
+            names.add(d.get("name").asString());
+            assertThat(d.get("side").asString()).as(d.get("name").asString())
+                    .isEqualTo(anadolu.contains(d.get("name").asString()) ? "ANADOLU" : "AVRUPA");
+        }
+        assertThat(names).containsExactlyElementsOf(expected);
+    }
+
+    @Test
     void questionsAreEmptyForKnownCategoryAndNotFoundOtherwise() throws Exception {
         call(HttpMethod.GET, "/api/v1/categories/plumbing/questions", null, null)
                 .andExpect(status().isOk())
