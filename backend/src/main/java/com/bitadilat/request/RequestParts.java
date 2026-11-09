@@ -40,9 +40,14 @@ public class RequestParts {
     public void replacePhotos(UUID requestId, List<UUID> mediaIds) {
         jdbc.update("delete from request_photos where request_id = ?", requestId);
         int order = 0;
-        for (UUID m : mediaIds) {
-            jdbc.update("insert into request_photos (request_id, media_id, sort_order) values (?, ?, ?)",
-                    requestId, m, order++);
+        try {
+            for (UUID m : mediaIds) {
+                jdbc.update("insert into request_photos (request_id, media_id, sort_order) values (?, ?, ?)",
+                        requestId, m, order++);
+            }
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            // ux_request_photos_media: eşzamanlı başka bir istek aynı fotoğrafı az önce bağladı.
+            throw com.bitadilat.common.ApiException.validation("photoIds", "Medya zaten kullanılmış.");
         }
     }
 

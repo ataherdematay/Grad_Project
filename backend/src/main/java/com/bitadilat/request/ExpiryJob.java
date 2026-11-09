@@ -83,9 +83,13 @@ public class ExpiryJob {
     }
 
     private int expireOffers(Instant now) {
+        // Talep satırı da kilitlenir: kullanıcı işlemleri (iptal, düzenleme, ret, geri çekme, teklif verme) önce talebi
+        // kilitler; o sırada zamanlayıcı aynı teklife dokunursa kullanıcı işleminin güncellemesi sürüm çakışmasına düşer.
         List<UUID> ids = jdbc.queryForList("""
-                select id from offers where status = 'PENDING' and valid_until <= ?
-                order by valid_until limit ? for update skip locked""", UUID.class, java.sql.Timestamp.from(now), BATCH);
+                select o.id from offers o join service_requests r on r.id = o.request_id
+                where o.status = 'PENDING' and o.valid_until <= ?
+                order by o.valid_until limit ? for update of o, r skip locked""",
+                UUID.class, java.sql.Timestamp.from(now), BATCH);
         for (UUID id : ids) {
             Offer o = offers.findById(id).orElseThrow();
             o.moveTo(OfferStatus.EXPIRED);

@@ -68,10 +68,15 @@ public class ProService {
         }
         List<String> categoryIds = checkCategories(b.categoryIds());
         List<Integer> districtIds = checkDistricts(b.districtIds());
+        String businessName = businessName(b.businessName());
         Set<DocumentType> types = EnumSet.noneOf(DocumentType.class);
+        Set<UUID> mediaIds = new java.util.HashSet<>();
         for (DocumentIn d : b.documents()) {
             if (!types.add(d.type())) {
                 throw ApiException.validation("documents", "Aynı belge türü birden çok kez gönderilmiş.");
+            }
+            if (!mediaIds.add(d.mediaId())) {
+                throw ApiException.validation("documents", "Aynı dosya birden çok belge için kullanılamaz.");
             }
         }
         if (!types.contains(DocumentType.IDENTITY) || !types.contains(DocumentType.TRADE_CERT)) {
@@ -84,7 +89,7 @@ public class ProService {
             profile = new ProProfile();
             profile.setUserId(userId);
         }
-        profile.setBusinessName(b.businessName().trim());
+        profile.setBusinessName(businessName);
         profile.setBio(b.bio() == null || b.bio().isBlank() ? null : b.bio().trim());
         profile.setExperienceYears(b.experienceYears());
         profile.setReviewStatus(ReviewStatus.PENDING_REVIEW);
@@ -94,14 +99,19 @@ public class ProService {
         replaceCategoriesAndDistricts(userId, categoryIds, districtIds);
         documents.deleteByProId(userId);
         documents.flush();
-        for (DocumentIn d : b.documents()) {
-            ProDocument doc = new ProDocument();
-            doc.setProId(userId);
-            doc.setType(d.type());
-            doc.setMediaId(d.mediaId());
-            documents.save(doc);
+        try {
+            for (DocumentIn d : b.documents()) {
+                ProDocument doc = new ProDocument();
+                doc.setProId(userId);
+                doc.setType(d.type());
+                doc.setMediaId(d.mediaId());
+                documents.save(doc);
+            }
+            documents.flush();
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            // ux_pro_documents_media: eşzamanlı başka bir başvuru aynı dosyayı az önce bağladı.
+            throw ApiException.validation("documents", "Medya zaten kullanılmış.");
         }
-        documents.flush();
         return application(userId);
     }
 
@@ -128,10 +138,11 @@ public class ProService {
     @Transactional
     public ProfileView updateProfile(UUID userId, ProfileBody b) {
         ProProfile p = access.requireApproved(userId);
+        String businessName = businessName(b.businessName());
         List<String> categoryIds = checkCategories(b.categoryIds());
         List<Integer> districtIds = checkDistricts(b.districtIds());
         List<ProWorkingHours> rows = parseHours(userId, b.workingHours());
-        p.setBusinessName(b.businessName().trim());
+        p.setBusinessName(businessName);
         p.setBio(b.bio() == null || b.bio().isBlank() ? null : b.bio().trim());
         p.setExperienceYears(b.experienceYears());
         profiles.saveAndFlush(p);
@@ -180,6 +191,15 @@ public class ProService {
         districtIds.forEach(d -> proDistricts.save(new ProDistrict(proId, d)));
         proCategories.flush();
         proDistricts.flush();
+    }
+
+    /** 2-100 karakter kuralı kırpılmış ada uygulanır. */
+    private static String businessName(String raw) {
+        String t = raw.trim();
+        if (t.length() < 2 || t.length() > 100) {
+            throw ApiException.validation("businessName", "İşletme adı 2-100 karakter olmalı.");
+        }
+        return t;
     }
 
     private List<String> checkCategories(List<String> ids) {

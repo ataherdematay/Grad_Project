@@ -404,6 +404,93 @@ class OfferFlowTest extends Wave2TestBase {
         assertThat(again.requests() + again.offers()).isZero();
     }
 
+    // ─── Denetim (wave 2) ───────────────────────────────────────────────────
+
+    @Test
+    void pastDuePendingOfferDoesNotBlockANewOfferBeforeTheSchedulerRuns() throws Exception {
+        Account ali = register();
+        Account usta = pro("Mavi", List.of("plumbing"), List.of("Kadıköy"));
+        String req = createRequest(ali, addressId(ali, "Kadıköy")).get("id").asString();
+        String old = sendOffer(usta, req, offerBody("1000", "0")).get("id").asString();
+        jdbc.update("update offers set valid_until = now() - interval '1 minute' where id = ?::uuid", old);
+
+        // Okuma anında EXPIRED görünen teklif yeni teklife engel olmaz (409 ALREADY_OFFERED değil).
+        String fresh = sendOffer(usta, req, offerBody("900", "0")).get("id").asString();
+        assertThat(fresh).isNotEqualTo(old);
+        assertThat(statusOf("offers", old)).isEqualTo("EXPIRED");
+        assertThat(statusOf("offers", fresh)).isEqualTo("PENDING");
+    }
+
+    @Test
+    void totalAboveColumnPrecisionIs400NotServerError() throws Exception {
+        Account ali = register();
+        Account usta = pro("Mavi", List.of("plumbing"), List.of("Kadıköy"));
+        String req = createRequest(ali, addressId(ali, "Kadıköy")).get("id").asString();
+        call(HttpMethod.POST, "/api/v1/pro/requests/" + req + "/offers", usta.access(),
+                offerBody("9999999999.99", "1.00"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+                .andExpect(jsonPath("$.field").value("materialsAmount"));
+    }
+
+    @Test
+    void idempotencyKeyIsScopedToThePro() throws Exception {
+        Account ali = register();
+        Account usta = pro("Mavi", List.of("plumbing"), List.of("Kadıköy"));
+        Account rival = pro("Rakip", List.of("plumbing"), List.of("Kadıköy"));
+        String req = createRequest(ali, addressId(ali, "Kadıköy")).get("id").asString();
+        String url = "/api/v1/pro/requests/" + req + "/offers";
+        String key = newKey();
+        JsonNode mine = body(send(usta, url, key, offerBody("1000", "0")).andExpect(status().isCreated()));
+        // Başka usta aynı anahtarla ilk ustanın yanıtını (ücret/net dahil) alamaz; kendi teklifi oluşur.
+        JsonNode theirs = body(send(rival, url, key, offerBody("777", "0")).andExpect(status().isCreated()));
+        assertThat(theirs.get("id").asString()).isNotEqualTo(mine.get("id").asString());
+        assertThat(theirs.get("pro").get("id").asString()).isEqualTo(rival.id());
+        assertThat(theirs.get("totalAmount").asDouble()).isEqualTo(777.0);
+        assertThat(count("select count(*) from offers where request_id = ?::uuid", req)).isEqualTo(2);
+    }
+
+    @Test
+    void schedulerSkipsOffersWhoseRequestIsLockedByAUserAction() throws Exception {
+        Account ali = register();
+        Account usta = pro("Mavi", List.of("plumbing"), List.of("Kadıköy"));
+        String req = createRequest(ali, addressId(ali, "Kadıköy")).get("id").asString();
+        String offer = sendOffer(usta, req, offerBody("1000", "0")).get("id").asString();
+        jdbc.update("update offers set valid_until = now() - interval '1 minute' where id = ?::uuid", offer);
+
+        // Bir kullanıcı işlemi (iptal, ret, geri çekme...) talep satırını kilitlemiş durumda: zamanlayıcı o talebin
+        // tekliflerine dokunmamalı, yoksa kullanıcı işleminin teklif güncellemesi sürüm çakışmasıyla 500'e düşer.
+        java.util.concurrent.CountDownLatch locked = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+        org.springframework.transaction.support.TransactionTemplate tx =
+                new org.springframework.transaction.support.TransactionTemplate(txManager);
+        Thread holder = new Thread(() -> tx.executeWithoutResult(s -> {
+            jdbc.queryForList("select id from service_requests where id = ?::uuid for update", req);
+            locked.countDown();
+            try {
+                release.await(10, java.util.concurrent.TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }));
+        holder.start();
+        try {
+            assertThat(locked.await(10, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            ExpiryJob.Result skipped = expiryJob.run(Instant.now());
+            assertThat(skipped.offers()).isZero();
+            assertThat(statusOf("offers", offer)).isEqualTo("PENDING");
+        } finally {
+            release.countDown();
+            holder.join(10_000);
+        }
+        // Kilit kalkınca bir sonraki çalışma işler.
+        assertThat(expiryJob.run(Instant.now()).offers()).isEqualTo(1);
+        assertThat(statusOf("offers", offer)).isEqualTo("EXPIRED");
+    }
+
+    @Autowired
+    org.springframework.transaction.PlatformTransactionManager txManager;
+
     private String statusOf(String table, String id) {
         return jdbc.queryForObject("select status from " + table + " where id = ?::uuid", String.class, id);
     }

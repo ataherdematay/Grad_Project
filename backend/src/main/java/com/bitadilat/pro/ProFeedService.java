@@ -85,9 +85,11 @@ public class ProFeedService {
         access.requireApproved(proId);
         ServiceRequest r = requests.findById(requestId).orElseThrow(() -> ApiException.notFound("Talep bulunamadı."));
         Instant now = Instant.now();
-        boolean hasOffer = !r.getCustomerId().equals(proId) && offers.existsByRequestIdAndProId(requestId, proId);
-        boolean visible = access.matches(proId, r) && r.isOpenAt(now);
-        if (!visible && !hasOffer) {
+        // ROLE_SCREEN_MAP: talep ayrıntısı ve fotoğrafları yalnız OPEN iken eşleşen onaylı ustalara. Bekleyen teklifi
+        // olan usta (sonradan ilçe/kategori değiştirse de) talep açıkken görmeye devam eder; talep kapanınca kimse.
+        boolean hasPending = !r.getCustomerId().equals(proId) && offerService.pendingOf(proId, requestId, now).isPresent();
+        boolean visible = r.isOpenAt(now) && (access.matches(proId, r) || hasPending);
+        if (!visible) {
             throw ApiException.notFound("Talep bulunamadı.");
         }
         FeedItem f = items(proId, List.of(r), now).get(0);

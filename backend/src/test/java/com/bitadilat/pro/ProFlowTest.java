@@ -75,6 +75,23 @@ class ProFlowTest extends Wave2TestBase {
     }
 
     @Test
+    void applicationRejectsOneFileForTwoDocumentsAndPaddedShortName() throws Exception {
+        Account hasan = register();
+        String one = upload(hasan, pdf(), "PRO_DOCUMENT").get("id").asString();
+        String other = upload(hasan, pdf(), "PRO_DOCUMENT").get("id").asString();
+        // Tek dosya hem kimlik hem mesleki belge sayılamaz.
+        call(HttpMethod.POST, "/api/v1/pro/application", hasan.access(),
+                application(List.of(doc("IDENTITY", one), doc("TRADE_CERT", one))))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("documents"));
+        // Boşlukla doldurulmuş tek harfli ad, kırpılınca 2 karakterden kısa: 400.
+        Map<String, Object> padded = application(List.of(doc("IDENTITY", one), doc("TRADE_CERT", other)));
+        padded.put("businessName", "   A   ");
+        call(HttpMethod.POST, "/api/v1/pro/application", hasan.access(), padded)
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("businessName"));
+        assertThat(count("select count(*) from pro_profiles")).isZero();
+    }
+
+    @Test
     void applicationLifecyclePendingBlocksResubmitNeedsDocumentsAllowsIt() throws Exception {
         Account hasan = register();
         String id = upload(hasan, jpeg(10, 10), "PRO_DOCUMENT").get("id").asString();
@@ -237,11 +254,20 @@ class ProFlowTest extends Wave2TestBase {
                 .andExpect(jsonPath("$.myOffer.serviceFee").value(110.0))
                 .andExpect(jsonPath("$.myOfferId").isNotEmpty());
 
-        // Kapanınca teklifi olmayan usta göremez; teklifi olan görmeye devam eder.
+        // Askıdaki usta (SUSPENDED) eşleşse de göremez.
+        Account suspended = pro("Askıda", List.of("plumbing"), List.of("Kadıköy"));
+        jdbc.update("update pro_profiles set review_status = 'SUSPENDED' where user_id = ?::uuid", suspended.id());
+        call(HttpMethod.GET, "/api/v1/pro/requests/" + req, suspended.access(), null)
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.code").value("PRO_NOT_APPROVED"));
+
+        // ROLE_SCREEN_MAP erişim kuralı: talep ayrıntısı ve fotoğrafları yalnız OPEN iken eşleşen onaylı ustalara.
+        // Kapanınca teklifi olan usta da dahil kimse göremez (fotoğraf adresi imzalanmaz).
         Account late = pro("Geç", List.of("plumbing"), List.of("Kadıköy"));
         call(HttpMethod.POST, "/api/v1/requests/" + req + "/cancel", ali.access(), Map.of("reason", "SOLVED"));
         call(HttpMethod.GET, "/api/v1/pro/requests/" + req, late.access(), null).andExpect(status().isNotFound());
-        call(HttpMethod.GET, "/api/v1/pro/requests/" + req, usta.access(), null).andExpect(status().isOk());
+        String closed = call(HttpMethod.GET, "/api/v1/pro/requests/" + req, usta.access(), null)
+                .andExpect(status().isNotFound()).andReturn().getResponse().getContentAsString();
+        assertThat(closed).doesNotContain("sig=");
     }
 
     // ─── Profil ─────────────────────────────────────────────────────────────

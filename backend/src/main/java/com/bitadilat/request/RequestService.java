@@ -94,8 +94,8 @@ public class RequestService {
         r.setUrgency(b.urgency());
         r.setPreferredFrom(from);
         r.setPreferredTo(to);
-        r.setTitle(b.title().trim());
-        r.setDescription(b.description().trim());
+        r.setTitle(text("title", b.title(), 5, 150));
+        r.setDescription(text("description", b.description(), 20, 2000));
         r.setDistrictId(address.districtId());
         r.setNeighborhood(address.neighborhood());
         r.setAddressId(address.id());
@@ -142,10 +142,10 @@ public class RequestService {
         }
         r.setUrgency(urgency);
         if (b.title() != null) {
-            r.setTitle(b.title().trim());
+            r.setTitle(text("title", b.title(), 5, 150));
         }
         if (b.description() != null) {
-            r.setDescription(b.description().trim());
+            r.setDescription(text("description", b.description(), 20, 2000));
         }
         if (b.addressId() != null) {
             AddressView a = addresses.get(userId, b.addressId());
@@ -308,6 +308,15 @@ public class RequestService {
         if (to.isAfter(limit)) {
             throw ApiException.validation("preferredTo", "Bitiş en fazla 30 gün sonra olabilir.");
         }
+    }
+
+    /** Uzunluk kuralı kırpılmış metne uygulanır (boşlukla doldurulmuş kısa metin geçmez). */
+    private static String text(String field, String value, int min, int max) {
+        String t = value.trim();
+        if (t.length() < min || t.length() > max) {
+            throw ApiException.validation(field, field + " " + min + "-" + max + " karakter olmalı.");
+        }
+        return t;
     }
 
     private static List<UUID> distinct(List<UUID> ids) {

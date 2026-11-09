@@ -302,6 +302,59 @@ class RequestFlowTest extends Wave2TestBase {
     }
 
     @Test
+    void lengthRulesApplyToTrimmedTextOnCreateAndPatch() throws Exception {
+        Account ali = register();
+        String addr = addressId(ali, "Kadıköy");
+        Map<String, Object> padded = requestBody(addr);
+        padded.put("title", "   ab   ");
+        call(HttpMethod.POST, "/api/v1/requests", ali.access(), padded)
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("title"));
+        Map<String, Object> paddedDesc = requestBody(addr);
+        paddedDesc.put("description", "kısa" + " ".repeat(30));
+        call(HttpMethod.POST, "/api/v1/requests", ali.access(), paddedDesc)
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("description"));
+
+        String id = createRequest(ali, addr).get("id").asString();
+        call(HttpMethod.PATCH, "/api/v1/requests/" + id, ali.access(), Map.of("title", "      "))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("title"));
+        call(HttpMethod.PATCH, "/api/v1/requests/" + id, ali.access(), Map.of("description", " ".repeat(25)))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("description"));
+        assertThat(jdbc.queryForObject("select title from service_requests where id = ?::uuid", String.class, id))
+                .isEqualTo("Banyo lavabo altı su kaçağı");
+    }
+
+    @Test
+    void samePhotoCannotBeAttachedToTwoRequestsEvenConcurrently() throws Exception {
+        Account ali = register();
+        String addr = addressId(ali, "Kadıköy");
+        for (int round = 0; round < 5; round++) {
+            String photo = upload(ali, jpeg(8 + round, 8), "REQUEST_PHOTO").get("id").asString();
+            Map<String, Object> body = requestBody(addr);
+            body.put("photoIds", List.of(photo));
+            java.util.concurrent.CyclicBarrier start = new java.util.concurrent.CyclicBarrier(2);
+            java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(2);
+            try {
+                List<java.util.concurrent.Future<Integer>> results = new ArrayList<>();
+                for (int i = 0; i < 2; i++) {
+                    results.add(pool.submit(() -> {
+                        start.await(10, java.util.concurrent.TimeUnit.SECONDS);
+                        return call(HttpMethod.POST, "/api/v1/requests", ali.access(), body)
+                                .andReturn().getResponse().getStatus();
+                    }));
+                }
+                List<Integer> statuses = new ArrayList<>();
+                for (var f : results) {
+                    statuses.add(f.get(30, java.util.concurrent.TimeUnit.SECONDS));
+                }
+                assertThat(statuses).containsExactlyInAnyOrder(201, 400);
+                assertThat(count("select count(*) from request_photos where media_id = ?::uuid", photo)).isEqualTo(1);
+            } finally {
+                pool.shutdownNow();
+            }
+        }
+    }
+
+    @Test
     void anonymousRequestsAreRejected() throws Exception {
         call(HttpMethod.GET, "/api/v1/requests", null, null).andExpect(status().isUnauthorized());
     }

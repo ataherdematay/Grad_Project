@@ -198,8 +198,17 @@ public class OfferService {
         if (pro.getAvailability() != Availability.ACTIVE) {
             throw ApiException.illegalState("Mola modundayken teklif verilemez.");
         }
-        if (offers.findByRequestIdAndProIdAndStatus(requestId, proId, OfferStatus.PENDING).isPresent()) {
-            throw new ApiException(HttpStatus.CONFLICT, "ALREADY_OFFERED", "Bu talebe zaten bekleyen bir teklifin var.");
+        Optional<Offer> existing = offers.findByRequestIdAndProIdAndStatus(requestId, proId, OfferStatus.PENDING);
+        if (existing.isPresent()) {
+            Offer prev = existing.get();
+            if (prev.getValidUntil().isAfter(now)) {
+                throw new ApiException(HttpStatus.CONFLICT, "ALREADY_OFFERED",
+                        "Bu talebe zaten bekleyen bir teklifin var.");
+            }
+            // Okuma anında zaten EXPIRED sayılan teklif zamanlayıcıyı beklemeden kapatılır (talep kilitli);
+            // yoksa kısmi benzersiz indeks yeni teklifi engeller.
+            prev.moveTo(OfferStatus.EXPIRED);
+            offers.saveAndFlush(prev);
         }
 
         Offer o = new Offer();
@@ -273,7 +282,13 @@ public class OfferService {
         return k;
     }
 
+    /** offers.total_amount numeric(12,2) üst sınırı. */
+    private static final BigDecimal MAX_TOTAL = new BigDecimal("9999999999.99");
+
     private static void validate(CreateOfferBody b, List<OfferItemIn> lines, Instant now) {
+        if (b.laborAmount().add(b.materialsAmount()).compareTo(MAX_TOTAL) > 0) {
+            throw ApiException.validation("materialsAmount", "Toplam tutar çok büyük.");
+        }
         if (!WARRANTIES.contains(b.warrantyMonths())) {
             throw ApiException.validation("warrantyMonths", "Garanti 0, 3, 6 veya 12 ay olmalı.");
         }

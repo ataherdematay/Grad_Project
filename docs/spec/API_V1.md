@@ -151,74 +151,190 @@ Eski `/api/offers/{id}` ve `/api/payments/*` uç noktaları yalnızca `dev` prof
 
 ### Wave 2 contract: requests, matching, offers, pro application, media
 
-Binding for both backend and Flutter. Field names, enums and status codes are exact. Base `/api/v1`, JSON camelCase, times ISO 8601 UTC, money as JSON numbers with 2 decimals (TRY). Errors `{code, message, field?}` as in wave 1. Lists: `{items, nextCursor}` (`nextCursor` null when done; `?cursor=&limit=` default 20, max 50).
+Binding for both backend and Flutter. Field names, enums and status codes are exact.
+
+**General rules**
+- Base path `/api/v1`. JSON in camelCase.
+- Times are ISO 8601 UTC.
+- Money is a JSON number with 2 decimals (TRY).
+- Errors are `{code, message, field?}`, as in wave 1.
+- Lists are `{items, nextCursor}`; `nextCursor` is null on the last page. Paging uses `?cursor=&limit=` (default 20, max 50).
 
 #### Shared types
 
-- `MediaRef` = `{id, url, expiresAt}`. `url` is a short-lived signed URL (10 min) usable WITHOUT auth header (e.g. `Image.network`). Server checks access before signing.
-- `ProCard` = `{id, businessName, fullName, ratingAvg, ratingCount, completedJobs, verified}` (`verified` = review status APPROVED).
-- `RequestSummary` = `{id, publicCode, title, categoryId, urgency ("URGENT"|"PLANNED"), status ("OPEN"|"ASSIGNED"|"CANCELLED"|"EXPIRED"), districtName, neighborhood, createdAt, expiresAt, offerCount, minOfferTotal (nullable), maxOfferTotal (nullable)}`. `offerCount` and min/max count PENDING offers only.
-- `RequestDetail` = `RequestSummary` + `{description, preferredFrom, preferredTo, photos: [MediaRef], answers: [{questionKey, answer}], matchedProCount, matchFactors: ["CATEGORY","DISTRICT","AVAILABILITY"], address: {districtName, neighborhood, lineFull, doorNote}}`. `lineFull`/`doorNote` only for the owner (null for anyone else).
-- `OfferItem` = `{kind ("LABOR"|"MATERIAL"), description, quantity, unitPrice, lineTotal}`.
-- `OfferSummary` = `{id, publicCode, requestId, status ("PENDING"|"ACCEPTED"|"DECLINED"|"WITHDRAWN"|"SUPERSEDED"|"EXPIRED"), pro: ProCard, laborAmount, materialsAmount, totalAmount, arrivalFrom, arrivalTo, warrantyMonths (0|3|6|12), note, validUntil, createdAt}`.
-- `OfferDetail` = `OfferSummary` + `{items: [OfferItem], serviceFee (nullable), netEarning (nullable), declineReason (nullable)}`. `serviceFee` = 10% of total and `netEarning` = total − fee, filled ONLY when the viewer is the offering pro; null for the customer.
+- **`MediaRef`** = `{id, url, expiresAt}`.
+  - `url` is a signed URL valid for 10 minutes. It works without an auth header (e.g. `Image.network`).
+  - The server checks access before signing.
+- **`ProCard`** = `{id, businessName, fullName, ratingAvg, ratingCount, completedJobs, verified}`.
+  - `verified` means review status APPROVED.
+- **`RequestSummary`** = `{id, publicCode, title, categoryId, urgency, status, districtName, neighborhood, createdAt, expiresAt, offerCount, minOfferTotal, maxOfferTotal}`.
+  - `urgency`: `"URGENT"` or `"PLANNED"`.
+  - `status`: `"OPEN"`, `"ASSIGNED"`, `"CANCELLED"` or `"EXPIRED"`.
+  - `minOfferTotal` and `maxOfferTotal` are nullable.
+  - `offerCount`, `minOfferTotal` and `maxOfferTotal` count PENDING offers only.
+- **`RequestDetail`** = `RequestSummary` + `{description, preferredFrom, preferredTo, photos, answers, matchedProCount, matchFactors, address}`.
+  - `photos`: `[MediaRef]`.
+  - `answers`: `[{questionKey, answer}]`.
+  - `matchFactors`: `["CATEGORY","DISTRICT","AVAILABILITY"]`.
+  - `address`: `{districtName, neighborhood, lineFull, doorNote}`. `lineFull` and `doorNote` are filled only for the owner and are null for anyone else.
+- **`OfferItem`** = `{kind, description, quantity, unitPrice, lineTotal}`, where `kind` is `"LABOR"` or `"MATERIAL"`.
+- **`OfferSummary`** = `{id, publicCode, requestId, status, pro, laborAmount, materialsAmount, totalAmount, arrivalFrom, arrivalTo, warrantyMonths, note, validUntil, createdAt}`.
+  - `status`: `"PENDING"`, `"ACCEPTED"`, `"DECLINED"`, `"WITHDRAWN"`, `"SUPERSEDED"` or `"EXPIRED"`.
+  - `pro`: `ProCard`.
+  - `warrantyMonths`: 0, 3, 6 or 12.
+- **`OfferDetail`** = `OfferSummary` + `{items, serviceFee, netEarning, declineReason}`.
+  - `items`: `[OfferItem]`.
+  - `serviceFee` (10% of total) and `netEarning` (total − fee) are filled ONLY when the viewer is the offering pro. For the customer they are null.
+  - `declineReason` is nullable.
 
 #### Media
 
-- `POST /media` multipart: `file`, `purpose` (`REQUEST_PHOTO`|`PRO_DOCUMENT`|`AVATAR`|`JOB_PHOTO`|`CHAT`|`COMPLAINT`) → 201 `{id, contentType, sizeBytes, width, height}`.
-  - Photos: JPEG/PNG/HEIC, ≤ 1.5 MB (1 572 864 bytes). `PRO_DOCUMENT`: PDF/JPEG/PNG ≤ 5 MB. Type is checked by magic bytes, not by the filename. Over limit → 400 `VALIDATION_FAILED` field `file`.
-  - Uploaded media is owned by the uploader and unattached until used. Attaching someone else's media id → 404.
-- `GET /media/{id}/content?exp=&sig=` serves bytes when the signature is valid (no auth). Invalid/expired → 403 `FORBIDDEN`.
+**`POST /media`** (multipart, fields `file` and `purpose`) → 201 `{id, contentType, sizeBytes, width, height}`.
+- `purpose` is one of `REQUEST_PHOTO`, `PRO_DOCUMENT`, `AVATAR`, `JOB_PHOTO`, `CHAT`, `COMPLAINT`.
+- Photos: JPEG, PNG or HEIC, at most 1.5 MB (1 572 864 bytes).
+- `PRO_DOCUMENT`: PDF, JPEG or PNG, at most 5 MB.
+- File type is checked by magic bytes, not by filename.
+- Over the size limit → 400 `VALIDATION_FAILED` with field `file`.
+- Uploaded media belongs to the uploader and stays unattached until used. Attaching someone else's media id → 404.
+
+**`GET /media/{id}/content?exp=&sig=`** serves the bytes when the signature is valid; no auth needed.
+- Invalid or expired signature → 403 `FORBIDDEN`.
 
 #### Catalog
 
-- `GET /categories/{id}/questions` → `[{key, labelTr, labelEn, options: [{value, labelTr, labelEn}]}]` (single choice). `plumbing`: `since` (Bugün / Birkaç gün / 1 haftadan fazla), `water_cut` (Evet / Hayır), `other_rooms` (Evet / Hayır). Every other category: only `since`.
+**`GET /categories/{id}/questions`** → `[{key, labelTr, labelEn, options: [{value, labelTr, labelEn}]}]`. All questions are single choice.
+- `plumbing` has three questions:
+  - `since`: Bugün / Birkaç gün / 1 haftadan fazla.
+  - `water_cut`: Evet / Hayır.
+  - `other_rooms`: Evet / Hayır.
+- Every other category has only `since`.
 
 #### Customer
 
-- `POST /requests` body `{categoryId, urgency, preferredFrom?, preferredTo?, title (5-150), description (20-2000), addressId, photoIds (0-5, REQUEST_PHOTO, own, unattached), answers: [{questionKey, answer}]}` → 201 `RequestDetail`.
-  - `PLANNED` requires `preferredFrom` < `preferredTo`, both in the future, within 30 days. `URGENT` ignores them (null).
-  - District and neighbourhood come from the address (must be the caller's; else 404).
-  - `expiresAt` = createdAt + 7 days.
-  - Matching (UC03): `matchedProCount` = pros with review status APPROVED, availability ACTIVE, the category and the district, excluding the customer themself. Always publish, even with 0 matches.
-- `GET /requests?scope=active|past` → `{items: [RequestSummary]}`. Active = OPEN, plus ASSIGNED while the job is not finished (wave 2: all ASSIGNED). Past = CANCELLED, EXPIRED.
-- `GET /requests/{id}` → `RequestDetail` (owner only; else 404).
-- `PATCH /requests/{id}` same fields as POST, all optional; only OPEN; all PENDING offers → EXPIRED; matchedProCount recomputed.
-- `POST /requests/{id}/cancel` `{reason ("PLANS_CHANGED"|"SOLVED"|"NO_SUITABLE_OFFER"|"OTHER"), note?}` → `RequestDetail` (CANCELLED; PENDING offers → EXPIRED). Only OPEN, else 409 `ILLEGAL_STATE`.
-- `GET /requests/{id}/offers?sort=recommended|price|rating|arrival&maxPrice=&minRating=` → `{items: [OfferSummary], declinedCount}`. PENDING only. `recommended` = rating desc, then price asc.
-- `GET /offers/{id}` → `OfferDetail` (request owner or offering pro; else 404).
-- `POST /offers/{id}/decline` `{reason ("PRICE"|"SCHEDULE"|"OTHER_OFFER"|"NOT_NEEDED"|"OTHER"), note?, keepRequestOpen (bool)}` → `OfferDetail`. Owner only, PENDING only. `keepRequestOpen=false` also cancels the request (reason `NOT_NEEDED` or `OTHER`).
-- `GET /pros/{id}` → `{id, businessName, fullName, bio, experienceYears, ratingAvg, ratingCount, completedJobs, memberSince, categoryIds, districts: [{id, name}], verifiedDocuments: ["IDENTITY"|"TRADE_CERT"|"TAX"|"CRIMINAL_RECORD"]}`. APPROVED pros only, else 404. Never phone or email.
-- `GET /pros/{id}/reviews` → `{items: [{id, rating, tags, comment, authorDisplay, createdAt}]}`. `authorDisplay` = initials "A.Y." or "Anonim". (No reviews exist yet in wave 2; endpoint must still work.)
+**`POST /requests`** → 201 `RequestDetail`.
+- Body: `{categoryId, urgency, preferredFrom?, preferredTo?, title, description, addressId, photoIds, answers}`.
+  - `title`: 5-150 characters.
+  - `description`: 20-2000 characters.
+  - `photoIds`: 0-5 ids, each a `REQUEST_PHOTO` of the caller's own that is not yet attached.
+  - `answers`: `[{questionKey, answer}]`.
+- `PLANNED` requires `preferredFrom` < `preferredTo`, both in the future and within 30 days. `URGENT` ignores both and stores null.
+- District and neighbourhood come from the address. The address must be the caller's, else 404.
+- `expiresAt` = createdAt + 7 days.
+- Matching (UC03): `matchedProCount` counts pros that meet all of these:
+  - review status APPROVED;
+  - availability ACTIVE;
+  - the request's category and district;
+  - not the customer themself.
+- The request is always published, even with 0 matches.
+
+**`GET /requests?scope=active|past`** → `{items: [RequestSummary]}`.
+- `active` = OPEN, plus ASSIGNED while the job is not finished (in wave 2: every ASSIGNED).
+- `past` = CANCELLED and EXPIRED.
+
+**`GET /requests/{id}`** → `RequestDetail`. Owner only, else 404.
+
+**`PATCH /requests/{id}`** takes the same fields as POST, all optional.
+- Only allowed while OPEN.
+- All PENDING offers become EXPIRED.
+- `matchedProCount` is recomputed.
+
+**`POST /requests/{id}/cancel`** `{reason, note?}` → `RequestDetail`.
+- `reason`: `"PLANS_CHANGED"`, `"SOLVED"`, `"NO_SUITABLE_OFFER"` or `"OTHER"`.
+- The request becomes CANCELLED and its PENDING offers become EXPIRED.
+- Only allowed while OPEN, else 409 `ILLEGAL_STATE`.
+
+**`GET /requests/{id}/offers?sort=recommended|price|rating|arrival&maxPrice=&minRating=`** → `{items: [OfferSummary], declinedCount}`.
+- Returns PENDING offers only.
+- `recommended` sorts by rating descending, then price ascending.
+
+**`GET /offers/{id}`** → `OfferDetail`. Allowed for the request owner and the offering pro, else 404.
+
+**`POST /offers/{id}/decline`** `{reason, note?, keepRequestOpen}` → `OfferDetail`.
+- `reason`: `"PRICE"`, `"SCHEDULE"`, `"OTHER_OFFER"`, `"NOT_NEEDED"` or `"OTHER"`.
+- `keepRequestOpen` is a bool. When false, the request is cancelled too (only with reason `NOT_NEEDED` or `OTHER`).
+- Owner only, PENDING offers only.
+
+**`GET /pros/{id}`** → `{id, businessName, fullName, bio, experienceYears, ratingAvg, ratingCount, completedJobs, memberSince, categoryIds, districts, verifiedDocuments}`.
+- `districts`: `[{id, name}]`.
+- `verifiedDocuments`: any of `"IDENTITY"`, `"TRADE_CERT"`, `"TAX"`, `"CRIMINAL_RECORD"`.
+- APPROVED pros only, else 404.
+- Never returns phone or email.
+
+**`GET /pros/{id}/reviews`** → `{items: [{id, rating, tags, comment, authorDisplay, createdAt}]}`.
+- `authorDisplay` is initials such as "A.Y.", or "Anonim".
+- No reviews exist yet in wave 2, but the endpoint must still work.
 
 #### Pro
 
-All `/pro/*` except the application endpoints require review status APPROVED (else 403 `PRO_NOT_APPROVED`).
+All `/pro/*` endpoints except the application endpoints require review status APPROVED, else 403 `PRO_NOT_APPROVED`.
 
-- `POST /pro/application` `{businessName (2-100), bio (0-1000), experienceYears (0-60), categoryIds (≥1), districtIds (≥1), documents: [{type, mediaId}]}` → 201 `ProApplication`. Requires at least `IDENTITY` and `TRADE_CERT` (PRO_DOCUMENT media, own). Allowed when there is no profile or it is NEEDS_DOCUMENTS/REJECTED (→ PENDING_REVIEW). PENDING_REVIEW/APPROVED/SUSPENDED → 409 `ILLEGAL_STATE`.
-- `GET /pro/application` → `ProApplication` = `{reviewStatus, reviewNote, businessName, bio, experienceYears, categoryIds, districtIds, documents: [{id, type, status ("PENDING"|"ACCEPTED"|"REJECTED"), media: MediaRef}], submittedAt}`. 404 when none.
-- `GET /pro/profile` → `ProProfile` = `{businessName, bio, experienceYears, categoryIds, districtIds, workingHours: [{weekday (1-7), start "HH:mm", end "HH:mm", acceptsUrgent}], reviewStatus, availability, ratingAvg, ratingCount, completedJobs}`.
-- `PUT /pro/profile` `{businessName, bio, experienceYears, categoryIds, districtIds, workingHours}` → `ProProfile`.
-- `PUT /pro/availability` `{availability ("ACTIVE"|"ON_BREAK")}` → `ProProfile`.
-- `GET /pro/feed?urgency=URGENT|PLANNED` → `{items: [FeedItem], onBreak}`. OPEN, not expired requests matching the pro's categories and districts, not the pro's own. `onBreak=true` → items empty.
-  - `FeedItem` = `{id, publicCode, title, categoryId, urgency, districtName, neighborhood, createdAt, preferredFrom, preferredTo, photoCount, offerCount, myOfferId (nullable)}`.
-- `GET /pro/requests/{id}` → `FeedItem` + `{description, photos: [MediaRef], answers, myOffer: OfferDetail|null}`. Address never beyond district + neighbourhood. Not matching → 404.
-- `POST /pro/requests/{id}/offers` (optional `Idempotency-Key` header: same key → same response) `{laborAmount (>0), materialsAmount (≥0), arrivalFrom, arrivalTo, warrantyMonths (0|3|6|12), note (0-500), items: [{kind, description, quantity (>0), unitPrice (≥0)}]}` → 201 `OfferDetail`.
-  - When `items` is non-empty, the LABOR item sum must equal `laborAmount` and the MATERIAL sum `materialsAmount` (else 400 field `items`).
-  - `arrivalFrom` > now; `arrivalTo` − `arrivalFrom` between 1 h and 12 h; `arrivalFrom` within 14 days.
-  - `validUntil` = min(`arrivalTo`, now + 72 h).
-  - Request must be OPEN and matching → else 409 `ILLEGAL_STATE` / 404. Existing PENDING offer by the same pro → 409 `ALREADY_OFFERED`.
-- `GET /pro/offers?status=` → `{items: [OfferSummary + request: {id, publicCode, title, districtName}]}`.
-- `POST /pro/offers/{id}/withdraw` → `OfferDetail` (PENDING only, own).
+**`POST /pro/application`** → 201 `ProApplication`.
+- Body: `{businessName, bio, experienceYears, categoryIds, districtIds, documents}`.
+  - `businessName`: 2-100 characters.
+  - `bio`: 0-1000 characters.
+  - `experienceYears`: 0-60.
+  - `categoryIds` and `districtIds`: at least one each.
+  - `documents`: `[{type, mediaId}]`.
+- Requires at least `IDENTITY` and `TRADE_CERT`, each a `PRO_DOCUMENT` media of the caller's own.
+- Allowed when there is no profile, or the profile is NEEDS_DOCUMENTS or REJECTED. The profile then becomes PENDING_REVIEW.
+- When the profile is PENDING_REVIEW, APPROVED or SUSPENDED → 409 `ILLEGAL_STATE`.
+
+**`GET /pro/application`** → `ProApplication`, or 404 when there is none.
+- `ProApplication` = `{reviewStatus, reviewNote, businessName, bio, experienceYears, categoryIds, districtIds, documents, submittedAt}`.
+- `documents`: `[{id, type, status, media}]`, where `status` is `"PENDING"`, `"ACCEPTED"` or `"REJECTED"` and `media` is a `MediaRef`.
+
+**`GET /pro/profile`** → `ProProfile`.
+- `ProProfile` = `{businessName, bio, experienceYears, categoryIds, districtIds, workingHours, reviewStatus, availability, ratingAvg, ratingCount, completedJobs}`.
+- `workingHours`: `[{weekday, start, end, acceptsUrgent}]`, where `weekday` is 1-7 and `start`/`end` are `"HH:mm"`.
+
+**`PUT /pro/profile`** `{businessName, bio, experienceYears, categoryIds, districtIds, workingHours}` → `ProProfile`.
+
+**`PUT /pro/availability`** `{availability}` → `ProProfile`. `availability` is `"ACTIVE"` or `"ON_BREAK"`.
+
+**`GET /pro/feed?urgency=URGENT|PLANNED`** → `{items: [FeedItem], onBreak}`.
+- Returns OPEN, unexpired requests that match the pro's categories and districts, excluding the pro's own requests.
+- When `onBreak` is true, `items` is empty.
+- `FeedItem` = `{id, publicCode, title, categoryId, urgency, districtName, neighborhood, createdAt, preferredFrom, preferredTo, photoCount, offerCount, myOfferId}`; `myOfferId` is nullable.
+
+**`GET /pro/requests/{id}`** → `FeedItem` + `{description, photos, answers, myOffer}`.
+- `photos`: `[MediaRef]`.
+- `myOffer`: `OfferDetail` or null.
+- The address is never shown beyond district and neighbourhood.
+- A request that does not match the pro → 404.
+
+**`POST /pro/requests/{id}/offers`** → 201 `OfferDetail`.
+- Optional `Idempotency-Key` header: the same key returns the same response.
+- Body: `{laborAmount, materialsAmount, arrivalFrom, arrivalTo, warrantyMonths, note, items}`.
+  - `laborAmount` > 0; `materialsAmount` ≥ 0.
+  - `warrantyMonths`: 0, 3, 6 or 12.
+  - `note`: 0-500 characters.
+  - `items`: `[{kind, description, quantity, unitPrice}]`, with `quantity` > 0 and `unitPrice` ≥ 0.
+- When `items` is non-empty, the LABOR items must sum to `laborAmount` and the MATERIAL items to `materialsAmount`, else 400 with field `items`.
+- Arrival window rules:
+  - `arrivalFrom` > now and within 14 days;
+  - `arrivalTo` − `arrivalFrom` is between 1 h and 12 h.
+- `validUntil` = min(`arrivalTo`, now + 72 h).
+- Request not OPEN → 409 `ILLEGAL_STATE`; request not matching → 404.
+- The same pro already has a PENDING offer → 409 `ALREADY_OFFERED`.
+
+**`GET /pro/offers?status=`** → `{items: [OfferSummary + request]}`, where `request` = `{id, publicCode, title, districtName}`.
+
+**`POST /pro/offers/{id}/withdraw`** → `OfferDetail`. Own PENDING offers only.
 
 #### Server-side jobs and side effects
 
-- A scheduler (every 5 min, `FOR UPDATE SKIP LOCKED`) expires OPEN requests past `expiresAt` (→ EXPIRED, PENDING offers → EXPIRED) and PENDING offers past `validUntil` (→ EXPIRED). Reads also treat past-due items as expired.
-- `NotificationService.notify(userId, type, params, targetRoute)` inserts a row in `notifications` (no endpoints yet). Types this wave: `NEW_MATCHING_REQUEST` (to matched pros), `OFFER_RECEIVED` (to customer), `OFFER_DECLINED` (to pro).
+- **Expiry scheduler:** runs every 5 minutes with `FOR UPDATE SKIP LOCKED`.
+  - OPEN requests past `expiresAt` become EXPIRED, and their PENDING offers become EXPIRED.
+  - PENDING offers past `validUntil` become EXPIRED.
+  - Reads also treat past-due items as expired.
+- **Notifications:** `NotificationService.notify(userId, type, params, targetRoute)` inserts a row in `notifications`. There are no notification endpoints yet. Types this wave:
+  - `NEW_MATCHING_REQUEST`, to matched pros.
+  - `OFFER_RECEIVED`, to the customer.
+  - `OFFER_DECLINED`, to the pro.
 
 #### Not in this wave
 
-Offer acceptance and payment, jobs, chat, reviews creation, complaints, admin endpoints, push.
+Offer acceptance and payment, jobs, chat, creating reviews, complaints, admin endpoints and push notifications.
 
 #### Uygulama notları (backend)
 
@@ -229,4 +345,7 @@ Offer acceptance and payment, jobs, chat, reviews creation, complaints, admin en
 - `decline` ile `keepRequestOpen=false` kullanılırsa `reason` yalnızca `NOT_NEEDED` veya `OTHER` olabilir (aksi 400 `reason`); talep `PLANS_CHANGED` (`NOT_NEEDED`) veya `OTHER` gerekçesiyle iptal edilir.
 - Süresi dolmuş `PENDING` teklifte `decline`/`withdraw` 409 `OFFER_EXPIRED` döner.
 - Mola (`ON_BREAK`) modundaki usta teklif gönderemez (409 `ILLEGAL_STATE`).
-- Şema: `V3__wave2_requests_offers_media.sql` (başlık 150, iptal gerekçesi, ret notu, idempotency anahtarı, kalem sırası, HEIC, kod dizileri).
+- Şema: `V3__wave2_requests_offers_media.sql` (başlık 150, iptal gerekçesi, ret notu, idempotency anahtarı, kalem sırası, HEIC, kod dizileri) ve `V4__media_single_attachment.sql` (bir medya tek kayda bağlanır).
+- Uzunluk kuralları (başlık, açıklama, işletme adı) kırpılmış metne uygulanır.
+- `GET /pro/requests/{id}` yalnız talep `OPEN` iken açılır (eşleşen veya bekleyen teklifi olan usta); kapanan talep her usta için 404 (ROLE_SCREEN_MAP erişim kuralı).
+- Süresi geçmiş ama zamanlayıcının henüz işlemediği `PENDING` teklif, aynı ustanın yeni teklifine engel olmaz; yeni teklif verilirken `EXPIRED` yapılır.
