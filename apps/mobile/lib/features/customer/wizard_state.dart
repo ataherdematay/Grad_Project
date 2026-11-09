@@ -6,8 +6,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/data.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
+import '../auth/session.dart';
 
+/// Eski, kullanıcıdan bağımsız taslak anahtarı. Artık okunmaz; açılışta silinir
+/// (başka bir hesabın taslağı olabilir).
 const String kDraftKey = 'request_draft_v1';
+
+/// Taslak her kullanıcı için ayrı saklanır: aynı cihazda oturum açan başka
+/// biri önceki kullanıcının adres ve açıklamasını görmez.
+String draftKeyFor(String userId) => '$kDraftKey:$userId';
 const int kTitleMin = 5;
 const int kTitleMax = 150;
 const int kDescMin = 20;
@@ -161,6 +168,7 @@ class WizardState {
     this.step = 1,
     this.fromReview = false,
     this.editingId,
+    this.editOfferCount = 0,
     this.attempted = false,
     this.submitting = false,
   });
@@ -171,6 +179,10 @@ class WizardState {
   /// "Gözden geçir"den "Düzenle" ile gelindi: adım sonunda tekrar 4'e dönülür.
   final bool fromReview;
   final String? editingId;
+
+  /// Düzenlenen talepteki bekleyen teklif sayısı. Kaydetmek bunları
+  /// geçersiz kılar (STATE_MACHINES §2); kullanıcıya önce sorulur.
+  final int editOfferCount;
 
   /// Kullanıcı "Devam"a bastı; hatalar görünür.
   final bool attempted;
@@ -191,28 +203,39 @@ class WizardState {
     step: step ?? this.step,
     fromReview: fromReview ?? this.fromReview,
     editingId: clearEditing ? null : (editingId ?? this.editingId),
+    editOfferCount: editOfferCount,
     attempted: attempted ?? this.attempted,
     submitting: submitting ?? this.submitting,
   );
 }
 
 class WizardController extends Notifier<WizardState> {
-  late final PhotoSet photos;
+  late PhotoSet photos;
   String _idemKey = newIdempotencyKey();
+  String? _userId;
 
   @override
   WizardState build() {
-    photos = PhotoSet(
+    // Kullanıcı değişince (çıkış, başka hesapla giriş) taslak ve fotoğraflar
+    // sıfırlanır.
+    _userId = ref.watch(sessionProvider.select((s) => s.me?.id));
+    final set = PhotoSet(
       api: ref.read(apiClientProvider).media,
       picker: ref.read(photoPickerProvider),
       recompress: ref.read(recompressProvider),
     );
-    ref.onDispose(photos.dispose);
+    ref.onDispose(set.dispose);
+    photos = set;
+    _idemKey = newIdempotencyKey();
+    final prefs = ref.read(sharedPreferencesProvider);
+    if (prefs.containsKey(kDraftKey)) prefs.remove(kDraftKey);
     return _load();
   }
 
   WizardState _load() {
-    final raw = ref.read(sharedPreferencesProvider).getString(kDraftKey);
+    final id = _userId;
+    if (id == null) return WizardState(draft: const RequestDraft());
+    final raw = ref.read(sharedPreferencesProvider).getString(draftKeyFor(id));
     if (raw == null) return WizardState(draft: const RequestDraft());
     try {
       final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -226,13 +249,14 @@ class WizardController extends Notifier<WizardState> {
   }
 
   void _persist() {
-    if (state.isEditing) return;
+    final id = _userId;
+    if (state.isEditing || id == null) return;
     final prefs = ref.read(sharedPreferencesProvider);
     if (state.draft.isEmpty) {
-      prefs.remove(kDraftKey);
+      prefs.remove(draftKeyFor(id));
     } else {
       prefs.setString(
-        kDraftKey,
+        draftKeyFor(id),
         jsonEncode({'draft': state.draft.toJson(), 'step': state.step}),
       );
     }
@@ -267,11 +291,13 @@ class WizardController extends Notifier<WizardState> {
     photos.addRemote(d.photos);
     state = WizardState(
       editingId: d.id,
+      editOfferCount: d.offerCount,
       draft: RequestDraft(
         categoryId: d.categoryId,
         urgency: d.urgency,
-        preferredFrom: d.preferredFrom,
-        preferredTo: d.preferredTo,
+        // Seçiciler ve doğrulama yerel saatle çalışır.
+        preferredFrom: d.preferredFrom?.toLocal(),
+        preferredTo: d.preferredTo?.toLocal(),
         addressId: addressId,
         answers: {for (final a in d.answers) a.questionKey: a.answer},
         title: d.title,
@@ -298,6 +324,34 @@ class WizardController extends Notifier<WizardState> {
         photosBusy: photos.isBusy,
         photosFailed: photos.hasFailed,
       );
+
+  /// Yayından önce 1-3. adımlar yeniden doğrulanır: geri yüklenen taslakta
+  /// tarih eskimiş ya da bir adım atlanmış olabilir. Sorunlu ilk adım açılır
+  /// ve hatalar gösterilir; sorun yoksa `true`.
+  bool validateAll(DateTime now, List<String> requiredKeys) {
+    for (var step = 1; step <= 3; step++) {
+      if (issues(step, now, requiredKeys).isNotEmpty) {
+        state = state.copyWith(step: step, fromReview: true, attempted: true);
+        _persist();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Sunucunun `field` hatasını sihirbaz adımına eşler; bilinmiyorsa `null`.
+  static int? stepForField(String? field) => switch (field) {
+    'categoryId' || 'urgency' || 'preferredFrom' || 'preferredTo' => 1,
+    'addressId' || 'answers' => 2,
+    'title' || 'description' || 'photoIds' => 3,
+    _ => null,
+  };
+
+  /// Sunucu hatasındaki adımı inceleme dönüşüyle açar.
+  void showServerFieldStep(int step) {
+    state = state.copyWith(step: step, fromReview: true, attempted: true);
+    _persist();
+  }
 
   /// Doğrulama geçerse bir sonraki adıma (ya da inceleme adımına) geçer.
   bool next(DateTime now, List<String> requiredKeys) {
@@ -355,11 +409,18 @@ class WizardController extends Notifier<WizardState> {
   }
 
   /// Yayın sonrası taslağı ve fotoğrafları siler.
+  ///
+  /// Düzenleme kaydedildiyse yeni talep taslağına dokunulmaz; kayıtlı taslak
+  /// geri yüklenir (yoksa bir sonraki değişiklik onu silerdi).
   void finish() {
-    ref.read(sharedPreferencesProvider).remove(kDraftKey);
+    final editing = state.isEditing;
+    final id = _userId;
+    if (id != null && !editing) {
+      ref.read(sharedPreferencesProvider).remove(draftKeyFor(id));
+    }
     photos.clear();
     _idemKey = newIdempotencyKey();
-    state = WizardState(draft: const RequestDraft());
+    state = editing ? _load() : WizardState(draft: const RequestDraft());
   }
 }
 

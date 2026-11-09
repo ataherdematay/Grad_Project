@@ -162,7 +162,7 @@
   "dateToday": "Today",
   "dateTomorrow": "Tomorrow",
   "requestAwaitingOffers": "Awaiting offers",
-  "requestOffersCount": "{count} offers",
+  "requestOffersCount": "{count, plural, =1{1 offer} other{{count} offers}}",
   "@requestOffersCount": {
     "placeholders": {
       "count": {
@@ -270,7 +270,7 @@
   "cancelConfirmTitle": "Cancel this request?",
   "cancelConfirmMessage": "All pending offers will close. This cannot be undone.",
   "publishedTitle": "Request published",
-  "publishedMatchTitle": "{count} pros matched",
+  "publishedMatchTitle": "{count, plural, =1{1 pro matched} other{{count} pros matched}}",
   "@publishedMatchTitle": {
     "placeholders": {
       "count": {
@@ -372,7 +372,7 @@
   "wizErrPhotosBusy": "Wait for the photos to finish uploading.",
   "wizErrPhotosFailed": "Retry or remove the photo that failed to upload.",
   "offersTitle": "Offers",
-  "offersResultCount": "{count} offers",
+  "offersResultCount": "{count, plural, =1{1 offer} other{{count} offers}}",
   "@offersResultCount": {
     "placeholders": {
       "count": {
@@ -380,7 +380,7 @@
       }
     }
   },
-  "offersDeclinedCount": "You declined {count} offers.",
+  "offersDeclinedCount": "{count, plural, =1{You declined 1 offer.} other{You declined {count} offers.}}",
   "@offersDeclinedCount": {
     "placeholders": {
       "count": {
@@ -480,7 +480,7 @@
   "proReviews": "Reviews",
   "proAbout": "About",
   "proExperience": "Experience",
-  "experienceYears": "{years} years",
+  "experienceYears": "{years, plural, =1{1 year} other{{years} years}}",
   "@experienceYears": {
     "placeholders": {
       "years": {
@@ -499,7 +499,7 @@
   "docCriminalRecord": "Criminal record",
   "reviewsEmptyTitle": "No reviews yet",
   "reviewsEmptyBody": "Reviews appear here once customers complete jobs.",
-  "starsOutOf5": "{rating} out of 5 stars",
+  "starsOutOf5": "{rating, plural, =1{1 out of 5 stars} other{{rating} out of 5 stars}}",
   "@starsOutOf5": {
     "placeholders": {
       "rating": {
@@ -560,7 +560,7 @@
   "feedActivate": "Go active",
   "feedEmptyTitle": "No matching requests right now",
   "feedEmptyBody": "New requests in your categories and districts appear here.",
-  "feedPhotos": "{count} photos",
+  "feedPhotos": "{count, plural, =1{1 photo} other{{count} photos}}",
   "@feedPhotos": {
     "placeholders": {
       "count": {
@@ -568,7 +568,7 @@
       }
     }
   },
-  "feedOffers": "{count} offers",
+  "feedOffers": "{count, plural, =1{1 offer} other{{count} offers}}",
   "@feedOffers": {
     "placeholders": {
       "count": {
@@ -643,5 +643,12 @@
   "hoursFrom": "From",
   "hoursTo": "To",
   "hoursAcceptsUrgent": "I also accept urgent jobs",
-  "hoursInvalid": "The end time must be after the start time."
+  "hoursInvalid": "The end time must be after the start time.",
+  "wizErrServerField": "“{field}” was not accepted. Check it and try again.",
+  "wizEditOffersTitle": "Save your changes?",
+  "wizEditOffersMessage": "{count, plural, =1{Your pending offer will expire.} other{Your {count} pending offers will expire.}} Pros can send new offers for your updated request. This can't be undone.",
+  "photoDuplicate": "You already added this photo.",
+  "feedEditProfile": "Edit your categories and districts",
+  "arrivalServerInvalid": "The arrival window was not accepted. Check the day and times and try again.",
+  "offerItemsServerInvalid": "The item totals don't add up. Check the material items and try again."
 }

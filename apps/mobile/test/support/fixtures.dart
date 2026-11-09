@@ -260,7 +260,8 @@ Map<String, dynamic> applicationJson({
   'submittedAt': '2026-11-10T08:00:00Z',
 };
 
-/// Sahte fotoğraf seçici: sırayla verilen boyutlarda dosya döner.
+/// Sahte fotoğraf seçici: sırayla verilen boyutlarda, her seferinde farklı
+/// içerikli dosya döner.
 class FakePicker implements PhotoPicker {
   FakePicker(this.sizes);
 
@@ -271,7 +272,10 @@ class FakePicker implements PhotoPicker {
   Future<PickedPhoto?> pick(PhotoSource source) async {
     final size = sizes[calls < sizes.length ? calls : sizes.length - 1];
     calls++;
-    return PickedPhoto(bytes: Uint8List(size), name: 'p$calls.jpg');
+    // Her seçim farklı bir fotoğraf (aynı baytlar yinelenen sayılır).
+    final bytes = Uint8List(size);
+    if (size > 0) bytes[0] = calls & 0xff;
+    return PickedPhoto(bytes: bytes, name: 'p$calls.jpg');
   }
 }
 

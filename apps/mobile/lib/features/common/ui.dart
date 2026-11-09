@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/error_messages.dart';
+import '../../core/formatters.dart';
 import '../../core/photos.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -132,8 +133,8 @@ class PhotoStrip extends StatelessWidget {
   }
 }
 
-/// Hata bildirimi. `ILLEGAL_STATE` ise "ekran güncellendi" metni gösterilir ve
-/// [onIllegalState] ile ekran yenilenir.
+/// Hata bildirimi. `ILLEGAL_STATE` (ve `OFFER_EXPIRED` gibi eskimiş durum
+/// kodları) ise açıklama gösterilir ve [onIllegalState] ile ekran yenilenir.
 void reportActionError(
   BuildContext context,
   ApiException e, {
@@ -143,7 +144,7 @@ void reportActionError(
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(content: Text(apiErrorMessage(l, e.code))));
-  if (e.code == ApiErrorCode.illegalState) onIllegalState?.call();
+  if (isStaleStateError(e)) onIllegalState?.call();
 }
 
 Widget sectionTitle(String text) => Padding(
@@ -304,7 +305,7 @@ class RatingText extends StatelessWidget {
         const SizedBox(width: 4),
         Flexible(
           child: Text(
-            l.ratingWithCount(avg.toStringAsFixed(1), count),
+            l.ratingWithCount(formatRating(avg, l.localeName), count),
             style: AppTypography.label,
           ),
         ),
@@ -344,7 +345,13 @@ class PhotoSetView extends StatelessWidget {
         ),
       ),
     );
-    if (source != null) await set.add(source);
+    if (source == null) return;
+    final res = await set.add(source);
+    if (res == PhotoAddResult.duplicate && context.mounted) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l.photoDuplicate)));
+    }
   }
 
   String _failure(AppLocalizations l, PhotoItem i) => switch (i.failure) {

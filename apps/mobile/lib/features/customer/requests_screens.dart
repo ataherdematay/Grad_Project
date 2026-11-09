@@ -449,11 +449,16 @@ class _CancelState extends ConsumerState<CancelRequestScreen> {
             ),
           );
       invalidateRequestData(ref);
-      if (router.canPop()) router.pop();
+      // Derin bağlantıyla açıldıysa yığın boştur: talebin detayına gidilir.
+      if (router.canPop()) {
+        router.pop();
+      } else {
+        router.go('/c/requests/${widget.id}');
+      }
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _error = apiErrorMessage(l, e.code));
-      if (e.code == ApiErrorCode.illegalState) invalidateRequestData(ref);
+      if (isStaleStateError(e)) invalidateRequestData(ref);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

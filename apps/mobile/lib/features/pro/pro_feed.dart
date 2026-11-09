@@ -114,6 +114,10 @@ class _ProFeedState extends ConsumerState<ProFeedScreen> {
                                     icon: Icons.search_off,
                                     title: l.feedEmptyTitle,
                                     message: l.feedEmptyBody,
+                                    // Boş listede bir sonraki adım (§6):
+                                    // eşleşmeyi belirleyen kategori/ilçeler.
+                                    actionLabel: l.feedEditProfile,
+                                    onAction: () => context.go('/p/profile'),
                                   ),
                                 ),
                               ],

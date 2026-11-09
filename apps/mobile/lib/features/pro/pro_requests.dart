@@ -159,6 +159,10 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
   bool _attempted = false;
   bool _submitting = false;
   String? _banner;
+
+  /// Sunucunun `VALIDATION_FAILED` ile döndürdüğü alan; ilgili bölümün
+  /// altında gösterilir, form değişince temizlenir.
+  String? _serverField;
   String _key = newIdempotencyKey();
 
   @override
@@ -168,7 +172,18 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
     super.dispose();
   }
 
-  void _touch() => _key = newIdempotencyKey();
+  void _touch() {
+    _key = newIdempotencyKey();
+    if (_serverField != null) setState(() => _serverField = null);
+  }
+
+  Widget _fieldError(String text) => Padding(
+    padding: const EdgeInsets.only(top: 6),
+    child: Text(
+      text,
+      style: AppTypography.label.copyWith(color: AppColors.error),
+    ),
+  );
 
   DateTime? get _from => (_day == null || _time == null)
       ? null
@@ -249,6 +264,7 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
     setState(() {
       _attempted = true;
       _banner = null;
+      _serverField = null;
     });
     final labor = _laborAmount(l);
     if (labor == null || !labor.isPositive) return;
@@ -293,11 +309,11 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
       router.push('/p/offers/${offer.id}/sent');
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() => _banner = apiErrorMessage(l, e.code));
-      if (e.code == ApiErrorCode.illegalState ||
-          e.code == ApiErrorCode.alreadyOffered) {
-        invalidateRequestData(ref);
-      }
+      setState(() {
+        _banner = apiErrorMessage(l, e.code);
+        _serverField = e.code == ApiErrorCode.validationFailed ? e.field : null;
+      });
+      if (isStaleStateError(e)) invalidateRequestData(ref);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -340,6 +356,8 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     errorText:
                         _attempted && (labor == null || !labor.isPositive)
                         ? l.laborAmountInvalid
+                        : _serverField == 'laborAmount'
+                        ? l.errFieldInvalid
                         : null,
                     onChanged: (_) {
                       _touch();
@@ -397,6 +415,9 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     variant: AppButtonVariant.secondary,
                     onPressed: _submitting ? null : () => _editMaterial(),
                   ),
+                  if (_serverField == 'items' ||
+                      _serverField == 'materialsAmount')
+                    _fieldError(l.offerItemsServerInvalid),
                   const FieldGap(big: true),
                   Text(l.arrival, style: AppTypography.section),
                   const SizedBox(height: AppSpacing.xs),
@@ -453,15 +474,10 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     ],
                   ),
                   if (_attempted && arrivalIssue != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: Text(
-                        _arrivalText(l, arrivalIssue),
-                        style: AppTypography.label.copyWith(
-                          color: AppColors.error,
-                        ),
-                      ),
-                    ),
+                    _fieldError(_arrivalText(l, arrivalIssue))
+                  else if (_serverField == 'arrivalFrom' ||
+                      _serverField == 'arrivalTo')
+                    _fieldError(l.arrivalServerInvalid),
                   const FieldGap(big: true),
                   Text(l.warranty, style: AppTypography.section),
                   const SizedBox(height: 4),
@@ -483,6 +499,8 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                         ),
                     ],
                   ),
+                  if (_serverField == 'warrantyMonths')
+                    _fieldError(l.errFieldInvalid),
                   const FieldGap(),
                   AppTextField(
                     label: l.offerNote,
@@ -490,6 +508,9 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     enabled: !_submitting,
                     maxLength: kNoteMax,
                     keyboardType: TextInputType.multiline,
+                    errorText: _serverField == 'note'
+                        ? l.errFieldInvalid
+                        : null,
                     onChanged: (_) => _touch(),
                   ),
                   const FieldGap(),

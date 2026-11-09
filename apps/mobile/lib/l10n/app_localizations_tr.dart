@@ -1416,4 +1416,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get hoursInvalid => 'Bitiş saati başlangıçtan sonra olmalı.';
+
+  @override
+  String wizErrServerField(String field) {
+    return '“$field” bilgisi kabul edilmedi. Kontrol edip tekrar dene.';
+  }
+
+  @override
+  String get wizEditOffersTitle => 'Değişiklikler kaydedilsin mi?';
+
+  @override
+  String wizEditOffersMessage(int count) {
+    return '$count bekleyen teklifin geçersiz olur. Ustalar güncel talebine yeniden teklif verebilir. Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get photoDuplicate => 'Bu fotoğrafı zaten ekledin.';
+
+  @override
+  String get feedEditProfile => 'Kategori ve ilçelerini düzenle';
+
+  @override
+  String get arrivalServerInvalid =>
+      'Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.';
+
+  @override
+  String get offerItemsServerInvalid =>
+      'Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene.';
 }

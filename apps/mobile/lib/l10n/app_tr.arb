@@ -643,5 +643,26 @@
   "hoursFrom": "Başlangıç",
   "hoursTo": "Bitiş",
   "hoursAcceptsUrgent": "Acil işleri de kabul ederim",
-  "hoursInvalid": "Bitiş saati başlangıçtan sonra olmalı."
+  "hoursInvalid": "Bitiş saati başlangıçtan sonra olmalı.",
+  "wizErrServerField": "“{field}” bilgisi kabul edilmedi. Kontrol edip tekrar dene.",
+  "@wizErrServerField": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "wizEditOffersTitle": "Değişiklikler kaydedilsin mi?",
+  "wizEditOffersMessage": "{count} bekleyen teklifin geçersiz olur. Ustalar güncel talebine yeniden teklif verebilir. Bu işlem geri alınamaz.",
+  "@wizEditOffersMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photoDuplicate": "Bu fotoğrafı zaten ekledin.",
+  "feedEditProfile": "Kategori ve ilçelerini düzenle",
+  "arrivalServerInvalid": "Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.",
+  "offerItemsServerInvalid": "Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene."
 }

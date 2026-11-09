@@ -35,3 +35,12 @@ String apiFieldMessage(AppLocalizations l, ApiException e) =>
     e.code == ApiErrorCode.validationFailed
     ? l.errFieldInvalid
     : apiErrorMessage(l, e.code);
+
+/// Sunucu kaydın durumunun değiştiğini söyledi (NAVIGATION_RULES §4): ekran
+/// açıklama gösterip veriyi yeniden çeker. Backend süresi dolmuş teklifte
+/// `ILLEGAL_STATE` yerine `OFFER_EXPIRED`, mükerrer teklifte
+/// `ALREADY_OFFERED` döner; ikisi de ekrandaki verinin eskidiğini gösterir.
+bool isStaleStateError(ApiException e) =>
+    e.code == ApiErrorCode.illegalState ||
+    e.code == ApiErrorCode.offerExpired ||
+    e.code == ApiErrorCode.alreadyOffered;

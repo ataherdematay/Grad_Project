@@ -2677,6 +2677,48 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bitiş saati başlangıçtan sonra olmalı.'**
   String get hoursInvalid;
+
+  /// No description provided for @wizErrServerField.
+  ///
+  /// In tr, this message translates to:
+  /// **'“{field}” bilgisi kabul edilmedi. Kontrol edip tekrar dene.'**
+  String wizErrServerField(String field);
+
+  /// No description provided for @wizEditOffersTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Değişiklikler kaydedilsin mi?'**
+  String get wizEditOffersTitle;
+
+  /// No description provided for @wizEditOffersMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} bekleyen teklifin geçersiz olur. Ustalar güncel talebine yeniden teklif verebilir. Bu işlem geri alınamaz.'**
+  String wizEditOffersMessage(int count);
+
+  /// No description provided for @photoDuplicate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu fotoğrafı zaten ekledin.'**
+  String get photoDuplicate;
+
+  /// No description provided for @feedEditProfile.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kategori ve ilçelerini düzenle'**
+  String get feedEditProfile;
+
+  /// No description provided for @arrivalServerInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.'**
+  String get arrivalServerInvalid;
+
+  /// No description provided for @offerItemsServerInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene.'**
+  String get offerItemsServerInvalid;
 }
 
 class _AppLocalizationsDelegate

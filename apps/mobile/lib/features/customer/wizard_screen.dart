@@ -87,14 +87,39 @@ class _WizardState extends ConsumerState<RequestWizardScreen> {
     ctrl.next(ref.read(nowProvider)(), _requiredKeys());
   }
 
+  /// Sunucunun `field` adını kullanıcıya gösterilecek alan adına çevirir.
+  String? _fieldLabel(AppLocalizations l, String? field) => switch (field) {
+    'categoryId' => l.wizCategory,
+    'urgency' => l.wizUrgency,
+    'preferredFrom' || 'preferredTo' => l.wizDates,
+    'addressId' => l.wizAddress,
+    'answers' => l.requestAnswers,
+    'title' => l.wizFieldTitle,
+    'description' => l.wizFieldDescription,
+    'photoIds' => l.requestPhotos,
+    _ => null,
+  };
+
   Future<void> _submit() async {
     final l = AppLocalizations.of(context);
     final ctrl = ref.read(wizardProvider.notifier);
     final st = ref.read(wizardProvider);
     if (st.submitting) return;
     setState(() => _banner = null);
-    final router = GoRouter.of(context);
+    // Geri yüklenen taslakta tarih eskimiş ya da adım atlanmış olabilir.
+    if (!ctrl.validateAll(ref.read(nowProvider)(), _requiredKeys())) return;
     final editing = st.isEditing;
+    if (editing && st.editOfferCount > 0) {
+      final ok = await showConfirmDialog(
+        context,
+        title: l.wizEditOffersTitle,
+        message: l.wizEditOffersMessage(st.editOfferCount),
+        confirmLabel: l.wizSaveChanges,
+        cancelLabel: l.cancel,
+      );
+      if (!ok || !mounted) return;
+    }
+    final router = GoRouter.of(context);
     try {
       final d = await ctrl.submit();
       invalidateRequestData(ref);
@@ -114,10 +139,17 @@ class _WizardState extends ConsumerState<RequestWizardScreen> {
       }
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() => _banner = apiErrorMessage(l, e.code));
-      if (e.code == ApiErrorCode.illegalState) {
-        invalidateRequestData(ref);
+      final step = e.code == ApiErrorCode.validationFailed
+          ? WizardController.stepForField(e.field)
+          : null;
+      final label = _fieldLabel(l, e.field);
+      if (step != null && label != null) {
+        ctrl.showServerFieldStep(step);
+        setState(() => _banner = l.wizErrServerField(label));
+      } else {
+        setState(() => _banner = apiErrorMessage(l, e.code));
       }
+      if (isStaleStateError(e)) invalidateRequestData(ref);
     }
   }
 
@@ -305,16 +337,23 @@ class _Step1 extends ConsumerWidget {
     DateTime now,
     DateTime? initial,
   ) async {
+    final first = DateTime(now.year, now.month, now.day);
+    final last = now.add(const Duration(days: 30));
+    // Geri yüklenen taslaktaki tarih aralık dışında kalmış olabilir; seçici
+    // aralık dışı başlangıç tarihini kabul etmez.
+    var start = (initial ?? now.add(const Duration(days: 1))).toLocal();
+    if (start.isBefore(first)) start = first;
+    if (start.isAfter(last)) start = last;
     final date = await showDatePicker(
       context: context,
-      initialDate: initial ?? now.add(const Duration(days: 1)),
-      firstDate: DateTime(now.year, now.month, now.day),
-      lastDate: now.add(const Duration(days: 30)),
+      initialDate: start,
+      firstDate: first,
+      lastDate: last,
     );
     if (date == null || !context.mounted) return null;
     final time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(initial ?? now),
+      initialTime: TimeOfDay.fromDateTime((initial ?? now).toLocal()),
     );
     if (time == null) return null;
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);

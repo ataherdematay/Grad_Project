@@ -105,6 +105,9 @@ Future<PickedPhoto> preparePhoto(PickedPhoto p, Recompress recompress) async {
 
 enum PhotoStatus { uploading, done, failed }
 
+/// `PhotoSet.add` sonucu.
+enum PhotoAddResult { added, duplicate, skipped }
+
 enum PhotoFailure { tooLarge, upload, pick }
 
 class PhotoItem {
@@ -189,15 +192,20 @@ class PhotoSet extends ChangeNotifier {
   }
 
   /// Seçici açılır, sonuç yüklenir. Sınır dolmuşsa hiçbir şey yapmaz.
-  Future<void> add(PhotoSource source) async {
-    if (isFull) return;
+  Future<PhotoAddResult> add(PhotoSource source) async {
+    if (isFull) return PhotoAddResult.skipped;
     final PickedPhoto? picked;
     try {
       picked = await picker.pick(source);
     } catch (_) {
-      return;
+      return PhotoAddResult.skipped;
     }
-    if (picked == null || isFull) return;
+    if (picked == null || isFull) return PhotoAddResult.skipped;
+    // Aynı fotoğraf ikinci kez yüklenmez (talepte iki kopya görünürdü).
+    final bytes = picked.bytes;
+    if (_items.any((e) => _sameBytes(e.bytes, bytes))) {
+      return PhotoAddResult.duplicate;
+    }
     final item = PhotoItem(
       localId: _seq++,
       bytes: picked.bytes,
@@ -207,6 +215,7 @@ class PhotoSet extends ChangeNotifier {
     _items.add(item);
     _notify();
     await _upload(item, picked);
+    return PhotoAddResult.added;
   }
 
   Future<void> _upload(PhotoItem item, PickedPhoto picked) async {
@@ -243,8 +252,23 @@ class PhotoSet extends ChangeNotifier {
         ..status = PhotoStatus.failed
         ..failure = PhotoFailure.upload
         ..error = e;
+    } catch (_) {
+      // Sıkıştırma ya da çözme hatası: öğe "yükleniyor"da takılı kalmaz,
+      // sihirbaz ilerleyebilir (yeniden dene ya da kaldır).
+      item
+        ..status = PhotoStatus.failed
+        ..failure = PhotoFailure.upload
+        ..error = null;
     }
     _notify();
+  }
+
+  static bool _sameBytes(Uint8List? a, Uint8List b) {
+    if (a == null || a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   Future<void> retry(PhotoItem item) async {

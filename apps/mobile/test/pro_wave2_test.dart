@@ -135,16 +135,18 @@ void main() {
       expect(find.text('2 fotoğraf'), findsOneWidget);
       expect(find.text('1 teklif'), findsOneWidget);
       expect(find.text('Teklif verdin'), findsOneWidget);
-      expect(h.adapter.last('/pro/feed').queryParameters, isEmpty);
+      expect(h.adapter.last('/pro/feed').queryParameters, {'limit': 50});
       await t.tap(find.text('Acil'));
       await t.pumpAndSettle();
       expect(h.adapter.last('/pro/feed').queryParameters, {
         'urgency': 'URGENT',
+        'limit': 50,
       });
       await t.tap(find.text('Planlı'));
       await t.pumpAndSettle();
       expect(h.adapter.last('/pro/feed').queryParameters, {
         'urgency': 'PLANNED',
+        'limit': 50,
       });
     });
 
@@ -453,6 +455,7 @@ void main() {
       await t.pumpAndSettle();
       expect(h.adapter.last('/pro/offers').queryParameters, {
         'status': 'PENDING',
+        'limit': 50,
       });
 
       await t.tap(btn('Geri çek'));

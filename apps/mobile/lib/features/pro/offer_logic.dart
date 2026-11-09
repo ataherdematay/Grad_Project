@@ -12,16 +12,30 @@ const int kNoteMax = 500;
 
 /// Metin tutarını kuruşa çevirir. TR: `1.250,50`; EN: `1,250.50`. Geçersizse
 /// `null`.
+///
+/// Binlik ayırıcı yalnız doğru gruplamada (`1.250`, `1.250.000`) kabul edilir.
+/// Diğer ayırıcıyla yazılmış kuruş (TR klavyede `1250.50`, EN'de `1250,50`)
+/// ondalık sayılır; aksi hâlde tutar sessizce 100 katına çıkardı.
 Money? parseMoney(String raw, String locale) {
-  var s = raw.trim().replaceAll(RegExp(r'[\s₺]'), '');
+  final s = raw.trim().replaceAll(RegExp(r'[\s₺]'), '');
   if (s.isEmpty) return null;
-  if (locale == 'tr') {
-    s = s.replaceAll('.', '').replaceAll(',', '.');
+  final tr = locale == 'tr';
+  final group = RegExp.escape(tr ? '.' : ',');
+  final dec = RegExp.escape(tr ? ',' : '.');
+  final grouped = RegExp('^\\d{1,3}($group\\d{3})+($dec\\d{1,2})?\$');
+  final plain = RegExp('^\\d+($dec\\d{1,2})?\$');
+  final otherDecimal = RegExp('^\\d+$group\\d{1,2}\$');
+  final String normalized;
+  if (grouped.hasMatch(s) || plain.hasMatch(s)) {
+    normalized = s
+        .replaceAll(tr ? '.' : ',', '')
+        .replaceAll(tr ? ',' : '.', '.');
+  } else if (otherDecimal.hasMatch(s)) {
+    normalized = s.replaceAll(tr ? '.' : ',', '.');
   } else {
-    s = s.replaceAll(',', '');
+    return null;
   }
-  if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(s)) return null;
-  return Money.fromJson(s);
+  return Money.fromJson(normalized);
 }
 
 class OfferLine {

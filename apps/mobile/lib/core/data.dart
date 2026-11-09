@@ -9,6 +9,10 @@ import 'providers.dart';
 /// görünmez.
 const bool kPaymentsEnabled = false;
 
+/// Listeler sayfalama yerine tek istekte en çok bu kadar kayıt ister
+/// (sunucu varsayılanı 20, üst sınırı 50).
+const int kListLimit = 50;
+
 /// Hata ekranında "Tekrar dene" olduğundan otomatik yeniden deneme yok.
 Duration? noRetry(int retryCount, Object error) => null;
 
@@ -38,7 +42,7 @@ final addressesProvider = FutureProvider.autoDispose<List<Address>>(
 /// `scope`: `active` ya da `past`.
 final requestsProvider = FutureProvider.autoDispose
     .family<Paged<RequestSummary>, String>(
-      (ref, scope) => _api(ref).requests.list(scope: scope, limit: 50),
+      (ref, scope) => _api(ref).requests.list(scope: scope, limit: kListLimit),
       retry: noRetry,
     );
 
@@ -113,7 +117,7 @@ final proPublicProvider = FutureProvider.autoDispose
 
 final proReviewsProvider = FutureProvider.autoDispose
     .family<Paged<ReviewItem>, String>(
-      (ref, id) => _api(ref).pros.reviews(id),
+      (ref, id) => _api(ref).pros.reviews(id, limit: kListLimit),
       retry: noRetry,
     );
 
@@ -136,7 +140,7 @@ final proProfileProvider = FutureProvider.autoDispose<ProProfile>(
 
 final feedProvider = FutureProvider.autoDispose
     .family<FeedPage, RequestUrgency?>(
-      (ref, urgency) => _api(ref).pro.feed(urgency: urgency),
+      (ref, urgency) => _api(ref).pro.feed(urgency: urgency, limit: kListLimit),
       retry: noRetry,
     );
 
@@ -148,7 +152,7 @@ final proRequestProvider = FutureProvider.autoDispose
 
 final proOffersProvider = FutureProvider.autoDispose
     .family<Paged<ProOfferItem>, OfferStatus?>(
-      (ref, status) => _api(ref).pro.offers(status: status),
+      (ref, status) => _api(ref).pro.offers(status: status, limit: kListLimit),
       retry: noRetry,
     );
 

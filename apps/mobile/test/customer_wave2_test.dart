@@ -143,7 +143,10 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
       ProviderContainer make() => ProviderContainer(
-        overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          sessionProvider.overrideWith(() => FakeSession(customer)),
+        ],
       );
       final c1 = make();
       final ctrl = c1.read(wizardProvider.notifier);
@@ -169,10 +172,13 @@ void main() {
     });
 
     test('bozuk taslak sessizce boş taslağa döner', () async {
-      SharedPreferences.setMockInitialValues({kDraftKey: '{bozuk'});
+      SharedPreferences.setMockInitialValues({draftKeyFor('u-1'): '{bozuk'});
       final prefs = await SharedPreferences.getInstance();
       final c = ProviderContainer(
-        overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          sessionProvider.overrideWith(() => FakeSession(customer)),
+        ],
       );
       addTearDown(c.dispose);
       expect(c.read(wizardProvider).draft.isEmpty, isTrue);
@@ -412,7 +418,9 @@ void main() {
       expect(find.byType(RequestWizardScreen), findsNothing);
       expect(find.text('Adım 4 / 4'), findsNothing);
       expect(
-        h.container.read(sharedPreferencesProvider).getString(kDraftKey),
+        h.container
+            .read(sharedPreferencesProvider)
+            .getString(draftKeyFor('u-1')),
         isNull,
       );
     });
@@ -498,6 +506,13 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(btn('Değişiklikleri kaydet'));
       await t.pumpAndSettle();
+      // Talepte 2 bekleyen teklif var: kaydetmek onları geçersiz kılar, onay
+      // istenir.
+      expect(find.text('Değişiklikler kaydedilsin mi?'), findsOneWidget);
+      await t.tap(
+        find.widgetWithText(FilledButton, 'Değişiklikleri kaydet').last,
+      );
+      await t.pumpAndSettle();
       expect(patch!['title'], 'Mutfak musluğu damlıyor');
       expect(patch!['photoIds'], ['m1']);
       expect(h.adapter.count('POST', '/requests'), 0);
@@ -540,7 +555,8 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text('En düşük fiyat'));
       await t.enterText(find.byType(TextFormField).last, '2500');
-      await t.tap(find.text('4.5+'));
+      // TR ondalık virgül (formatRating).
+      await t.tap(find.text('4,5+'));
       await t.pumpAndSettle();
       await t.tap(btn('Sonuçları uygula'));
       await t.pumpAndSettle();

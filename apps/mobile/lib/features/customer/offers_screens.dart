@@ -373,7 +373,7 @@ class _FilterState extends State<OffersFilterSheet> {
                     label: Text(
                       r == null
                           ? l.filterAnyRating
-                          : l.filterRatingOrMore(r.toStringAsFixed(1)),
+                          : l.filterRatingOrMore(formatRating(r, l.localeName)),
                     ),
                     selected: _rating == r,
                     onSelected: (_) => setState(() => _rating = r),
@@ -429,7 +429,10 @@ class CompareOffersScreen extends ConsumerWidget {
               title: l.compareGoneTitle,
               message: l.compareGoneBody,
               actionLabel: l.compareBackToOffers,
-              onAction: () => context.pop(),
+              // Derin bağlantıda yığın boş olabilir; boş yığında pop yapılmaz.
+              onAction: () => context.canPop()
+                  ? context.pop()
+                  : context.go('/c/requests/$id/offers'),
             );
           }
           String m(Money v) => formatMoney(v, l.localeName);
@@ -455,7 +458,7 @@ class CompareOffersScreen extends ConsumerWidget {
                   o.pro.ratingCount == 0
                       ? l.noRatingYet
                       : l.ratingWithCount(
-                          o.pro.ratingAvg.toStringAsFixed(1),
+                          formatRating(o.pro.ratingAvg, l.localeName),
                           o.pro.ratingCount,
                         ),
               ],
@@ -778,14 +781,17 @@ class _DeclineState extends ConsumerState<DeclineOfferScreen> {
       invalidateRequestData(ref);
       if (!keep) {
         router.go('/c/requests');
+      } else if (!router.canPop()) {
+        // Derin bağlantı: yığın boş, talebin teklif listesine gidilir.
+        router.go('/c/requests/${o.requestId}/offers');
       } else {
-        if (router.canPop()) router.pop();
+        router.pop();
         if (router.canPop()) router.pop();
       }
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _error = apiErrorMessage(l, e.code));
-      if (e.code == ApiErrorCode.illegalState) invalidateRequestData(ref);
+      if (isStaleStateError(e)) invalidateRequestData(ref);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

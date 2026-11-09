@@ -513,7 +513,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String requestOffersCount(int count) {
-    return '$count offers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -721,7 +727,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String publishedMatchTitle(int count) {
-    return '$count pros matched';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pros matched',
+      one: '1 pro matched',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -891,12 +903,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String offersResultCount(int count) {
-    return '$count offers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
   }
 
   @override
   String offersDeclinedCount(int count) {
-    return 'You declined $count offers.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You declined $count offers.',
+      one: 'You declined 1 offer.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1089,7 +1113,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String experienceYears(int years) {
-    return '$years years';
+    String _temp0 = intl.Intl.pluralLogic(
+      years,
+      locale: localeName,
+      other: '$years years',
+      one: '1 year',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1128,7 +1158,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String starsOutOf5(int rating) {
-    return '$rating out of 5 stars';
+    String _temp0 = intl.Intl.pluralLogic(
+      rating,
+      locale: localeName,
+      other: '$rating out of 5 stars',
+      one: '1 out of 5 stars',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1245,12 +1281,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String feedPhotos(int count) {
-    return '$count photos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
   }
 
   @override
   String feedOffers(int count) {
-    return '$count offers';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers',
+      one: '1 offer',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1426,4 +1474,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hoursInvalid => 'The end time must be after the start time.';
+
+  @override
+  String wizErrServerField(String field) {
+    return '“$field” was not accepted. Check it and try again.';
+  }
+
+  @override
+  String get wizEditOffersTitle => 'Save your changes?';
+
+  @override
+  String wizEditOffersMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your $count pending offers will expire.',
+      one: 'Your pending offer will expire.',
+    );
+    return '$_temp0 Pros can send new offers for your updated request. This can\'t be undone.';
+  }
+
+  @override
+  String get photoDuplicate => 'You already added this photo.';
+
+  @override
+  String get feedEditProfile => 'Edit your categories and districts';
+
+  @override
+  String get arrivalServerInvalid =>
+      'The arrival window was not accepted. Check the day and times and try again.';
+
+  @override
+  String get offerItemsServerInvalid =>
+      'The item totals don\'t add up. Check the material items and try again.';
 }
