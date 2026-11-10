@@ -80,7 +80,7 @@ public class ProPublicService {
     }
 
     /** "Ali Yılmaz" → "A.Y."; tek isim → "A."; boşsa "Anonim". */
-    static String initials(String fullName) {
+    public static String initials(String fullName) {
         if (fullName == null || fullName.isBlank()) {
             return "Anonim";
         }

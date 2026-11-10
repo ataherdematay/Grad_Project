@@ -8,6 +8,7 @@ import com.bitadilat.payment.dto.RefundRequest;
 import com.bitadilat.payment.service.OfferCatalog;
 import com.bitadilat.payment.service.PaymentService;
 import jakarta.validation.Valid;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * HTML prototipi için eski uç noktalar (statik {@link OfferCatalog}, kanal PROTOTYPE, iş açmaz). Yalnızca
+ * {@code bitadilat.prototype-api.enabled=true} iken vardır; bu ayar yalnızca {@code application-dev.properties}'te (ve
+ * testlerin kendi ayar dosyasında) açıktır, bu yüzden {@code prod}'da bu yollar 404 döner. Banka dönüşü
+ * ({@link ThreeDsCallbackController}) her profilde açıktır.
+ */
 @RestController
+@ConditionalOnProperty(name = "bitadilat.prototype-api.enabled", havingValue = "true")
 @RequestMapping("/api")
 public class PaymentController {
 

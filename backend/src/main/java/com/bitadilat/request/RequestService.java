@@ -164,7 +164,13 @@ public class RequestService {
         } else if (categoryChanged) {
             parts.replaceAnswers(r.getId(), Map.of()); // eski kategorinin cevapları yenisine uymaz
         }
-        // Düzenleme mevcut teklifleri geçersiz kılar.
+        // Düzenleme mevcut teklifleri geçersiz kılar; teklifi bekleyen ustalar haberdar edilir.
+        for (var pending : offers.findByRequestIdAndStatus(r.getId(), com.bitadilat.offer.OfferStatus.PENDING)) {
+            notifications.notify(pending.getProId(), NotificationService.REQUEST_UPDATED,
+                    Map.of("offerId", pending.getId().toString(), "requestId", r.getId().toString(),
+                            "publicCode", r.getPublicCode(), "title", r.getTitle()),
+                    "/p/offers");
+        }
         offerLifecycle.expirePendingOf(r.getId());
         r.setMatchedProCount(matching.matchedProIds(r.getCategoryId(), r.getDistrictId(), userId).size());
         r = requests.saveAndFlush(r);
@@ -213,11 +219,18 @@ public class RequestService {
         List<ServiceRequest> mine = requests.findByCustomerIdOrderByCreatedAtDescIdDesc(userId).stream()
                 .filter(r -> {
                     RequestStatus s = r.effectiveStatus(now);
-                    boolean isActive = s == RequestStatus.OPEN || s == RequestStatus.ASSIGNED;
+                    // ASSIGNED talep, işi bitene (COMPLETED/RESOLVED) kadar etkindir.
+                    boolean isActive = s == RequestStatus.OPEN
+                            || (s == RequestStatus.ASSIGNED && !jobFinished(r.getId()));
                     return isActive == active;
                 }).toList();
         Paging.Slice<ServiceRequest> page = Paging.slice(mine, cursor, limit);
         return new RequestList(summaries(page.items(), now), page.nextCursor());
+    }
+
+    private boolean jobFinished(UUID requestId) {
+        return parts.activeJob(requestId)
+                .map(j -> "COMPLETED".equals(j.status()) || "RESOLVED".equals(j.status())).orElse(false);
     }
 
     // ─── Ortak yardımcılar (offer ve pro paketleri de kullanır) ──────────────
@@ -252,11 +265,13 @@ public class RequestService {
     private RequestSummary summary(ServiceRequest r, Instant now, Object[] stat, String districtName) {
         RequestStatus status = r.effectiveStatus(now);
         boolean counts = stat != null && status == RequestStatus.OPEN;
+        UUID jobId = status == RequestStatus.ASSIGNED ? parts.activeJob(r.getId()).map(RequestParts.JobRef::id).orElse(null) : null;
         return new RequestSummary(r.getId(), r.getPublicCode(), r.getTitle(), r.getCategoryId(), r.getUrgency(),
                 status, districtName, r.getNeighborhood(), r.getCreatedAt(), r.getExpiresAt(),
                 counts ? ((Long) stat[1]).intValue() : 0,
                 counts ? Money.of((BigDecimal) stat[2]) : null,
-                counts ? Money.of((BigDecimal) stat[3]) : null);
+                counts ? Money.of((BigDecimal) stat[3]) : null,
+                jobId);
     }
 
     /** Tam ayrıntı. {@code owner} değilse tam adres ve kapı notu null. İmzalı fotoğraf adresleri burada üretilir. */
@@ -275,7 +290,7 @@ public class RequestService {
         List<AnswerDto> answers = parts.answers(r.getId());
         return new RequestDetail(s.id(), s.publicCode(), s.title(), s.categoryId(), s.urgency(), s.status(),
                 s.districtName(), s.neighborhood(), s.createdAt(), s.expiresAt(), s.offerCount(), s.minOfferTotal(),
-                s.maxOfferTotal(), r.getDescription(), r.getPreferredFrom(), r.getPreferredTo(),
+                s.maxOfferTotal(), s.jobId(), r.getDescription(), r.getPreferredFrom(), r.getPreferredTo(),
                 media.refs(parts.photoIds(r.getId())), answers, r.getMatchedProCount(), MatchingService.FACTORS,
                 new RequestDetail.Address(s.districtName(), r.getNeighborhood(), line, door));
     }

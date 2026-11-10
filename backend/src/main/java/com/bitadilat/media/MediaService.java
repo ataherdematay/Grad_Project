@@ -54,9 +54,13 @@ public class MediaService {
 
     // ─── Yükleme ────────────────────────────────────────────────────────────
 
+    /** Kullanıcı başına 24 saatte en fazla bu kadar yükleme (aşılırsa 429 TOO_MANY_ATTEMPTS). */
+    public static final int UPLOAD_QUOTA_PER_DAY = 60;
+
     @Transactional
     public MediaUploaded upload(UUID ownerId, MultipartFile file, String purposeRaw) {
         MediaPurpose purpose = parsePurpose(purposeRaw);
+        enforceQuota(ownerId);
         if (file == null || file.isEmpty()) {
             throw ApiException.validation("file", "Dosya gerekli.");
         }
@@ -100,6 +104,20 @@ public class MediaService {
             throw e;
         }
         return new MediaUploaded(m.getId(), m.getContentType(), m.getSizeBytes(), m.getWidth(), m.getHeight());
+    }
+
+    /**
+     * Kota kontrolü. Aynı kullanıcının eşzamanlı yüklemeleri işlem düzeyinde bir danışma kilidiyle sıraya girer; böylece
+     * sayım ve ekleme arasında yarış olmaz ve kota aşılmaz.
+     */
+    private void enforceQuota(UUID ownerId) {
+        jdbc.queryForList("select pg_advisory_xact_lock(hashtextextended(?, 0))", "media-quota:" + ownerId);
+        Long used = jdbc.queryForObject("select count(*) from media where owner_id = ? and created_at > ?",
+                Long.class, ownerId, java.sql.Timestamp.from(Instant.now().minus(java.time.Duration.ofHours(24))));
+        if (used != null && used >= UPLOAD_QUOTA_PER_DAY) {
+            throw new ApiException(HttpStatus.TOO_MANY_REQUESTS, "TOO_MANY_ATTEMPTS",
+                    "Günlük yükleme sınırına ulaştınız. Daha sonra tekrar deneyin.");
+        }
     }
 
     private static MediaPurpose parsePurpose(String raw) {

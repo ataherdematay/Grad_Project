@@ -75,6 +75,21 @@ public class EscrowPayment {
     private Instant releasedAt;
     private Instant refundedAt;
 
+    private UUID requestId;
+    private UUID customerId;
+    private UUID proId;
+    private UUID jobId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EscrowChannel channel = EscrowChannel.PROTOTYPE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EscrowProvider provider = EscrowProvider.CRAFTGATE;
+
+    private String errorCode;
+
     @Version
     private long version;
 
@@ -95,6 +110,57 @@ public class EscrowPayment {
         return p;
     }
 
+    /**
+     * Uygulama kanalı ödemesi. Tutar teklif satırından gelir (istemciden değil). {@code offerId} teklifin UUID'sidir,
+     * {@code jobRef} talebin herkese açık kodudur (BD-#####).
+     */
+    public static EscrowPayment startApp(UUID offerId, String jobRef, BigDecimal totalAmount, UUID requestId,
+                                         UUID customerId, UUID proId, String attemptKey, String cardLast4,
+                                         EscrowProvider provider) {
+        EscrowPayment p = new EscrowPayment();
+        p.ref = UUID.randomUUID().toString();
+        p.conversationId = UUID.randomUUID().toString();
+        p.offerId = offerId.toString();
+        p.jobRef = jobRef;
+        p.attemptKey = attemptKey;
+        p.cardLast4 = cardLast4;
+        p.totalAmount = money(totalAmount);
+        p.commission = money(totalAmount.multiply(COMMISSION_RATE));
+        p.proPayout = p.totalAmount.subtract(p.commission);
+        p.refundedAmount = money(BigDecimal.ZERO);
+        p.status = EscrowStatus.INITIALIZED;
+        p.createdAt = Instant.now();
+        p.requestId = requestId;
+        p.customerId = customerId;
+        p.proId = proId;
+        p.channel = EscrowChannel.APP;
+        p.provider = provider;
+        return p;
+    }
+
+    public void attachJob(UUID jobId) {
+        this.jobId = jobId;
+    }
+
+    /** Ödeme alındı ama iş açılamadı (talep başkasına gitti, teklif süresi doldu). Kullanıcıya gösterilecek durum. */
+    public void markError(String code, String message) {
+        this.errorCode = code;
+        this.errorMessage = message;
+    }
+
+    /** İade yapılamadı: para kartta, kayıt LOCKED kaldı. Zamanlayıcı iadeyi yeniden dener. */
+    public void markUncertain() {
+        this.resultUncertain = true;
+    }
+
+    public void clearUncertain() {
+        this.resultUncertain = false;
+    }
+
+    public boolean isSeed() {
+        return provider == EscrowProvider.SEED;
+    }
+
     public void attachCraftgatePayment(Long paymentId) {
         this.craftgatePaymentId = paymentId;
     }
@@ -110,12 +176,14 @@ public class EscrowPayment {
         require(Set.of(EscrowStatus.INITIALIZED));
         status = EscrowStatus.FAILED;
         errorMessage = message;
+        errorCode = "PAYMENT_DECLINED";
     }
 
     /** Craftgate yanıtı kayıtla uyuşmadı: para çekilmiş olabilir, kullanıcıya "ücret alınmadı" denmez. */
     public void failUnverified(String message) {
         fail(message);
         resultUncertain = true;
+        errorCode = "RESULT_UNCERTAIN";
     }
 
     public void dispute() {

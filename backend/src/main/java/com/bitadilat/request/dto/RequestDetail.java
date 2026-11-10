@@ -23,6 +23,7 @@ public record RequestDetail(
         int offerCount,
         BigDecimal minOfferTotal,
         BigDecimal maxOfferTotal,
+        UUID jobId,
         String description,
         Instant preferredFrom,
         Instant preferredTo,

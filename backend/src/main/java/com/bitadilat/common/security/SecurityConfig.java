@@ -52,7 +52,10 @@ public class SecurityConfig {
                         // Medya içeriği: erişimi imza belirler (HMAC + son kullanma), Authorization gerekmez.
                         .requestMatchers(HttpMethod.GET, "/api/v1/media/*/content").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Prototip uyumu: eski uç noktalar kimliksiz kalır.
+                        // Banka dönüşü ve APP kanalı bitiş sayfası her profilde açık (bankanın tarayıcısı kimlik taşımaz).
+                        .requestMatchers(HttpMethod.POST, "/api/payments/3ds/callback").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/payments/3ds/done").permitAll()
+                        // Prototip uyumu: eski uç noktalar kimliksiz kalır (yalnız dev'de denetleyicisi vardır).
                         .requestMatchers("/api/offers/**", "/api/payments/**", "/preview/**", "/", "/error")
                         .permitAll()
                         // Dev bean'i yalnız dev profilinde vardır; loopback kontrolü denetleyicidedir.

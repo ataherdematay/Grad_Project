@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-/** {@code offerCount} ve min/max yalnızca PENDING (süresi dolmamış) teklifleri sayar. */
+/**
+ * {@code offerCount} ve min/max yalnızca PENDING (süresi dolmamış) teklifleri sayar. {@code jobId}: talep ASSIGNED
+ * iken işin kimliği, aksi halde null.
+ */
 public record RequestSummary(
         UUID id,
         String publicCode,
@@ -20,5 +23,6 @@ public record RequestSummary(
         Instant expiresAt,
         int offerCount,
         BigDecimal minOfferTotal,
-        BigDecimal maxOfferTotal) {
+        BigDecimal maxOfferTotal,
+        UUID jobId) {
 }

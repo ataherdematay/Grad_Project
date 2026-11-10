@@ -129,7 +129,8 @@ class DevSeedTest extends ApiTestBase {
     void request88412AndItsThreeOffersAreSeeded() throws Exception {
         String access = login("ali@bitadilat.test").get("accessToken").asString();
         JsonNode active = body(call(HttpMethod.GET, "/api/v1/requests?scope=active", access, null)
-                .andExpect(status().isOk()).andExpect(jsonPath("$.items.length()").value(1)));
+                // Wave 3: BD-88409 (iş SCHEDULED) de etkin; BD-88407 (iş COMPLETED) geçmişte. En yeni talep BD-88412.
+                .andExpect(status().isOk()).andExpect(jsonPath("$.items.length()").value(2)));
         JsonNode r = active.get("items").get(0);
         assertThat(r.get("publicCode").asString()).isEqualTo("BD-88412");
         assertThat(r.get("title").asString()).isEqualTo("Banyo lavabo altı su kaçağı");
@@ -167,9 +168,9 @@ class DevSeedTest extends ApiTestBase {
         assertThat(detail.get("serviceFee").isNull()).isTrue();
 
         // Varış aralıkları geçerli ve geleceğe dönük; "bugün 14:00" geçmişse yarına kaymış olur.
-        assertThat(jdbc.queryForObject("select count(*) from offers where arrival_from <= now() or valid_until <= now()",
+        assertThat(jdbc.queryForObject("select count(*) from offers where status = 'PENDING' and (arrival_from <= now() or valid_until <= now())",
                 Long.class)).isZero();
-        assertThat(jdbc.queryForObject("select count(*) from offers where arrival_to - arrival_from = interval '3 hours'",
+        assertThat(jdbc.queryForObject("select count(*) from offers where status = 'PENDING' and arrival_to - arrival_from = interval '3 hours'",
                 Long.class)).isEqualTo(1L);
     }
 
@@ -202,7 +203,7 @@ class DevSeedTest extends ApiTestBase {
         assertThat(jdbc.queryForObject("select count(*) from service_requests where public_code = 'BD-88412' and status = 'OPEN'",
                 Long.class)).isEqualTo(1L);
         assertThat(jdbc.queryForObject("select count(*) from offers where status = 'PENDING'", Long.class)).isEqualTo(3L);
-        assertThat(jdbc.queryForObject("select string_agg(public_code, ',' order by public_code) from offers",
-                String.class)).isEqualTo("T-10001,T-10002,T-10003");
+        assertThat(jdbc.queryForObject("select string_agg(public_code, ',' order by public_code) from offers where public_code < 'T-20000'",
+                String.class)).isEqualTo("T-10001,T-10002,T-10003,T-10004,T-10005,T-10006");
     }
 }

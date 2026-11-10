@@ -57,6 +57,15 @@ public class RequestParts {
                 "insert into request_answers (request_id, question_key, answer) values (?, ?, ?)", requestId, k, v));
     }
 
+    /** İptal edilmemiş (aktif veya tamamlanmış) iş; talep başına en fazla bir tane vardır. */
+    public record JobRef(UUID id, String status) {
+    }
+
+    public java.util.Optional<JobRef> activeJob(UUID requestId) {
+        return jdbc.query("select id, status from jobs where request_id = ? and status <> 'CANCELLED'",
+                (rs, i) -> new JobRef(rs.getObject(1, UUID.class), rs.getString(2)), requestId).stream().findFirst();
+    }
+
     public String nextPublicCode() {
         Long n = jdbc.queryForObject("select nextval('request_code_seq')", Long.class);
         return String.format("BD-%05d", n);

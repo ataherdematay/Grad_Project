@@ -97,7 +97,7 @@ public class ProFeedService {
         return new ProRequestDetail(f.id(), f.publicCode(), f.title(), f.categoryId(), f.urgency(), f.districtName(),
                 f.neighborhood(), f.createdAt(), f.preferredFrom(), f.preferredTo(), f.photoCount(), f.offerCount(),
                 f.myOfferId(), r.getDescription(), media.refs(parts.photoIds(requestId)), parts.answers(requestId),
-                myOffer);
+                myOffer, r.effectiveStatus(now));
     }
 
     private List<FeedItem> items(UUID proId, List<ServiceRequest> list, Instant now) {

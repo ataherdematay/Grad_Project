@@ -1,10 +1,17 @@
 package com.bitadilat.payment.controller;
 
+import com.bitadilat.payment.domain.EscrowChannel;
 import com.bitadilat.payment.service.PaymentService;
 import com.bitadilat.payment.service.PaymentService.CallbackOutcome;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +34,12 @@ public class ThreeDsCallbackController {
         this.payments = payments;
     }
 
+    /**
+     * APP kanalı: sonuç sayfası yerine {@code /api/payments/3ds/done?ref=} adresine yönlendirilir (WebView bu adresi
+     * yakalayıp kapanır ve sonucu {@code GET /api/v1/payments/{ref}} ile sorar). PROTOTYPE kanalı eskisi gibidir.
+     */
     @PostMapping(path = "/api/payments/3ds/callback", produces = MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
-    public String callback(@RequestParam Map<String, String> params) {
+    public ResponseEntity<String> callback(@RequestParam Map<String, String> params) {
         CallbackOutcome outcome;
         try {
             outcome = payments.handleCallback(params);
@@ -36,7 +47,25 @@ public class ThreeDsCallbackController {
             log.error("3DS callback işlenemedi: {}", e.getClass().getName(), e);
             outcome = new CallbackOutcome(null, false);
         }
-        return resultPage(outcome);
+        if (outcome.ref() != null && outcome.channel() == EscrowChannel.APP) {
+            return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                    .location(URI.create("/api/payments/3ds/done?ref=" + URLEncoder.encode(outcome.ref(), StandardCharsets.UTF_8)))
+                    .build();
+        }
+        return ResponseEntity.ok(resultPage(outcome));
+    }
+
+    /** Herkese açık, sabit sayfa: ödeme verisi göstermez, ref'i sayfaya yazmaz. */
+    @GetMapping(path = "/api/payments/3ds/done", produces = MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
+    public String done() {
+        return """
+                <!DOCTYPE html>
+                <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>BiTadilat</title></head>
+                <body style="font-family:sans-serif;text-align:center;padding:48px 16px;color:#102A34">
+                <p>İşlem tamamlandı, uygulamaya dönülüyor…</p>
+                </body></html>
+                """;
     }
 
     private static String resultPage(CallbackOutcome outcome) {

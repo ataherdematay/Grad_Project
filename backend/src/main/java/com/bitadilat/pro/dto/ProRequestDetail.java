@@ -13,5 +13,5 @@ public record ProRequestDetail(UUID id, String publicCode, String title, String 
                                String districtName, String neighborhood, Instant createdAt, Instant preferredFrom,
                                Instant preferredTo, int photoCount, int offerCount, UUID myOfferId,
                                String description, List<MediaRef> photos, List<AnswerDto> answers,
-                               OfferDetail myOffer) {
+                               OfferDetail myOffer, com.bitadilat.request.RequestStatus status) {
 }

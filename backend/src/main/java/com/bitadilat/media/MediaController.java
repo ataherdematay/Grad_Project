@@ -47,10 +47,14 @@ public class MediaController {
             // bozuk exp imzasız sayılır: 403
         }
         MediaService.Content c = media.content(id, expSeconds, sig);
-        return ResponseEntity.ok()
+        ResponseEntity.BodyBuilder response = ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(c.contentType()))
                 .cacheControl(CacheControl.noStore())
-                .header("X-Content-Type-Options", "nosniff")
-                .body(c.bytes());
+                .header("X-Content-Type-Options", "nosniff");
+        if ("application/pdf".equals(c.contentType())) {
+            // Kullanıcı yüklemesi olan PDF tarayıcıda satır içi açılmasın; indirilsin.
+            response.header("Content-Disposition", "attachment; filename=\"document.pdf\"");
+        }
+        return response.body(c.bytes());
     }
 }

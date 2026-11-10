@@ -375,6 +375,13 @@ public class OfferService {
                 .filter(o -> o.getValidUntil().isAfter(now));
     }
 
+    /** İşin teklifi (kabul edilmiş veya geri çekilmiş olabilir): durum olduğu gibi, ücret kırılımı yalnız ustaya. */
+    @Transactional(readOnly = true)
+    public OfferDetail forJob(UUID offerId, boolean viewerIsPro) {
+        Offer o = offers.findById(offerId).orElseThrow(() -> ApiException.notFound("Teklif bulunamadı."));
+        return detail(o, viewerIsPro, Instant.now(), false);
+    }
+
     @Transactional(readOnly = true)
     public OfferDetail proView(Offer o) {
         Instant now = Instant.now();

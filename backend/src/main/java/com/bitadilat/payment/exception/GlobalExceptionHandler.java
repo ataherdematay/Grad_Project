@@ -79,8 +79,10 @@ public class GlobalExceptionHandler {
      * eski davranışını (BAD_REQUEST) korur.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> invalid(MethodArgumentNotValidException e) {
-        if (e.getParameter().getContainingClass().getPackageName().startsWith("com.bitadilat.payment")) {
+    public ResponseEntity<Map<String, Object>> invalid(MethodArgumentNotValidException e, HttpServletRequest request) {
+        boolean legacyPaymentApi = e.getParameter().getContainingClass().getPackageName().startsWith("com.bitadilat.payment")
+                && !request.getRequestURI().startsWith("/api/v1/");
+        if (legacyPaymentApi) {
             return ResponseEntity.badRequest().body(body("BAD_REQUEST", BAD_REQUEST));
         }
         FieldError first = e.getBindingResult().getFieldErrors().stream().findFirst().orElse(null);
@@ -112,6 +114,18 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = body("VALIDATION_FAILED", BAD_REQUEST);
         body.put("field", e.getName());
         return ResponseEntity.badRequest().body(body);
+    }
+
+    /**
+     * Eşzamanlı iki işlem aynı satırı değiştirmeye çalıştı (sürüm çakışması). Kullanıcı açısından durum az önce
+     * değişmiştir: 409 ILLEGAL_STATE, istemci yenileyip tekrar dener.
+     */
+    @ExceptionHandler({org.springframework.orm.ObjectOptimisticLockingFailureException.class,
+            jakarta.persistence.OptimisticLockException.class})
+    public ResponseEntity<Map<String, Object>> optimisticLock(Exception e) {
+        log.info("İyimser kilit çakışması: {}", e.getClass().getSimpleName());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(body("ILLEGAL_STATE", "Kayıt az önce başka bir işlemle değişti. Yenileyip tekrar deneyin."));
     }
 
     @ExceptionHandler(Exception.class)

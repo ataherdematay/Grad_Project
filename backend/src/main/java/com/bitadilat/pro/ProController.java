@@ -35,11 +35,13 @@ public class ProController {
     private final ProService pro;
     private final ProFeedService feed;
     private final OfferService offers;
+    private final EarningsService earnings;
 
-    public ProController(ProService pro, ProFeedService feed, OfferService offers) {
+    public ProController(ProService pro, ProFeedService feed, OfferService offers, EarningsService earnings) {
         this.pro = pro;
         this.feed = feed;
         this.offers = offers;
+        this.earnings = earnings;
     }
 
     @PostMapping("/application")
@@ -96,6 +98,11 @@ public class ProController {
                                  @RequestParam(value = "cursor", required = false) String cursor,
                                  @RequestParam(value = "limit", required = false) Integer limit) {
         return offers.listForPro(p.userId(), status, cursor, limit);
+    }
+
+    @GetMapping("/earnings")
+    public com.bitadilat.pro.dto.EarningsView earnings(@AuthenticationPrincipal AuthPrincipal p) {
+        return earnings.earnings(p.userId());
     }
 
     @PostMapping("/offers/{id}/withdraw")

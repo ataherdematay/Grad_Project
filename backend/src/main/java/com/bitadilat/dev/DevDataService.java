@@ -47,7 +47,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * docs/spec/SEED_DATA.md demo seti (hesaplar, usta profilleri, Ali'nin adresi). Yalnızca {@code dev}.
- * Wave 2: BD-88412 talebi ve 3 teklifi. Diğer talepler (BD-88407/09/98), iş ve ödeme kayıtları sonraki dalgalarda.
+ * BD-88412 talebi ve 3 teklifi buradadır; BD-88407/09/98 işleri (emanet {@code provider = SEED}, mesajlar, değerlendirme,
+ * şikayet SK-1001) {@link DevJobSeeder}'dadır.
  */
 @Slf4j
 @Service
@@ -78,11 +79,11 @@ public class DevDataService {
                     new Pro("Usta Eller Tesisat", "Tıkanıklık açma ve küçük tesisat onarımları.", 9,
                             ReviewStatus.APPROVED, null, List.of("plumbing"),
                             List.of("Kadıköy", "Ataşehir"), "4.70", 62, 88)),
-            new Demo("Hasan Yıldız", "hasan@bitadilat.test", "+905379026615", false, UserMode.CUSTOMER,
+            new Demo("Hasan Yıldız", "hasan@bitadilat.test", "+905379026615", false, UserMode.PRO,
                     new Pro("Yıldız Elektrik", "Ev elektrik tesisatı ve arıza giderme.", 6,
                             ReviewStatus.PENDING_REVIEW, null, List.of("electrical"),
                             List.of("Ümraniye"), null, 0, 0)),
-            new Demo("Selim Aksoy", "selim@bitadilat.test", "+905383412758", false, UserMode.CUSTOMER,
+            new Demo("Selim Aksoy", "selim@bitadilat.test", "+905383412758", false, UserMode.PRO,
                     new Pro("Aksoy Boya & Badana", "İç cephe boya ve badana.", 8,
                             ReviewStatus.NEEDS_DOCUMENTS, "Vergi levhası eksik. Belgeyi yükleyip yeniden gönder.",
                             List.of("painting"), List.of("Beşiktaş"), null, 0, 0)),
@@ -103,13 +104,16 @@ public class DevDataService {
     private final OfferItemRepository offerItems;
     private final RequestParts requestParts;
     private final MatchingService matching;
+    private final DevJobSeeder jobSeeder;
 
     public DevDataService(UserRepository users, ProProfileRepository proProfiles,
                           ProCategoryRepository proCategories, ProDistrictRepository proDistricts,
                           ProWorkingHoursRepository workingHours, AddressRepository addresses,
                           DistrictRepository districts, PasswordEncoder encoder, AesGcmCrypto crypto,
                           JdbcTemplate jdbc, ServiceRequestRepository serviceRequests, OfferRepository offers,
-                          OfferItemRepository offerItems, RequestParts requestParts, MatchingService matching) {
+                          OfferItemRepository offerItems, RequestParts requestParts, MatchingService matching,
+                          DevJobSeeder jobSeeder) {
+        this.jobSeeder = jobSeeder;
         this.users = users;
         this.proProfiles = proProfiles;
         this.proCategories = proCategories;
@@ -167,6 +171,8 @@ public class DevDataService {
                 seedAddress(u);
             }
         }
+        // İşler önce, BD-88412 en son: Ali'nin listesinde en yeni talep BD-88412'dir.
+        jobSeeder.seedJobs();
         seedRequest88412();
         log.info("Demo verisi yüklendi: {} hesap (şifre {}).", DEMOS.size(), DEMO_PASSWORD);
     }
@@ -180,10 +186,10 @@ public class DevDataService {
         profile.setReviewStatus(p.status());
         profile.setReviewNote(p.note());
         profile.setAvailability(Availability.ACTIVE);
-        // Not: puan/iş sayısı geçmiş iş ve yorumlar seed'lenince onlardan hesaplanacak; şimdilik tablodaki değerler.
-        profile.setRatingAvg(p.rating() == null ? null : new BigDecimal(p.rating()));
-        profile.setRatingCount(p.ratingCount());
-        profile.setCompletedJobs(p.jobs());
+        // Puan ve iş sayısı sabit yazılmaz: DevJobSeeder geçmiş işleri ve değerlendirmeleri yükleyip bunlardan hesaplar.
+        profile.setRatingAvg(null);
+        profile.setRatingCount(0);
+        profile.setCompletedJobs(0);
         profile.setApprovedAt(p.status() == ReviewStatus.APPROVED ? now : null);
         proProfiles.saveAndFlush(profile);
 

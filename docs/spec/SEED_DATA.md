@@ -76,4 +76,11 @@ Mavi Hat teklifinin usta ekranındaki dökümü: toplam ₺2.450, hizmet bedeli 
 
 ## Prototip uyumu
 
-Prototipin sabit teklif kimliği `OFFER-BD-88412`, seed'deki Mavi Hat teklifinin `public_code` değeridir. Böylece `preview/` ödeme akışı aynı veriyle çalışmaya devam eder (PROTOTYPE kanalı, yalnızca `dev`).
+HTML prototipi (`preview/`) ödeme akışında backend'deki statik `OfferCatalog` teklifini `OFFER-BD-88412` kimliğiyle kullanır (PROTOTYPE kanalı, yalnızca `dev`, iş açmaz). Bu kimlik veritabanındaki teklifin kodu değildir: seed teklif kodları `T-#####` biçimindedir (BD-88412 için `T-10001`..`T-10003`; BD-88407/09/98 için `T-10004`..`T-10006`; geçmiş işler `T-20001` sonrası). Uygulama kanalı gerçek teklif kimliğiyle ödeme alır.
+
+## Wave 3 eklemeleri
+
+- Usta hesaplarının tümünün `last_mode` değeri `PRO`, müşterilerin ve adminin `CUSTOMER`. Admin telefonu boş kalır.
+- Onaylı ustaların `IDENTITY` ve `TRADE_CERT` belgeleri `ACCEPTED`; Hasan'ınkiler `PENDING`; Selim'in kimlik belgesi `ACCEPTED`, ticaret belgesi `REJECTED`.
+- Her onaylı ustada 3-5 geçmiş tamamlanmış iş ve gerçek `reviews` satırı vardır (Ali ve Zeynep'ten, farklı tarihlerle, etiket ve yorumlu, bazıları anonim). Puan, değerlendirme sayısı ve tamamlanan iş sayısı bu kayıtlardan hesaplanır; yukarıdaki profil tablosundaki sabit rakamlar artık yazılmaz.
+- Tüm emanet kayıtları `provider = SEED`; geçmiş işlerde `RELEASED_TO_PRO`, BD-88409 `LOCKED`, BD-88398 `DISPUTED`.
