@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitadilat_mobile/core/formatters.dart';
 import 'package:bitadilat_mobile/features/payment/card_validation.dart';
 import 'package:bitadilat_mobile/features/payment/payment_screens.dart';
@@ -352,6 +354,39 @@ void main() {
       expect(find.byType(TextFormField), findsNothing);
     });
 
+    testWidgets('istek sürerken tek istek gider ve ekrandan çıkılamaz', (
+      t,
+    ) async {
+      final pending = Completer<ResponseBody>();
+      final h = await openPay(
+        t,
+        handler: server3({'POST /payments/3ds/init': (_) => pending.future}),
+      );
+      await fillTest(t);
+      await t.tap(btn('₺1.200 öde'));
+      await t.pump(const Duration(milliseconds: 10));
+      await t.tap(find.byType(AppButton).last, warnIfMissed: false);
+      await t.pump(const Duration(milliseconds: 10));
+      await t.pump(const Duration(milliseconds: 10));
+      int posts() => h.adapter.count('POST', '/payments/3ds/init');
+      expect(posts(), 1);
+      // Banka bağlantısı kurulurken geri oku ve sistem geri tuşu ekranı
+      // kapatmaz; kapatsa başlatılan ödeme 3-D Secure sayfası olmadan
+      // INITIALIZED kalır ve yeniden deneme PAYMENT_IN_PROGRESS alır.
+      await t.tap(find.byTooltip('Geri'));
+      await t.pump();
+      expect(h.location, '/c/offers/o1/pay');
+      await t.binding.handlePopRoute();
+      await t.pump();
+      expect(h.location, '/c/offers/o1/pay');
+      pending.complete(
+        json(200, {'ref': 'ESC-1', 'htmlContent': '<form>3ds</form>'}),
+      );
+      await t.pumpAndSettle();
+      expect(posts(), 1);
+      expect(h.location, '/c/payments/ESC-1/3ds');
+    });
+
     testWidgets('PAYMENT_DECLINED sonuç ekranına geçer', (t) async {
       final h = await openPay(
         t,
@@ -620,6 +655,94 @@ void main() {
       }
     });
 
+    testWidgets('yoklama sırasında ağ hatası yoklamayı durdurmaz', (t) async {
+      var n = 0;
+      final h = await openResult(
+        t,
+        server3({
+          'GET /payments/ESC-1': (o) {
+            n++;
+            if (n == 2) {
+              throw DioException(
+                requestOptions: o,
+                type: DioExceptionType.connectionError,
+              );
+            }
+            return json(
+              200,
+              n < 3
+                  ? paymentJson(
+                      status: 'INITIALIZED',
+                      jobId: null,
+                      uncertain: true,
+                    )
+                  : paymentJson(status: 'LOCKED'),
+            );
+          },
+          'GET /jobs/j1': (_) => json(
+            200,
+            jobDetailJson(
+              status: 'AWAITING_APPOINTMENT',
+              actions: ['PROPOSE_SLOT'],
+            ),
+          ),
+        }),
+        settle: false,
+      );
+      for (var i = 0; i < 12; i++) {
+        await t.pump(const Duration(seconds: 1));
+      }
+      await t.pumpAndSettle();
+      // Geçici hata bir yoklama hakkı harcar; sonraki yoklama sonucu getirir.
+      expect(h.adapter.count('GET', '/payments/ESC-1'), 3);
+      expect(h.location, '/c/jobs/j1/appointment');
+    });
+
+    testWidgets('arka planda yoklama durur, dönünce hemen sorulur', (t) async {
+      var locked = false;
+      final h = await openResult(
+        t,
+        server3({
+          'GET /payments/ESC-1': (_) => json(
+            200,
+            locked
+                ? paymentJson(status: 'LOCKED')
+                : paymentJson(
+                    status: 'INITIALIZED',
+                    jobId: null,
+                    uncertain: true,
+                  ),
+          ),
+          'GET /jobs/j1': (_) => json(
+            200,
+            jobDetailJson(
+              status: 'AWAITING_APPOINTMENT',
+              actions: ['PROPOSE_SLOT'],
+            ),
+          ),
+        }),
+        settle: false,
+      );
+      expect(h.adapter.count('GET', '/payments/ESC-1'), 1);
+      final b = t.binding;
+      b.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      b.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      b.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      for (var i = 0; i < 40; i++) {
+        await t.pump(const Duration(seconds: 1));
+      }
+      // Arka planda hiç istek gitmez; süre bütçesi de harcanmaz.
+      expect(h.adapter.count('GET', '/payments/ESC-1'), 1);
+      expect(find.text(tr((l) => l.payUncertainTitle)), findsNothing);
+      locked = true;
+      b.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      b.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      b.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await t.pumpAndSettle();
+      expect(h.adapter.count('GET', '/payments/ESC-1'), 2);
+      expect(h.location, '/c/jobs/j1/appointment');
+    });
+
     final cases = <(String, String, String Function(AppLocalizations), String)>[
       (
         'FAILED',
@@ -693,8 +816,30 @@ void main() {
         locale: 'en',
       );
       expect(find.text(en((l) => l.payFailExpired)), findsOneWidget);
-      expect(find.text('Try a different card'), findsOneWidget);
+      // Süresi dolmuş teklif başka kartla da ödenemez: yalnız teklife dön.
+      expect(find.text('Try a different card'), findsNothing);
+      expect(find.text(en((l) => l.payBackToOffer)), findsOneWidget);
     });
+
+    for (final code in ['REQUEST_ALREADY_ASSIGNED', 'OFFER_EXPIRED']) {
+      testWidgets('$code: Farklı kartla dene gösterilmez', (t) async {
+        await openResult(
+          t,
+          server3({
+            'GET /payments/ESC-1': (_) => json(
+              200,
+              paymentJson(
+                status: 'REFUNDED_TO_CUSTOMER',
+                jobId: null,
+                errorCode: code,
+              ),
+            ),
+          }),
+        );
+        expect(find.text('Farklı kartla dene'), findsNothing);
+        expect(find.text('Teklife dön'), findsOneWidget);
+      });
+    }
 
     testWidgets('Farklı kartla dene kart formunu açar', (t) async {
       final h = await openResult(

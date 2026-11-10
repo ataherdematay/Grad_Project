@@ -296,113 +296,122 @@ class _PayState extends ConsumerState<PayScreen> {
     final l = AppLocalizations.of(context);
     final async = ref.watch(offerProvider(widget.offerId));
     final showTest = ref.watch(showTestCardProvider);
-    return ListPage(
-      title: l.payTitle,
-      leading: AppBackButton(fallback: '/c/offers/${widget.offerId}'),
-      body: AsyncView<OfferDetail>(
-        value: async,
-        onRetry: () => ref.invalidate(offerProvider(widget.offerId)),
-        builder: (context, o) => SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppCard(
-                child: Column(
+    // Bankaya bağlanırken ekrandan çıkılmaz: çıkılırsa başlatılan ödeme banka
+    // sayfası açılmadan INITIALIZED kalır, yeni deneme PAYMENT_IN_PROGRESS
+    // alır.
+    return PopScope(
+      canPop: !_loading,
+      child: ListPage(
+        title: l.payTitle,
+        leading: AppBackButton(
+          fallback: '/c/offers/${widget.offerId}',
+          onBack: _loading ? () {} : null,
+        ),
+        body: AsyncView<OfferDetail>(
+          value: async,
+          onRetry: () => ref.invalidate(offerProvider(widget.offerId)),
+          builder: (context, o) => SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InfoRow(l.payTo, o.pro.businessName),
+                      InfoRow(
+                        l.payAmount,
+                        formatMoney(o.totalAmount, l.localeName),
+                        bold: true,
+                      ),
+                      Text(l.acceptVatNote, style: AppTypography.bodySecondary),
+                    ],
+                  ),
+                ),
+                const FieldGap(),
+                if (showTest) ...[
+                  AppButton(
+                    label: l.payFillTestCard,
+                    icon: Icons.bug_report_outlined,
+                    variant: AppButtonVariant.secondary,
+                    onPressed: _loading ? null : _fillTestCard,
+                  ),
+                  const FieldGap(),
+                ],
+                AppTextField(
+                  label: l.cardHolder,
+                  controller: _holder,
+                  enabled: !_loading,
+                  errorText: _errors[CardField.holderName],
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  onChanged: (_) => _clearError(CardField.holderName),
+                ),
+                const FieldGap(),
+                AppTextField(
+                  label: l.cardNumber,
+                  controller: _number,
+                  enabled: !_loading,
+                  hintText: '0000 0000 0000 0000',
+                  errorText: _errors[CardField.number],
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  inputFormatters: [CardNumberFormatter()],
+                  onChanged: (_) => _clearError(CardField.number),
+                ),
+                const FieldGap(),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InfoRow(l.payTo, o.pro.businessName),
-                    InfoRow(
-                      l.payAmount,
-                      formatMoney(o.totalAmount, l.localeName),
-                      bold: true,
+                    Expanded(
+                      child: AppTextField(
+                        label: l.cardExpiry,
+                        controller: _expiry,
+                        enabled: !_loading,
+                        hintText: l.cardExpiryHint,
+                        errorText: _errors[CardField.expiry],
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        inputFormatters: [ExpiryFormatter()],
+                        onChanged: (_) => _clearError(CardField.expiry),
+                      ),
                     ),
-                    Text(l.acceptVatNote, style: AppTypography.bodySecondary),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: AppTextField(
+                        label: l.cardCvc,
+                        controller: _cvc,
+                        enabled: !_loading,
+                        hintText: '000',
+                        errorText: _errors[CardField.cvc],
+                        isPassword: true,
+                        showPasswordTooltip: l.showPassword,
+                        hidePasswordTooltip: l.hidePassword,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        inputFormatters: [CvcFormatter()],
+                        onChanged: (_) => _clearError(CardField.cvc),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              const FieldGap(),
-              if (showTest) ...[
-                AppButton(
-                  label: l.payFillTestCard,
-                  icon: Icons.bug_report_outlined,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: _loading ? null : _fillTestCard,
-                ),
                 const FieldGap(),
-              ],
-              AppTextField(
-                label: l.cardHolder,
-                controller: _holder,
-                enabled: !_loading,
-                errorText: _errors[CardField.holderName],
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                onChanged: (_) => _clearError(CardField.holderName),
-              ),
-              const FieldGap(),
-              AppTextField(
-                label: l.cardNumber,
-                controller: _number,
-                enabled: !_loading,
-                hintText: '0000 0000 0000 0000',
-                errorText: _errors[CardField.number],
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                inputFormatters: [CardNumberFormatter()],
-                onChanged: (_) => _clearError(CardField.number),
-              ),
-              const FieldGap(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AppTextField(
-                      label: l.cardExpiry,
-                      controller: _expiry,
-                      enabled: !_loading,
-                      hintText: l.cardExpiryHint,
-                      errorText: _errors[CardField.expiry],
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      inputFormatters: [ExpiryFormatter()],
-                      onChanged: (_) => _clearError(CardField.expiry),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: AppTextField(
-                      label: l.cardCvc,
-                      controller: _cvc,
-                      enabled: !_loading,
-                      hintText: '000',
-                      errorText: _errors[CardField.cvc],
-                      isPassword: true,
-                      showPasswordTooltip: l.showPassword,
-                      hidePasswordTooltip: l.hidePassword,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      inputFormatters: [CvcFormatter()],
-                      onChanged: (_) => _clearError(CardField.cvc),
-                    ),
-                  ),
+                Text(l.payNoStore, style: AppTypography.bodySecondary),
+                if (_banner != null) ...[
+                  const FieldGap(),
+                  MessageBanner(_banner!),
                 ],
-              ),
-              const FieldGap(),
-              Text(l.payNoStore, style: AppTypography.bodySecondary),
-              if (_banner != null) ...[
                 const FieldGap(),
-                MessageBanner(_banner!),
+                AppButton(
+                  label: l.payButton(formatMoney(o.totalAmount, l.localeName)),
+                  isLoading: _loading,
+                  loadingLabel: l.payConnecting,
+                  onPressed: () => _submit(o),
+                ),
               ],
-              const FieldGap(),
-              AppButton(
-                label: l.payButton(formatMoney(o.totalAmount, l.localeName)),
-                isLoading: _loading,
-                loadingLabel: l.payConnecting,
-                onPressed: () => _submit(o),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -507,6 +516,12 @@ String paymentFailureBody(AppLocalizations l, PaymentResult r) =>
       PaymentErrorCode.unknown || null => l.payFailGeneric,
     };
 
+/// Aynı teklif başka bir kartla yeniden ödenebilir mi? Teklif başka bir
+/// teklifle sonuçlanmışsa ya da süresi dolmuşsa hayır.
+bool paymentCanRetryWithCard(PaymentResult r) =>
+    r.errorCode != PaymentErrorCode.requestAlreadyAssigned &&
+    r.errorCode != PaymentErrorCode.offerExpired;
+
 String paymentFailureTitle(AppLocalizations l, PaymentResult r) =>
     r.errorCode == PaymentErrorCode.resultUncertain
     ? l.payUncertainTitle
@@ -531,17 +546,43 @@ class _ResultState extends ConsumerState<PaymentResultScreen> {
   int _polls = 0;
   bool _gaveUp = false;
   bool _fetching = false;
+  bool _background = false;
+  late final AppLifecycleListener _lifecycle;
 
   @override
   void initState() {
     super.initState();
+    _lifecycle = AppLifecycleListener(onStateChange: _onLifecycle);
     _fetch();
   }
 
   @override
   void dispose() {
+    _lifecycle.dispose();
     _timer?.cancel();
     super.dispose();
+  }
+
+  bool get _pending =>
+      _result == null || _result!.status == EscrowStatus.initialized;
+
+  /// Arka planda yoklama durur (süre bütçesi harcanmaz); dönünce sonuç hemen
+  /// yeniden sorulur, gerekirse kalan aralıklarla sürer.
+  void _onLifecycle(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (!_background) return;
+        _background = false;
+        if (_pending && !_fetching) _fetch();
+      case AppLifecycleState.hidden ||
+          AppLifecycleState.paused ||
+          AppLifecycleState.detached:
+        _background = true;
+        _timer?.cancel();
+        _timer = null;
+      case AppLifecycleState.inactive:
+        break;
+    }
   }
 
   Future<void> _fetch() async {
@@ -561,23 +602,31 @@ class _ResultState extends ConsumerState<PaymentResultScreen> {
       _handle(r);
     } on ApiException catch (e) {
       if (!mounted) return;
-      setState(() => _error = e);
+      if (_result?.status == EscrowStatus.initialized) {
+        // Yoklama sırasında geçici hata: bekleme ekranı kalır, yoklama
+        // kalan aralıklarla sürer (yoksa ekran sonsuza dek bekler).
+        _scheduleNext();
+      } else {
+        setState(() => _error = e);
+      }
     } finally {
       _fetching = false;
+    }
+  }
+
+  void _scheduleNext() {
+    if (_background) return;
+    if (_polls < kPaymentPollSeconds.length) {
+      _timer = Timer(Duration(seconds: kPaymentPollSeconds[_polls++]), _fetch);
+    } else {
+      setState(() => _gaveUp = true);
     }
   }
 
   void _handle(PaymentResult r) {
     switch (r.status) {
       case EscrowStatus.initialized:
-        if (_polls < kPaymentPollSeconds.length) {
-          _timer = Timer(
-            Duration(seconds: kPaymentPollSeconds[_polls++]),
-            _fetch,
-          );
-        } else {
-          setState(() => _gaveUp = true);
-        }
+        _scheduleNext();
       case EscrowStatus.failed || EscrowStatus.refundedToCustomer:
         invalidateJobData(ref);
       case EscrowStatus.locked:
@@ -646,13 +695,18 @@ class _ResultState extends ConsumerState<PaymentResultScreen> {
           message: paymentFailureBody(l, r),
           actions: [
             if (r.offerId != null) ...[
-              AppButton(
-                label: l.payTryOtherCard,
-                onPressed: () => _retry(r.offerId!),
-              ),
+              // Teklif başkasına gitti ya da süresi doldu: başka kartla
+              // denemek de aynı hatayı verir, yalnız teklife dönülür.
+              if (paymentCanRetryWithCard(r))
+                AppButton(
+                  label: l.payTryOtherCard,
+                  onPressed: () => _retry(r.offerId!),
+                ),
               AppButton(
                 label: l.payBackToOffer,
-                variant: AppButtonVariant.secondary,
+                variant: paymentCanRetryWithCard(r)
+                    ? AppButtonVariant.secondary
+                    : AppButtonVariant.primary,
                 onPressed: () => context.go('/c/offers/${r.offerId}'),
               ),
             ] else
