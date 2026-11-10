@@ -394,4 +394,18 @@ class AuthFlowTest extends ApiTestBase {
                         .header("Access-Control-Request-Method", "POST"))
                 .andExpect(status().isForbidden());
     }
+
+    /** Ön uçuşsuz gerçek istek: izinsiz origin (3DS bankası dahil) /api/v1'de reddedilir, izin başlığı dönmez. */
+    @Test
+    void corsRejectsActualV1RequestFromUnlistedOrigin() throws Exception {
+        for (String origin : new String[] {"https://kotu.example", "https://sandbox-api.craftgate.io"}) {
+            mvc.perform(get("/api/v1/categories").header("Origin", origin))
+                    .andExpect(status().isForbidden())
+                    .andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
+        }
+        mvc.perform(get("/api/v1/categories").header("Origin", "http://localhost:5173"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .andExpect(header().doesNotExist("Access-Control-Allow-Credentials"));
+    }
 }

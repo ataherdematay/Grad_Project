@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -356,13 +357,21 @@ class PaymentFlowTest {
                         .param("completeStatus", "")
                         .param("conversationId", conversationId))
                 .andExpect(status().isOk())
+                // İstisna yalnız engeli kaldırır; yanıtı başka origin'e okunur kılmaz.
+                .andExpect(header().doesNotExist("Access-Control-Allow-Origin"))
                 .andReturn().getResponse().getContentAsString();
 
         assertThat(page).contains(FAILURE_SID);
         assertStatus("FAILED");
 
         mvc.perform(get("/api/payments/3ds/done").header("Origin", "https://sandbox-api.craftgate.io"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
+
+        // Aynı origin'den kardeş yol (eski init) CORS'a tabi kalır.
+        mvc.perform(post("/api/payments/3ds/init").header("Origin", "https://sandbox-api.craftgate.io")
+                        .contentType("application/json").content("{}"))
+                .andExpect(status().isForbidden());
     }
 
     /** Sandbox'ta görüldü: bankada iptal edilince callback'te paymentId boş, conversationId dolu gelir. */

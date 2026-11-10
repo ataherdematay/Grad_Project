@@ -72,4 +72,36 @@ class ProdProfileConfigTest {
         request.addHeader("Origin", "http://localhost:5173");
         assertThat(source.getCorsConfiguration(request)).isNull();
     }
+
+    /**
+     * prod'da admin web origin'i tanımlıyken: 3DS banka yolları CORS dışıdır (yanıta izin başlığı da eklenmez),
+     * /api/v1 ve eski /api/payments/3ds/init yalnız tanımlı origin'e açıktır, kimlik bilgili izin yoktur.
+     */
+    @Test
+    void prodCorsExemptsOnlyBankPathsAndKeepsApiRestricted() throws Exception {
+        var method = SecurityConfig.class.getDeclaredMethod("corsConfigurationSource", String.class);
+        method.setAccessible(true);
+        CorsConfigurationSource source =
+                (CorsConfigurationSource) method.invoke(new SecurityConfig(), "https://admin.bitadilat.com");
+        String bank = "https://sandbox-api.craftgate.io";
+
+        assertThat(source.getCorsConfiguration(request("POST", "/api/payments/3ds/callback", bank))).isNull();
+        assertThat(source.getCorsConfiguration(request("GET", "/api/payments/3ds/done", bank))).isNull();
+
+        for (String path : new String[] {"/api/v1/auth/login", "/api/v1/payments/3ds/init",
+                "/api/payments/3ds/init", "/api/payments/3ds/callback/x", "/api/payments/3ds/callbackx"}) {
+            var config = source.getCorsConfiguration(request("POST", path, bank));
+            assertThat(config).as(path).isNotNull();
+            assertThat(config.checkOrigin(bank)).as(path).isNull();
+            assertThat(config.checkOrigin("https://kotu.example")).as(path).isNull();
+            assertThat(config.checkOrigin("https://admin.bitadilat.com")).as(path).isEqualTo("https://admin.bitadilat.com");
+            assertThat(config.getAllowCredentials()).as(path).isNotEqualTo(Boolean.TRUE);
+        }
+    }
+
+    private static MockHttpServletRequest request(String method, String path, String origin) {
+        MockHttpServletRequest request = new MockHttpServletRequest(method, path);
+        request.addHeader("Origin", origin);
+        return request;
+    }
 }
