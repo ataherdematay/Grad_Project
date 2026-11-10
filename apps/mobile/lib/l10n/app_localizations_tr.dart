@@ -1443,4 +1443,910 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get offerItemsServerInvalid =>
       'Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene.';
+
+  @override
+  String get backToJob => 'İşe dön';
+
+  @override
+  String get addressTitle => 'Adres';
+
+  @override
+  String get doorNote => 'Kapı notu';
+
+  @override
+  String get timelineTitle => 'Geçmiş';
+
+  @override
+  String starsCount(int count) {
+    return '$count yıldız';
+  }
+
+  @override
+  String unreadMessages(int count) {
+    return '$count okunmamış mesaj';
+  }
+
+  @override
+  String get serviceFeeLabel => 'Hizmet bedeli (%10)';
+
+  @override
+  String get netEarningLabel => 'Net kazancın';
+
+  @override
+  String get photosPending =>
+      'Fotoğraflar yüklenirken bekle ya da hatalı olanı kaldır.';
+
+  @override
+  String get homeActiveJob => 'Aktif işin';
+
+  @override
+  String get jobScreenTitle => 'İş';
+
+  @override
+  String get jobStatusAwaiting => 'Ustanın onayı bekleniyor';
+
+  @override
+  String get jobStatusAwaitingPro => 'Randevu onayın bekleniyor';
+
+  @override
+  String get jobStatusScheduled => 'Randevun onaylandı';
+
+  @override
+  String get jobStatusScheduledPro => 'Randevu onaylandı';
+
+  @override
+  String get jobStatusArrived => 'Usta adreste';
+
+  @override
+  String get jobStatusArrivedPro => 'Adrese ulaştın';
+
+  @override
+  String get jobStatusInProgress => 'İş sürüyor';
+
+  @override
+  String get jobStatusWorkFinished => 'Onayın bekleniyor';
+
+  @override
+  String get jobStatusWorkFinishedPro => 'Müşteri onayı bekleniyor';
+
+  @override
+  String get jobStatusCompleted => 'Tamamlandı';
+
+  @override
+  String get jobStatusDisputed => 'Şikayet inceleniyor';
+
+  @override
+  String get jobStatusCancelled => 'İptal edildi';
+
+  @override
+  String get jobStatusResolved => 'Sonuçlandı';
+
+  @override
+  String get escrowInitialized => 'Ödeme bekleniyor';
+
+  @override
+  String get escrowLocked => 'Güvence havuzunda';
+
+  @override
+  String get escrowFailed => 'Ödeme alınamadı';
+
+  @override
+  String get escrowRefunded => 'Kartına iade edildi';
+
+  @override
+  String get escrowRefundedPro => 'Müşteriye iade edildi';
+
+  @override
+  String get escrowReleased => 'Ustaya aktarıldı';
+
+  @override
+  String get escrowReleasedPro => 'Sana aktarıldı';
+
+  @override
+  String get escrowDisputed => 'Şikayet nedeniyle bekliyor';
+
+  @override
+  String get escrowSplit => 'İki tarafa paylaştırıldı';
+
+  @override
+  String get actorYou => 'Sen';
+
+  @override
+  String get actorCustomer => 'Müşteri';
+
+  @override
+  String get actorPro => 'Usta';
+
+  @override
+  String get actorSystem => 'Sistem';
+
+  @override
+  String get actorAdmin => 'Yönetici';
+
+  @override
+  String get eventStatus => 'Durum güncellendi';
+
+  @override
+  String get eventNote => 'Not eklendi';
+
+  @override
+  String get eventPhoto => 'Fotoğraf eklendi';
+
+  @override
+  String get eventProposed => 'Randevu önerildi';
+
+  @override
+  String get eventAccepted => 'Randevu kabul edildi';
+
+  @override
+  String get offerSummaryTitle => 'Teklif özeti';
+
+  @override
+  String get paymentSummaryTitle => 'Ödeme';
+
+  @override
+  String get paymentStatusLabel => 'Durum';
+
+  @override
+  String get refundedLabel => 'İade edilen';
+
+  @override
+  String get escrowExplain =>
+      'Ödemen güvence havuzunda tutulur. İş bitip onayladığında ustaya aktarılır.';
+
+  @override
+  String get acceptTitle => 'Teklifi kabul et';
+
+  @override
+  String acceptIntro(String pro) {
+    return '$pro ile çalışmak üzeresin. Ödemeden önce dökümü ve koşulları kontrol et.';
+  }
+
+  @override
+  String get acceptVatNote => 'Tutar KDV dahildir.';
+
+  @override
+  String get escrowHowTitle => 'Ödemen güvence havuzunda tutulur';
+
+  @override
+  String get escrowHowBody =>
+      'Ödeme kartından alınır ve güvence havuzunda bekler. Usta işi bitirir, sen onaylarsın; onayından sonra tutar ustaya aktarılır. Onaylamazsan ya da sorun yaşarsan şikayet açabilirsin.';
+
+  @override
+  String get cancelPolicyTitle => 'İptal politikası';
+
+  @override
+  String get cancelPolicyBody =>
+      'Randevu gününe kadar ve usta adrese ulaşana kadar iptal edebilirsin; ödemenin tamamı kartına iade edilir. İş başladıktan sonra iptal yerine şikayet açabilirsin.';
+
+  @override
+  String get acceptUnavailable =>
+      'Bu teklif artık kabul edilemiyor. Teklifin süresi dolmuş ya da durumu değişmiş olabilir.';
+
+  @override
+  String acceptContinue(String amount) {
+    return 'Ödemeye geç, $amount';
+  }
+
+  @override
+  String get acceptBack => 'Vazgeç';
+
+  @override
+  String get payTitle => 'Ödeme';
+
+  @override
+  String get payTo => 'Usta';
+
+  @override
+  String get payAmount => 'Ödenecek tutar';
+
+  @override
+  String get payFillTestCard => 'Test kartını doldur';
+
+  @override
+  String get cardHolder => 'Kart üzerindeki ad';
+
+  @override
+  String get cardNumber => 'Kart numarası';
+
+  @override
+  String get cardExpiry => 'Son kullanma (AA/YY)';
+
+  @override
+  String get cardExpiryHint => 'AA/YY';
+
+  @override
+  String get cardCvc => 'Güvenlik kodu (CVC)';
+
+  @override
+  String get cardErrHolder => 'Kart üzerindeki adı ve soyadı gir.';
+
+  @override
+  String get cardErrNumber => 'Kart numarası geçersiz. 16 haneyi kontrol et.';
+
+  @override
+  String get cardErrExpiry =>
+      'Son kullanma tarihi geçersiz. AA/YY biçiminde gir.';
+
+  @override
+  String get cardErrExpiryPast => 'Kartın son kullanma tarihi geçmiş.';
+
+  @override
+  String get cardErrCvc => 'Güvenlik kodu (CVC) geçersiz. 3 ya da 4 hane gir.';
+
+  @override
+  String get payNoStore =>
+      'Kart bilgilerin kaydedilmez. Banka doğrulaması bir sonraki adımda yapılır.';
+
+  @override
+  String payButton(String amount) {
+    return '$amount öde';
+  }
+
+  @override
+  String get payConnecting => 'Bankaya bağlanılıyor';
+
+  @override
+  String get threeDsTitle => 'Banka doğrulaması';
+
+  @override
+  String get threeDsClose => 'Kapat';
+
+  @override
+  String get threeDsCloseTitle => 'Doğrulamayı kapatmak istiyor musun?';
+
+  @override
+  String get threeDsCloseBody =>
+      'Doğrulamayı tamamlamadan çıkarsan ödeme tamamlanmayabilir. Çıkınca ödemenin durumunu kontrol ederiz.';
+
+  @override
+  String get threeDsCloseConfirm => 'Kapat';
+
+  @override
+  String get threeDsCloseStay => 'Doğrulamaya dön';
+
+  @override
+  String get payResultTitle => 'Ödeme sonucu';
+
+  @override
+  String get payWaiting => 'Bankadan sonuç bekleniyor';
+
+  @override
+  String get payWaitingHint => 'Bu birkaç saniye sürebilir. Ekranı kapatma.';
+
+  @override
+  String get paySuccessTitle => 'Ödemen alındı';
+
+  @override
+  String paySuccessBody(String amount) {
+    return '$amount güvence havuzunda tutuluyor.';
+  }
+
+  @override
+  String get payFailedTitle => 'Ödeme tamamlanamadı';
+
+  @override
+  String get payRefundedTitle => 'Ödemen iade edildi';
+
+  @override
+  String get payUncertainTitle => 'Sonuç henüz belli değil';
+
+  @override
+  String get payFailDeclined =>
+      'Bankan ödemeyi onaylamadı. Kart bilgilerini kontrol et ya da farklı bir kartla dene.';
+
+  @override
+  String get payFailAssigned =>
+      'Talebin bu sırada başka bir teklifle sonuçlandı. Ödemen kartına iade edildi.';
+
+  @override
+  String get payFailExpired =>
+      'Teklifin süresi doldu. Ödemen kartına iade edildi.';
+
+  @override
+  String get payFailUncertain =>
+      'Bankadan henüz kesin sonuç gelmedi. Biraz sonra tekrar kontrol et. Ödeme tamamlandıysa işin Taleplerim sekmesinde görünür.';
+
+  @override
+  String get payFailGeneric =>
+      'Ödeme tamamlanamadı. Farklı bir kartla tekrar deneyebilirsin.';
+
+  @override
+  String get payTryOtherCard => 'Farklı kartla dene';
+
+  @override
+  String get payBackToOffer => 'Teklife dön';
+
+  @override
+  String get payCheckAgain => 'Tekrar kontrol et';
+
+  @override
+  String get payToJob => 'İşe git';
+
+  @override
+  String get payToRequests => 'Taleplerime git';
+
+  @override
+  String get appointmentTitle => 'Randevu';
+
+  @override
+  String get appointmentProTitle => 'Randevu';
+
+  @override
+  String get appointmentNotChosen => 'Randevu henüz seçilmedi.';
+
+  @override
+  String get proposalMine => 'Önerin karşı tarafın onayını bekliyor';
+
+  @override
+  String get proposalFromPro => 'Usta bu aralığı önerdi';
+
+  @override
+  String get proposalFromCustomer => 'Müşteri bu aralığı önerdi';
+
+  @override
+  String get proposalAccept => 'Kabul et';
+
+  @override
+  String get proposalOther => 'Başka aralık seç';
+
+  @override
+  String get appointmentChoose => 'Randevu seç';
+
+  @override
+  String get appointmentChange => 'Randevuyu değiştir';
+
+  @override
+  String get appointmentIntro =>
+      'Ustanın gelmesini istediğin aralığı seç. Usta onaylar ya da başka bir aralık önerir.';
+
+  @override
+  String get appointmentProIntro =>
+      'Müşterinin önerisini kabul et ya da kendi uygun aralığını öner.';
+
+  @override
+  String get appointmentPickDay => 'Gün';
+
+  @override
+  String get appointmentPickSlot => 'Saat aralığı';
+
+  @override
+  String get appointmentOfferWindow => 'Teklifteki varış aralığı';
+
+  @override
+  String get appointmentYourWindow => 'Teklifindeki varış aralığı';
+
+  @override
+  String get appointmentNoSlots => 'Bu gün için uygun aralık yok.';
+
+  @override
+  String get appointmentSelectHint => 'Devam etmek için bir aralık seç.';
+
+  @override
+  String get appointmentSubmit => 'Randevu iste';
+
+  @override
+  String get appointmentProSubmit => 'Yeni aralık öner';
+
+  @override
+  String get appointmentClosed => 'Bu işte şu an randevu işlemi yapılamıyor.';
+
+  @override
+  String get cancelTitle => 'İşi iptal et';
+
+  @override
+  String get cancelJobAction => 'İşi iptal et';
+
+  @override
+  String get proCancelAction => 'İşi iptal et';
+
+  @override
+  String cancelIntroCustomer(String amount) {
+    return 'İptal edersen $amount kartına iade edilir ve talebin kapanır.';
+  }
+
+  @override
+  String cancelIntroPro(String amount) {
+    return 'İptal edersen müşteriye $amount iade edilir ve talep yeniden açılır. İptaller profilinde görünür.';
+  }
+
+  @override
+  String get cancelReasonProUnreachable => 'Usta ulaşılamıyor';
+
+  @override
+  String get cancelReasonOtherProvider => 'Başka bir usta ile anlaştım';
+
+  @override
+  String get proCancelReasonSchedule => 'Takvimim uygun değil';
+
+  @override
+  String get proCancelReasonCannot => 'İşi yapamayacağım';
+
+  @override
+  String get proCancelReasonCustomer => 'Müşteriye ulaşamıyorum';
+
+  @override
+  String get cancelSubmit => 'İptal et';
+
+  @override
+  String get cancelRescheduleInstead => 'İptal yerine yeni tarih iste';
+
+  @override
+  String get cancelNotAllowed =>
+      'Bu iş artık iptal edilemiyor. Randevu sonrası sorunlarda şikayet açabilirsin.';
+
+  @override
+  String cancelConfirmCustomer(String amount) {
+    return 'Bu işlem geri alınamaz. $amount kartına iade edilir.';
+  }
+
+  @override
+  String cancelConfirmPro(String amount) {
+    return 'Bu işlem geri alınamaz. Müşteriye $amount iade edilir ve talep yeniden açılır.';
+  }
+
+  @override
+  String get cancelConfirmAction => 'İşi iptal et';
+
+  @override
+  String get cancelConfirmKeep => 'Vazgeç';
+
+  @override
+  String get completeTitle => 'Teslim onayı';
+
+  @override
+  String get completeIntro =>
+      'Usta işi bitirdiğini bildirdi. Notu ve fotoğrafları kontrol et, sorun yoksa onayla.';
+
+  @override
+  String get completeProNote => 'Ustanın notu';
+
+  @override
+  String get completeNoNote => 'Usta not eklemedi.';
+
+  @override
+  String get completeProPhotos => 'Ustanın fotoğrafları';
+
+  @override
+  String completeAutoNote(String date) {
+    return 'Onaylamazsan $date tarihinde otomatik onaylanır.';
+  }
+
+  @override
+  String get completeConfirmButton => 'Onayla';
+
+  @override
+  String get completeNotAvailable => 'Bu iş şu an onay beklemiyor.';
+
+  @override
+  String get completeConfirmTitle => 'Teslimi onaylıyor musun?';
+
+  @override
+  String completeConfirmBody(String amount, String pro) {
+    return 'Onaylarsan $amount güvence havuzundan $pro adlı ustaya aktarılır. Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get completeConfirmAction => 'Onayla ve aktar';
+
+  @override
+  String get confirmCompletion => 'Teslimi onayla';
+
+  @override
+  String get complainAction => 'Sorun bildir';
+
+  @override
+  String get reviewTitle => 'Puanla';
+
+  @override
+  String get reviewAction => 'Puan ver';
+
+  @override
+  String reviewIntro(String pro) {
+    return '$pro ile deneyimin nasıldı?';
+  }
+
+  @override
+  String get reviewStarsTitle => 'Puanın';
+
+  @override
+  String get reviewStarsRequired => 'Devam etmek için yıldız ver.';
+
+  @override
+  String get reviewTagsTitle => 'Neler iyiydi?';
+
+  @override
+  String get reviewTagOnTime => 'Zamanında geldi';
+
+  @override
+  String get reviewTagCleanWork => 'Temiz çalıştı';
+
+  @override
+  String get reviewTagFairPrice => 'Fiyat adildi';
+
+  @override
+  String get reviewTagGoodCommunication => 'İletişim iyiydi';
+
+  @override
+  String get reviewTagPolite => 'Saygılıydı';
+
+  @override
+  String get reviewCommentLabel => 'Yorumun (isteğe bağlı)';
+
+  @override
+  String get reviewAnonymous => 'Adım görünmesin';
+
+  @override
+  String get reviewAnonymousHelp =>
+      'Yorumun ustanın profilinde ismin olmadan görünür.';
+
+  @override
+  String get reviewPublish => 'Yayınla';
+
+  @override
+  String get reviewSkip => 'Şimdi değil';
+
+  @override
+  String get reviewAlreadyTitle => 'Puanını verdin';
+
+  @override
+  String get reviewAlreadyBody => 'Bu iş için puan verildi. Teşekkürler.';
+
+  @override
+  String get reviewNotAvailableTitle => 'Şu an puanlanamıyor';
+
+  @override
+  String get reviewNotAvailableBody =>
+      'İş tamamlandıktan sonra puan verebilirsin.';
+
+  @override
+  String get yourReview => 'Puanın';
+
+  @override
+  String get complaintTitle => 'Sorun bildir';
+
+  @override
+  String get complaintIntro =>
+      'Yaşadığın sorunu anlat. Şikayet açıldığında ödeme güvence havuzunda bekler ve ekibimiz inceler.';
+
+  @override
+  String get complaintReasonTitle => 'Neden';
+
+  @override
+  String get complaintReasonNoShow => 'Usta gelmedi';
+
+  @override
+  String get complaintReasonIncomplete => 'İş eksik ya da hatalı';
+
+  @override
+  String get complaintReasonExtraCharge => 'Ek ücret istendi';
+
+  @override
+  String get complaintReasonRude => 'Saygısız davranış';
+
+  @override
+  String get complaintReasonOther => 'Diğer';
+
+  @override
+  String get complaintDescription => 'Açıklama';
+
+  @override
+  String complaintDescriptionHelp(int count, int min) {
+    return '$count/$min karakter (en az)';
+  }
+
+  @override
+  String complaintDescriptionShort(int min) {
+    return 'Açıklama en az $min karakter olmalı. Ne olduğunu biraz daha anlat.';
+  }
+
+  @override
+  String get complaintEvidenceTitle => 'Kanıt fotoğrafları';
+
+  @override
+  String complaintEvidenceHelp(int max) {
+    return 'İsteğe bağlı, en fazla $max fotoğraf.';
+  }
+
+  @override
+  String get complaintAgree =>
+      'Şikayet incelenirken ödemenin güvence havuzunda bekleyeceğini anladım.';
+
+  @override
+  String get complaintSubmit => 'Şikayeti gönder';
+
+  @override
+  String get complaintPhotosPending =>
+      'Fotoğraflar yüklenirken bekle ya da hatalı olanı kaldır.';
+
+  @override
+  String get complaintConfirmTitle => 'Şikayeti göndermek istiyor musun?';
+
+  @override
+  String get complaintConfirmBody =>
+      'Şikayet gönderilince iş inceleme durumuna geçer ve ödeme güvence havuzunda bekler. Bu işlem geri alınamaz.';
+
+  @override
+  String get complaintConfirmAction => 'Şikayeti gönder';
+
+  @override
+  String get complaintNotAvailableTitle => 'Şikayet açılamıyor';
+
+  @override
+  String get complaintNotAvailableBody =>
+      'Bu iş için şu an şikayet açılamıyor. Daha önce açılmış olabilir.';
+
+  @override
+  String get complaintStatusTitle => 'Şikayet durumu';
+
+  @override
+  String get complaintStatusOpen => 'Alındı';
+
+  @override
+  String get complaintStatusInReview => 'İnceleniyor';
+
+  @override
+  String get complaintStatusResolved => 'Sonuçlandı';
+
+  @override
+  String get complaintStatusDismissed => 'Reddedildi';
+
+  @override
+  String get complaintExplainOpen =>
+      'Şikayetin alındı. Ekibimiz inceleme için sıraya aldı. Bu sırada ödeme güvence havuzunda bekler.';
+
+  @override
+  String get complaintExplainInReview =>
+      'Ekibimiz şikayetini inceliyor. Sonuç belli olunca burada görünür.';
+
+  @override
+  String get complaintExplainResolved =>
+      'Şikayetin sonuçlandı. Karar ve gerekçesi aşağıda.';
+
+  @override
+  String get complaintExplainDismissed =>
+      'Şikayetin değerlendirildi ve kabul edilmedi. Gerekçesi aşağıda.';
+
+  @override
+  String get complaintCreatedAt => 'Açılış';
+
+  @override
+  String get complaintDecisionTitle => 'Karar';
+
+  @override
+  String get complaintGoChat => 'Sohbete git';
+
+  @override
+  String complaintCardTitle(String code) {
+    return 'Şikayet $code';
+  }
+
+  @override
+  String get chatEntryTitle => 'Mesajlar';
+
+  @override
+  String get chatOpen => 'Sohbeti aç';
+
+  @override
+  String get chatEmptyTitle => 'Henüz mesaj yok';
+
+  @override
+  String get chatEmptyBody =>
+      'İlk mesajı sen yaz. Telefon numaraları paylaşılmaz; iletişim buradan yürür.';
+
+  @override
+  String get chatReadOnlyBody =>
+      'Bu sohbet salt okunur: iş kapandıktan 30 gün sonra yeni mesaj yazılamaz.';
+
+  @override
+  String get chatInputLabel => 'Mesaj yaz';
+
+  @override
+  String get chatInputHint => 'Mesajını yaz';
+
+  @override
+  String get chatSend => 'Gönder';
+
+  @override
+  String get chatAttachPhoto => 'Fotoğraf ekle';
+
+  @override
+  String get chatPhotoBody => 'Fotoğraf';
+
+  @override
+  String get chatSending => 'Gönderiliyor';
+
+  @override
+  String get chatSendFailed => 'Gönderilemedi.';
+
+  @override
+  String get chatRetry => 'Tekrar dene';
+
+  @override
+  String get chatDiscard => 'Sil';
+
+  @override
+  String get chatRead => 'Okundu';
+
+  @override
+  String get chatSent => 'Gönderildi';
+
+  @override
+  String get conversationsEmptyTitle => 'Henüz konuşma yok';
+
+  @override
+  String get conversationsEmptyBody =>
+      'Bir teklifi kabul edip ödeme yaptığında ustayla buradan yazışırsın.';
+
+  @override
+  String get conversationsEmptyBodyPro =>
+      'Bir teklifin kabul edilince müşteriyle buradan yazışırsın.';
+
+  @override
+  String get conversationsGoRequests => 'Taleplerime git';
+
+  @override
+  String get conversationsGoJobs => 'İşlerime git';
+
+  @override
+  String get conversationNoMessages => 'Henüz mesaj yok';
+
+  @override
+  String get jobsEmptyPastTitle => 'Geçmiş iş yok';
+
+  @override
+  String get jobsEmptyPastBody =>
+      'Tamamlanan ve iptal edilen işlerin burada görünür.';
+
+  @override
+  String get proArrived => 'Adrese ulaştım';
+
+  @override
+  String get proStart => 'İşe başladım';
+
+  @override
+  String get proFinish => 'İşi bitirdim';
+
+  @override
+  String get proAddNote => 'Not veya fotoğraf ekle';
+
+  @override
+  String get proOpenMaps => 'Haritada aç';
+
+  @override
+  String get mapsOpenFailed => 'Harita uygulaması açılamadı.';
+
+  @override
+  String proAutoCompleteNote(String date) {
+    return 'Müşteri onaylamazsa iş $date tarihinde otomatik onaylanır.';
+  }
+
+  @override
+  String get proNoteTitle => 'Not veya fotoğraf';
+
+  @override
+  String get proNoteIntro => 'Müşterinin göreceği bir not ya da fotoğraf ekle.';
+
+  @override
+  String get proNoteLabel => 'Not';
+
+  @override
+  String get proNoteEmpty => 'Bir not yaz ya da fotoğraf ekle.';
+
+  @override
+  String get proNoteSubmit => 'Ekle';
+
+  @override
+  String get proPhotosTitle => 'Fotoğraflar';
+
+  @override
+  String get proFinishTitle => 'İşi bitirdim';
+
+  @override
+  String get proFinishIntro =>
+      'Yaptığın işi kısaca anlat. Müşteri notunu ve fotoğraflarını görüp onaylar.';
+
+  @override
+  String get proFinishNoteLabel => 'Yapılan işin notu';
+
+  @override
+  String proFinishNoteHelp(int count, int min) {
+    return '$count/$min karakter (en az)';
+  }
+
+  @override
+  String proFinishNoteShort(int min) {
+    return 'Not en az $min karakter olmalı.';
+  }
+
+  @override
+  String get proFinishPhotosHelp => 'İsteğe bağlı, en fazla 5 fotoğraf.';
+
+  @override
+  String get proFinishSubmit => 'İşi bitirdim';
+
+  @override
+  String get proFinishConfirmTitle =>
+      'İşi bitirdiğini bildirmek istiyor musun?';
+
+  @override
+  String get proFinishConfirmBody =>
+      'Müşteriye onay bildirimi gider. Bu işlem geri alınamaz.';
+
+  @override
+  String get proFinishConfirmAction => 'Bildir';
+
+  @override
+  String get proFinishedTitle => 'Teslim gönderildi';
+
+  @override
+  String get proFinishedHeadline => 'Teslimini gönderdin';
+
+  @override
+  String get proFinishedBody =>
+      'Müşteri onaylayınca ödeme güvence havuzundan sana aktarılır.';
+
+  @override
+  String get proBackToJobs => 'İşlerime dön';
+
+  @override
+  String get proCancelledTitle => 'İş iptal edildi';
+
+  @override
+  String get proCancelledHeadline => 'İşi iptal ettin';
+
+  @override
+  String get proCancelledBody =>
+      'Müşteriye iade yapıldı ve talep yeniden açıldı. İptaller profilinde görünür.';
+
+  @override
+  String get earningsTitle => 'Kazançlar';
+
+  @override
+  String get earningsReleased => 'Sana aktarılan';
+
+  @override
+  String get earningsPending => 'Güvence havuzunda bekleyen';
+
+  @override
+  String get earningsFeeTotal => 'Toplam hizmet bedeli';
+
+  @override
+  String get earningsPendingHelp =>
+      'Bekleyen tutar, müşteri onayladığında ya da şikayet sonuçlandığında hesabına geçer.';
+
+  @override
+  String get earningsList => 'İşler';
+
+  @override
+  String get earningsEmptyTitle => 'Henüz kazanç yok';
+
+  @override
+  String get earningsEmptyBody =>
+      'Teklifin kabul edilip iş tamamlanınca kazancın burada görünür.';
+
+  @override
+  String get earningPending => 'Bekliyor';
+
+  @override
+  String get earningReleased => 'Aktarıldı';
+
+  @override
+  String get earningRefunded => 'İade edildi';
+
+  @override
+  String get earningSplit => 'Paylaştırıldı';
+
+  @override
+  String get offerFormRequestClosed =>
+      'Bu talep artık teklif almıyor. Ekran güncellendi.';
+
+  @override
+  String get homeActiveJobs => 'Aktif işlerin';
+
+  @override
+  String get homeOpenRequests => 'Açık taleplerin';
+
+  @override
+  String get homeSeeAll => 'Tümünü gör';
 }

@@ -48,6 +48,7 @@ class ApiException implements Exception {
     this.message = '',
     this.field,
     this.statusCode,
+    this.ref,
   });
 
   final ApiErrorCode code;
@@ -59,6 +60,9 @@ class ApiException implements Exception {
   final String? field;
   final int? statusCode;
 
+  /// `PAYMENT_DECLINED` yanıtındaki ödeme referansı.
+  final String? ref;
+
   bool get isNetworkError => code == ApiErrorCode.networkError;
 
   /// `{code, message, field?}` gövdesini ve HTTP durumunu çözer.
@@ -69,6 +73,7 @@ class ApiException implements Exception {
         message: (body['message'] ?? '').toString(),
         field: body['field'] is String ? body['field'] as String : null,
         statusCode: statusCode,
+        ref: body['ref'] is String ? body['ref'] as String : null,
       );
     }
     return ApiException(code: ApiErrorCode.unknown, statusCode: statusCode);

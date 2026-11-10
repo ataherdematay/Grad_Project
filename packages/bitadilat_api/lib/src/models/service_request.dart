@@ -49,6 +49,9 @@ abstract class RequestSummary with _$RequestSummary {
     @Default(0) int offerCount,
     @NullableMoneyConverter() Money? minOfferTotal,
     @NullableMoneyConverter() Money? maxOfferTotal,
+
+    /// Talep `ASSIGNED` olunca açılan işin kimliği.
+    @JsonKey(fromJson: idFromJsonNullable) String? jobId,
   }) = _RequestSummary;
 
   factory RequestSummary.fromJson(Map<String, dynamic> json) =>
@@ -82,6 +85,7 @@ abstract class RequestDetail with _$RequestDetail {
     @Default(0) int matchedProCount,
     @Default(<MatchFactor>[]) List<MatchFactor> matchFactors,
     RequestAddress? address,
+    @JsonKey(fromJson: idFromJsonNullable) String? jobId,
   }) = _RequestDetail;
 
   factory RequestDetail.fromJson(Map<String, dynamic> json) =>
@@ -101,6 +105,7 @@ abstract class RequestDetail with _$RequestDetail {
     offerCount: offerCount,
     minOfferTotal: minOfferTotal,
     maxOfferTotal: maxOfferTotal,
+    jobId: jobId,
   );
 }
 

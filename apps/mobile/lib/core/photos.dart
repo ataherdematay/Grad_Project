@@ -122,9 +122,13 @@ class PhotoItem {
     this.mediaId,
     this.failure,
     this.error,
+    this.localPath,
   });
 
   final int localId;
+
+  /// Taslak için diske yazılmış kopya (yükleme bitince doldurulur).
+  String? localPath;
 
   /// Yerel önizleme (yüklenen dosya).
   final Uint8List? bytes;
@@ -189,6 +193,30 @@ class PhotoSet extends ChangeNotifier {
 
   void _notify() {
     if (!_disposed) notifyListeners();
+  }
+
+  /// Taslaktan geri yüklenen, zaten yüklenmiş fotoğraf (`mediaId` sunucuda).
+  void addRestored({
+    required Uint8List bytes,
+    required String mediaId,
+    required String name,
+    required String mime,
+    required String localPath,
+  }) {
+    if (_items.length >= max) return;
+    _items.add(
+      PhotoItem(
+        localId: _seq++,
+        bytes: bytes,
+        name: name,
+        mime: mime,
+        status: PhotoStatus.done,
+        progress: 1,
+        mediaId: mediaId,
+        localPath: localPath,
+      ),
+    );
+    _notify();
   }
 
   /// Seçici açılır, sonuç yüklenir. Sınır dolmuşsa hiçbir şey yapmaz.

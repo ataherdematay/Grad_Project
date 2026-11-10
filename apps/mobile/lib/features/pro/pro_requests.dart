@@ -327,6 +327,13 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
     final labor = _laborAmount(l);
     final arrivalIssue = validateArrival(_from, _to, now);
     String m(Money v) => formatMoney(v, l.localeName);
+    // Talep durumu sunucudan izlenir; durum eskiyince (ILLEGAL_STATE)
+    // sağlayıcı geçersiz kılınır ve form güncel durumu gösterir.
+    final status = ref
+        .watch(proRequestProvider(widget.requestId))
+        .value
+        ?.status;
+    final closed = status != null && status != RequestStatus.open;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -508,6 +515,7 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     enabled: !_submitting,
                     maxLength: kNoteMax,
                     keyboardType: TextInputType.multiline,
+                    minLines: 3,
                     errorText: _serverField == 'note'
                         ? l.errFieldInvalid
                         : null,
@@ -540,11 +548,15 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     const FieldGap(),
                     MessageBanner(_banner!),
                   ],
+                  if (closed) ...[
+                    const FieldGap(),
+                    MessageBanner(l.offerFormRequestClosed),
+                  ],
                   const FieldGap(),
                   AppButton(
                     label: l.offerSend,
                     isLoading: _submitting,
-                    onPressed: _submit,
+                    onPressed: closed ? null : _submit,
                   ),
                 ],
               ),

@@ -222,25 +222,3 @@ class _FeedCard extends StatelessWidget {
     );
   }
 }
-
-/// `/p/jobs`: bu dalgada yalnızca boş durum.
-class ProJobsScreen extends StatelessWidget {
-  const ProJobsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l.tabJobs)),
-      body: SafeArea(
-        child: EmptyState(
-          icon: Icons.handyman_outlined,
-          title: l.jobsEmptyTitle,
-          message: l.jobsEmptyBody,
-          actionLabel: l.backToFeed,
-          onAction: () => context.go('/p/feed'),
-        ),
-      ),
-    );
-  }
-}

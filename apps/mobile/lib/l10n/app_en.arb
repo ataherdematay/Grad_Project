@@ -650,5 +650,429 @@
   "photoDuplicate": "You already added this photo.",
   "feedEditProfile": "Edit your categories and districts",
   "arrivalServerInvalid": "The arrival window was not accepted. Check the day and times and try again.",
-  "offerItemsServerInvalid": "The item totals don't add up. Check the material items and try again."
+  "offerItemsServerInvalid": "The item totals don't add up. Check the material items and try again.",
+  "backToJob": "Back to the job",
+  "addressTitle": "Address",
+  "doorNote": "Door note",
+  "timelineTitle": "History",
+  "starsCount": "{count} stars",
+  "@starsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unreadMessages": "{count} unread messages",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceFeeLabel": "Service fee (10%)",
+  "netEarningLabel": "Your net earning",
+  "photosPending": "Wait for the photos to upload or remove the failed one.",
+  "homeActiveJob": "Your active job",
+  "jobScreenTitle": "Job",
+  "jobStatusAwaiting": "Awaiting pro confirmation",
+  "jobStatusAwaitingPro": "Awaiting your appointment confirmation",
+  "jobStatusScheduled": "Appointment confirmed",
+  "jobStatusScheduledPro": "Appointment confirmed",
+  "jobStatusArrived": "Pro on site",
+  "jobStatusArrivedPro": "You are on site",
+  "jobStatusInProgress": "In progress",
+  "jobStatusWorkFinished": "Awaiting your approval",
+  "jobStatusWorkFinishedPro": "Awaiting customer approval",
+  "jobStatusCompleted": "Completed",
+  "jobStatusDisputed": "Under review",
+  "jobStatusCancelled": "Cancelled",
+  "jobStatusResolved": "Resolved",
+  "escrowInitialized": "Awaiting payment",
+  "escrowLocked": "In secure hold",
+  "escrowFailed": "Payment failed",
+  "escrowRefunded": "Refunded to your card",
+  "escrowRefundedPro": "Refunded to the customer",
+  "escrowReleased": "Paid out to the pro",
+  "escrowReleasedPro": "Paid out to you",
+  "escrowDisputed": "On hold during the complaint",
+  "escrowSplit": "Split between both sides",
+  "actorYou": "You",
+  "actorCustomer": "Customer",
+  "actorPro": "Pro",
+  "actorSystem": "System",
+  "actorAdmin": "Admin",
+  "eventStatus": "Status updated",
+  "eventNote": "Note added",
+  "eventPhoto": "Photo added",
+  "eventProposed": "Appointment proposed",
+  "eventAccepted": "Appointment accepted",
+  "offerSummaryTitle": "Offer summary",
+  "paymentSummaryTitle": "Payment",
+  "paymentStatusLabel": "Status",
+  "refundedLabel": "Refunded",
+  "escrowExplain": "Your payment is kept in secure hold. It is paid out to the pro once the job is done and you approve it.",
+  "acceptTitle": "Accept the offer",
+  "acceptIntro": "You are about to work with {pro}. Check the breakdown and the terms before paying.",
+  "@acceptIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptVatNote": "The amount includes VAT.",
+  "escrowHowTitle": "Your payment stays in secure hold",
+  "escrowHowBody": "The payment is taken from your card and held securely. The pro finishes the job and you approve it; only then is the amount paid out to the pro. If you do not approve or something goes wrong, you can open a complaint.",
+  "cancelPolicyTitle": "Cancellation policy",
+  "cancelPolicyBody": "You can cancel until the pro arrives at your address; the full payment is refunded to your card. Once the work has started you can open a complaint instead of cancelling.",
+  "acceptUnavailable": "This offer can no longer be accepted. It may have expired or changed.",
+  "acceptContinue": "Continue to payment, {amount}",
+  "@acceptContinue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptBack": "Not now",
+  "payTitle": "Payment",
+  "payTo": "Pro",
+  "payAmount": "Amount to pay",
+  "payFillTestCard": "Fill the test card",
+  "cardHolder": "Name on card",
+  "cardNumber": "Card number",
+  "cardExpiry": "Expiry (MM/YY)",
+  "cardExpiryHint": "MM/YY",
+  "cardCvc": "Security code (CVC)",
+  "cardErrHolder": "Enter the name and surname on the card.",
+  "cardErrNumber": "The card number is invalid. Check all 16 digits.",
+  "cardErrExpiry": "The expiry date is invalid. Use MM/YY.",
+  "cardErrExpiryPast": "The card has expired.",
+  "cardErrCvc": "The security code (CVC) is invalid. Enter 3 or 4 digits.",
+  "payNoStore": "Your card details are not saved. The bank verification comes next.",
+  "payButton": "Pay {amount}",
+  "@payButton": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payConnecting": "Connecting to the bank",
+  "threeDsTitle": "Bank verification",
+  "threeDsClose": "Close",
+  "threeDsCloseTitle": "Close the verification?",
+  "threeDsCloseBody": "If you leave before finishing, the payment may not complete. We will check the payment status when you leave.",
+  "threeDsCloseConfirm": "Close",
+  "threeDsCloseStay": "Back to verification",
+  "payResultTitle": "Payment result",
+  "payWaiting": "Waiting for the bank result",
+  "payWaitingHint": "This can take a few seconds. Please stay on this screen.",
+  "paySuccessTitle": "Payment received",
+  "paySuccessBody": "{amount} is now held securely.",
+  "@paySuccessBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payFailedTitle": "Payment was not completed",
+  "payRefundedTitle": "Your payment was refunded",
+  "payUncertainTitle": "The result is not clear yet",
+  "payFailDeclined": "Your bank did not approve the payment. Check your card details or try a different card.",
+  "payFailAssigned": "Your request was assigned to another offer in the meantime. Your payment was refunded to your card.",
+  "payFailExpired": "The offer expired. Your payment was refunded to your card.",
+  "payFailUncertain": "We have not received a final result from the bank yet. Check again in a moment. If the payment went through, your job will appear under Requests.",
+  "payFailGeneric": "The payment could not be completed. You can try again with a different card.",
+  "payTryOtherCard": "Try a different card",
+  "payBackToOffer": "Back to the offer",
+  "payCheckAgain": "Check again",
+  "payToJob": "Go to the job",
+  "payToRequests": "Go to my requests",
+  "appointmentTitle": "Appointment",
+  "appointmentProTitle": "Appointment",
+  "appointmentNotChosen": "No appointment chosen yet.",
+  "proposalMine": "Your proposal is waiting for the other side",
+  "proposalFromPro": "The pro proposed this window",
+  "proposalFromCustomer": "The customer proposed this window",
+  "proposalAccept": "Accept",
+  "proposalOther": "Choose another window",
+  "appointmentChoose": "Choose an appointment",
+  "appointmentChange": "Change the appointment",
+  "appointmentIntro": "Choose when you want the pro to come. The pro confirms or proposes another window.",
+  "appointmentProIntro": "Accept the customer proposal or suggest a window that suits you.",
+  "appointmentPickDay": "Day",
+  "appointmentPickSlot": "Time window",
+  "appointmentOfferWindow": "Arrival window from the offer",
+  "appointmentYourWindow": "Arrival window from your offer",
+  "appointmentNoSlots": "No windows available for this day.",
+  "appointmentSelectHint": "Choose a window to continue.",
+  "appointmentSubmit": "Request this appointment",
+  "appointmentProSubmit": "Propose a new window",
+  "appointmentClosed": "Appointments cannot be changed for this job right now.",
+  "cancelTitle": "Cancel the job",
+  "cancelJobAction": "Cancel the job",
+  "proCancelAction": "Cancel the job",
+  "cancelIntroCustomer": "If you cancel, {amount} is refunded to your card and your request is closed.",
+  "@cancelIntroCustomer": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelIntroPro": "If you cancel, {amount} is refunded to the customer and the request is reopened. Cancellations are recorded on your profile.",
+  "@cancelIntroPro": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelReasonProUnreachable": "The pro cannot be reached",
+  "cancelReasonOtherProvider": "I agreed with another pro",
+  "proCancelReasonSchedule": "My schedule does not fit",
+  "proCancelReasonCannot": "I cannot do the job",
+  "proCancelReasonCustomer": "I cannot reach the customer",
+  "cancelSubmit": "Cancel",
+  "cancelRescheduleInstead": "Ask for a new date instead",
+  "cancelNotAllowed": "This job can no longer be cancelled. If something went wrong you can open a complaint.",
+  "cancelConfirmCustomer": "This cannot be undone. {amount} will be refunded to your card.",
+  "@cancelConfirmCustomer": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelConfirmPro": "This cannot be undone. {amount} will be refunded to the customer and the request will reopen.",
+  "@cancelConfirmPro": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelConfirmAction": "Cancel the job",
+  "cancelConfirmKeep": "Keep the job",
+  "completeTitle": "Approve the work",
+  "completeIntro": "The pro says the job is done. Check the note and photos and approve if all is fine.",
+  "completeProNote": "Note from the pro",
+  "completeNoNote": "The pro did not add a note.",
+  "completeProPhotos": "Photos from the pro",
+  "completeAutoNote": "If you do not approve, it is approved automatically on {date}.",
+  "@completeAutoNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "completeConfirmButton": "Approve",
+  "completeNotAvailable": "This job is not waiting for your approval right now.",
+  "completeConfirmTitle": "Approve the work?",
+  "completeConfirmBody": "If you approve, {amount} is paid out from secure hold to {pro}. This cannot be undone.",
+  "@completeConfirmBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "completeConfirmAction": "Approve and pay out",
+  "confirmCompletion": "Approve the work",
+  "complainAction": "Report a problem",
+  "reviewTitle": "Rate",
+  "reviewAction": "Leave a rating",
+  "reviewIntro": "How was your experience with {pro}?",
+  "@reviewIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewStarsTitle": "Your rating",
+  "reviewStarsRequired": "Choose a star rating to continue.",
+  "reviewTagsTitle": "What went well?",
+  "reviewTagOnTime": "On time",
+  "reviewTagCleanWork": "Clean work",
+  "reviewTagFairPrice": "Fair price",
+  "reviewTagGoodCommunication": "Good communication",
+  "reviewTagPolite": "Polite",
+  "reviewCommentLabel": "Your comment (optional)",
+  "reviewAnonymous": "Hide my name",
+  "reviewAnonymousHelp": "Your review appears on the pro profile without your name.",
+  "reviewPublish": "Publish",
+  "reviewSkip": "Not now",
+  "reviewAlreadyTitle": "You already rated this job",
+  "reviewAlreadyBody": "A rating was already given for this job. Thank you.",
+  "reviewNotAvailableTitle": "Cannot be rated right now",
+  "reviewNotAvailableBody": "You can rate once the job is completed.",
+  "yourReview": "Your rating",
+  "complaintTitle": "Report a problem",
+  "complaintIntro": "Tell us what went wrong. Once a complaint is opened the payment stays in secure hold while our team reviews it.",
+  "complaintReasonTitle": "Reason",
+  "complaintReasonNoShow": "The pro did not show up",
+  "complaintReasonIncomplete": "The work is incomplete or faulty",
+  "complaintReasonExtraCharge": "An extra charge was requested",
+  "complaintReasonRude": "Rude behaviour",
+  "complaintReasonOther": "Other",
+  "complaintDescription": "Description",
+  "complaintDescriptionHelp": "{count}/{min} characters (minimum)",
+  "@complaintDescriptionHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintDescriptionShort": "The description needs at least {min} characters. Tell us a bit more.",
+  "@complaintDescriptionShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintEvidenceTitle": "Evidence photos",
+  "complaintEvidenceHelp": "Optional, up to {max} photos.",
+  "@complaintEvidenceHelp": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintAgree": "I understand the payment stays in secure hold while the complaint is reviewed.",
+  "complaintSubmit": "Submit complaint",
+  "complaintPhotosPending": "Wait for the photos to upload or remove the failed one.",
+  "complaintConfirmTitle": "Submit the complaint?",
+  "complaintConfirmBody": "Once submitted the job goes under review and the payment stays in secure hold. This cannot be undone.",
+  "complaintConfirmAction": "Submit",
+  "complaintNotAvailableTitle": "A complaint cannot be opened",
+  "complaintNotAvailableBody": "A complaint cannot be opened for this job right now. One may already exist.",
+  "complaintStatusTitle": "Complaint status",
+  "complaintStatusOpen": "Received",
+  "complaintStatusInReview": "Under review",
+  "complaintStatusResolved": "Resolved",
+  "complaintStatusDismissed": "Dismissed",
+  "complaintExplainOpen": "Your complaint was received and is queued for review. The payment stays in secure hold meanwhile.",
+  "complaintExplainInReview": "Our team is reviewing your complaint. The result will appear here.",
+  "complaintExplainResolved": "Your complaint has been resolved. The decision and its reasons are below.",
+  "complaintExplainDismissed": "Your complaint was reviewed and not upheld. The reasons are below.",
+  "complaintCreatedAt": "Opened",
+  "complaintDecisionTitle": "Decision",
+  "complaintGoChat": "Go to the chat",
+  "complaintCardTitle": "Complaint {code}",
+  "@complaintCardTitle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "chatEntryTitle": "Messages",
+  "chatOpen": "Open the chat",
+  "chatEmptyTitle": "No messages yet",
+  "chatEmptyBody": "Write the first message. Phone numbers are not shared; all contact happens here.",
+  "chatReadOnlyBody": "This chat is read-only: new messages cannot be sent 30 days after the job is closed.",
+  "chatInputLabel": "Write a message",
+  "chatInputHint": "Type your message",
+  "chatSend": "Send",
+  "chatAttachPhoto": "Attach a photo",
+  "chatPhotoBody": "Photo",
+  "chatSending": "Sending",
+  "chatSendFailed": "Not sent.",
+  "chatRetry": "Try again",
+  "chatDiscard": "Delete",
+  "chatRead": "Read",
+  "chatSent": "Sent",
+  "conversationsEmptyTitle": "No conversations yet",
+  "conversationsEmptyBody": "Once you accept an offer and pay, you can chat with the pro here.",
+  "conversationsEmptyBodyPro": "Once an offer of yours is accepted, you can chat with the customer here.",
+  "conversationsGoRequests": "Go to my requests",
+  "conversationsGoJobs": "Go to my jobs",
+  "conversationNoMessages": "No messages yet",
+  "jobsEmptyPastTitle": "No past jobs",
+  "jobsEmptyPastBody": "Completed and cancelled jobs show up here.",
+  "proArrived": "I have arrived",
+  "proStart": "I started the job",
+  "proFinish": "I finished the job",
+  "proAddNote": "Add a note or photo",
+  "proOpenMaps": "Open in Maps",
+  "mapsOpenFailed": "Could not open a maps app.",
+  "proAutoCompleteNote": "If the customer does not approve, the job is approved automatically on {date}.",
+  "@proAutoCompleteNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proNoteTitle": "Note or photo",
+  "proNoteIntro": "Add a note or photo that the customer will see.",
+  "proNoteLabel": "Note",
+  "proNoteEmpty": "Write a note or add a photo.",
+  "proNoteSubmit": "Add",
+  "proPhotosTitle": "Photos",
+  "proFinishTitle": "Finish the job",
+  "proFinishIntro": "Briefly describe the work you did. The customer sees your note and photos and then approves.",
+  "proFinishNoteLabel": "Note about the work",
+  "proFinishNoteHelp": "{count}/{min} characters (minimum)",
+  "@proFinishNoteHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "proFinishNoteShort": "The note needs at least {min} characters.",
+  "@proFinishNoteShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "proFinishPhotosHelp": "Optional, up to 5 photos.",
+  "proFinishSubmit": "I finished the job",
+  "proFinishConfirmTitle": "Report the job as finished?",
+  "proFinishConfirmBody": "The customer is asked to approve. This cannot be undone.",
+  "proFinishConfirmAction": "Report",
+  "proFinishedTitle": "Handover sent",
+  "proFinishedHeadline": "You sent the handover",
+  "proFinishedBody": "Once the customer approves, the payment is paid out to you from secure hold.",
+  "proBackToJobs": "Back to my jobs",
+  "proCancelledTitle": "Job cancelled",
+  "proCancelledHeadline": "You cancelled the job",
+  "proCancelledBody": "The customer was refunded and the request reopened. Cancellations are recorded on your profile.",
+  "earningsTitle": "Earnings",
+  "earningsReleased": "Paid out to you",
+  "earningsPending": "Waiting in secure hold",
+  "earningsFeeTotal": "Total service fee",
+  "earningsPendingHelp": "The waiting amount is paid out once the customer approves or a complaint is resolved.",
+  "earningsList": "Jobs",
+  "earningsEmptyTitle": "No earnings yet",
+  "earningsEmptyBody": "Your earnings appear here once an offer is accepted and the job is done.",
+  "earningPending": "Pending",
+  "earningReleased": "Paid out",
+  "earningRefunded": "Refunded",
+  "earningSplit": "Split",
+  "offerFormRequestClosed": "This request no longer accepts offers. The screen was refreshed.",
+  "homeActiveJobs": "Your active jobs",
+  "homeOpenRequests": "Your open requests",
+  "homeSeeAll": "See all"
 }

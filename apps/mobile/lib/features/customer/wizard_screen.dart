@@ -49,6 +49,9 @@ class _WizardState extends ConsumerState<RequestWizardScreen> {
     if (widget.editId == null) {
       ctrl.enterNew();
       _syncTexts();
+      // Metin alanları ilk kareden sonra doldu: sayaç ve doğrulama yeniden
+      // çizilsin (yoksa geri yüklenen açıklama "0 karakter" görünür).
+      if (mounted) setState(() {});
       return;
     }
     setState(() {
@@ -683,6 +686,7 @@ class _Step3 extends ConsumerWidget {
           controller: desc,
           maxLength: kDescMax,
           keyboardType: TextInputType.multiline,
+          minLines: 3,
           helperText: l.wizDescriptionCount(desc.text.trim().length, kDescMin),
           onChanged: (v) => ctrl.update((x) => x.copyWith(description: v)),
         ),

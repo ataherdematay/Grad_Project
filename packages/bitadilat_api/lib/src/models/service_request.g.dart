@@ -50,6 +50,7 @@ _RequestSummary _$RequestSummaryFromJson(
   offerCount: (json['offerCount'] as num?)?.toInt() ?? 0,
   minOfferTotal: const NullableMoneyConverter().fromJson(json['minOfferTotal']),
   maxOfferTotal: const NullableMoneyConverter().fromJson(json['maxOfferTotal']),
+  jobId: idFromJsonNullable(json['jobId']),
 );
 
 Map<String, dynamic> _$RequestSummaryToJson(_RequestSummary instance) =>
@@ -71,6 +72,7 @@ Map<String, dynamic> _$RequestSummaryToJson(_RequestSummary instance) =>
       'maxOfferTotal': const NullableMoneyConverter().toJson(
         instance.maxOfferTotal,
       ),
+      'jobId': instance.jobId,
     };
 
 const _$RequestUrgencyEnumMap = {
@@ -127,6 +129,7 @@ _RequestDetail _$RequestDetailFromJson(
   address: json['address'] == null
       ? null
       : RequestAddress.fromJson(json['address'] as Map<String, dynamic>),
+  jobId: idFromJsonNullable(json['jobId']),
 );
 
 Map<String, dynamic> _$RequestDetailToJson(_RequestDetail instance) =>
@@ -158,6 +161,7 @@ Map<String, dynamic> _$RequestDetailToJson(_RequestDetail instance) =>
           .map((e) => _$MatchFactorEnumMap[e]!)
           .toList(),
       'address': instance.address?.toJson(),
+      'jobId': instance.jobId,
     };
 
 const _$MatchFactorEnumMap = {

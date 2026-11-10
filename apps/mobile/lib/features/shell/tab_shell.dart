@@ -9,34 +9,44 @@ import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
 
 class TabSpec {
-  const TabSpec(this.icon, this.selectedIcon, this.label);
+  const TabSpec(this.icon, this.selectedIcon, this.label, {this.refresh});
 
   final IconData icon;
   final IconData selectedIcon;
   final String label;
+
+  /// Sekmeye dönülünce çalışır: sekmenin verisini yeniden çekmek için
+  /// sağlayıcıları geçersiz kılar (NAVIGATION_RULES §4).
+  final void Function(WidgetRef ref)? refresh;
 }
 
 /// Alt sekme iskeleti. Sekme kökünde geri oku yoktur; Android geri tuşu
 /// önce ilk sekmeye döner.
-class TabShell extends StatelessWidget {
+class TabShell extends ConsumerWidget {
   const TabShell({super.key, required this.shell, required this.tabs});
 
   final StatefulNavigationShell shell;
   final List<TabSpec> tabs;
 
+  void _open(WidgetRef ref, int i) {
+    // Sekmeler yığında canlı kalır; dönüşte eski veri değil güncel veri
+    // gösterilsin diye sekmenin sağlayıcıları geçersiz kılınır.
+    tabs[i].refresh?.call(ref);
+    shell.goBranch(i, initialLocation: i == shell.currentIndex);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PopScope(
       canPop: shell.currentIndex == 0,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) shell.goBranch(0);
+        if (!didPop) _open(ref, 0);
       },
       child: Scaffold(
         body: shell,
         bottomNavigationBar: NavigationBar(
           selectedIndex: shell.currentIndex,
-          onDestinationSelected: (i) =>
-              shell.goBranch(i, initialLocation: i == shell.currentIndex),
+          onDestinationSelected: (i) => _open(ref, i),
           destinations: [
             for (final t in tabs)
               NavigationDestination(
@@ -45,28 +55,6 @@ class TabShell extends StatelessWidget {
                 label: t.label,
               ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Sekme kökü yer tutucusu: başlık ve "Bu bölüm hazırlanıyor". Sahte veri yok.
-class TabRootPlaceholder extends StatelessWidget {
-  const TabRootPlaceholder({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text(title)),
-      body: SafeArea(
-        child: EmptyState(
-          title: l.comingSoonTitle,
-          message: l.comingSoonBody,
-          icon: Icons.construction_outlined,
         ),
       ),
     );

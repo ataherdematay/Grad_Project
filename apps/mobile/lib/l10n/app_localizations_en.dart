@@ -1507,4 +1507,913 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offerItemsServerInvalid =>
       'The item totals don\'t add up. Check the material items and try again.';
+
+  @override
+  String get backToJob => 'Back to the job';
+
+  @override
+  String get addressTitle => 'Address';
+
+  @override
+  String get doorNote => 'Door note';
+
+  @override
+  String get timelineTitle => 'History';
+
+  @override
+  String starsCount(int count) {
+    return '$count stars';
+  }
+
+  @override
+  String unreadMessages(int count) {
+    return '$count unread messages';
+  }
+
+  @override
+  String get serviceFeeLabel => 'Service fee (10%)';
+
+  @override
+  String get netEarningLabel => 'Your net earning';
+
+  @override
+  String get photosPending =>
+      'Wait for the photos to upload or remove the failed one.';
+
+  @override
+  String get homeActiveJob => 'Your active job';
+
+  @override
+  String get jobScreenTitle => 'Job';
+
+  @override
+  String get jobStatusAwaiting => 'Awaiting pro confirmation';
+
+  @override
+  String get jobStatusAwaitingPro => 'Awaiting your appointment confirmation';
+
+  @override
+  String get jobStatusScheduled => 'Appointment confirmed';
+
+  @override
+  String get jobStatusScheduledPro => 'Appointment confirmed';
+
+  @override
+  String get jobStatusArrived => 'Pro on site';
+
+  @override
+  String get jobStatusArrivedPro => 'You are on site';
+
+  @override
+  String get jobStatusInProgress => 'In progress';
+
+  @override
+  String get jobStatusWorkFinished => 'Awaiting your approval';
+
+  @override
+  String get jobStatusWorkFinishedPro => 'Awaiting customer approval';
+
+  @override
+  String get jobStatusCompleted => 'Completed';
+
+  @override
+  String get jobStatusDisputed => 'Under review';
+
+  @override
+  String get jobStatusCancelled => 'Cancelled';
+
+  @override
+  String get jobStatusResolved => 'Resolved';
+
+  @override
+  String get escrowInitialized => 'Awaiting payment';
+
+  @override
+  String get escrowLocked => 'In secure hold';
+
+  @override
+  String get escrowFailed => 'Payment failed';
+
+  @override
+  String get escrowRefunded => 'Refunded to your card';
+
+  @override
+  String get escrowRefundedPro => 'Refunded to the customer';
+
+  @override
+  String get escrowReleased => 'Paid out to the pro';
+
+  @override
+  String get escrowReleasedPro => 'Paid out to you';
+
+  @override
+  String get escrowDisputed => 'On hold during the complaint';
+
+  @override
+  String get escrowSplit => 'Split between both sides';
+
+  @override
+  String get actorYou => 'You';
+
+  @override
+  String get actorCustomer => 'Customer';
+
+  @override
+  String get actorPro => 'Pro';
+
+  @override
+  String get actorSystem => 'System';
+
+  @override
+  String get actorAdmin => 'Admin';
+
+  @override
+  String get eventStatus => 'Status updated';
+
+  @override
+  String get eventNote => 'Note added';
+
+  @override
+  String get eventPhoto => 'Photo added';
+
+  @override
+  String get eventProposed => 'Appointment proposed';
+
+  @override
+  String get eventAccepted => 'Appointment accepted';
+
+  @override
+  String get offerSummaryTitle => 'Offer summary';
+
+  @override
+  String get paymentSummaryTitle => 'Payment';
+
+  @override
+  String get paymentStatusLabel => 'Status';
+
+  @override
+  String get refundedLabel => 'Refunded';
+
+  @override
+  String get escrowExplain =>
+      'Your payment is kept in secure hold. It is paid out to the pro once the job is done and you approve it.';
+
+  @override
+  String get acceptTitle => 'Accept the offer';
+
+  @override
+  String acceptIntro(String pro) {
+    return 'You are about to work with $pro. Check the breakdown and the terms before paying.';
+  }
+
+  @override
+  String get acceptVatNote => 'The amount includes VAT.';
+
+  @override
+  String get escrowHowTitle => 'Your payment stays in secure hold';
+
+  @override
+  String get escrowHowBody =>
+      'The payment is taken from your card and held securely. The pro finishes the job and you approve it; only then is the amount paid out to the pro. If you do not approve or something goes wrong, you can open a complaint.';
+
+  @override
+  String get cancelPolicyTitle => 'Cancellation policy';
+
+  @override
+  String get cancelPolicyBody =>
+      'You can cancel until the pro arrives at your address; the full payment is refunded to your card. Once the work has started you can open a complaint instead of cancelling.';
+
+  @override
+  String get acceptUnavailable =>
+      'This offer can no longer be accepted. It may have expired or changed.';
+
+  @override
+  String acceptContinue(String amount) {
+    return 'Continue to payment, $amount';
+  }
+
+  @override
+  String get acceptBack => 'Not now';
+
+  @override
+  String get payTitle => 'Payment';
+
+  @override
+  String get payTo => 'Pro';
+
+  @override
+  String get payAmount => 'Amount to pay';
+
+  @override
+  String get payFillTestCard => 'Fill the test card';
+
+  @override
+  String get cardHolder => 'Name on card';
+
+  @override
+  String get cardNumber => 'Card number';
+
+  @override
+  String get cardExpiry => 'Expiry (MM/YY)';
+
+  @override
+  String get cardExpiryHint => 'MM/YY';
+
+  @override
+  String get cardCvc => 'Security code (CVC)';
+
+  @override
+  String get cardErrHolder => 'Enter the name and surname on the card.';
+
+  @override
+  String get cardErrNumber =>
+      'The card number is invalid. Check all 16 digits.';
+
+  @override
+  String get cardErrExpiry => 'The expiry date is invalid. Use MM/YY.';
+
+  @override
+  String get cardErrExpiryPast => 'The card has expired.';
+
+  @override
+  String get cardErrCvc =>
+      'The security code (CVC) is invalid. Enter 3 or 4 digits.';
+
+  @override
+  String get payNoStore =>
+      'Your card details are not saved. The bank verification comes next.';
+
+  @override
+  String payButton(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String get payConnecting => 'Connecting to the bank';
+
+  @override
+  String get threeDsTitle => 'Bank verification';
+
+  @override
+  String get threeDsClose => 'Close';
+
+  @override
+  String get threeDsCloseTitle => 'Close the verification?';
+
+  @override
+  String get threeDsCloseBody =>
+      'If you leave before finishing, the payment may not complete. We will check the payment status when you leave.';
+
+  @override
+  String get threeDsCloseConfirm => 'Close';
+
+  @override
+  String get threeDsCloseStay => 'Back to verification';
+
+  @override
+  String get payResultTitle => 'Payment result';
+
+  @override
+  String get payWaiting => 'Waiting for the bank result';
+
+  @override
+  String get payWaitingHint =>
+      'This can take a few seconds. Please stay on this screen.';
+
+  @override
+  String get paySuccessTitle => 'Payment received';
+
+  @override
+  String paySuccessBody(String amount) {
+    return '$amount is now held securely.';
+  }
+
+  @override
+  String get payFailedTitle => 'Payment was not completed';
+
+  @override
+  String get payRefundedTitle => 'Your payment was refunded';
+
+  @override
+  String get payUncertainTitle => 'The result is not clear yet';
+
+  @override
+  String get payFailDeclined =>
+      'Your bank did not approve the payment. Check your card details or try a different card.';
+
+  @override
+  String get payFailAssigned =>
+      'Your request was assigned to another offer in the meantime. Your payment was refunded to your card.';
+
+  @override
+  String get payFailExpired =>
+      'The offer expired. Your payment was refunded to your card.';
+
+  @override
+  String get payFailUncertain =>
+      'We have not received a final result from the bank yet. Check again in a moment. If the payment went through, your job will appear under Requests.';
+
+  @override
+  String get payFailGeneric =>
+      'The payment could not be completed. You can try again with a different card.';
+
+  @override
+  String get payTryOtherCard => 'Try a different card';
+
+  @override
+  String get payBackToOffer => 'Back to the offer';
+
+  @override
+  String get payCheckAgain => 'Check again';
+
+  @override
+  String get payToJob => 'Go to the job';
+
+  @override
+  String get payToRequests => 'Go to my requests';
+
+  @override
+  String get appointmentTitle => 'Appointment';
+
+  @override
+  String get appointmentProTitle => 'Appointment';
+
+  @override
+  String get appointmentNotChosen => 'No appointment chosen yet.';
+
+  @override
+  String get proposalMine => 'Your proposal is waiting for the other side';
+
+  @override
+  String get proposalFromPro => 'The pro proposed this window';
+
+  @override
+  String get proposalFromCustomer => 'The customer proposed this window';
+
+  @override
+  String get proposalAccept => 'Accept';
+
+  @override
+  String get proposalOther => 'Choose another window';
+
+  @override
+  String get appointmentChoose => 'Choose an appointment';
+
+  @override
+  String get appointmentChange => 'Change the appointment';
+
+  @override
+  String get appointmentIntro =>
+      'Choose when you want the pro to come. The pro confirms or proposes another window.';
+
+  @override
+  String get appointmentProIntro =>
+      'Accept the customer proposal or suggest a window that suits you.';
+
+  @override
+  String get appointmentPickDay => 'Day';
+
+  @override
+  String get appointmentPickSlot => 'Time window';
+
+  @override
+  String get appointmentOfferWindow => 'Arrival window from the offer';
+
+  @override
+  String get appointmentYourWindow => 'Arrival window from your offer';
+
+  @override
+  String get appointmentNoSlots => 'No windows available for this day.';
+
+  @override
+  String get appointmentSelectHint => 'Choose a window to continue.';
+
+  @override
+  String get appointmentSubmit => 'Request this appointment';
+
+  @override
+  String get appointmentProSubmit => 'Propose a new window';
+
+  @override
+  String get appointmentClosed =>
+      'Appointments cannot be changed for this job right now.';
+
+  @override
+  String get cancelTitle => 'Cancel the job';
+
+  @override
+  String get cancelJobAction => 'Cancel the job';
+
+  @override
+  String get proCancelAction => 'Cancel the job';
+
+  @override
+  String cancelIntroCustomer(String amount) {
+    return 'If you cancel, $amount is refunded to your card and your request is closed.';
+  }
+
+  @override
+  String cancelIntroPro(String amount) {
+    return 'If you cancel, $amount is refunded to the customer and the request is reopened. Cancellations are recorded on your profile.';
+  }
+
+  @override
+  String get cancelReasonProUnreachable => 'The pro cannot be reached';
+
+  @override
+  String get cancelReasonOtherProvider => 'I agreed with another pro';
+
+  @override
+  String get proCancelReasonSchedule => 'My schedule does not fit';
+
+  @override
+  String get proCancelReasonCannot => 'I cannot do the job';
+
+  @override
+  String get proCancelReasonCustomer => 'I cannot reach the customer';
+
+  @override
+  String get cancelSubmit => 'Cancel';
+
+  @override
+  String get cancelRescheduleInstead => 'Ask for a new date instead';
+
+  @override
+  String get cancelNotAllowed =>
+      'This job can no longer be cancelled. If something went wrong you can open a complaint.';
+
+  @override
+  String cancelConfirmCustomer(String amount) {
+    return 'This cannot be undone. $amount will be refunded to your card.';
+  }
+
+  @override
+  String cancelConfirmPro(String amount) {
+    return 'This cannot be undone. $amount will be refunded to the customer and the request will reopen.';
+  }
+
+  @override
+  String get cancelConfirmAction => 'Cancel the job';
+
+  @override
+  String get cancelConfirmKeep => 'Keep the job';
+
+  @override
+  String get completeTitle => 'Approve the work';
+
+  @override
+  String get completeIntro =>
+      'The pro says the job is done. Check the note and photos and approve if all is fine.';
+
+  @override
+  String get completeProNote => 'Note from the pro';
+
+  @override
+  String get completeNoNote => 'The pro did not add a note.';
+
+  @override
+  String get completeProPhotos => 'Photos from the pro';
+
+  @override
+  String completeAutoNote(String date) {
+    return 'If you do not approve, it is approved automatically on $date.';
+  }
+
+  @override
+  String get completeConfirmButton => 'Approve';
+
+  @override
+  String get completeNotAvailable =>
+      'This job is not waiting for your approval right now.';
+
+  @override
+  String get completeConfirmTitle => 'Approve the work?';
+
+  @override
+  String completeConfirmBody(String amount, String pro) {
+    return 'If you approve, $amount is paid out from secure hold to $pro. This cannot be undone.';
+  }
+
+  @override
+  String get completeConfirmAction => 'Approve and pay out';
+
+  @override
+  String get confirmCompletion => 'Approve the work';
+
+  @override
+  String get complainAction => 'Report a problem';
+
+  @override
+  String get reviewTitle => 'Rate';
+
+  @override
+  String get reviewAction => 'Leave a rating';
+
+  @override
+  String reviewIntro(String pro) {
+    return 'How was your experience with $pro?';
+  }
+
+  @override
+  String get reviewStarsTitle => 'Your rating';
+
+  @override
+  String get reviewStarsRequired => 'Choose a star rating to continue.';
+
+  @override
+  String get reviewTagsTitle => 'What went well?';
+
+  @override
+  String get reviewTagOnTime => 'On time';
+
+  @override
+  String get reviewTagCleanWork => 'Clean work';
+
+  @override
+  String get reviewTagFairPrice => 'Fair price';
+
+  @override
+  String get reviewTagGoodCommunication => 'Good communication';
+
+  @override
+  String get reviewTagPolite => 'Polite';
+
+  @override
+  String get reviewCommentLabel => 'Your comment (optional)';
+
+  @override
+  String get reviewAnonymous => 'Hide my name';
+
+  @override
+  String get reviewAnonymousHelp =>
+      'Your review appears on the pro profile without your name.';
+
+  @override
+  String get reviewPublish => 'Publish';
+
+  @override
+  String get reviewSkip => 'Not now';
+
+  @override
+  String get reviewAlreadyTitle => 'You already rated this job';
+
+  @override
+  String get reviewAlreadyBody =>
+      'A rating was already given for this job. Thank you.';
+
+  @override
+  String get reviewNotAvailableTitle => 'Cannot be rated right now';
+
+  @override
+  String get reviewNotAvailableBody =>
+      'You can rate once the job is completed.';
+
+  @override
+  String get yourReview => 'Your rating';
+
+  @override
+  String get complaintTitle => 'Report a problem';
+
+  @override
+  String get complaintIntro =>
+      'Tell us what went wrong. Once a complaint is opened the payment stays in secure hold while our team reviews it.';
+
+  @override
+  String get complaintReasonTitle => 'Reason';
+
+  @override
+  String get complaintReasonNoShow => 'The pro did not show up';
+
+  @override
+  String get complaintReasonIncomplete => 'The work is incomplete or faulty';
+
+  @override
+  String get complaintReasonExtraCharge => 'An extra charge was requested';
+
+  @override
+  String get complaintReasonRude => 'Rude behaviour';
+
+  @override
+  String get complaintReasonOther => 'Other';
+
+  @override
+  String get complaintDescription => 'Description';
+
+  @override
+  String complaintDescriptionHelp(int count, int min) {
+    return '$count/$min characters (minimum)';
+  }
+
+  @override
+  String complaintDescriptionShort(int min) {
+    return 'The description needs at least $min characters. Tell us a bit more.';
+  }
+
+  @override
+  String get complaintEvidenceTitle => 'Evidence photos';
+
+  @override
+  String complaintEvidenceHelp(int max) {
+    return 'Optional, up to $max photos.';
+  }
+
+  @override
+  String get complaintAgree =>
+      'I understand the payment stays in secure hold while the complaint is reviewed.';
+
+  @override
+  String get complaintSubmit => 'Submit complaint';
+
+  @override
+  String get complaintPhotosPending =>
+      'Wait for the photos to upload or remove the failed one.';
+
+  @override
+  String get complaintConfirmTitle => 'Submit the complaint?';
+
+  @override
+  String get complaintConfirmBody =>
+      'Once submitted the job goes under review and the payment stays in secure hold. This cannot be undone.';
+
+  @override
+  String get complaintConfirmAction => 'Submit';
+
+  @override
+  String get complaintNotAvailableTitle => 'A complaint cannot be opened';
+
+  @override
+  String get complaintNotAvailableBody =>
+      'A complaint cannot be opened for this job right now. One may already exist.';
+
+  @override
+  String get complaintStatusTitle => 'Complaint status';
+
+  @override
+  String get complaintStatusOpen => 'Received';
+
+  @override
+  String get complaintStatusInReview => 'Under review';
+
+  @override
+  String get complaintStatusResolved => 'Resolved';
+
+  @override
+  String get complaintStatusDismissed => 'Dismissed';
+
+  @override
+  String get complaintExplainOpen =>
+      'Your complaint was received and is queued for review. The payment stays in secure hold meanwhile.';
+
+  @override
+  String get complaintExplainInReview =>
+      'Our team is reviewing your complaint. The result will appear here.';
+
+  @override
+  String get complaintExplainResolved =>
+      'Your complaint has been resolved. The decision and its reasons are below.';
+
+  @override
+  String get complaintExplainDismissed =>
+      'Your complaint was reviewed and not upheld. The reasons are below.';
+
+  @override
+  String get complaintCreatedAt => 'Opened';
+
+  @override
+  String get complaintDecisionTitle => 'Decision';
+
+  @override
+  String get complaintGoChat => 'Go to the chat';
+
+  @override
+  String complaintCardTitle(String code) {
+    return 'Complaint $code';
+  }
+
+  @override
+  String get chatEntryTitle => 'Messages';
+
+  @override
+  String get chatOpen => 'Open the chat';
+
+  @override
+  String get chatEmptyTitle => 'No messages yet';
+
+  @override
+  String get chatEmptyBody =>
+      'Write the first message. Phone numbers are not shared; all contact happens here.';
+
+  @override
+  String get chatReadOnlyBody =>
+      'This chat is read-only: new messages cannot be sent 30 days after the job is closed.';
+
+  @override
+  String get chatInputLabel => 'Write a message';
+
+  @override
+  String get chatInputHint => 'Type your message';
+
+  @override
+  String get chatSend => 'Send';
+
+  @override
+  String get chatAttachPhoto => 'Attach a photo';
+
+  @override
+  String get chatPhotoBody => 'Photo';
+
+  @override
+  String get chatSending => 'Sending';
+
+  @override
+  String get chatSendFailed => 'Not sent.';
+
+  @override
+  String get chatRetry => 'Try again';
+
+  @override
+  String get chatDiscard => 'Delete';
+
+  @override
+  String get chatRead => 'Read';
+
+  @override
+  String get chatSent => 'Sent';
+
+  @override
+  String get conversationsEmptyTitle => 'No conversations yet';
+
+  @override
+  String get conversationsEmptyBody =>
+      'Once you accept an offer and pay, you can chat with the pro here.';
+
+  @override
+  String get conversationsEmptyBodyPro =>
+      'Once an offer of yours is accepted, you can chat with the customer here.';
+
+  @override
+  String get conversationsGoRequests => 'Go to my requests';
+
+  @override
+  String get conversationsGoJobs => 'Go to my jobs';
+
+  @override
+  String get conversationNoMessages => 'No messages yet';
+
+  @override
+  String get jobsEmptyPastTitle => 'No past jobs';
+
+  @override
+  String get jobsEmptyPastBody => 'Completed and cancelled jobs show up here.';
+
+  @override
+  String get proArrived => 'I have arrived';
+
+  @override
+  String get proStart => 'I started the job';
+
+  @override
+  String get proFinish => 'I finished the job';
+
+  @override
+  String get proAddNote => 'Add a note or photo';
+
+  @override
+  String get proOpenMaps => 'Open in Maps';
+
+  @override
+  String get mapsOpenFailed => 'Could not open a maps app.';
+
+  @override
+  String proAutoCompleteNote(String date) {
+    return 'If the customer does not approve, the job is approved automatically on $date.';
+  }
+
+  @override
+  String get proNoteTitle => 'Note or photo';
+
+  @override
+  String get proNoteIntro => 'Add a note or photo that the customer will see.';
+
+  @override
+  String get proNoteLabel => 'Note';
+
+  @override
+  String get proNoteEmpty => 'Write a note or add a photo.';
+
+  @override
+  String get proNoteSubmit => 'Add';
+
+  @override
+  String get proPhotosTitle => 'Photos';
+
+  @override
+  String get proFinishTitle => 'Finish the job';
+
+  @override
+  String get proFinishIntro =>
+      'Briefly describe the work you did. The customer sees your note and photos and then approves.';
+
+  @override
+  String get proFinishNoteLabel => 'Note about the work';
+
+  @override
+  String proFinishNoteHelp(int count, int min) {
+    return '$count/$min characters (minimum)';
+  }
+
+  @override
+  String proFinishNoteShort(int min) {
+    return 'The note needs at least $min characters.';
+  }
+
+  @override
+  String get proFinishPhotosHelp => 'Optional, up to 5 photos.';
+
+  @override
+  String get proFinishSubmit => 'I finished the job';
+
+  @override
+  String get proFinishConfirmTitle => 'Report the job as finished?';
+
+  @override
+  String get proFinishConfirmBody =>
+      'The customer is asked to approve. This cannot be undone.';
+
+  @override
+  String get proFinishConfirmAction => 'Report';
+
+  @override
+  String get proFinishedTitle => 'Handover sent';
+
+  @override
+  String get proFinishedHeadline => 'You sent the handover';
+
+  @override
+  String get proFinishedBody =>
+      'Once the customer approves, the payment is paid out to you from secure hold.';
+
+  @override
+  String get proBackToJobs => 'Back to my jobs';
+
+  @override
+  String get proCancelledTitle => 'Job cancelled';
+
+  @override
+  String get proCancelledHeadline => 'You cancelled the job';
+
+  @override
+  String get proCancelledBody =>
+      'The customer was refunded and the request reopened. Cancellations are recorded on your profile.';
+
+  @override
+  String get earningsTitle => 'Earnings';
+
+  @override
+  String get earningsReleased => 'Paid out to you';
+
+  @override
+  String get earningsPending => 'Waiting in secure hold';
+
+  @override
+  String get earningsFeeTotal => 'Total service fee';
+
+  @override
+  String get earningsPendingHelp =>
+      'The waiting amount is paid out once the customer approves or a complaint is resolved.';
+
+  @override
+  String get earningsList => 'Jobs';
+
+  @override
+  String get earningsEmptyTitle => 'No earnings yet';
+
+  @override
+  String get earningsEmptyBody =>
+      'Your earnings appear here once an offer is accepted and the job is done.';
+
+  @override
+  String get earningPending => 'Pending';
+
+  @override
+  String get earningReleased => 'Paid out';
+
+  @override
+  String get earningRefunded => 'Refunded';
+
+  @override
+  String get earningSplit => 'Split';
+
+  @override
+  String get offerFormRequestClosed =>
+      'This request no longer accepts offers. The screen was refreshed.';
+
+  @override
+  String get homeActiveJobs => 'Your active jobs';
+
+  @override
+  String get homeOpenRequests => 'Your open requests';
+
+  @override
+  String get homeSeeAll => 'See all';
 }

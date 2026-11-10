@@ -615,8 +615,10 @@ void main() {
       expect(h.uri.path, '/c/requests/r1/compare');
       expect(h.uri.queryParameters['ids'], 'o1,o2,o3');
       expect(find.text('Karşılaştırma'), findsOneWidget);
-      expect(find.text('Mavi Hat'), findsOneWidget);
-      expect(find.text('Yeşil Boru'), findsOneWidget);
+      // Üç teklifin üçü de görünür (başlık + her özellik kartında bir satır).
+      expect(find.text('Mavi Hat'), findsWidgets);
+      expect(find.text('Kırmızı Su'), findsWidgets);
+      expect(find.text('Yeşil Boru'), findsWidgets);
       expect(find.text('Sarı Vana'), findsNothing);
       expect(find.text('Toplam (KDV dahil)'), findsOneWidget);
     });
@@ -640,11 +642,11 @@ void main() {
       'GET /pros/po1': (_) => json(200, proPublicJson()),
     });
 
-    test('ödeme bayrağı bu dalgada kapalı', () {
-      expect(kPaymentsEnabled, isFalse);
+    test('ödeme bayrağı açık', () {
+      expect(kPaymentsEnabled, isTrue);
     });
 
-    testWidgets('kPaymentsEnabled=false iken kabul düğmesi yok, soru sor yok', (
+    testWidgets('kabul düğmesi kabul onayı rotasını açar, soru sor yok', (
       t,
     ) async {
       await pumpApp(
@@ -657,7 +659,7 @@ void main() {
       expect(find.text('Toplam tutar (KDV dahil)'), findsOneWidget);
       expect(find.text('₺2.450'), findsOneWidget);
       expect(find.text('Küresel vana × 2'), findsOneWidget);
-      expect(find.text('Teklifi kabul et'), findsNothing);
+      expect(btn('Teklifi kabul et'), findsOneWidget);
       expect(find.textContaining('soru'), findsNothing);
       expect(btn('Teklifi reddet'), findsOneWidget);
       expect(btn('Profili görüntüle'), findsOneWidget);

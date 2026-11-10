@@ -143,7 +143,7 @@ class _ProApplyState extends ConsumerState<ProApplyScreen> {
             ),
           );
       invalidateProData(ref);
-      await ref.read(sessionProvider.notifier).refreshMe();
+      await ref.read(sessionProvider.notifier).afterApplicationSubmitted();
       // Başvuru gönderilince form yığından çıkar (NAVIGATION_RULES §1).
       router.go('/c/profile');
       router.push('/p/application');
@@ -216,6 +216,7 @@ class _ProApplyState extends ConsumerState<ProApplyScreen> {
                     enabled: !_submitting,
                     maxLength: 1000,
                     keyboardType: TextInputType.multiline,
+                    minLines: 3,
                   ),
                   const FieldGap(),
                   AppTextField(

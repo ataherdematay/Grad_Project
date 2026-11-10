@@ -115,6 +115,16 @@ void main() {
       expect(main, contains('android:allowBackup="false"'));
     });
 
+    test(
+      'WebView ve harita: INTERNET izni var, https VIEW sorgusu tanımlı',
+      () {
+        // 3-D Secure WebView'i INTERNET iznine, "Haritada aç" https VIEW
+        // sorgusuna dayanır (Android 11+ paket görünürlüğü).
+        expect(main, contains('android.intent.action.VIEW'));
+        expect(main, contains('<data android:scheme="https"/>'));
+      },
+    );
+
     test('düz HTTP yalnız debug manifestinde', () {
       expect(debug, contains('android:usesCleartextTraffic="true"'));
     });

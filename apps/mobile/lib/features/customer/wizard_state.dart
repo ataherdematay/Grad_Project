@@ -4,6 +4,7 @@ import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/data.dart';
+import '../../core/draft_photos.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
 import '../auth/session.dart';
@@ -214,6 +215,14 @@ class WizardController extends Notifier<WizardState> {
   String _idemKey = newIdempotencyKey();
   String? _userId;
 
+  /// Taslağın diskte tuttuğu fotoğraf dosyaları.
+  Set<String> _paths = {};
+  final Set<int> _writing = {};
+
+  /// `true` iken fotoğraf değişimleri taslağa yazılmaz ve dosyalar silinmez
+  /// (düzenleme moduna geçiş gibi toplu işlemler).
+  bool _quiet = false;
+
   @override
   WizardState build() {
     // Kullanıcı değişince (çıkış, başka hesapla giriş) taslak ve fotoğraflar
@@ -224,13 +233,121 @@ class WizardController extends Notifier<WizardState> {
       picker: ref.read(photoPickerProvider),
       recompress: ref.read(recompressProvider),
     );
-    ref.onDispose(set.dispose);
+    set.addListener(_onPhotosChanged);
+    ref.onDispose(() {
+      set
+        ..removeListener(_onPhotosChanged)
+        ..dispose();
+    });
     photos = set;
+    _paths = {};
+    _writing.clear();
     _idemKey = newIdempotencyKey();
     final prefs = ref.read(sharedPreferencesProvider);
     if (prefs.containsKey(kDraftKey)) prefs.remove(kDraftKey);
-    return _load();
+    final loaded = _load();
+    if (!loaded.isEditing) _restorePhotos(set);
+    return loaded;
   }
+
+  List<Map<String, dynamic>> _savedPhotos() {
+    final id = _userId;
+    if (id == null) return const [];
+    final raw = ref.read(sharedPreferencesProvider).getString(draftKeyFor(id));
+    if (raw == null) return const [];
+    try {
+      final j = jsonDecode(raw) as Map<String, dynamic>;
+      return [
+        for (final e in (j['photos'] as List? ?? const []))
+          if (e is Map) Map<String, dynamic>.from(e),
+      ];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Kayıtlı taslaktaki fotoğrafları yerel dosyadan geri getirir. Dosyası
+  /// olmayan fotoğraf sessizce düşer.
+  Future<void> _restorePhotos(PhotoSet set) async {
+    final saved = _savedPhotos();
+    if (saved.isEmpty) return;
+    final store = ref.read(draftPhotoStoreProvider);
+    final restored = <Map<String, dynamic>>[];
+    for (final e in saved) {
+      final path = e['path'] as String?;
+      final mediaId = e['mediaId'] as String?;
+      if (path == null || mediaId == null) continue;
+      final bytes = await store.read(path);
+      if (bytes == null) continue;
+      if (!ref.mounted || !identical(photos, set)) return;
+      if (state.isEditing) return;
+      _quiet = true;
+      set.addRestored(
+        bytes: bytes,
+        mediaId: mediaId,
+        name: (e['name'] as String?) ?? 'photo.jpg',
+        mime: (e['mime'] as String?) ?? 'image/jpeg',
+        localPath: path,
+      );
+      _quiet = false;
+      restored.add(e);
+    }
+    if (!ref.mounted) return;
+    _paths = {for (final e in restored) e['path'] as String};
+    // Düşen fotoğraflar kayıttan da çıkar.
+    if (restored.length != saved.length) _persist();
+  }
+
+  /// Fotoğraf eklenince/silinince taslağı günceller; yeni yüklenen
+  /// fotoğrafın yerel kopyasını yazar, silinenin dosyasını kaldırır.
+  void _onPhotosChanged() {
+    if (_quiet || state.isEditing) return;
+    final id = _userId;
+    if (id == null) return;
+    final store = ref.read(draftPhotoStoreProvider);
+    final current = <String>{};
+    for (final item in photos.items) {
+      final path = item.localPath;
+      if (path != null) current.add(path);
+      if (item.status == PhotoStatus.done &&
+          item.remote == null &&
+          item.bytes != null &&
+          item.mediaId != null &&
+          path == null &&
+          _writing.add(item.localId)) {
+        store.save(id, item.mediaId!, item.bytes!).then((p) {
+          _writing.remove(item.localId);
+          if (!ref.mounted) return;
+          if (photos.items.contains(item)) {
+            item.localPath = p;
+            _paths.add(p);
+            _persist();
+          } else {
+            store.delete(p);
+          }
+        });
+      }
+    }
+    for (final gone in _paths.difference(current)) {
+      store.delete(gone);
+    }
+    _paths = {..._paths.intersection(current)};
+    _persist();
+  }
+
+  List<Map<String, dynamic>> _photoJson() => [
+    for (final item in photos.items)
+      if (item.status == PhotoStatus.done &&
+          item.remote == null &&
+          item.mediaId != null &&
+          item.localPath != null)
+        {
+          'mediaId': item.mediaId,
+          'path': item.localPath,
+          'name': item.name,
+          'mime': item.mime,
+        },
+  ];
 
   WizardState _load() {
     final id = _userId;
@@ -252,12 +369,17 @@ class WizardController extends Notifier<WizardState> {
     final id = _userId;
     if (state.isEditing || id == null) return;
     final prefs = ref.read(sharedPreferencesProvider);
-    if (state.draft.isEmpty) {
+    final saved = _photoJson();
+    if (state.draft.isEmpty && saved.isEmpty) {
       prefs.remove(draftKeyFor(id));
     } else {
       prefs.setString(
         draftKeyFor(id),
-        jsonEncode({'draft': state.draft.toJson(), 'step': state.step}),
+        jsonEncode({
+          'draft': state.draft.toJson(),
+          'step': state.step,
+          'photos': saved,
+        }),
       );
     }
   }
@@ -271,8 +393,12 @@ class WizardController extends Notifier<WizardState> {
   /// Yeni talep için açılış: düzenleme kalıntısı varsa kayıtlı taslağa dön.
   void enterNew() {
     if (!state.isEditing) return;
+    _quiet = true;
     photos.clear();
+    _quiet = false;
+    _paths = {};
     state = _load();
+    _restorePhotos(photos);
   }
 
   /// Mevcut talebi doldurarak düzenleme modunu açar.
@@ -287,8 +413,11 @@ class WizardController extends Notifier<WizardState> {
         }
       }
     }
+    // Taslağın fotoğraf dosyaları düzenleme sırasında korunur.
+    _quiet = true;
     photos.clear();
     photos.addRemote(d.photos);
+    _quiet = false;
     state = WizardState(
       editingId: d.id,
       editOfferCount: d.offerCount,
@@ -418,9 +547,20 @@ class WizardController extends Notifier<WizardState> {
     if (id != null && !editing) {
       ref.read(sharedPreferencesProvider).remove(draftKeyFor(id));
     }
+    _quiet = true;
+    if (!editing) {
+      // Yayınlanan talebin taslak fotoğrafları diskten silinir.
+      final store = ref.read(draftPhotoStoreProvider);
+      for (final p in _paths) {
+        store.delete(p);
+      }
+      _paths = {};
+    }
     photos.clear();
+    _quiet = false;
     _idemKey = newIdempotencyKey();
     state = editing ? _load() : WizardState(draft: const RequestDraft());
+    if (editing) _restorePhotos(photos);
   }
 }
 

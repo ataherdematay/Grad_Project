@@ -13,7 +13,7 @@ abstract class Me with _$Me {
     @JsonKey(fromJson: idFromJson) required String id,
     required String fullName,
     required String email,
-    required String phone,
+    String? phone,
     required String locale,
     required UserMode lastMode,
     required bool isAdmin,

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'enums.dart';
 import 'json_helpers.dart';
 import 'media_ref.dart';
+import 'money.dart';
 import 'offers.dart';
 import 'service_request.dart';
 
@@ -67,6 +68,9 @@ abstract class ProRequestDetail with _$ProRequestDetail {
     @Default(<MediaRef>[]) List<MediaRef> photos,
     @Default(<RequestAnswer>[]) List<RequestAnswer> answers,
     OfferDetail? myOffer,
+
+    /// Talep durumu (`ASSIGNED` ise teklif artık verilemez).
+    RequestStatus? status,
   }) = _ProRequestDetail;
 
   factory ProRequestDetail.fromJson(Map<String, dynamic> json) =>
@@ -246,4 +250,37 @@ abstract class ReviewItem with _$ReviewItem {
 
   factory ReviewItem.fromJson(Map<String, dynamic> json) =>
       _$ReviewItemFromJson(json);
+}
+
+// --- Kazançlar -------------------------------------------------------------
+
+@freezed
+abstract class EarningsItem with _$EarningsItem {
+  const factory EarningsItem({
+    @JsonKey(fromJson: idFromJson) required String jobId,
+    required String publicCode,
+    required String title,
+    @MoneyConverter() required Money totalAmount,
+    @MoneyConverter() required Money serviceFee,
+    @MoneyConverter() required Money netEarning,
+    required EarningStatus status,
+    required DateTime date,
+  }) = _EarningsItem;
+
+  factory EarningsItem.fromJson(Map<String, dynamic> json) =>
+      _$EarningsItemFromJson(json);
+}
+
+/// `GET /pro/earnings`. `pendingTotal`: kilitli ve şikayetteki emanetin neti.
+@freezed
+abstract class Earnings with _$Earnings {
+  const factory Earnings({
+    @MoneyConverter() required Money releasedTotal,
+    @MoneyConverter() required Money pendingTotal,
+    @MoneyConverter() required Money serviceFeeTotal,
+    @Default(<EarningsItem>[]) List<EarningsItem> items,
+  }) = _Earnings;
+
+  factory Earnings.fromJson(Map<String, dynamic> json) =>
+      _$EarningsFromJson(json);
 }

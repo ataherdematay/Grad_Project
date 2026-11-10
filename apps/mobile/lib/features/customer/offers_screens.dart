@@ -472,71 +472,69 @@ class CompareOffersScreen extends ConsumerWidget {
               [for (final o in offers) o.pro.verified ? l.yes : l.no],
             ),
           ];
-          const labelW = 112.0;
-          const colW = 148.0;
-          return SingleChildScrollView(
+          // Her özellik kendi kartında, teklifler alt alta: 2-3 teklif 320 px
+          // genişlikte de yatay kaydırma olmadan okunur.
+          return ListView(
             padding: const EdgeInsets.all(AppSpacing.md),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                columnWidths: {
-                  0: const FixedColumnWidth(labelW),
-                  for (var i = 0; i < offers.length; i++)
-                    i + 1: const FixedColumnWidth(colW),
-                },
-                border: const TableBorder(
-                  horizontalInside: BorderSide(color: AppColors.border),
-                ),
-                children: [
-                  TableRow(
-                    children: [
-                      const SizedBox.shrink(),
-                      for (final o in offers)
-                        Padding(
-                          padding: const EdgeInsets.all(AppSpacing.xs),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                o.pro.businessName,
-                                style: AppTypography.cardTitle,
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  minimumSize: const Size(
-                                    AppSizes.minTouch,
-                                    AppSizes.minTouch,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.centerLeft,
-                                ),
-                                onPressed: () =>
-                                    context.push('/c/offers/${o.id}'),
-                                child: Text(l.viewOffer),
-                              ),
-                            ],
+            children: [
+              for (final o in offers)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: AppCard(
+                    onTap: () => context.push('/c/offers/${o.id}'),
+                    semanticLabel: l.viewOffer,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            o.pro.businessName,
+                            style: AppTypography.cardTitle,
                           ),
                         ),
-                    ],
+                        const Icon(Icons.chevron_right),
+                      ],
+                    ),
                   ),
-                  for (final r in rows)
-                    TableRow(
+                ),
+              for (final r in rows)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  child: AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(AppSpacing.xs),
-                          child: Text(r.$1, style: AppTypography.label),
-                        ),
-                        for (final v in r.$2)
+                        Text(r.$1, style: AppTypography.label),
+                        const SizedBox(height: 4),
+                        for (var i = 0; i < offers.length; i++)
                           Padding(
-                            padding: const EdgeInsets.all(AppSpacing.xs),
-                            child: Text(v, style: AppTypography.body),
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    offers[i].pro.businessName,
+                                    style: AppTypography.bodySecondary,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    r.$2[i],
+                                    textAlign: TextAlign.end,
+                                    style: AppTypography.body,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                       ],
                     ),
-                ],
-              ),
-            ),
+                  ),
+                ),
+            ],
           );
         },
       ),
@@ -848,6 +846,7 @@ class _DeclineState extends ConsumerState<DeclineOfferScreen> {
                 enabled: !_loading,
                 maxLength: 250,
                 keyboardType: TextInputType.multiline,
+                minLines: 3,
               ),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
