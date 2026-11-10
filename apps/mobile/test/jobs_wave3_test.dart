@@ -639,6 +639,52 @@ void main() {
       expect(h.location, '/c/requests');
     });
 
+    testWidgets(
+      'istek sürerken ekrandan çıkılırsa çökmez, iş verisi yine yenilenir',
+      (t) async {
+        final pending = Completer<ResponseBody>();
+        var cancelled = false;
+        final h = await pumpApp(
+          t,
+          session: customerSession(),
+          initial: '/c/jobs/j1',
+          size: tall,
+          overrides: _now,
+          handler: server3({
+            'GET /jobs/j1': (_) => json(
+              200,
+              cancelled
+                  ? jobDetailJson(status: 'CANCELLED', actions: [])
+                  : jobDetailJson(actions: ['CANCEL']),
+            ),
+            'GET /requests': (_) =>
+                json(200, {'items': <Object>[], 'nextCursor': null}),
+            'POST /jobs/j1/cancel': (_) => pending.future,
+          }),
+        );
+        await t.tap(btn('İşi iptal et'));
+        await t.pumpAndSettle();
+        expect(h.location, '/c/jobs/j1/cancel');
+        await t.tap(find.text('Planlarım değişti'));
+        await t.tap(btn('İptal et'));
+        await t.pumpAndSettle();
+        await t.tap(dialogBtn('İşi iptal et'));
+        await t.pump(const Duration(milliseconds: 10));
+        // İstek sürerken kullanıcı geri döner.
+        await t.tap(find.byTooltip('Geri'));
+        await t.pumpAndSettle();
+        expect(h.location, '/c/jobs/j1');
+        cancelled = true;
+        pending.complete(
+          json(200, jobDetailJson(status: 'CANCELLED', actions: [])),
+        );
+        await t.pumpAndSettle();
+        expect(t.takeException(), isNull);
+        // İş ekranı iptal edilmiş işi gösterir (eski veri kalmaz).
+        expect(find.text('İptal edildi'), findsWidgets);
+      },
+    );
+
     testWidgets('vazgeçilirse istek gitmez', (t) async {
       final h = await openJob(
         t,

@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:bitadilat_api/bitadilat_api.dart';
+import 'package:flutter/foundation.dart' show VoidCallback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show ProviderOrFamily;
 
 import 'providers.dart';
 
@@ -204,30 +206,56 @@ final earningsProvider = FutureProvider.autoDispose<Earnings>(
   retry: noRetry,
 );
 
+/// Talep ve teklif verisini tutan sağlayıcılar.
+List<ProviderOrFamily> get _requestData => [
+  requestsProvider,
+  requestProvider,
+  requestOffersProvider,
+  offerProvider,
+  feedProvider,
+  proRequestProvider,
+  proOffersProvider,
+];
+
+/// İşi etkileyen eylemden sonra yenilenen sağlayıcılar (talep ve teklif
+/// verisi de değişmiş olabilir).
+List<ProviderOrFamily> get _jobData => [
+  ..._requestData,
+  jobsProvider,
+  jobProvider,
+  paymentProvider,
+  complaintProvider,
+  conversationsProvider,
+  earningsProvider,
+];
+
 /// İş, ödeme ve sohbet verisini geçersiz kılar; işi etkileyen her eylemden
-/// sonra çağrılır (talep ve teklif verisi de değişmiş olabilir).
+/// sonra çağrılır.
 void invalidateJobData(WidgetRef ref) {
-  invalidateRequestData(ref);
-  ref
-    ..invalidate(jobsProvider)
-    ..invalidate(jobProvider)
-    ..invalidate(paymentProvider)
-    ..invalidate(complaintProvider)
-    ..invalidate(conversationsProvider)
-    ..invalidate(earningsProvider);
+  for (final p in _jobData) {
+    ref.invalidate(p);
+  }
+}
+
+/// [invalidateJobData]in `await`ten önce alınan biçimi. Sunucu isteği
+/// sürerken kullanıcı ekrandan çıkabilir; kapanmış widget'ın `ref`i
+/// kullanılamaz (StateError) ama iş verisi yine de yenilenmelidir. Bu yüzden
+/// kapsayıcı istekten önce yakalanır.
+VoidCallback jobDataInvalidator(WidgetRef ref) {
+  final container = ProviderScope.containerOf(ref.context, listen: false);
+  return () {
+    for (final p in _jobData) {
+      container.invalidate(p);
+    }
+  };
 }
 
 /// Durum değiştiren işlemden sonra talep ve teklif sağlayıcılarını geçersiz
 /// kılar (NAVIGATION_RULES §4).
 void invalidateRequestData(WidgetRef ref) {
-  ref
-    ..invalidate(requestsProvider)
-    ..invalidate(requestProvider)
-    ..invalidate(requestOffersProvider)
-    ..invalidate(offerProvider)
-    ..invalidate(feedProvider)
-    ..invalidate(proRequestProvider)
-    ..invalidate(proOffersProvider);
+  for (final p in _requestData) {
+    ref.invalidate(p);
+  }
 }
 
 void invalidateProData(WidgetRef ref) {

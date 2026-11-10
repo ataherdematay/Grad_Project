@@ -178,9 +178,10 @@ class _ProJobBodyState extends ConsumerState<_ProJobBody> {
   Future<void> _stage(Future<Object?> Function(JobsApi api) call) async {
     if (_busy) return;
     setState(() => _busy = true);
+    final refresh = jobDataInvalidator(ref);
     try {
       await call(ref.read(apiClientProvider).jobs);
-      invalidateJobData(ref);
+      refresh();
     } on ApiException catch (e) {
       if (mounted) {
         reportActionError(
@@ -408,6 +409,7 @@ class _ProNoteState extends ConsumerState<ProNoteScreen> {
     }
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref
           .read(apiClientProvider)
@@ -419,7 +421,8 @@ class _ProNoteState extends ConsumerState<ProNoteScreen> {
               photoIds: _photos.mediaIds,
             ),
           );
-      invalidateJobData(ref);
+      refresh();
+      if (!mounted) return;
       if (router.canPop()) {
         router.pop();
       } else {
@@ -548,6 +551,7 @@ class _ProFinishState extends ConsumerState<ProFinishScreen> {
     if (!ok || !mounted) return;
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref
           .read(apiClientProvider)
@@ -559,7 +563,8 @@ class _ProFinishState extends ConsumerState<ProFinishScreen> {
               photoIds: _photos.mediaIds,
             ),
           );
-      invalidateJobData(ref);
+      refresh();
+      if (!mounted) return;
       // Form yığından çıkar; geri tuşu İşlerim'e döner.
       router.go('/p/jobs/${widget.jobId}/finished');
     } on ApiException catch (e) {

@@ -65,9 +65,10 @@ class _CustomerJobBodyState extends ConsumerState<_CustomerJobBody> {
     final p = job.appointment.pendingProposal;
     if (_busy || p == null) return;
     setState(() => _busy = true);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref.read(apiClientProvider).jobs.acceptProposal(job.id, p.id);
-      invalidateJobData(ref);
+      refresh();
     } on ApiException catch (e) {
       if (mounted) {
         reportActionError(
@@ -310,15 +311,17 @@ class _AppointmentState extends ConsumerState<AppointmentScreen> {
     }
   }
 
-  void _done() {
-    invalidateJobData(ref);
-    context.go(_jobPath);
+  /// Kayıttan sonra: veri yenilenir; ekran hâlâ açıksa iş ekranına gidilir.
+  void _done(VoidCallback refresh) {
+    refresh();
+    if (mounted) context.go(_jobPath);
   }
 
   Future<void> _propose(JobDetail job) async {
     final s = _selected;
     if (_busy || s == null) return;
     setState(() => _busy = true);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref
           .read(apiClientProvider)
@@ -327,7 +330,7 @@ class _AppointmentState extends ConsumerState<AppointmentScreen> {
             job.id,
             ProposeSlotRequest(slotFrom: s.from.toUtc(), slotTo: s.to.toUtc()),
           );
-      if (mounted) _done();
+      _done(refresh);
     } on ApiException catch (e) {
       if (mounted) {
         reportActionError(
@@ -345,9 +348,10 @@ class _AppointmentState extends ConsumerState<AppointmentScreen> {
     final p = job.appointment.pendingProposal;
     if (_busy || p == null) return;
     setState(() => _busy = true);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref.read(apiClientProvider).jobs.acceptProposal(job.id, p.id);
-      if (mounted) _done();
+      _done(refresh);
     } on ApiException catch (e) {
       if (mounted) {
         reportActionError(
@@ -573,6 +577,7 @@ class _CancelState extends ConsumerState<CancelJobScreen> {
     if (!ok || !mounted) return;
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       final note = _note.text.trim();
       await ref
@@ -585,7 +590,9 @@ class _CancelState extends ConsumerState<CancelJobScreen> {
               note: note.isEmpty ? null : note,
             ),
           );
-      invalidateJobData(ref);
+      refresh();
+      // İstek sürerken ekrandan çıkıldıysa kullanıcı olduğu yerde kalır.
+      if (!mounted) return;
       router.go(widget.pro ? '/p/jobs/${job.id}/cancelled' : '/c/requests');
     } on ApiException catch (e) {
       if (mounted) {
@@ -728,9 +735,11 @@ class _CompleteState extends ConsumerState<CompleteJobScreen> {
     if (!ok || !mounted) return;
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref.read(apiClientProvider).jobs.confirm(job.id);
-      invalidateJobData(ref);
+      refresh();
+      if (!mounted) return;
       // Onay formu yığından çıkar; geri tuşu işe döner.
       router.go('/c/jobs/${job.id}/review');
     } on ApiException catch (e) {
@@ -880,6 +889,7 @@ class _ReviewState extends ConsumerState<ReviewScreen> {
     if (_rating < 1) return;
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       await ref
           .read(apiClientProvider)
@@ -893,7 +903,8 @@ class _ReviewState extends ConsumerState<ReviewScreen> {
               anonymous: _anonymous,
             ),
           );
-      invalidateJobData(ref);
+      refresh();
+      if (!mounted) return;
       router.go('/c/jobs/${job.id}');
     } on ApiException catch (e) {
       if (mounted) {
@@ -1104,6 +1115,7 @@ class _ComplaintState extends ConsumerState<ComplaintScreen> {
     if (!ok || !mounted) return;
     setState(() => _busy = true);
     final router = GoRouter.of(context);
+    final refresh = jobDataInvalidator(ref);
     try {
       final c = await ref
           .read(apiClientProvider)
@@ -1116,7 +1128,8 @@ class _ComplaintState extends ConsumerState<ComplaintScreen> {
               evidenceIds: _photos.mediaIds,
             ),
           );
-      invalidateJobData(ref);
+      refresh();
+      if (!mounted) return;
       router.go('/c/complaints/${c.id}');
     } on ApiException catch (e) {
       if (mounted) {
