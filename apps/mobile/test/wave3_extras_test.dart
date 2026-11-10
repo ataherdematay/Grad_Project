@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_mobile/core/draft_photos.dart';
+import 'package:bitadilat_mobile/core/photos.dart';
 import 'package:bitadilat_mobile/core/providers.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
 import 'package:bitadilat_mobile/features/customer/wizard_state.dart';
@@ -428,6 +429,51 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 100));
       expect(wb.photos.mediaIds, ['up9']);
       expect(b.read(wizardProvider).draft.title, 'Musluk');
+    });
+
+    test('galeriden yüklenen fotoğraf diske yazılır ve taslağa girer', () async {
+      // Önceki test kopyayı elle veriyor; burada gerçek yol sınanır: seçici,
+      // POST /media, dinleyicinin kopyayı yazması, taslak kaydı, geri yükleme.
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final store = FileDraftPhotoStore(baseDir: dir);
+      ProviderContainer makeWithUpload() => ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          draftPhotoStoreProvider.overrideWithValue(store),
+          sessionProvider.overrideWith(
+            () => FakeSession(SessionState.signedIn(testMe())),
+          ),
+          apiClientProvider.overrideWithValue(
+            ApiClient(
+              config: const ApiConfig('http://x'),
+              tokenStore: MemoryTokenStore(null),
+              adapter: FakeAdapter((o) => uploadOk(o, 'up7')),
+            ),
+          ),
+          photoPickerProvider.overrideWithValue(FakePicker([1000])),
+          recompressProvider.overrideWithValue((b, q, w) async => null),
+        ],
+      );
+      final a = makeWithUpload();
+      final sub = a.listen(wizardProvider, (_, _) {});
+      final w = a.read(wizardProvider.notifier);
+      w.update((d) => d.copyWith(title: 'Musluk'));
+      await w.photos.add(PhotoSource.gallery);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      expect(w.photos.mediaIds, ['up7']);
+      final saved = prefs.getString(draftKeyFor('u-1'))!;
+      expect(saved, contains('"mediaId":"up7"'));
+      final files = Directory('${dir.path}/draft_photos/u-1').listSync();
+      expect(files, hasLength(1));
+      sub.close();
+      a.dispose();
+
+      final b = make(prefs, store);
+      addTearDown(b.dispose);
+      b.listen(wizardProvider, (_, _) {});
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      expect(b.read(wizardProvider.notifier).photos.mediaIds, ['up7']);
     });
 
     test('yerel dosya yoksa fotoğraf sessizce düşer', () async {
