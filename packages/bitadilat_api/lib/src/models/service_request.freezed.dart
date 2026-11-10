@@ -553,7 +553,8 @@ as String?,
 /// @nodoc
 mixin _$RequestSummary {
 
-@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; RequestStatus get status; String get districtName; String get neighborhood; DateTime get createdAt; DateTime get expiresAt; int get offerCount;@NullableMoneyConverter() Money? get minOfferTotal;@NullableMoneyConverter() Money? get maxOfferTotal;
+@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; RequestStatus get status; String get districtName; String get neighborhood; DateTime get createdAt; DateTime get expiresAt; int get offerCount;@NullableMoneyConverter() Money? get minOfferTotal;@NullableMoneyConverter() Money? get maxOfferTotal;/// Talep `ASSIGNED` olunca açılan işin kimliği.
+@JsonKey(fromJson: idFromJsonNullable) String? get jobId;
 /// Create a copy of RequestSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -566,16 +567,16 @@ $RequestSummaryCopyWith<RequestSummary> get copyWith => _$RequestSummaryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.jobId, jobId) || other.jobId == jobId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal);
+int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,jobId);
 
 @override
 String toString() {
-  return 'RequestSummary(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal)';
+  return 'RequestSummary(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, jobId: $jobId)';
 }
 
 
@@ -586,7 +587,7 @@ abstract mixin class $RequestSummaryCopyWith<$Res>  {
   factory $RequestSummaryCopyWith(RequestSummary value, $Res Function(RequestSummary) _then) = _$RequestSummaryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal,@JsonKey(fromJson: idFromJsonNullable) String? jobId
 });
 
 
@@ -603,7 +604,7 @@ class _$RequestSummaryCopyWithImpl<$Res>
 
 /// Create a copy of RequestSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? jobId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -618,7 +619,8 @@ as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore
 as DateTime,offerCount: null == offerCount ? _self.offerCount : offerCount // ignore: cast_nullable_to_non_nullable
 as int,minOfferTotal: freezed == minOfferTotal ? _self.minOfferTotal : minOfferTotal // ignore: cast_nullable_to_non_nullable
 as Money?,maxOfferTotal: freezed == maxOfferTotal ? _self.maxOfferTotal : maxOfferTotal // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -703,10 +705,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RequestSummary() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.jobId);case _:
   return orElse();
 
 }
@@ -724,10 +726,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)  $default,) {final _that = this;
 switch (_that) {
 case _RequestSummary():
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.jobId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -744,10 +746,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)?  $default,) {final _that = this;
 switch (_that) {
 case _RequestSummary() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.jobId);case _:
   return null;
 
 }
@@ -759,7 +761,7 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 @JsonSerializable()
 
 class _RequestSummary implements RequestSummary {
-  const _RequestSummary({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.status, required this.districtName, required this.neighborhood, required this.createdAt, required this.expiresAt, this.offerCount = 0, @NullableMoneyConverter() this.minOfferTotal, @NullableMoneyConverter() this.maxOfferTotal});
+  const _RequestSummary({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.status, required this.districtName, required this.neighborhood, required this.createdAt, required this.expiresAt, this.offerCount = 0, @NullableMoneyConverter() this.minOfferTotal, @NullableMoneyConverter() this.maxOfferTotal, @JsonKey(fromJson: idFromJsonNullable) this.jobId});
   factory _RequestSummary.fromJson(Map<String, dynamic> json) => _$RequestSummaryFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -775,6 +777,8 @@ class _RequestSummary implements RequestSummary {
 @override@JsonKey() final  int offerCount;
 @override@NullableMoneyConverter() final  Money? minOfferTotal;
 @override@NullableMoneyConverter() final  Money? maxOfferTotal;
+/// Talep `ASSIGNED` olunca açılan işin kimliği.
+@override@JsonKey(fromJson: idFromJsonNullable) final  String? jobId;
 
 /// Create a copy of RequestSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -789,16 +793,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.jobId, jobId) || other.jobId == jobId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal);
+int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,jobId);
 
 @override
 String toString() {
-  return 'RequestSummary(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal)';
+  return 'RequestSummary(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, jobId: $jobId)';
 }
 
 
@@ -809,7 +813,7 @@ abstract mixin class _$RequestSummaryCopyWith<$Res> implements $RequestSummaryCo
   factory _$RequestSummaryCopyWith(_RequestSummary value, $Res Function(_RequestSummary) _then) = __$RequestSummaryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal,@JsonKey(fromJson: idFromJsonNullable) String? jobId
 });
 
 
@@ -826,7 +830,7 @@ class __$RequestSummaryCopyWithImpl<$Res>
 
 /// Create a copy of RequestSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? jobId = freezed,}) {
   return _then(_RequestSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -841,7 +845,8 @@ as DateTime,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore
 as DateTime,offerCount: null == offerCount ? _self.offerCount : offerCount // ignore: cast_nullable_to_non_nullable
 as int,minOfferTotal: freezed == minOfferTotal ? _self.minOfferTotal : minOfferTotal // ignore: cast_nullable_to_non_nullable
 as Money?,maxOfferTotal: freezed == maxOfferTotal ? _self.maxOfferTotal : maxOfferTotal // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -852,7 +857,7 @@ as Money?,
 /// @nodoc
 mixin _$RequestDetail {
 
-@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; RequestStatus get status; String get districtName; String get neighborhood; DateTime get createdAt; DateTime get expiresAt; int get offerCount;@NullableMoneyConverter() Money? get minOfferTotal;@NullableMoneyConverter() Money? get maxOfferTotal; String get description; DateTime? get preferredFrom; DateTime? get preferredTo; List<MediaRef> get photos; List<RequestAnswer> get answers; int get matchedProCount; List<MatchFactor> get matchFactors; RequestAddress? get address;
+@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; RequestStatus get status; String get districtName; String get neighborhood; DateTime get createdAt; DateTime get expiresAt; int get offerCount;@NullableMoneyConverter() Money? get minOfferTotal;@NullableMoneyConverter() Money? get maxOfferTotal; String get description; DateTime? get preferredFrom; DateTime? get preferredTo; List<MediaRef> get photos; List<RequestAnswer> get answers; int get matchedProCount; List<MatchFactor> get matchFactors; RequestAddress? get address;@JsonKey(fromJson: idFromJsonNullable) String? get jobId;
 /// Create a copy of RequestDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -865,16 +870,16 @@ $RequestDetailCopyWith<RequestDetail> get copyWith => _$RequestDetailCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.description, description) || other.description == description)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.matchedProCount, matchedProCount) || other.matchedProCount == matchedProCount)&&const DeepCollectionEquality().equals(other.matchFactors, matchFactors)&&(identical(other.address, address) || other.address == address));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.description, description) || other.description == description)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.matchedProCount, matchedProCount) || other.matchedProCount == matchedProCount)&&const DeepCollectionEquality().equals(other.matchFactors, matchFactors)&&(identical(other.address, address) || other.address == address)&&(identical(other.jobId, jobId) || other.jobId == jobId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,description,preferredFrom,preferredTo,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),matchedProCount,const DeepCollectionEquality().hash(matchFactors),address]);
+int get hashCode => Object.hashAll([runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,description,preferredFrom,preferredTo,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),matchedProCount,const DeepCollectionEquality().hash(matchFactors),address,jobId]);
 
 @override
 String toString() {
-  return 'RequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, description: $description, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photos: $photos, answers: $answers, matchedProCount: $matchedProCount, matchFactors: $matchFactors, address: $address)';
+  return 'RequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, description: $description, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photos: $photos, answers: $answers, matchedProCount: $matchedProCount, matchFactors: $matchFactors, address: $address, jobId: $jobId)';
 }
 
 
@@ -885,7 +890,7 @@ abstract mixin class $RequestDetailCopyWith<$Res>  {
   factory $RequestDetailCopyWith(RequestDetail value, $Res Function(RequestDetail) _then) = _$RequestDetailCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal, String description, DateTime? preferredFrom, DateTime? preferredTo, List<MediaRef> photos, List<RequestAnswer> answers, int matchedProCount, List<MatchFactor> matchFactors, RequestAddress? address
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal, String description, DateTime? preferredFrom, DateTime? preferredTo, List<MediaRef> photos, List<RequestAnswer> answers, int matchedProCount, List<MatchFactor> matchFactors, RequestAddress? address,@JsonKey(fromJson: idFromJsonNullable) String? jobId
 });
 
 
@@ -902,7 +907,7 @@ class _$RequestDetailCopyWithImpl<$Res>
 
 /// Create a copy of RequestDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? description = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photos = null,Object? answers = null,Object? matchedProCount = null,Object? matchFactors = null,Object? address = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? description = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photos = null,Object? answers = null,Object? matchedProCount = null,Object? matchFactors = null,Object? address = freezed,Object? jobId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -925,7 +930,8 @@ as List<MediaRef>,answers: null == answers ? _self.answers : answers // ignore: 
 as List<RequestAnswer>,matchedProCount: null == matchedProCount ? _self.matchedProCount : matchedProCount // ignore: cast_nullable_to_non_nullable
 as int,matchFactors: null == matchFactors ? _self.matchFactors : matchFactors // ignore: cast_nullable_to_non_nullable
 as List<MatchFactor>,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
-as RequestAddress?,
+as RequestAddress?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 /// Create a copy of RequestDetail
@@ -1022,10 +1028,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RequestDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address,_that.jobId);case _:
   return orElse();
 
 }
@@ -1043,10 +1049,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)  $default,) {final _that = this;
 switch (_that) {
 case _RequestDetail():
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address,_that.jobId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1063,10 +1069,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  RequestStatus status,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime expiresAt,  int offerCount, @NullableMoneyConverter()  Money? minOfferTotal, @NullableMoneyConverter()  Money? maxOfferTotal,  String description,  DateTime? preferredFrom,  DateTime? preferredTo,  List<MediaRef> photos,  List<RequestAnswer> answers,  int matchedProCount,  List<MatchFactor> matchFactors,  RequestAddress? address, @JsonKey(fromJson: idFromJsonNullable)  String? jobId)?  $default,) {final _that = this;
 switch (_that) {
 case _RequestDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.status,_that.districtName,_that.neighborhood,_that.createdAt,_that.expiresAt,_that.offerCount,_that.minOfferTotal,_that.maxOfferTotal,_that.description,_that.preferredFrom,_that.preferredTo,_that.photos,_that.answers,_that.matchedProCount,_that.matchFactors,_that.address,_that.jobId);case _:
   return null;
 
 }
@@ -1078,7 +1084,7 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 @JsonSerializable()
 
 class _RequestDetail extends RequestDetail {
-  const _RequestDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.status, required this.districtName, required this.neighborhood, required this.createdAt, required this.expiresAt, this.offerCount = 0, @NullableMoneyConverter() this.minOfferTotal, @NullableMoneyConverter() this.maxOfferTotal, required this.description, this.preferredFrom, this.preferredTo, this.photos = const <MediaRef>[], this.answers = const <RequestAnswer>[], this.matchedProCount = 0, this.matchFactors = const <MatchFactor>[], this.address}): super._();
+  const _RequestDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.status, required this.districtName, required this.neighborhood, required this.createdAt, required this.expiresAt, this.offerCount = 0, @NullableMoneyConverter() this.minOfferTotal, @NullableMoneyConverter() this.maxOfferTotal, required this.description, this.preferredFrom, this.preferredTo, this.photos = const <MediaRef>[], this.answers = const <RequestAnswer>[], this.matchedProCount = 0, this.matchFactors = const <MatchFactor>[], this.address, @JsonKey(fromJson: idFromJsonNullable) this.jobId}): super._();
   factory _RequestDetail.fromJson(Map<String, dynamic> json) => _$RequestDetailFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -1102,6 +1108,7 @@ class _RequestDetail extends RequestDetail {
 @override@JsonKey() final  int matchedProCount;
 @override@JsonKey() final  List<MatchFactor> matchFactors;
 @override final  RequestAddress? address;
+@override@JsonKey(fromJson: idFromJsonNullable) final  String? jobId;
 
 /// Create a copy of RequestDetail
 /// with the given fields replaced by the non-null parameter values.
@@ -1116,16 +1123,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.description, description) || other.description == description)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.matchedProCount, matchedProCount) || other.matchedProCount == matchedProCount)&&const DeepCollectionEquality().equals(other.matchFactors, matchFactors)&&(identical(other.address, address) || other.address == address));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.status, status) || other.status == status)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.minOfferTotal, minOfferTotal) || other.minOfferTotal == minOfferTotal)&&(identical(other.maxOfferTotal, maxOfferTotal) || other.maxOfferTotal == maxOfferTotal)&&(identical(other.description, description) || other.description == description)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.matchedProCount, matchedProCount) || other.matchedProCount == matchedProCount)&&const DeepCollectionEquality().equals(other.matchFactors, matchFactors)&&(identical(other.address, address) || other.address == address)&&(identical(other.jobId, jobId) || other.jobId == jobId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,description,preferredFrom,preferredTo,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),matchedProCount,const DeepCollectionEquality().hash(matchFactors),address]);
+int get hashCode => Object.hashAll([runtimeType,id,publicCode,title,categoryId,urgency,status,districtName,neighborhood,createdAt,expiresAt,offerCount,minOfferTotal,maxOfferTotal,description,preferredFrom,preferredTo,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),matchedProCount,const DeepCollectionEquality().hash(matchFactors),address,jobId]);
 
 @override
 String toString() {
-  return 'RequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, description: $description, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photos: $photos, answers: $answers, matchedProCount: $matchedProCount, matchFactors: $matchFactors, address: $address)';
+  return 'RequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, status: $status, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, expiresAt: $expiresAt, offerCount: $offerCount, minOfferTotal: $minOfferTotal, maxOfferTotal: $maxOfferTotal, description: $description, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photos: $photos, answers: $answers, matchedProCount: $matchedProCount, matchFactors: $matchFactors, address: $address, jobId: $jobId)';
 }
 
 
@@ -1136,7 +1143,7 @@ abstract mixin class _$RequestDetailCopyWith<$Res> implements $RequestDetailCopy
   factory _$RequestDetailCopyWith(_RequestDetail value, $Res Function(_RequestDetail) _then) = __$RequestDetailCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal, String description, DateTime? preferredFrom, DateTime? preferredTo, List<MediaRef> photos, List<RequestAnswer> answers, int matchedProCount, List<MatchFactor> matchFactors, RequestAddress? address
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, RequestStatus status, String districtName, String neighborhood, DateTime createdAt, DateTime expiresAt, int offerCount,@NullableMoneyConverter() Money? minOfferTotal,@NullableMoneyConverter() Money? maxOfferTotal, String description, DateTime? preferredFrom, DateTime? preferredTo, List<MediaRef> photos, List<RequestAnswer> answers, int matchedProCount, List<MatchFactor> matchFactors, RequestAddress? address,@JsonKey(fromJson: idFromJsonNullable) String? jobId
 });
 
 
@@ -1153,7 +1160,7 @@ class __$RequestDetailCopyWithImpl<$Res>
 
 /// Create a copy of RequestDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? description = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photos = null,Object? answers = null,Object? matchedProCount = null,Object? matchFactors = null,Object? address = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? status = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? expiresAt = null,Object? offerCount = null,Object? minOfferTotal = freezed,Object? maxOfferTotal = freezed,Object? description = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photos = null,Object? answers = null,Object? matchedProCount = null,Object? matchFactors = null,Object? address = freezed,Object? jobId = freezed,}) {
   return _then(_RequestDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -1176,7 +1183,8 @@ as List<MediaRef>,answers: null == answers ? _self.answers : answers // ignore: 
 as List<RequestAnswer>,matchedProCount: null == matchedProCount ? _self.matchedProCount : matchedProCount // ignore: cast_nullable_to_non_nullable
 as int,matchFactors: null == matchFactors ? _self.matchFactors : matchFactors // ignore: cast_nullable_to_non_nullable
 as List<MatchFactor>,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
-as RequestAddress?,
+as RequestAddress?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

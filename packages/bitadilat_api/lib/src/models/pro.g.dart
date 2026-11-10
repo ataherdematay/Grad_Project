@@ -96,6 +96,7 @@ _ProRequestDetail _$ProRequestDetailFromJson(Map<String, dynamic> json) =>
       myOffer: json['myOffer'] == null
           ? null
           : OfferDetail.fromJson(json['myOffer'] as Map<String, dynamic>),
+      status: $enumDecodeNullable(_$RequestStatusEnumMap, json['status']),
     );
 
 Map<String, dynamic> _$ProRequestDetailToJson(_ProRequestDetail instance) =>
@@ -117,7 +118,15 @@ Map<String, dynamic> _$ProRequestDetailToJson(_ProRequestDetail instance) =>
       'photos': instance.photos.map((e) => e.toJson()).toList(),
       'answers': instance.answers.map((e) => e.toJson()).toList(),
       'myOffer': instance.myOffer?.toJson(),
+      'status': _$RequestStatusEnumMap[instance.status],
     };
+
+const _$RequestStatusEnumMap = {
+  RequestStatus.open: 'OPEN',
+  RequestStatus.assigned: 'ASSIGNED',
+  RequestStatus.cancelled: 'CANCELLED',
+  RequestStatus.expired: 'EXPIRED',
+};
 
 _ApplicationDocument _$ApplicationDocumentFromJson(Map<String, dynamic> json) =>
     _ApplicationDocument(
@@ -381,3 +390,52 @@ Map<String, dynamic> _$ReviewItemToJson(_ReviewItem instance) =>
       'authorDisplay': instance.authorDisplay,
       'createdAt': instance.createdAt.toIso8601String(),
     };
+
+_EarningsItem _$EarningsItemFromJson(Map<String, dynamic> json) =>
+    _EarningsItem(
+      jobId: idFromJson(json['jobId']),
+      publicCode: json['publicCode'] as String,
+      title: json['title'] as String,
+      totalAmount: const MoneyConverter().fromJson(json['totalAmount']),
+      serviceFee: const MoneyConverter().fromJson(json['serviceFee']),
+      netEarning: const MoneyConverter().fromJson(json['netEarning']),
+      status: $enumDecode(_$EarningStatusEnumMap, json['status']),
+      date: DateTime.parse(json['date'] as String),
+    );
+
+Map<String, dynamic> _$EarningsItemToJson(_EarningsItem instance) =>
+    <String, dynamic>{
+      'jobId': instance.jobId,
+      'publicCode': instance.publicCode,
+      'title': instance.title,
+      'totalAmount': const MoneyConverter().toJson(instance.totalAmount),
+      'serviceFee': const MoneyConverter().toJson(instance.serviceFee),
+      'netEarning': const MoneyConverter().toJson(instance.netEarning),
+      'status': _$EarningStatusEnumMap[instance.status]!,
+      'date': instance.date.toIso8601String(),
+    };
+
+const _$EarningStatusEnumMap = {
+  EarningStatus.pending: 'PENDING',
+  EarningStatus.released: 'RELEASED',
+  EarningStatus.refunded: 'REFUNDED',
+  EarningStatus.split: 'SPLIT',
+};
+
+_Earnings _$EarningsFromJson(Map<String, dynamic> json) => _Earnings(
+  releasedTotal: const MoneyConverter().fromJson(json['releasedTotal']),
+  pendingTotal: const MoneyConverter().fromJson(json['pendingTotal']),
+  serviceFeeTotal: const MoneyConverter().fromJson(json['serviceFeeTotal']),
+  items:
+      (json['items'] as List<dynamic>?)
+          ?.map((e) => EarningsItem.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <EarningsItem>[],
+);
+
+Map<String, dynamic> _$EarningsToJson(_Earnings instance) => <String, dynamic>{
+  'releasedTotal': const MoneyConverter().toJson(instance.releasedTotal),
+  'pendingTotal': const MoneyConverter().toJson(instance.pendingTotal),
+  'serviceFeeTotal': const MoneyConverter().toJson(instance.serviceFeeTotal),
+  'items': instance.items.map((e) => e.toJson()).toList(),
+};

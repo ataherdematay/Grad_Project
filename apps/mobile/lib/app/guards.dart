@@ -31,10 +31,21 @@ final List<RegExp> _wave2Routes = [
   RegExp(
     r'^/c/requests/(new|[^/]+(/(edit|cancel|published|offers|compare))?)$',
   ),
-  RegExp(r'^/c/offers/[^/]+(/decline)?$'),
+  RegExp(r'^/c/offers/[^/]+(/(decline|accept|pay))?$'),
   RegExp(r'^/c/pros/[^/]+(/reviews)?$'),
   RegExp(r'^/p/requests/[^/]+(/offer)?$'),
   RegExp(r'^/p/offers(/[^/]+/sent)?$'),
+];
+
+/// Dalga 3 rotaları (ödeme, iş, şikayet, kazanç).
+final List<RegExp> _wave3Routes = [
+  RegExp(r'^/c/payments/[^/]+/(3ds|result)$'),
+  RegExp(r'^/c/jobs/[^/]+(/(appointment|cancel|complete|review|complaint))?$'),
+  RegExp(r'^/c/complaints/[^/]+$'),
+  RegExp(
+    r'^/p/jobs/[^/]+(/(appointment|cancel|cancelled|finish|finished|note))?$',
+  ),
+  RegExp(r'^/p/earnings$'),
 ];
 
 /// Uygulamada tanımlı rota mı? Değilse "bulunamadı" ekranı gösterilir.
@@ -48,7 +59,8 @@ bool isKnownPath(String path) =>
     path == '/notifications' ||
     _legalRe.hasMatch(path) ||
     _chatRe.hasMatch(path) ||
-    _wave2Routes.any((r) => r.hasMatch(path));
+    _wave2Routes.any((r) => r.hasMatch(path)) ||
+    _wave3Routes.any((r) => r.hasMatch(path));
 
 bool _isPublic(String path) =>
     path == '/' || guestPaths.contains(path) || _legalRe.hasMatch(path);
@@ -87,19 +99,31 @@ bool isProMode(Me me) =>
 /// Modun ana sekmesi.
 String homeFor(Me me) => isProMode(me) ? '/p/feed' : '/c/home';
 
-String _toPro(String path) => switch (path) {
-  '/c/requests' => '/p/jobs',
-  '/c/messages' => '/p/messages',
-  '/c/profile' => '/p/profile',
-  _ => '/p/feed',
-};
+final RegExp _customerJobRe = RegExp(r'^/c/jobs/([^/]+)$');
+final RegExp _proJobRe = RegExp(r'^/p/jobs/([^/]+)$');
 
-String _toCustomer(String path) => switch (path) {
-  '/p/jobs' => '/c/requests',
-  '/p/messages' => '/c/messages',
-  '/p/profile' => '/c/profile',
-  _ => '/c/home',
-};
+/// Müşteri rotasının usta moduna ait eşdeğeri (NAVIGATION_RULES §2).
+String _toPro(String path) {
+  final job = _customerJobRe.firstMatch(path);
+  if (job != null) return '/p/jobs/${job.group(1)}';
+  return switch (path) {
+    '/c/requests' => '/p/jobs',
+    '/c/messages' => '/p/messages',
+    '/c/profile' => '/p/profile',
+    _ => '/p/feed',
+  };
+}
+
+String _toCustomer(String path) {
+  final job = _proJobRe.firstMatch(path);
+  if (job != null) return '/c/jobs/${job.group(1)}';
+  return switch (path) {
+    '/p/jobs' => '/c/requests',
+    '/p/messages' => '/c/messages',
+    '/p/profile' => '/c/profile',
+    _ => '/c/home',
+  };
+}
 
 /// NAVIGATION_RULES §3 korumaları. `null` = olduğu gibi aç.
 String? guardRedirect(SessionState s, Uri uri) {

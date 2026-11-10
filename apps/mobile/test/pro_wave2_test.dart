@@ -385,10 +385,8 @@ void main() {
         find.text('Bu işlem artık yapılamıyor, ekran güncellendi.'),
         findsOneWidget,
       );
-      expect(
-        h.adapter.count('GET', '/pro/requests/r1'),
-        greaterThanOrEqualTo(before),
-      );
+      // ILLEGAL_STATE sonrası ekran gerçekten yeniden çeker.
+      expect(h.adapter.count('GET', '/pro/requests/r1'), greaterThan(before));
     });
 
     testWidgets('ağ hatasında form korunur ve tekrar gönderilebilir', (
@@ -488,8 +486,15 @@ void main() {
       expect(find.text('Kabul edildi'), findsWidgets);
     });
 
-    testWidgets('İşlerim bu dalgada boş durum', (t) async {
-      await pumpApp(t, session: proSession(), initial: '/p/jobs');
+    testWidgets('İşlerim: iş yoksa boş durum', (t) async {
+      await pumpApp(
+        t,
+        session: proSession(),
+        initial: '/p/jobs',
+        handler: routes({
+          'GET /jobs': (_) => json(200, {'items': <Object>[]}),
+        }),
+      );
       expect(find.text('Henüz işin yok'), findsOneWidget);
     });
   });

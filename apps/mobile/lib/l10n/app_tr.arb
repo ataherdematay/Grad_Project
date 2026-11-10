@@ -664,5 +664,426 @@
   "photoDuplicate": "Bu fotoğrafı zaten ekledin.",
   "feedEditProfile": "Kategori ve ilçelerini düzenle",
   "arrivalServerInvalid": "Varış aralığı kabul edilmedi. Gün ve saatleri kontrol edip tekrar dene.",
-  "offerItemsServerInvalid": "Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene."
+  "offerItemsServerInvalid": "Kalem toplamları tutmadı. Malzeme kalemlerini kontrol edip tekrar dene.",
+  "backToJob": "İşe dön",
+  "addressTitle": "Adres",
+  "doorNote": "Kapı notu",
+  "timelineTitle": "Geçmiş",
+  "starsCount": "{count} yıldız",
+  "@starsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unreadMessages": "{count} okunmamış mesaj",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceFeeLabel": "Hizmet bedeli (%10)",
+  "netEarningLabel": "Net kazancın",
+  "photosPending": "Fotoğraflar yüklenirken bekle ya da hatalı olanı kaldır.",
+  "homeActiveJob": "Aktif işin",
+  "jobScreenTitle": "İş",
+  "jobStatusAwaiting": "Ustanın onayı bekleniyor",
+  "jobStatusAwaitingPro": "Randevu onayın bekleniyor",
+  "jobStatusScheduled": "Randevun onaylandı",
+  "jobStatusScheduledPro": "Randevu onaylandı",
+  "jobStatusArrived": "Usta adreste",
+  "jobStatusArrivedPro": "Adrese ulaştın",
+  "jobStatusInProgress": "İş sürüyor",
+  "jobStatusWorkFinished": "Onayın bekleniyor",
+  "jobStatusWorkFinishedPro": "Müşteri onayı bekleniyor",
+  "jobStatusCompleted": "Tamamlandı",
+  "jobStatusDisputed": "Şikayet inceleniyor",
+  "jobStatusCancelled": "İptal edildi",
+  "jobStatusResolved": "Sonuçlandı",
+  "escrowInitialized": "Ödeme bekleniyor",
+  "escrowLocked": "Güvence havuzunda",
+  "escrowFailed": "Ödeme alınamadı",
+  "escrowRefunded": "Kartına iade edildi",
+  "escrowRefundedPro": "Müşteriye iade edildi",
+  "escrowReleased": "Ustaya aktarıldı",
+  "escrowReleasedPro": "Sana aktarıldı",
+  "escrowDisputed": "Şikayet nedeniyle bekliyor",
+  "escrowSplit": "İki tarafa paylaştırıldı",
+  "actorYou": "Sen",
+  "actorCustomer": "Müşteri",
+  "actorPro": "Usta",
+  "actorSystem": "Sistem",
+  "actorAdmin": "Yönetici",
+  "eventStatus": "Durum güncellendi",
+  "eventNote": "Not eklendi",
+  "eventPhoto": "Fotoğraf eklendi",
+  "eventProposed": "Randevu önerildi",
+  "eventAccepted": "Randevu kabul edildi",
+  "offerSummaryTitle": "Teklif özeti",
+  "paymentSummaryTitle": "Ödeme",
+  "paymentStatusLabel": "Durum",
+  "refundedLabel": "İade edilen",
+  "escrowExplain": "Ödemen güvence havuzunda tutulur. İş bitip onayladığında ustaya aktarılır.",
+  "acceptTitle": "Teklifi kabul et",
+  "acceptIntro": "{pro} ile çalışmak üzeresin. Ödemeden önce dökümü ve koşulları kontrol et.",
+  "@acceptIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptVatNote": "Tutar KDV dahildir.",
+  "escrowHowTitle": "Ödemen güvence havuzunda tutulur",
+  "escrowHowBody": "Ödeme kartından alınır ve güvence havuzunda bekler. Usta işi bitirir, sen onaylarsın; onayından sonra tutar ustaya aktarılır. Onaylamazsan ya da sorun yaşarsan şikayet açabilirsin.",
+  "cancelPolicyTitle": "İptal politikası",
+  "cancelPolicyBody": "Randevu gününe kadar ve usta adrese ulaşana kadar iptal edebilirsin; ödemenin tamamı kartına iade edilir. İş başladıktan sonra iptal yerine şikayet açabilirsin.",
+  "acceptUnavailable": "Bu teklif artık kabul edilemiyor. Teklifin süresi dolmuş ya da durumu değişmiş olabilir.",
+  "acceptContinue": "Ödemeye geç, {amount}",
+  "@acceptContinue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptBack": "Vazgeç",
+  "payTitle": "Ödeme",
+  "payTo": "Usta",
+  "payAmount": "Ödenecek tutar",
+  "payFillTestCard": "Test kartını doldur",
+  "cardHolder": "Kart üzerindeki ad",
+  "cardNumber": "Kart numarası",
+  "cardExpiry": "Son kullanma (AA/YY)",
+  "cardExpiryHint": "AA/YY",
+  "cardCvc": "Güvenlik kodu (CVC)",
+  "cardErrHolder": "Kart üzerindeki adı ve soyadı gir.",
+  "cardErrNumber": "Kart numarası geçersiz. 16 haneyi kontrol et.",
+  "cardErrExpiry": "Son kullanma tarihi geçersiz. AA/YY biçiminde gir.",
+  "cardErrExpiryPast": "Kartın son kullanma tarihi geçmiş.",
+  "cardErrCvc": "Güvenlik kodu (CVC) geçersiz. 3 ya da 4 hane gir.",
+  "payNoStore": "Kart bilgilerin kaydedilmez. Banka doğrulaması bir sonraki adımda yapılır.",
+  "payButton": "{amount} öde",
+  "@payButton": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payConnecting": "Bankaya bağlanılıyor",
+  "threeDsTitle": "Banka doğrulaması",
+  "threeDsClose": "Kapat",
+  "threeDsCloseTitle": "Doğrulamayı kapatmak istiyor musun?",
+  "threeDsCloseBody": "Doğrulamayı tamamlamadan çıkarsan ödeme tamamlanmayabilir. Çıkınca ödemenin durumunu kontrol ederiz.",
+  "threeDsCloseConfirm": "Kapat",
+  "threeDsCloseStay": "Doğrulamaya dön",
+  "payResultTitle": "Ödeme sonucu",
+  "payWaiting": "Bankadan sonuç bekleniyor",
+  "payWaitingHint": "Bu birkaç saniye sürebilir. Ekranı kapatma.",
+  "paySuccessTitle": "Ödemen alındı",
+  "paySuccessBody": "{amount} güvence havuzunda tutuluyor.",
+  "@paySuccessBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payFailedTitle": "Ödeme tamamlanamadı",
+  "payRefundedTitle": "Ödemen iade edildi",
+  "payUncertainTitle": "Sonuç henüz belli değil",
+  "payFailDeclined": "Bankan ödemeyi onaylamadı. Kart bilgilerini kontrol et ya da farklı bir kartla dene.",
+  "payFailAssigned": "Talebin bu sırada başka bir teklifle sonuçlandı. Ödemen kartına iade edildi.",
+  "payFailExpired": "Teklifin süresi doldu. Ödemen kartına iade edildi.",
+  "payFailUncertain": "Bankadan henüz kesin sonuç gelmedi. Biraz sonra tekrar kontrol et. Ödeme tamamlandıysa işin Taleplerim sekmesinde görünür.",
+  "payFailGeneric": "Ödeme tamamlanamadı. Farklı bir kartla tekrar deneyebilirsin.",
+  "payTryOtherCard": "Farklı kartla dene",
+  "payBackToOffer": "Teklife dön",
+  "payCheckAgain": "Tekrar kontrol et",
+  "payToJob": "İşe git",
+  "payToRequests": "Taleplerime git",
+  "appointmentTitle": "Randevu",
+  "appointmentProTitle": "Randevu",
+  "appointmentNotChosen": "Randevu henüz seçilmedi.",
+  "proposalMine": "Önerin karşı tarafın onayını bekliyor",
+  "proposalFromPro": "Usta bu aralığı önerdi",
+  "proposalFromCustomer": "Müşteri bu aralığı önerdi",
+  "proposalAccept": "Kabul et",
+  "proposalOther": "Başka aralık seç",
+  "appointmentChoose": "Randevu seç",
+  "appointmentChange": "Randevuyu değiştir",
+  "appointmentIntro": "Ustanın gelmesini istediğin aralığı seç. Usta onaylar ya da başka bir aralık önerir.",
+  "appointmentProIntro": "Müşterinin önerisini kabul et ya da kendi uygun aralığını öner.",
+  "appointmentPickDay": "Gün",
+  "appointmentPickSlot": "Saat aralığı",
+  "appointmentOfferWindow": "Teklifteki varış aralığı",
+  "appointmentYourWindow": "Teklifindeki varış aralığı",
+  "appointmentNoSlots": "Bu gün için uygun aralık yok.",
+  "appointmentSelectHint": "Devam etmek için bir aralık seç.",
+  "appointmentSubmit": "Randevu iste",
+  "appointmentProSubmit": "Yeni aralık öner",
+  "appointmentClosed": "Bu işte şu an randevu işlemi yapılamıyor.",
+  "cancelTitle": "İşi iptal et",
+  "cancelJobAction": "İşi iptal et",
+  "proCancelAction": "İşi iptal et",
+  "cancelIntroCustomer": "İptal edersen {amount} kartına iade edilir ve talebin kapanır.",
+  "@cancelIntroCustomer": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelIntroPro": "İptal edersen müşteriye {amount} iade edilir ve talep yeniden açılır. İptaller profilinde görünür.",
+  "@cancelIntroPro": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelReasonProUnreachable": "Usta ulaşılamıyor",
+  "cancelReasonOtherProvider": "Başka bir usta ile anlaştım",
+  "proCancelReasonSchedule": "Takvimim uygun değil",
+  "proCancelReasonCannot": "İşi yapamayacağım",
+  "proCancelReasonCustomer": "Müşteriye ulaşamıyorum",
+  "cancelSubmit": "İptal et",
+  "cancelRescheduleInstead": "İptal yerine yeni tarih iste",
+  "cancelNotAllowed": "Bu iş artık iptal edilemiyor. Randevu sonrası sorunlarda şikayet açabilirsin.",
+  "cancelConfirmCustomer": "Bu işlem geri alınamaz. {amount} kartına iade edilir.",
+  "@cancelConfirmCustomer": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelConfirmPro": "Bu işlem geri alınamaz. Müşteriye {amount} iade edilir ve talep yeniden açılır.",
+  "@cancelConfirmPro": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelConfirmAction": "İşi iptal et",
+  "cancelConfirmKeep": "Vazgeç",
+  "completeTitle": "Teslim onayı",
+  "completeIntro": "Usta işi bitirdiğini bildirdi. Notu ve fotoğrafları kontrol et, sorun yoksa onayla.",
+  "completeProNote": "Ustanın notu",
+  "completeNoNote": "Usta not eklemedi.",
+  "completeProPhotos": "Ustanın fotoğrafları",
+  "completeAutoNote": "Onaylamazsan {date} tarihinde otomatik onaylanır.",
+  "@completeAutoNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "completeConfirmButton": "Onayla",
+  "completeNotAvailable": "Bu iş şu an onay beklemiyor.",
+  "completeConfirmTitle": "Teslimi onaylıyor musun?",
+  "completeConfirmBody": "Onaylarsan {amount} güvence havuzundan {pro} adlı ustaya aktarılır. Bu işlem geri alınamaz.",
+  "@completeConfirmBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "completeConfirmAction": "Onayla ve aktar",
+  "confirmCompletion": "Teslimi onayla",
+  "complainAction": "Sorun bildir",
+  "reviewTitle": "Puanla",
+  "reviewAction": "Puan ver",
+  "reviewIntro": "{pro} ile deneyimin nasıldı?",
+  "@reviewIntro": {
+    "placeholders": {
+      "pro": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewStarsTitle": "Puanın",
+  "reviewStarsRequired": "Devam etmek için yıldız ver.",
+  "reviewTagsTitle": "Neler iyiydi?",
+  "reviewTagOnTime": "Zamanında geldi",
+  "reviewTagCleanWork": "Temiz çalıştı",
+  "reviewTagFairPrice": "Fiyat adildi",
+  "reviewTagGoodCommunication": "İletişim iyiydi",
+  "reviewTagPolite": "Saygılıydı",
+  "reviewCommentLabel": "Yorumun (isteğe bağlı)",
+  "reviewAnonymous": "Adım görünmesin",
+  "reviewAnonymousHelp": "Yorumun ustanın profilinde ismin olmadan görünür.",
+  "reviewPublish": "Yayınla",
+  "reviewSkip": "Şimdi değil",
+  "reviewAlreadyTitle": "Puanını verdin",
+  "reviewAlreadyBody": "Bu iş için puan verildi. Teşekkürler.",
+  "reviewNotAvailableTitle": "Şu an puanlanamıyor",
+  "reviewNotAvailableBody": "İş tamamlandıktan sonra puan verebilirsin.",
+  "yourReview": "Puanın",
+  "complaintTitle": "Sorun bildir",
+  "complaintIntro": "Yaşadığın sorunu anlat. Şikayet açıldığında ödeme güvence havuzunda bekler ve ekibimiz inceler.",
+  "complaintReasonTitle": "Neden",
+  "complaintReasonNoShow": "Usta gelmedi",
+  "complaintReasonIncomplete": "İş eksik ya da hatalı",
+  "complaintReasonExtraCharge": "Ek ücret istendi",
+  "complaintReasonRude": "Saygısız davranış",
+  "complaintReasonOther": "Diğer",
+  "complaintDescription": "Açıklama",
+  "complaintDescriptionHelp": "{count}/{min} karakter (en az)",
+  "@complaintDescriptionHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintDescriptionShort": "Açıklama en az {min} karakter olmalı. Ne olduğunu biraz daha anlat.",
+  "@complaintDescriptionShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintEvidenceTitle": "Kanıt fotoğrafları",
+  "complaintEvidenceHelp": "İsteğe bağlı, en fazla {max} fotoğraf.",
+  "@complaintEvidenceHelp": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "complaintAgree": "Şikayet incelenirken ödemenin güvence havuzunda bekleyeceğini anladım.",
+  "complaintSubmit": "Şikayeti gönder",
+  "complaintPhotosPending": "Fotoğraflar yüklenirken bekle ya da hatalı olanı kaldır.",
+  "complaintConfirmTitle": "Şikayeti göndermek istiyor musun?",
+  "complaintConfirmBody": "Şikayet gönderilince iş inceleme durumuna geçer ve ödeme güvence havuzunda bekler. Bu işlem geri alınamaz.",
+  "complaintConfirmAction": "Şikayeti gönder",
+  "complaintNotAvailableTitle": "Şikayet açılamıyor",
+  "complaintNotAvailableBody": "Bu iş için şu an şikayet açılamıyor. Daha önce açılmış olabilir.",
+  "complaintStatusTitle": "Şikayet durumu",
+  "complaintStatusOpen": "Alındı",
+  "complaintStatusInReview": "İnceleniyor",
+  "complaintStatusResolved": "Sonuçlandı",
+  "complaintStatusDismissed": "Reddedildi",
+  "complaintExplainOpen": "Şikayetin alındı. Ekibimiz inceleme için sıraya aldı. Bu sırada ödeme güvence havuzunda bekler.",
+  "complaintExplainInReview": "Ekibimiz şikayetini inceliyor. Sonuç belli olunca burada görünür.",
+  "complaintExplainResolved": "Şikayetin sonuçlandı. Karar ve gerekçesi aşağıda.",
+  "complaintExplainDismissed": "Şikayetin değerlendirildi ve kabul edilmedi. Gerekçesi aşağıda.",
+  "complaintCreatedAt": "Açılış",
+  "complaintDecisionTitle": "Karar",
+  "complaintGoChat": "Sohbete git",
+  "complaintCardTitle": "Şikayet {code}",
+  "@complaintCardTitle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "chatEntryTitle": "Mesajlar",
+  "chatOpen": "Sohbeti aç",
+  "chatEmptyTitle": "Henüz mesaj yok",
+  "chatEmptyBody": "İlk mesajı sen yaz. Telefon numaraları paylaşılmaz; iletişim buradan yürür.",
+  "chatReadOnlyBody": "Bu sohbet salt okunur: iş kapandıktan 30 gün sonra yeni mesaj yazılamaz.",
+  "chatInputLabel": "Mesaj yaz",
+  "chatInputHint": "Mesajını yaz",
+  "chatSend": "Gönder",
+  "chatAttachPhoto": "Fotoğraf ekle",
+  "chatPhotoBody": "Fotoğraf",
+  "chatSending": "Gönderiliyor",
+  "chatSendFailed": "Gönderilemedi.",
+  "chatRetry": "Tekrar dene",
+  "chatDiscard": "Sil",
+  "chatRead": "Okundu",
+  "chatSent": "Gönderildi",
+  "conversationsEmptyTitle": "Henüz konuşma yok",
+  "conversationsEmptyBody": "Bir teklifi kabul edip ödeme yaptığında ustayla buradan yazışırsın.",
+  "conversationsEmptyBodyPro": "Bir teklifin kabul edilince müşteriyle buradan yazışırsın.",
+  "conversationsGoRequests": "Taleplerime git",
+  "conversationsGoJobs": "İşlerime git",
+  "conversationNoMessages": "Henüz mesaj yok",
+  "jobsEmptyPastTitle": "Geçmiş iş yok",
+  "jobsEmptyPastBody": "Tamamlanan ve iptal edilen işlerin burada görünür.",
+  "proArrived": "Adrese ulaştım",
+  "proStart": "İşe başladım",
+  "proFinish": "İşi bitirdim",
+  "proAddNote": "Not veya fotoğraf ekle",
+  "proOpenMaps": "Haritada aç",
+  "mapsOpenFailed": "Harita uygulaması açılamadı.",
+  "proAutoCompleteNote": "Müşteri onaylamazsa iş {date} tarihinde otomatik onaylanır.",
+  "@proAutoCompleteNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "proNoteTitle": "Not veya fotoğraf",
+  "proNoteIntro": "Müşterinin göreceği bir not ya da fotoğraf ekle.",
+  "proNoteLabel": "Not",
+  "proNoteEmpty": "Bir not yaz ya da fotoğraf ekle.",
+  "proNoteSubmit": "Ekle",
+  "proPhotosTitle": "Fotoğraflar",
+  "proFinishTitle": "İşi bitirdim",
+  "proFinishIntro": "Yaptığın işi kısaca anlat. Müşteri notunu ve fotoğraflarını görüp onaylar.",
+  "proFinishNoteLabel": "Yapılan işin notu",
+  "proFinishNoteHelp": "{count}/{min} karakter (en az)",
+  "@proFinishNoteHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "proFinishNoteShort": "Not en az {min} karakter olmalı.",
+  "@proFinishNoteShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "proFinishPhotosHelp": "İsteğe bağlı, en fazla 5 fotoğraf.",
+  "proFinishSubmit": "İşi bitirdim",
+  "proFinishConfirmTitle": "İşi bitirdiğini bildirmek istiyor musun?",
+  "proFinishConfirmBody": "Müşteriye onay bildirimi gider. Bu işlem geri alınamaz.",
+  "proFinishConfirmAction": "Bildir",
+  "proFinishedTitle": "Teslim gönderildi",
+  "proFinishedHeadline": "Teslimini gönderdin",
+  "proFinishedBody": "Müşteri onaylayınca ödeme güvence havuzundan sana aktarılır.",
+  "proBackToJobs": "İşlerime dön",
+  "proCancelledTitle": "İş iptal edildi",
+  "proCancelledHeadline": "İşi iptal ettin",
+  "proCancelledBody": "Müşteriye iade yapıldı ve talep yeniden açıldı. İptaller profilinde görünür.",
+  "earningsTitle": "Kazançlar",
+  "earningsReleased": "Sana aktarılan",
+  "earningsPending": "Güvence havuzunda bekleyen",
+  "earningsFeeTotal": "Toplam hizmet bedeli",
+  "earningsPendingHelp": "Bekleyen tutar, müşteri onayladığında ya da şikayet sonuçlandığında hesabına geçer.",
+  "earningsList": "İşler",
+  "earningsEmptyTitle": "Henüz kazanç yok",
+  "earningsEmptyBody": "Teklifin kabul edilip iş tamamlanınca kazancın burada görünür.",
+  "earningPending": "Bekliyor",
+  "earningReleased": "Aktarıldı",
+  "earningRefunded": "İade edildi",
+  "earningSplit": "Paylaştırıldı",
+  "offerFormRequestClosed": "Bu talep artık teklif almıyor. Ekran güncellendi."
 }

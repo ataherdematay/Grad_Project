@@ -640,11 +640,11 @@ void main() {
       'GET /pros/po1': (_) => json(200, proPublicJson()),
     });
 
-    test('ödeme bayrağı bu dalgada kapalı', () {
-      expect(kPaymentsEnabled, isFalse);
+    test('ödeme bayrağı açık', () {
+      expect(kPaymentsEnabled, isTrue);
     });
 
-    testWidgets('kPaymentsEnabled=false iken kabul düğmesi yok, soru sor yok', (
+    testWidgets('kabul düğmesi kabul onayı rotasını açar, soru sor yok', (
       t,
     ) async {
       await pumpApp(
@@ -657,7 +657,7 @@ void main() {
       expect(find.text('Toplam tutar (KDV dahil)'), findsOneWidget);
       expect(find.text('₺2.450'), findsOneWidget);
       expect(find.text('Küresel vana × 2'), findsOneWidget);
-      expect(find.text('Teklifi kabul et'), findsNothing);
+      expect(btn('Teklifi kabul et'), findsOneWidget);
       expect(find.textContaining('soru'), findsNothing);
       expect(btn('Teklifi reddet'), findsOneWidget);
       expect(btn('Profili görüntüle'), findsOneWidget);

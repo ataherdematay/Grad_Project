@@ -12,6 +12,7 @@ import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
+import '../jobs/job_ui.dart';
 
 /// Talep kartı: başlık, kategori, konum, etiketler.
 class RequestCard extends ConsumerWidget {
@@ -78,6 +79,9 @@ class CustomerHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final async = ref.watch(requestsProvider('active'));
+    final jobs = ref.watch(
+      jobsProvider(const JobsQuery(PartyRole.customer, 'active')),
+    );
     final me = ref.watch(
       sessionProvider.select((s) => s.me?.fullName.split(' ').first),
     );
@@ -86,14 +90,20 @@ class CustomerHomeScreen extends ConsumerWidget {
       body: SafeArea(
         child: AsyncView<Paged<RequestSummary>>(
           value: async,
-          onRetry: () => ref.invalidate(requestsProvider),
+          onRetry: () {
+            ref
+              ..invalidate(requestsProvider)
+              ..invalidate(jobsProvider);
+          },
           builder: (context, page) {
             final open =
                 page.items.where((r) => r.status == RequestStatus.open).toList()
                   ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
             return RefreshIndicator(
-              onRefresh: () async =>
-                  ref.refresh(requestsProvider('active').future),
+              onRefresh: () {
+                ref.invalidate(jobsProvider);
+                return ref.refresh(requestsProvider('active').future);
+              },
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(AppSpacing.md),
@@ -101,6 +111,28 @@ class CustomerHomeScreen extends ConsumerWidget {
                   if (me != null)
                     Text(l.homeGreeting(me), style: AppTypography.screenTitle),
                   const SizedBox(height: AppSpacing.md),
+                  if (jobs.value != null && jobs.requireValue.isNotEmpty) ...[
+                    Text(l.homeActiveJob, style: AppTypography.section),
+                    const SizedBox(height: AppSpacing.xs),
+                    JobCard(
+                      job:
+                          (jobs.requireValue.toList()..sort(
+                                (a, b) => b.updatedAt.compareTo(a.updatedAt),
+                              ))
+                              .first,
+                      onTap: () async {
+                        final id =
+                            (jobs.requireValue.toList()..sort(
+                                  (a, b) => b.updatedAt.compareTo(a.updatedAt),
+                                ))
+                                .first
+                                .id;
+                        await context.push('/c/jobs/$id');
+                        ref.invalidate(jobsProvider);
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   if (open.isEmpty)
                     AppCard(
                       child: Column(
@@ -247,8 +279,16 @@ class _RequestList extends ConsumerWidget {
                     return RequestCard(
                       item: r,
                       onTap: () async {
-                        await context.push('/c/requests/${r.id}');
-                        ref.invalidate(requestsProvider);
+                        // Atanmış talep işin kendi ekranını açar.
+                        final job = r.status == RequestStatus.assigned
+                            ? r.jobId
+                            : null;
+                        await context.push(
+                          job != null ? '/c/jobs/$job' : '/c/requests/${r.id}',
+                        );
+                        ref
+                          ..invalidate(requestsProvider)
+                          ..invalidate(jobsProvider);
                       },
                     );
                   },

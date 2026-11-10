@@ -5,9 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'providers.dart';
 
-/// Ödemeler sonraki dalgada gelecek. `false` iken "Teklifi kabul et" hiç
-/// görünmez.
-const bool kPaymentsEnabled = false;
+/// Ödemeler açık. `false` yapılırsa "Teklifi kabul et" hiç görünmez.
+const bool kPaymentsEnabled = true;
 
 /// Listeler sayfalama yerine tek istekte en çok bu kadar kayıt ister
 /// (sunucu varsayılanı 20, üst sınırı 50).
@@ -155,6 +154,68 @@ final proOffersProvider = FutureProvider.autoDispose
       (ref, status) => _api(ref).pro.offers(status: status, limit: kListLimit),
       retry: noRetry,
     );
+
+/// İş listesi sorgusu: bakan rol + `active` / `past`.
+class JobsQuery {
+  const JobsQuery(this.role, this.scope);
+
+  final PartyRole role;
+  final String scope;
+
+  @override
+  bool operator ==(Object other) =>
+      other is JobsQuery && other.role == role && other.scope == scope;
+
+  @override
+  int get hashCode => Object.hash(role, scope);
+}
+
+final jobsProvider = FutureProvider.autoDispose
+    .family<List<JobSummary>, JobsQuery>(
+      (ref, q) async =>
+          (await _api(ref).jobs.list(role: q.role, scope: q.scope)).items,
+      retry: noRetry,
+    );
+
+final jobProvider = FutureProvider.autoDispose.family<JobDetail, String>(
+  (ref, id) => _api(ref).jobs.get(id),
+  retry: noRetry,
+);
+
+final paymentProvider = FutureProvider.autoDispose
+    .family<PaymentResult, String>(
+      (ref, id) => _api(ref).payments.get(id),
+      retry: noRetry,
+    );
+
+final complaintProvider = FutureProvider.autoDispose.family<Complaint, String>(
+  (ref, id) => _api(ref).complaints.get(id),
+  retry: noRetry,
+);
+
+final conversationsProvider = FutureProvider.autoDispose
+    .family<List<Conversation>, PartyRole>(
+      (ref, role) => _api(ref).chat.conversations(role),
+      retry: noRetry,
+    );
+
+final earningsProvider = FutureProvider.autoDispose<Earnings>(
+  (ref) => _api(ref).pro.earnings(),
+  retry: noRetry,
+);
+
+/// İş, ödeme ve sohbet verisini geçersiz kılar; işi etkileyen her eylemden
+/// sonra çağrılır (talep ve teklif verisi de değişmiş olabilir).
+void invalidateJobData(WidgetRef ref) {
+  invalidateRequestData(ref);
+  ref
+    ..invalidate(jobsProvider)
+    ..invalidate(jobProvider)
+    ..invalidate(paymentProvider)
+    ..invalidate(complaintProvider)
+    ..invalidate(conversationsProvider)
+    ..invalidate(earningsProvider);
+}
 
 /// Durum değiştiren işlemden sonra talep ve teklif sağlayıcılarını geçersiz
 /// kılar (NAVIGATION_RULES §4).

@@ -230,6 +230,13 @@ class _ProProfileState extends ConsumerState<ProProfileScreen> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 AppButton(
+                  label: l.earningsTitle,
+                  icon: Icons.payments_outlined,
+                  variant: AppButtonVariant.secondary,
+                  onPressed: () => context.push('/p/earnings'),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                AppButton(
                   label: l.myOffersTitle,
                   icon: Icons.local_offer_outlined,
                   variant: AppButtonVariant.secondary,

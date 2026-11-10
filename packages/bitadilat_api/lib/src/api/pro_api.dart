@@ -124,6 +124,14 @@ class ProApi {
     return decodeApi(() => OfferDetail.fromJson(res.data!));
   }
 
+  /// Kazançlar: aktarılan, bekleyen (emanette) ve hizmet bedeli toplamları.
+  Future<Earnings> earnings() async {
+    final res = await guardApi(
+      () => _dio.get<Map<String, dynamic>>('$_base/earnings'),
+    );
+    return decodeApi(() => Earnings.fromJson(res.data!));
+  }
+
   /// Teklif detayı (usta kendi teklifini `GET /offers/{id}` ile de açabilir).
   Future<OfferDetail> offer(String offerId) async {
     final res = await guardApi(

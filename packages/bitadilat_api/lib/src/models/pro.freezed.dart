@@ -583,7 +583,8 @@ as String?,
 /// @nodoc
 mixin _$ProRequestDetail {
 
-@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; String get districtName; String get neighborhood; DateTime get createdAt; DateTime? get preferredFrom; DateTime? get preferredTo; int get photoCount; int get offerCount;@JsonKey(fromJson: idFromJsonNullable) String? get myOfferId; String get description; List<MediaRef> get photos; List<RequestAnswer> get answers; OfferDetail? get myOffer;
+@JsonKey(fromJson: idFromJson) String get id; String get publicCode; String get title;@JsonKey(fromJson: idFromJson) String get categoryId; RequestUrgency get urgency; String get districtName; String get neighborhood; DateTime get createdAt; DateTime? get preferredFrom; DateTime? get preferredTo; int get photoCount; int get offerCount;@JsonKey(fromJson: idFromJsonNullable) String? get myOfferId; String get description; List<MediaRef> get photos; List<RequestAnswer> get answers; OfferDetail? get myOffer;/// Talep durumu (`ASSIGNED` ise teklif artık verilemez).
+ RequestStatus? get status;
 /// Create a copy of ProRequestDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -596,16 +597,16 @@ $ProRequestDetailCopyWith<ProRequestDetail> get copyWith => _$ProRequestDetailCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProRequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&(identical(other.photoCount, photoCount) || other.photoCount == photoCount)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.myOfferId, myOfferId) || other.myOfferId == myOfferId)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.myOffer, myOffer) || other.myOffer == myOffer));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProRequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&(identical(other.photoCount, photoCount) || other.photoCount == photoCount)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.myOfferId, myOfferId) || other.myOfferId == myOfferId)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.myOffer, myOffer) || other.myOffer == myOffer)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,districtName,neighborhood,createdAt,preferredFrom,preferredTo,photoCount,offerCount,myOfferId,description,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),myOffer);
+int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,districtName,neighborhood,createdAt,preferredFrom,preferredTo,photoCount,offerCount,myOfferId,description,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),myOffer,status);
 
 @override
 String toString() {
-  return 'ProRequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photoCount: $photoCount, offerCount: $offerCount, myOfferId: $myOfferId, description: $description, photos: $photos, answers: $answers, myOffer: $myOffer)';
+  return 'ProRequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photoCount: $photoCount, offerCount: $offerCount, myOfferId: $myOfferId, description: $description, photos: $photos, answers: $answers, myOffer: $myOffer, status: $status)';
 }
 
 
@@ -616,7 +617,7 @@ abstract mixin class $ProRequestDetailCopyWith<$Res>  {
   factory $ProRequestDetailCopyWith(ProRequestDetail value, $Res Function(ProRequestDetail) _then) = _$ProRequestDetailCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, String districtName, String neighborhood, DateTime createdAt, DateTime? preferredFrom, DateTime? preferredTo, int photoCount, int offerCount,@JsonKey(fromJson: idFromJsonNullable) String? myOfferId, String description, List<MediaRef> photos, List<RequestAnswer> answers, OfferDetail? myOffer
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, String districtName, String neighborhood, DateTime createdAt, DateTime? preferredFrom, DateTime? preferredTo, int photoCount, int offerCount,@JsonKey(fromJson: idFromJsonNullable) String? myOfferId, String description, List<MediaRef> photos, List<RequestAnswer> answers, OfferDetail? myOffer, RequestStatus? status
 });
 
 
@@ -633,7 +634,7 @@ class _$ProRequestDetailCopyWithImpl<$Res>
 
 /// Create a copy of ProRequestDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photoCount = null,Object? offerCount = null,Object? myOfferId = freezed,Object? description = null,Object? photos = null,Object? answers = null,Object? myOffer = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photoCount = null,Object? offerCount = null,Object? myOfferId = freezed,Object? description = null,Object? photos = null,Object? answers = null,Object? myOffer = freezed,Object? status = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -652,7 +653,8 @@ as String?,description: null == description ? _self.description : description //
 as String,photos: null == photos ? _self.photos : photos // ignore: cast_nullable_to_non_nullable
 as List<MediaRef>,answers: null == answers ? _self.answers : answers // ignore: cast_nullable_to_non_nullable
 as List<RequestAnswer>,myOffer: freezed == myOffer ? _self.myOffer : myOffer // ignore: cast_nullable_to_non_nullable
-as OfferDetail?,
+as OfferDetail?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as RequestStatus?,
   ));
 }
 /// Create a copy of ProRequestDetail
@@ -749,10 +751,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer,  RequestStatus? status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProRequestDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer,_that.status);case _:
   return orElse();
 
 }
@@ -770,10 +772,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer,  RequestStatus? status)  $default,) {final _that = this;
 switch (_that) {
 case _ProRequestDetail():
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer,_that.status);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -790,10 +792,10 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode,  String title, @JsonKey(fromJson: idFromJson)  String categoryId,  RequestUrgency urgency,  String districtName,  String neighborhood,  DateTime createdAt,  DateTime? preferredFrom,  DateTime? preferredTo,  int photoCount,  int offerCount, @JsonKey(fromJson: idFromJsonNullable)  String? myOfferId,  String description,  List<MediaRef> photos,  List<RequestAnswer> answers,  OfferDetail? myOffer,  RequestStatus? status)?  $default,) {final _that = this;
 switch (_that) {
 case _ProRequestDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer);case _:
+return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urgency,_that.districtName,_that.neighborhood,_that.createdAt,_that.preferredFrom,_that.preferredTo,_that.photoCount,_that.offerCount,_that.myOfferId,_that.description,_that.photos,_that.answers,_that.myOffer,_that.status);case _:
   return null;
 
 }
@@ -805,7 +807,7 @@ return $default(_that.id,_that.publicCode,_that.title,_that.categoryId,_that.urg
 @JsonSerializable()
 
 class _ProRequestDetail implements ProRequestDetail {
-  const _ProRequestDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.districtName, required this.neighborhood, required this.createdAt, this.preferredFrom, this.preferredTo, this.photoCount = 0, this.offerCount = 0, @JsonKey(fromJson: idFromJsonNullable) this.myOfferId, required this.description, this.photos = const <MediaRef>[], this.answers = const <RequestAnswer>[], this.myOffer});
+  const _ProRequestDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, required this.title, @JsonKey(fromJson: idFromJson) required this.categoryId, required this.urgency, required this.districtName, required this.neighborhood, required this.createdAt, this.preferredFrom, this.preferredTo, this.photoCount = 0, this.offerCount = 0, @JsonKey(fromJson: idFromJsonNullable) this.myOfferId, required this.description, this.photos = const <MediaRef>[], this.answers = const <RequestAnswer>[], this.myOffer, this.status});
   factory _ProRequestDetail.fromJson(Map<String, dynamic> json) => _$ProRequestDetailFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -825,6 +827,8 @@ class _ProRequestDetail implements ProRequestDetail {
 @override@JsonKey() final  List<MediaRef> photos;
 @override@JsonKey() final  List<RequestAnswer> answers;
 @override final  OfferDetail? myOffer;
+/// Talep durumu (`ASSIGNED` ise teklif artık verilemez).
+@override final  RequestStatus? status;
 
 /// Create a copy of ProRequestDetail
 /// with the given fields replaced by the non-null parameter values.
@@ -839,16 +843,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProRequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&(identical(other.photoCount, photoCount) || other.photoCount == photoCount)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.myOfferId, myOfferId) || other.myOfferId == myOfferId)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.myOffer, myOffer) || other.myOffer == myOffer));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProRequestDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.urgency, urgency) || other.urgency == urgency)&&(identical(other.districtName, districtName) || other.districtName == districtName)&&(identical(other.neighborhood, neighborhood) || other.neighborhood == neighborhood)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.preferredFrom, preferredFrom) || other.preferredFrom == preferredFrom)&&(identical(other.preferredTo, preferredTo) || other.preferredTo == preferredTo)&&(identical(other.photoCount, photoCount) || other.photoCount == photoCount)&&(identical(other.offerCount, offerCount) || other.offerCount == offerCount)&&(identical(other.myOfferId, myOfferId) || other.myOfferId == myOfferId)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photos, photos)&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.myOffer, myOffer) || other.myOffer == myOffer)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,districtName,neighborhood,createdAt,preferredFrom,preferredTo,photoCount,offerCount,myOfferId,description,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),myOffer);
+int get hashCode => Object.hash(runtimeType,id,publicCode,title,categoryId,urgency,districtName,neighborhood,createdAt,preferredFrom,preferredTo,photoCount,offerCount,myOfferId,description,const DeepCollectionEquality().hash(photos),const DeepCollectionEquality().hash(answers),myOffer,status);
 
 @override
 String toString() {
-  return 'ProRequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photoCount: $photoCount, offerCount: $offerCount, myOfferId: $myOfferId, description: $description, photos: $photos, answers: $answers, myOffer: $myOffer)';
+  return 'ProRequestDetail(id: $id, publicCode: $publicCode, title: $title, categoryId: $categoryId, urgency: $urgency, districtName: $districtName, neighborhood: $neighborhood, createdAt: $createdAt, preferredFrom: $preferredFrom, preferredTo: $preferredTo, photoCount: $photoCount, offerCount: $offerCount, myOfferId: $myOfferId, description: $description, photos: $photos, answers: $answers, myOffer: $myOffer, status: $status)';
 }
 
 
@@ -859,7 +863,7 @@ abstract mixin class _$ProRequestDetailCopyWith<$Res> implements $ProRequestDeta
   factory _$ProRequestDetailCopyWith(_ProRequestDetail value, $Res Function(_ProRequestDetail) _then) = __$ProRequestDetailCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, String districtName, String neighborhood, DateTime createdAt, DateTime? preferredFrom, DateTime? preferredTo, int photoCount, int offerCount,@JsonKey(fromJson: idFromJsonNullable) String? myOfferId, String description, List<MediaRef> photos, List<RequestAnswer> answers, OfferDetail? myOffer
+@JsonKey(fromJson: idFromJson) String id, String publicCode, String title,@JsonKey(fromJson: idFromJson) String categoryId, RequestUrgency urgency, String districtName, String neighborhood, DateTime createdAt, DateTime? preferredFrom, DateTime? preferredTo, int photoCount, int offerCount,@JsonKey(fromJson: idFromJsonNullable) String? myOfferId, String description, List<MediaRef> photos, List<RequestAnswer> answers, OfferDetail? myOffer, RequestStatus? status
 });
 
 
@@ -876,7 +880,7 @@ class __$ProRequestDetailCopyWithImpl<$Res>
 
 /// Create a copy of ProRequestDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photoCount = null,Object? offerCount = null,Object? myOfferId = freezed,Object? description = null,Object? photos = null,Object? answers = null,Object? myOffer = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? title = null,Object? categoryId = null,Object? urgency = null,Object? districtName = null,Object? neighborhood = null,Object? createdAt = null,Object? preferredFrom = freezed,Object? preferredTo = freezed,Object? photoCount = null,Object? offerCount = null,Object? myOfferId = freezed,Object? description = null,Object? photos = null,Object? answers = null,Object? myOffer = freezed,Object? status = freezed,}) {
   return _then(_ProRequestDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -895,7 +899,8 @@ as String?,description: null == description ? _self.description : description //
 as String,photos: null == photos ? _self.photos : photos // ignore: cast_nullable_to_non_nullable
 as List<MediaRef>,answers: null == answers ? _self.answers : answers // ignore: cast_nullable_to_non_nullable
 as List<RequestAnswer>,myOffer: freezed == myOffer ? _self.myOffer : myOffer // ignore: cast_nullable_to_non_nullable
-as OfferDetail?,
+as OfferDetail?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as RequestStatus?,
   ));
 }
 
@@ -3716,6 +3721,562 @@ as List<String>,comment: freezed == comment ? _self.comment : comment // ignore:
 as String?,authorDisplay: null == authorDisplay ? _self.authorDisplay : authorDisplay // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$EarningsItem {
+
+@JsonKey(fromJson: idFromJson) String get jobId; String get publicCode; String get title;@MoneyConverter() Money get totalAmount;@MoneyConverter() Money get serviceFee;@MoneyConverter() Money get netEarning; EarningStatus get status; DateTime get date;
+/// Create a copy of EarningsItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EarningsItemCopyWith<EarningsItem> get copyWith => _$EarningsItemCopyWithImpl<EarningsItem>(this as EarningsItem, _$identity);
+
+  /// Serializes this EarningsItem to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EarningsItem&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,publicCode,title,totalAmount,serviceFee,netEarning,status,date);
+
+@override
+String toString() {
+  return 'EarningsItem(jobId: $jobId, publicCode: $publicCode, title: $title, totalAmount: $totalAmount, serviceFee: $serviceFee, netEarning: $netEarning, status: $status, date: $date)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EarningsItemCopyWith<$Res>  {
+  factory $EarningsItemCopyWith(EarningsItem value, $Res Function(EarningsItem) _then) = _$EarningsItemCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(fromJson: idFromJson) String jobId, String publicCode, String title,@MoneyConverter() Money totalAmount,@MoneyConverter() Money serviceFee,@MoneyConverter() Money netEarning, EarningStatus status, DateTime date
+});
+
+
+
+
+}
+/// @nodoc
+class _$EarningsItemCopyWithImpl<$Res>
+    implements $EarningsItemCopyWith<$Res> {
+  _$EarningsItemCopyWithImpl(this._self, this._then);
+
+  final EarningsItem _self;
+  final $Res Function(EarningsItem) _then;
+
+/// Create a copy of EarningsItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? jobId = null,Object? publicCode = null,Object? title = null,Object? totalAmount = null,Object? serviceFee = null,Object? netEarning = null,Object? status = null,Object? date = null,}) {
+  return _then(_self.copyWith(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as Money,serviceFee: null == serviceFee ? _self.serviceFee : serviceFee // ignore: cast_nullable_to_non_nullable
+as Money,netEarning: null == netEarning ? _self.netEarning : netEarning // ignore: cast_nullable_to_non_nullable
+as Money,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as EarningStatus,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EarningsItem].
+extension EarningsItemPatterns on EarningsItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EarningsItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EarningsItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EarningsItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _EarningsItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EarningsItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EarningsItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String jobId,  String publicCode,  String title, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money serviceFee, @MoneyConverter()  Money netEarning,  EarningStatus status,  DateTime date)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EarningsItem() when $default != null:
+return $default(_that.jobId,_that.publicCode,_that.title,_that.totalAmount,_that.serviceFee,_that.netEarning,_that.status,_that.date);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String jobId,  String publicCode,  String title, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money serviceFee, @MoneyConverter()  Money netEarning,  EarningStatus status,  DateTime date)  $default,) {final _that = this;
+switch (_that) {
+case _EarningsItem():
+return $default(_that.jobId,_that.publicCode,_that.title,_that.totalAmount,_that.serviceFee,_that.netEarning,_that.status,_that.date);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String jobId,  String publicCode,  String title, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money serviceFee, @MoneyConverter()  Money netEarning,  EarningStatus status,  DateTime date)?  $default,) {final _that = this;
+switch (_that) {
+case _EarningsItem() when $default != null:
+return $default(_that.jobId,_that.publicCode,_that.title,_that.totalAmount,_that.serviceFee,_that.netEarning,_that.status,_that.date);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EarningsItem implements EarningsItem {
+  const _EarningsItem({@JsonKey(fromJson: idFromJson) required this.jobId, required this.publicCode, required this.title, @MoneyConverter() required this.totalAmount, @MoneyConverter() required this.serviceFee, @MoneyConverter() required this.netEarning, required this.status, required this.date});
+  factory _EarningsItem.fromJson(Map<String, dynamic> json) => _$EarningsItemFromJson(json);
+
+@override@JsonKey(fromJson: idFromJson) final  String jobId;
+@override final  String publicCode;
+@override final  String title;
+@override@MoneyConverter() final  Money totalAmount;
+@override@MoneyConverter() final  Money serviceFee;
+@override@MoneyConverter() final  Money netEarning;
+@override final  EarningStatus status;
+@override final  DateTime date;
+
+/// Create a copy of EarningsItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EarningsItemCopyWith<_EarningsItem> get copyWith => __$EarningsItemCopyWithImpl<_EarningsItem>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EarningsItemToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EarningsItem&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,publicCode,title,totalAmount,serviceFee,netEarning,status,date);
+
+@override
+String toString() {
+  return 'EarningsItem(jobId: $jobId, publicCode: $publicCode, title: $title, totalAmount: $totalAmount, serviceFee: $serviceFee, netEarning: $netEarning, status: $status, date: $date)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EarningsItemCopyWith<$Res> implements $EarningsItemCopyWith<$Res> {
+  factory _$EarningsItemCopyWith(_EarningsItem value, $Res Function(_EarningsItem) _then) = __$EarningsItemCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(fromJson: idFromJson) String jobId, String publicCode, String title,@MoneyConverter() Money totalAmount,@MoneyConverter() Money serviceFee,@MoneyConverter() Money netEarning, EarningStatus status, DateTime date
+});
+
+
+
+
+}
+/// @nodoc
+class __$EarningsItemCopyWithImpl<$Res>
+    implements _$EarningsItemCopyWith<$Res> {
+  __$EarningsItemCopyWithImpl(this._self, this._then);
+
+  final _EarningsItem _self;
+  final $Res Function(_EarningsItem) _then;
+
+/// Create a copy of EarningsItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? jobId = null,Object? publicCode = null,Object? title = null,Object? totalAmount = null,Object? serviceFee = null,Object? netEarning = null,Object? status = null,Object? date = null,}) {
+  return _then(_EarningsItem(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as Money,serviceFee: null == serviceFee ? _self.serviceFee : serviceFee // ignore: cast_nullable_to_non_nullable
+as Money,netEarning: null == netEarning ? _self.netEarning : netEarning // ignore: cast_nullable_to_non_nullable
+as Money,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as EarningStatus,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$Earnings {
+
+@MoneyConverter() Money get releasedTotal;@MoneyConverter() Money get pendingTotal;@MoneyConverter() Money get serviceFeeTotal; List<EarningsItem> get items;
+/// Create a copy of Earnings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EarningsCopyWith<Earnings> get copyWith => _$EarningsCopyWithImpl<Earnings>(this as Earnings, _$identity);
+
+  /// Serializes this Earnings to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Earnings&&(identical(other.releasedTotal, releasedTotal) || other.releasedTotal == releasedTotal)&&(identical(other.pendingTotal, pendingTotal) || other.pendingTotal == pendingTotal)&&(identical(other.serviceFeeTotal, serviceFeeTotal) || other.serviceFeeTotal == serviceFeeTotal)&&const DeepCollectionEquality().equals(other.items, items));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,releasedTotal,pendingTotal,serviceFeeTotal,const DeepCollectionEquality().hash(items));
+
+@override
+String toString() {
+  return 'Earnings(releasedTotal: $releasedTotal, pendingTotal: $pendingTotal, serviceFeeTotal: $serviceFeeTotal, items: $items)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EarningsCopyWith<$Res>  {
+  factory $EarningsCopyWith(Earnings value, $Res Function(Earnings) _then) = _$EarningsCopyWithImpl;
+@useResult
+$Res call({
+@MoneyConverter() Money releasedTotal,@MoneyConverter() Money pendingTotal,@MoneyConverter() Money serviceFeeTotal, List<EarningsItem> items
+});
+
+
+
+
+}
+/// @nodoc
+class _$EarningsCopyWithImpl<$Res>
+    implements $EarningsCopyWith<$Res> {
+  _$EarningsCopyWithImpl(this._self, this._then);
+
+  final Earnings _self;
+  final $Res Function(Earnings) _then;
+
+/// Create a copy of Earnings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? releasedTotal = null,Object? pendingTotal = null,Object? serviceFeeTotal = null,Object? items = null,}) {
+  return _then(_self.copyWith(
+releasedTotal: null == releasedTotal ? _self.releasedTotal : releasedTotal // ignore: cast_nullable_to_non_nullable
+as Money,pendingTotal: null == pendingTotal ? _self.pendingTotal : pendingTotal // ignore: cast_nullable_to_non_nullable
+as Money,serviceFeeTotal: null == serviceFeeTotal ? _self.serviceFeeTotal : serviceFeeTotal // ignore: cast_nullable_to_non_nullable
+as Money,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<EarningsItem>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Earnings].
+extension EarningsPatterns on Earnings {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Earnings value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Earnings() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Earnings value)  $default,){
+final _that = this;
+switch (_that) {
+case _Earnings():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Earnings value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Earnings() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MoneyConverter()  Money releasedTotal, @MoneyConverter()  Money pendingTotal, @MoneyConverter()  Money serviceFeeTotal,  List<EarningsItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Earnings() when $default != null:
+return $default(_that.releasedTotal,_that.pendingTotal,_that.serviceFeeTotal,_that.items);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MoneyConverter()  Money releasedTotal, @MoneyConverter()  Money pendingTotal, @MoneyConverter()  Money serviceFeeTotal,  List<EarningsItem> items)  $default,) {final _that = this;
+switch (_that) {
+case _Earnings():
+return $default(_that.releasedTotal,_that.pendingTotal,_that.serviceFeeTotal,_that.items);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MoneyConverter()  Money releasedTotal, @MoneyConverter()  Money pendingTotal, @MoneyConverter()  Money serviceFeeTotal,  List<EarningsItem> items)?  $default,) {final _that = this;
+switch (_that) {
+case _Earnings() when $default != null:
+return $default(_that.releasedTotal,_that.pendingTotal,_that.serviceFeeTotal,_that.items);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _Earnings implements Earnings {
+  const _Earnings({@MoneyConverter() required this.releasedTotal, @MoneyConverter() required this.pendingTotal, @MoneyConverter() required this.serviceFeeTotal, this.items = const <EarningsItem>[]});
+  factory _Earnings.fromJson(Map<String, dynamic> json) => _$EarningsFromJson(json);
+
+@override@MoneyConverter() final  Money releasedTotal;
+@override@MoneyConverter() final  Money pendingTotal;
+@override@MoneyConverter() final  Money serviceFeeTotal;
+@override@JsonKey() final  List<EarningsItem> items;
+
+/// Create a copy of Earnings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EarningsCopyWith<_Earnings> get copyWith => __$EarningsCopyWithImpl<_Earnings>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EarningsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Earnings&&(identical(other.releasedTotal, releasedTotal) || other.releasedTotal == releasedTotal)&&(identical(other.pendingTotal, pendingTotal) || other.pendingTotal == pendingTotal)&&(identical(other.serviceFeeTotal, serviceFeeTotal) || other.serviceFeeTotal == serviceFeeTotal)&&const DeepCollectionEquality().equals(other.items, items));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,releasedTotal,pendingTotal,serviceFeeTotal,const DeepCollectionEquality().hash(items));
+
+@override
+String toString() {
+  return 'Earnings(releasedTotal: $releasedTotal, pendingTotal: $pendingTotal, serviceFeeTotal: $serviceFeeTotal, items: $items)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EarningsCopyWith<$Res> implements $EarningsCopyWith<$Res> {
+  factory _$EarningsCopyWith(_Earnings value, $Res Function(_Earnings) _then) = __$EarningsCopyWithImpl;
+@override @useResult
+$Res call({
+@MoneyConverter() Money releasedTotal,@MoneyConverter() Money pendingTotal,@MoneyConverter() Money serviceFeeTotal, List<EarningsItem> items
+});
+
+
+
+
+}
+/// @nodoc
+class __$EarningsCopyWithImpl<$Res>
+    implements _$EarningsCopyWith<$Res> {
+  __$EarningsCopyWithImpl(this._self, this._then);
+
+  final _Earnings _self;
+  final $Res Function(_Earnings) _then;
+
+/// Create a copy of Earnings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? releasedTotal = null,Object? pendingTotal = null,Object? serviceFeeTotal = null,Object? items = null,}) {
+  return _then(_Earnings(
+releasedTotal: null == releasedTotal ? _self.releasedTotal : releasedTotal // ignore: cast_nullable_to_non_nullable
+as Money,pendingTotal: null == pendingTotal ? _self.pendingTotal : pendingTotal // ignore: cast_nullable_to_non_nullable
+as Money,serviceFeeTotal: null == serviceFeeTotal ? _self.serviceFeeTotal : serviceFeeTotal // ignore: cast_nullable_to_non_nullable
+as Money,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<EarningsItem>,
   ));
 }
 
