@@ -45,8 +45,10 @@ public interface PaymentGateway {
     enum Status {
         SUCCESS,
         FAILURE,
-        /** 3DS henüz bitmedi (INIT_THREEDS, CALLBACK_THREEDS, WAITING). */
-        IN_PROGRESS
+        /** 3DS henüz bitmedi, tamamlama yapılmadı (INIT_THREEDS, CALLBACK_THREEDS): para çekilmedi. */
+        IN_PROGRESS,
+        /** Banka sonucu bekleniyor (WAITING) veya durum bilinmiyor: para çekilmiş olabilir, kayıt kapatılmaz. */
+        PROCESSING
     }
 
     ThreeDsSession init3ds(ThreeDsRequest request);
@@ -60,7 +62,10 @@ public interface PaymentGateway {
 
     enum RefundState {
         NOT_REFUNDED,
+        /** Kısmi iade yapılmış (ör. elle): tam iade gönderilmez, kayıt elle incelenir. */
         PARTIALLY_REFUNDED,
+        /** Bir iade isteği Craftgate'te sonuç bekliyor: yeni iade gönderilmez, sonra yeniden sorulur. */
+        REFUND_PENDING,
         FULLY_REFUNDED
     }
 

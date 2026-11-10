@@ -1,6 +1,7 @@
 package com.bitadilat.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.clearInvocations;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bitadilat.Wave3TestBase;
@@ -19,14 +21,17 @@ import com.bitadilat.payment.gateway.PaymentGateway.RefundState;
 import com.bitadilat.payment.gateway.PaymentGateway.Status;
 import com.bitadilat.payment.service.PaymentService;
 import com.bitadilat.payment.service.PaymentSweeper;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -90,6 +95,42 @@ class PaymentSweeperTest extends Wave3TestBase {
         sweeper.run(Instant.now().plus(Duration.ofMinutes(10)));
         verify(gateway, times(1)).refundFully(anyLong(), anyString());
         assertThat(state(ref)).isEqualTo("REFUNDED_TO_CUSTOMER/OFFER_EXPIRED/1");
+    }
+
+    @Test
+    void partiallyRefundedPaymentIsNeverSentAFullRefundAndGoesStraightToReview() throws Exception {
+        String ref = orphan(openRequestWithOffer());
+        clearInvocations(gateway);
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        org.mockito.Mockito.doNothing().when(gateway).refundFully(anyLong(), anyString());
+
+        sweeper.run(Instant.now().plus(Duration.ofHours(1)));
+
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        assertThat(state(ref)).startsWith("LOCKED/REFUND_NEEDS_REVIEW/");
+        assertThat(count("select count(*) from payout_ledger where payment_ref = ?", ref)).isZero();
+        clearInvocations(gateway);
+        sweeper.run(Instant.now().plus(Duration.ofDays(2)));
+        verify(gateway, never()).refundState(anyLong());
+    }
+
+    @Test
+    void refundStillPendingAtCraftgateIsNotSentAgainAndIsAskedAgainAfterTheBackoff() throws Exception {
+        String ref = orphan(openRequestWithOffer());
+        clearInvocations(gateway);
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.REFUND_PENDING);
+        org.mockito.Mockito.doNothing().when(gateway).refundFully(anyLong(), anyString());
+
+        Instant t = Instant.now().plus(Duration.ofHours(1));
+        sweeper.run(t);
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        assertThat(state(ref)).isEqualTo("LOCKED/OFFER_EXPIRED/2");
+
+        // İade sonuçlandı: sonraki turda yalnızca defter düzelir.
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.FULLY_REFUNDED);
+        sweeper.run(t.plus(Duration.ofHours(1)));
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        assertThat(state(ref)).isEqualTo("REFUNDED_TO_CUSTOMER/OFFER_EXPIRED/2");
     }
 
     @Test
@@ -184,6 +225,38 @@ class PaymentSweeperTest extends Wave3TestBase {
     }
 
     @Test
+    void stalePaymentStillWaitingForTheBankResultIsNotAbandoned() throws Exception {
+        // WAITING: tamamlama gönderilmiş, banka sonucu bekleniyor. "Ücret alınmadı" denip kapatılırsa para kartta kalır.
+        Setup s = openRequestWithOffer();
+        String ref = stale(s);
+        doReturn(new GatewayPayment(1L, Status.PROCESSING, null, "x", null)).when(gateway).retrieve(anyLong());
+        sweeper.run(Instant.now());
+        assertThat(st(ref)).isEqualTo("INITIALIZED/-");
+        assertThat(count("select count(*) from jobs")).isZero();
+    }
+
+    @Test
+    void successfulCallbackArrivingAfterTheSweeperAbandonedThePaymentNeverCompletesIt() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = stale(s);
+        doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+        sweeper.run(Instant.now());
+        assertThat(st(ref)).isEqualTo("FAILED/THREEDS_ABANDONED");
+
+        // Kullanıcı bankadan geç döndü: complete3ds çağrılmaz (para çekilmez), iş açılmaz.
+        Map<String, Object> row = jdbc.queryForMap(
+                "select craftgate_payment_id, conversation_id from escrow_payment where ref = ?", ref);
+        mvc.perform(post("/api/payments/3ds/callback")
+                .param("status", "SUCCESS")
+                .param("completeStatus", "WAITING")
+                .param("paymentId", String.valueOf(row.get("craftgate_payment_id")))
+                .param("conversationId", (String) row.get("conversation_id")));
+        verify(gateway, never()).complete3ds(anyLong());
+        assertThat(st(ref)).isEqualTo("FAILED/THREEDS_ABANDONED");
+        assertThat(count("select count(*) from jobs")).isZero();
+    }
+
+    @Test
     void staleInitializedPaymentIsUntouchedWhenCraftgateDoesNotAnswerAndYoungOnesAreIgnored() throws Exception {
         Setup s = openRequestWithOffer();
         String ref = stale(s);
@@ -207,53 +280,108 @@ class PaymentSweeperTest extends Wave3TestBase {
 
     // ─── yarış ──────────────────────────────────────────────────────────────
 
+    /** Craftgate'in gerçek durumu: kaydın tutarı ve conversationId ile başarılı (Wave3TestBase ile aynı). */
+    private GatewayPayment succeeded(long paymentId) {
+        Map<String, Object> row = jdbc.queryForMap(
+                "select total_amount, conversation_id from escrow_payment where craftgate_payment_id = ?", paymentId);
+        return new GatewayPayment(paymentId, Status.SUCCESS, (BigDecimal) row.get("total_amount"),
+                (String) row.get("conversation_id"), null);
+    }
+
+    /** {@code holder} adlı iş parçacığı Craftgate'e sorduğunda (satır kilidi elindeyken) {@code release} açılana dek bekler. */
+    private void blockRetrieveIn(String holder, CountDownLatch inRetrieve, CountDownLatch release) {
+        org.mockito.Mockito.doAnswer(inv -> {
+            if (holder.equals(Thread.currentThread().getName())) {
+                inRetrieve.countDown();
+                assertThat(release.await(30, TimeUnit.SECONDS)).isTrue();
+            }
+            return succeeded(inv.getArgument(0));
+        }).when(gateway).retrieve(anyLong());
+    }
+
+    private static ExecutorService named(String name) {
+        return Executors.newSingleThreadExecutor(r -> new Thread(r, name));
+    }
+
     @Test
     void sweeperSkipsARowThatARealCallbackHoldsAndNeverBlocksOrDoubleProcesses() throws Exception {
         Setup s = openRequestWithOffer();
         String ref = stale(s);
         clearInvocations(gateway);
+        ExecutorService other = named("sweeper");
         try (Connection holder = jdbc.getDataSource().getConnection()) {
             holder.setAutoCommit(false);
             try (var st = holder.prepareStatement("select 1 from escrow_payment where ref = ? for update")) {
                 st.setString(1, ref);
                 st.executeQuery();
             }
-            long started = System.nanoTime();
-            payments.reconcileStale(ref); // beklerse test kilitlenir; SKIP LOCKED hemen döner
-            assertThat(Duration.ofNanos(System.nanoTime() - started)).isLessThan(Duration.ofSeconds(5));
+            // Ayrı iş parçacığında: SKIP LOCKED çalışmazsa test asılı kalmaz, zaman aşımıyla kırmızı olur.
+            other.submit(() -> payments.reconcileStale(ref)).get(10, TimeUnit.SECONDS);
             holder.rollback();
+        } finally {
+            other.shutdownNow();
         }
         verify(gateway, never()).retrieve(anyLong());
         assertThat(st(ref)).isEqualTo("INITIALIZED/-");
     }
 
     @Test
-    void sweeperAndCallbackRunningTogetherProduceExactlyOneOutcome() throws Exception {
+    void callbackHoldingTheRowMakesTheSweeperSkipItAndOnlyTheCallbackOpensTheJob() throws Exception {
         Setup s = openRequestWithOffer();
         String ref = stale(s);
-        ExecutorService pool = Executors.newFixedThreadPool(2);
+        CountDownLatch inRetrieve = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        blockRetrieveIn("callback", inRetrieve, release);
+        ExecutorService cbThread = named("callback");
+        ExecutorService swThread = named("sweeper");
         try {
-            CountDownLatch go = new CountDownLatch(1);
-            Future<Integer> cb = pool.submit(() -> {
-                go.await();
-                return callback(ref).andReturn().getResponse().getStatus();
-            });
-            Future<?> sw = pool.submit(() -> {
-                go.await();
-                sweeper.run(Instant.now());
-                return null;
-            });
-            go.countDown();
+            Future<Integer> cb = cbThread.submit(() -> callback(ref).andReturn().getResponse().getStatus());
+            assertThat(inRetrieve.await(30, TimeUnit.SECONDS)).isTrue(); // callback satırı kilitledi, Craftgate'te
+            // Toplayıcı beklemeden döner ve Craftgate'e sormaz (satır kilitli: SKIP LOCKED).
+            swThread.submit(() -> sweeper.run(Instant.now())).get(10, TimeUnit.SECONDS);
+            verify(gateway, times(1)).retrieve(anyLong());
+            assertThat(cb.isDone()).isFalse();
+            release.countDown();
             cb.get(30, TimeUnit.SECONDS);
-            sw.get(30, TimeUnit.SECONDS);
         } finally {
-            pool.shutdownNow();
+            release.countDown();
+            cbThread.shutdownNow();
+            swThread.shutdownNow();
         }
-        // Sweeper atlamış olabilir; bir tur daha çalışması zararsız olmalı.
-        sweeper.run(Instant.now());
+        sweeper.run(Instant.now()); // sonraki tur zararsız
         assertThat(st(ref)).isEqualTo("LOCKED/-");
         assertThat(count("select count(*) from jobs where request_id = ?::uuid", s.requestId())).isEqualTo(1);
         assertThat(notifications(s.pro(), "OFFER_ACCEPTED")).isEqualTo(1);
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+    }
+
+    @Test
+    void callbackArrivingWhileTheSweeperHoldsTheRowWaitsAndThenSeesTheSweepersResult() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = stale(s);
+        CountDownLatch inRetrieve = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        blockRetrieveIn("sweeper", inRetrieve, release);
+        ExecutorService cbThread = named("callback");
+        ExecutorService swThread = named("sweeper");
+        try {
+            Future<?> sw = swThread.submit(() -> sweeper.run(Instant.now()));
+            assertThat(inRetrieve.await(30, TimeUnit.SECONDS)).isTrue(); // toplayıcı satırı kilitledi, Craftgate'te
+            Future<Integer> cb = cbThread.submit(() -> callback(ref).andReturn().getResponse().getStatus());
+            // Gerçek callback satır kilidini bekler (SKIP LOCKED yalnızca toplayıcıda).
+            assertThatThrownBy(() -> cb.get(1, TimeUnit.SECONDS)).isInstanceOf(TimeoutException.class);
+            release.countDown();
+            sw.get(30, TimeUnit.SECONDS);
+            cb.get(30, TimeUnit.SECONDS);
+        } finally {
+            release.countDown();
+            cbThread.shutdownNow();
+            swThread.shutdownNow();
+        }
+        assertThat(st(ref)).isEqualTo("LOCKED/-");
+        assertThat(count("select count(*) from jobs where request_id = ?::uuid", s.requestId())).isEqualTo(1);
+        assertThat(notifications(s.pro(), "OFFER_ACCEPTED")).isEqualTo(1);
+        verify(gateway, never()).complete3ds(anyLong());
         verify(gateway, never()).refundFully(anyLong(), anyString());
     }
 }

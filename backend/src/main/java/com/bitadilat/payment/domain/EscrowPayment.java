@@ -214,6 +214,13 @@ public class EscrowPayment {
         return false;
     }
 
+    /** Otomatik iade güvenle yapılamaz (ör. Craftgate'te kısmi iade var): kayıt hemen elle incelemeye düşer. */
+    public void sendToRefundReview(Instant now) {
+        lastRefundAttemptAt = now;
+        nextRefundAttemptAt = null;
+        markError(ERROR_REFUND_NEEDS_REVIEW, REFUND_REVIEW_MESSAGE);
+    }
+
     /** 5 dk, 10 dk, 20 dk ... en çok 6 saat. {@code attempts}: şimdiye dek başarısız deneme sayısı. */
     public static Duration refundBackoff(int attempts) {
         long minutes = Math.min(5L << Math.min(Math.max(attempts - 1, 0), 10), 360L);

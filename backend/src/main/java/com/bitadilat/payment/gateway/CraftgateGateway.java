@@ -7,6 +7,7 @@ import io.craftgate.model.Currency;
 import io.craftgate.model.PaymentGroup;
 import io.craftgate.model.PaymentPhase;
 import io.craftgate.model.PaymentRefundStatus;
+import io.craftgate.model.PaymentStatus;
 import io.craftgate.model.RefundDestinationType;
 import io.craftgate.model.RefundStatus;
 import io.craftgate.request.CompleteThreeDSPaymentRequest;
@@ -18,6 +19,7 @@ import io.craftgate.request.dto.PaymentItem;
 import io.craftgate.response.InitThreeDSPaymentResponse;
 import io.craftgate.response.PaymentRefundResponse;
 import io.craftgate.response.PaymentResponse;
+import io.craftgate.response.ReportingPaymentRefundResponse;
 import io.craftgate.response.ReportingPaymentResponse;
 import io.craftgate.response.PaymentTransactionRefundResponse;
 import io.craftgate.response.dto.PaymentTransaction;
@@ -101,7 +103,13 @@ public class CraftgateGateway implements PaymentGateway {
         if (report.getRefundStatus() == PaymentRefundStatus.FULLY_REFUNDED) {
             return RefundState.FULLY_REFUNDED;
         }
-        if (report.getRefundStatus() == PaymentRefundStatus.PARTIAL_REFUNDED) {
+        List<ReportingPaymentRefundResponse> refunds = report.getRefunds() == null ? List.of() : report.getRefunds();
+        if (refunds.stream().anyMatch(r -> r.getStatus() == RefundStatus.WAITING)) {
+            return RefundState.REFUND_PENDING;
+        }
+        if (report.getRefundStatus() == PaymentRefundStatus.PARTIAL_REFUNDED
+                || refunds.stream().anyMatch(r -> r.getStatus() == RefundStatus.SUCCESS)) {
+            // Başarılı iade kaydı var ama toplam durum "tam iade" değil: tam iade gönderilmez.
             return RefundState.PARTIALLY_REFUNDED;
         }
         return RefundState.NOT_REFUNDED;
@@ -158,10 +166,13 @@ public class CraftgateGateway implements PaymentGateway {
     }
 
     private static GatewayPayment toGatewayPayment(PaymentResponse response) {
-        Status status = switch (response.getPaymentStatus()) {
+        // WAITING: tamamlama gönderildi, banka sonucu bekleniyor; para çekilmiş olabilir (IN_PROGRESS değil).
+        PaymentStatus raw = response.getPaymentStatus();
+        Status status = raw == null ? Status.PROCESSING : switch (raw) {
             case SUCCESS -> Status.SUCCESS;
             case FAILURE -> Status.FAILURE;
-            default -> Status.IN_PROGRESS;
+            case INIT_THREEDS, CALLBACK_THREEDS -> Status.IN_PROGRESS;
+            default -> Status.PROCESSING;
         };
         String errorGroup = response.getPaymentError() == null ? null : response.getPaymentError().getErrorGroup();
         return new GatewayPayment(

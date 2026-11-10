@@ -300,6 +300,7 @@ public class PaymentService {
         GatewayPayment actual = retrieveOrNull(payment.getCraftgatePaymentId());
         if (actual != null && actual.status() == Status.IN_PROGRESS) {
             // 30 dakikadır 3DS bitmedi: kullanıcı bankada vazgeçti. complete3ds hiç çağrılmadığı için para çekilmez.
+            // PROCESSING (WAITING) burada kapatılmaz: banka sonucu bekleniyor, para çekilmiş olabilir.
             log.info("Terk edilmiş 3DS ödemesi kapatıldı. ref={}", ref);
             payment.abandon(THREEDS_ABANDONED_MESSAGE);
             return;
@@ -321,10 +322,22 @@ public class PaymentService {
         String reason = payment.getErrorCode();
         try {
             // İade Craftgate'te yapılmış ama yanıt bize ulaşmamış olabilir: önce sor, yapılmışsa yalnızca defteri düzelt.
-            if (!payment.isSeed() && payment.getCraftgatePaymentId() != null
-                    && gateway.refundState(payment.getCraftgatePaymentId()) == PaymentGateway.RefundState.FULLY_REFUNDED) {
+            PaymentGateway.RefundState refunded = payment.isSeed() || payment.getCraftgatePaymentId() == null
+                    ? PaymentGateway.RefundState.NOT_REFUNDED
+                    : gateway.refundState(payment.getCraftgatePaymentId());
+            if (refunded == PaymentGateway.RefundState.FULLY_REFUNDED) {
                 log.warn("Ödeme Craftgate'te zaten iade edilmiş, yeniden iade gönderilmedi. ref={}", ref);
                 escrow.recordRefundAlreadyDone(payment);
+            } else if (refunded == PaymentGateway.RefundState.PARTIALLY_REFUNDED) {
+                // Tam iade, kısmen iade edilmiş ödemede tutarı ve defteri bozar: elle incelenir.
+                log.error("Öksüz ödeme Craftgate'te kısmen iade edilmiş, tam iade gönderilmedi; elle incelenmeli. "
+                        + "ref={} paymentId={}", ref, payment.getCraftgatePaymentId());
+                payment.sendToRefundReview(now);
+                repository.saveAndFlush(payment);
+                return;
+            } else if (refunded == PaymentGateway.RefundState.REFUND_PENDING) {
+                // Önceki iade isteği Craftgate'te sonuç bekliyor: ikinci iade gönderilmez, sonraki turda yeniden sorulur.
+                throw new GatewayException("İade sonucu bekleniyor.", false);
             } else {
                 escrow.refundFully(payment);
             }
@@ -450,7 +463,7 @@ public class PaymentService {
 
     /** result null veya sürüyor ise kayıt INITIALIZED kalır: para durumu bilinmeden sonuç yazılmaz. */
     private void applyResult(EscrowPayment payment, GatewayPayment result) {
-        if (result == null || result.status() == Status.IN_PROGRESS) {
+        if (result == null || result.status() == Status.IN_PROGRESS || result.status() == Status.PROCESSING) {
             log.warn("3DS sonucu kesinleşmedi, kayıt değiştirilmedi. ref={}", payment.getRef());
             return;
         }
