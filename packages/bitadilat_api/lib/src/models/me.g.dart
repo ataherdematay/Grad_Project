@@ -10,7 +10,7 @@ _Me _$MeFromJson(Map<String, dynamic> json) => _Me(
   id: idFromJson(json['id']),
   fullName: json['fullName'] as String,
   email: json['email'] as String,
-  phone: json['phone'] as String,
+  phone: json['phone'] as String?,
   locale: json['locale'] as String,
   lastMode: $enumDecode(_$UserModeEnumMap, json['lastMode']),
   isAdmin: json['isAdmin'] as bool,

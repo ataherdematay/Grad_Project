@@ -4351,6 +4351,24 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Bu talep artık teklif almıyor. Ekran güncellendi.'**
   String get offerFormRequestClosed;
+
+  /// No description provided for @homeActiveJobs.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktif işlerin'**
+  String get homeActiveJobs;
+
+  /// No description provided for @homeOpenRequests.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık taleplerin'**
+  String get homeOpenRequests;
+
+  /// No description provided for @homeSeeAll.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tümünü gör'**
+  String get homeSeeAll;
 }
 
 class _AppLocalizationsDelegate

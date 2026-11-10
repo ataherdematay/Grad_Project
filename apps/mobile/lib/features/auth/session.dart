@@ -136,7 +136,11 @@ class SessionController extends Notifier<SessionState> {
     await _accept(auth.user);
   }
 
+  /// Kayıtta "usta olacağım" seçildi; başvuru gönderilince son mod PRO olur.
+  bool _wantsPro = false;
+
   Future<void> register(RegisterRequest request) async {
+    _wantsPro = request.wantsPro;
     final auth = await _client.auth.register(request);
     await _accept(
       auth.user,
@@ -184,6 +188,22 @@ class SessionController extends Notifier<SessionState> {
     } on ApiException {
       // Mevcut durum korunur.
     }
+  }
+
+  /// Başvuru gönderildikten sonra: kayıtta `wantsPro` seçilmişse son mod PRO
+  /// olarak kaydedilir (`PATCH /me`); sonraki girişte usta kabuğu açılır ve
+  /// korumalar onaysız ustayı `/p/application`'a götürür.
+  Future<void> afterApplicationSubmitted() async {
+    await refreshMe();
+    final me = state.me;
+    if (_wantsPro && me != null && me.lastMode != UserMode.pro) {
+      try {
+        await switchMode(UserMode.pro);
+      } on ApiException {
+        // Mod kaydı başarısızsa başvuru yine de gönderilmiştir.
+      }
+    }
+    _wantsPro = false;
   }
 
   /// `PATCH /me` ile son modu kaydeder; başarılıysa durum güncellenir.

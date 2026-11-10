@@ -2340,4 +2340,13 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get offerFormRequestClosed =>
       'Bu talep artık teklif almıyor. Ekran güncellendi.';
+
+  @override
+  String get homeActiveJobs => 'Aktif işlerin';
+
+  @override
+  String get homeOpenRequests => 'Açık taleplerin';
+
+  @override
+  String get homeSeeAll => 'Tümünü gör';
 }

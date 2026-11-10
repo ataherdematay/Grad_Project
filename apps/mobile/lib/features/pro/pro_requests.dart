@@ -329,7 +329,10 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
     String m(Money v) => formatMoney(v, l.localeName);
     // Talep durumu sunucudan izlenir; durum eskiyince (ILLEGAL_STATE)
     // sağlayıcı geçersiz kılınır ve form güncel durumu gösterir.
-    final status = ref.watch(proRequestProvider(widget.requestId)).value?.status;
+    final status = ref
+        .watch(proRequestProvider(widget.requestId))
+        .value
+        ?.status;
     final closed = status != null && status != RequestStatus.open;
     return Scaffold(
       appBar: AppBar(
@@ -512,6 +515,7 @@ class _OfferFormState extends ConsumerState<OfferFormScreen> {
                     enabled: !_submitting,
                     maxLength: kNoteMax,
                     keyboardType: TextInputType.multiline,
+                    minLines: 3,
                     errorText: _serverField == 'note'
                         ? l.errFieldInvalid
                         : null,

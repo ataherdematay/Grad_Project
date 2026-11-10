@@ -683,6 +683,7 @@ class _Step3 extends ConsumerWidget {
           controller: desc,
           maxLength: kDescMax,
           keyboardType: TextInputType.multiline,
+          minLines: 3,
           helperText: l.wizDescriptionCount(desc.text.trim().length, kDescMin),
           onChanged: (v) => ctrl.update((x) => x.copyWith(description: v)),
         ),

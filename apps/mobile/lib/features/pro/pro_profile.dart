@@ -312,6 +312,7 @@ class _ProProfileState extends ConsumerState<ProProfileScreen> {
         enabled: !_saving,
         maxLength: 1000,
         keyboardType: TextInputType.multiline,
+        minLines: 3,
       ),
       const FieldGap(),
       AppTextField(

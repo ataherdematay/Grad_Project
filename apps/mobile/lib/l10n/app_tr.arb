@@ -1085,5 +1085,8 @@
   "earningReleased": "Aktarıldı",
   "earningRefunded": "İade edildi",
   "earningSplit": "Paylaştırıldı",
-  "offerFormRequestClosed": "Bu talep artık teklif almıyor. Ekran güncellendi."
+  "offerFormRequestClosed": "Bu talep artık teklif almıyor. Ekran güncellendi.",
+  "homeActiveJobs": "Aktif işlerin",
+  "homeOpenRequests": "Açık taleplerin",
+  "homeSeeAll": "Tümünü gör"
 }

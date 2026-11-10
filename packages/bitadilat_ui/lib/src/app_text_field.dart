@@ -30,6 +30,8 @@ class AppTextField extends StatefulWidget {
     this.autofocus = false,
     this.prefixText,
     this.maxLength,
+    this.minLines,
+    this.maxLines,
     this.textCapitalization = TextCapitalization.none,
   }) : assert(
          !isPassword ||
@@ -59,6 +61,11 @@ class AppTextField extends StatefulWidget {
   final bool autofocus;
   final String? prefixText;
   final int? maxLength;
+
+  /// Çok satırlı alan: `minLines` verilirse alan o kadar satırla başlar ve
+  /// `maxLines`a (varsayılan `minLines` + 4) kadar büyür.
+  final int? minLines;
+  final int? maxLines;
   final TextCapitalization textCapitalization;
 
   @override
@@ -67,6 +74,8 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   bool _obscured = true;
+
+  bool get _multiline => widget.minLines != null || widget.maxLines != null;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +109,12 @@ class _AppTextFieldState extends State<AppTextField> {
             onChanged: widget.onChanged,
             onFieldSubmitted: widget.onFieldSubmitted,
             maxLength: widget.maxLength,
+            minLines: _multiline ? (widget.minLines ?? 1) : null,
+            maxLines: widget.isPassword
+                ? 1
+                : (_multiline
+                      ? (widget.maxLines ?? (widget.minLines ?? 1) + 4)
+                      : 1),
             textCapitalization: widget.textCapitalization,
             forceErrorText: hasError ? widget.errorText : null,
             style: AppTypography.body,

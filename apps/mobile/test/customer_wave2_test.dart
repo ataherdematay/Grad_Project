@@ -615,8 +615,10 @@ void main() {
       expect(h.uri.path, '/c/requests/r1/compare');
       expect(h.uri.queryParameters['ids'], 'o1,o2,o3');
       expect(find.text('Karşılaştırma'), findsOneWidget);
-      expect(find.text('Mavi Hat'), findsOneWidget);
-      expect(find.text('Yeşil Boru'), findsOneWidget);
+      // Üç teklifin üçü de görünür (başlık + her özellik kartında bir satır).
+      expect(find.text('Mavi Hat'), findsWidgets);
+      expect(find.text('Kırmızı Su'), findsWidgets);
+      expect(find.text('Yeşil Boru'), findsWidgets);
       expect(find.text('Sarı Vana'), findsNothing);
       expect(find.text('Toplam (KDV dahil)'), findsOneWidget);
     });

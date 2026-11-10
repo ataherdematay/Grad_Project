@@ -462,6 +462,7 @@ class _ProNoteState extends ConsumerState<ProNoteScreen> {
                 enabled: !_busy,
                 maxLength: 1000,
                 keyboardType: TextInputType.multiline,
+                minLines: 3,
                 errorText: _attempted && empty ? l.proNoteEmpty : null,
                 onChanged: (_) => setState(() {}),
               ),
@@ -598,6 +599,7 @@ class _ProFinishState extends ConsumerState<ProFinishScreen> {
                 enabled: !_busy,
                 maxLength: kFinishNoteMax,
                 keyboardType: TextInputType.multiline,
+                minLines: 3,
                 helperText: l.proFinishNoteHelp(len, kFinishNoteMin),
                 errorText: _attempted && !_noteOk
                     ? l.proFinishNoteShort(kFinishNoteMin)

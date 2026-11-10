@@ -145,6 +145,9 @@ Future<Harness> pumpApp(
   double textScale = 1,
   String locale = 'tr',
   List<Override> overrides = const [],
+
+  /// `false` iken yalnız bir kare çizilir (zamanlayıcı ve yoklama testleri).
+  bool settle = true,
 }) async {
   AppTypography.useGoogleFonts = false;
   SharedPreferences.setMockInitialValues({'locale': locale});
@@ -181,6 +184,12 @@ Future<Harness> pumpApp(
       child: const BitadilatApp(),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    for (var i = 0; i < 3; i++) {
+      await tester.pump(const Duration(milliseconds: 10));
+    }
+  }
   return Harness(container, adapter, store);
 }

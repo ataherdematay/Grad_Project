@@ -96,8 +96,9 @@ bool isProMode(Me me) =>
     me.lastMode == UserMode.pro &&
     me.pro?.reviewStatus == ReviewStatus.approved;
 
-/// Modun ana sekmesi.
-String homeFor(Me me) => isProMode(me) ? '/p/feed' : '/c/home';
+/// Giriş sonrası ana rota. Son mod PRO ise usta kabuğu açılır; usta onaysızsa
+/// korumalar `/p/application` ya da `/p/apply`'a yönlendirir.
+String homeFor(Me me) => me.lastMode == UserMode.pro ? '/p/feed' : '/c/home';
 
 final RegExp _customerJobRe = RegExp(r'^/c/jobs/([^/]+)$');
 final RegExp _proJobRe = RegExp(r'^/p/jobs/([^/]+)$');

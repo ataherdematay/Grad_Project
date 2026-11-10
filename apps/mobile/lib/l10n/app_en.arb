@@ -1071,5 +1071,8 @@
   "earningReleased": "Paid out",
   "earningRefunded": "Refunded",
   "earningSplit": "Split",
-  "offerFormRequestClosed": "This request no longer accepts offers. The screen was refreshed."
+  "offerFormRequestClosed": "This request no longer accepts offers. The screen was refreshed.",
+  "homeActiveJobs": "Your active jobs",
+  "homeOpenRequests": "Your open requests",
+  "homeSeeAll": "See all"
 }

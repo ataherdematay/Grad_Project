@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 
 import 'tokens.dart';
@@ -46,6 +47,13 @@ abstract final class AppTheme {
       textTheme: textTheme,
       primaryTextTheme: textTheme,
       materialTapTargetSize: MaterialTapTargetSize.padded,
+      // iOS'ta soldan kaydırarak geri (kenar hareketi) için Cupertino geçişi.
+      pageTransitionsTheme: PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: const CupertinoPageTransitionsBuilder(),
+        },
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.canvas,
         foregroundColor: AppColors.textPrimary,

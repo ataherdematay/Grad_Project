@@ -71,6 +71,9 @@ class RequestCard extends ConsumerWidget {
   }
 }
 
+/// Ana sayfada her bölümde en çok bu kadar kart gösterilir.
+const int kHomeMaxCards = 3;
+
 /// `/c/home`: aktif talep özeti ve "Talep oluştur".
 class CustomerHomeScreen extends ConsumerWidget {
   const CustomerHomeScreen({super.key});
@@ -99,6 +102,8 @@ class CustomerHomeScreen extends ConsumerWidget {
             final open =
                 page.items.where((r) => r.status == RequestStatus.open).toList()
                   ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            final activeJobs = (jobs.value ?? const <JobSummary>[]).toList()
+              ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
             return RefreshIndicator(
               onRefresh: () {
                 ref.invalidate(jobsProvider);
@@ -111,29 +116,29 @@ class CustomerHomeScreen extends ConsumerWidget {
                   if (me != null)
                     Text(l.homeGreeting(me), style: AppTypography.screenTitle),
                   const SizedBox(height: AppSpacing.md),
-                  if (jobs.value != null && jobs.requireValue.isNotEmpty) ...[
-                    Text(l.homeActiveJob, style: AppTypography.section),
+                  if (activeJobs.isNotEmpty) ...[
+                    Text(l.homeActiveJobs, style: AppTypography.section),
                     const SizedBox(height: AppSpacing.xs),
-                    JobCard(
-                      job:
-                          (jobs.requireValue.toList()..sort(
-                                (a, b) => b.updatedAt.compareTo(a.updatedAt),
-                              ))
-                              .first,
-                      onTap: () async {
-                        final id =
-                            (jobs.requireValue.toList()..sort(
-                                  (a, b) => b.updatedAt.compareTo(a.updatedAt),
-                                ))
-                                .first
-                                .id;
-                        await context.push('/c/jobs/$id');
-                        ref.invalidate(jobsProvider);
-                      },
-                    ),
+                    for (final j in activeJobs.take(kHomeMaxCards))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                        child: JobCard(
+                          job: j,
+                          onTap: () async {
+                            await context.push('/c/jobs/${j.id}');
+                            ref.invalidate(jobsProvider);
+                          },
+                        ),
+                      ),
+                    if (activeJobs.length > kHomeMaxCards)
+                      AppButton(
+                        label: l.homeSeeAll,
+                        variant: AppButtonVariant.tertiary,
+                        onPressed: () => context.go('/c/requests'),
+                      ),
                     const SizedBox(height: AppSpacing.md),
                   ],
-                  if (open.isEmpty)
+                  if (open.isEmpty && activeJobs.isEmpty)
                     AppCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,25 +155,34 @@ class CustomerHomeScreen extends ConsumerWidget {
                         ],
                       ),
                     )
-                  else ...[
-                    Text(l.homeActiveRequest, style: AppTypography.section),
+                  else if (open.isNotEmpty) ...[
+                    Text(l.homeOpenRequests, style: AppTypography.section),
                     const SizedBox(height: AppSpacing.xs),
-                    RequestCard(
-                      item: open.first,
-                      onTap: () async {
-                        await context.push('/c/requests/${open.first.id}');
-                        ref.invalidate(requestsProvider);
-                      },
-                    ),
-                    if (open.first.offerCount > 0) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      AppButton(
-                        label: l.seeOffers(open.first.offerCount),
-                        variant: AppButtonVariant.secondary,
-                        onPressed: () =>
-                            context.push('/c/requests/${open.first.id}/offers'),
+                    for (final r in open.take(kHomeMaxCards)) ...[
+                      RequestCard(
+                        item: r,
+                        onTap: () async {
+                          await context.push('/c/requests/${r.id}');
+                          ref.invalidate(requestsProvider);
+                        },
                       ),
+                      if (r.offerCount > 0) ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        AppButton(
+                          label: l.seeOffers(r.offerCount),
+                          variant: AppButtonVariant.secondary,
+                          onPressed: () =>
+                              context.push('/c/requests/${r.id}/offers'),
+                        ),
+                      ],
+                      const SizedBox(height: AppSpacing.xs),
                     ],
+                    if (open.length > kHomeMaxCards)
+                      AppButton(
+                        label: l.homeSeeAll,
+                        variant: AppButtonVariant.tertiary,
+                        onPressed: () => context.go('/c/requests'),
+                      ),
                   ],
                   const SizedBox(height: AppSpacing.md),
                   AppButton(
@@ -535,6 +549,7 @@ class _CancelState extends ConsumerState<CancelRequestScreen> {
             enabled: !_loading,
             maxLength: 250,
             keyboardType: TextInputType.multiline,
+            minLines: 3,
           ),
           if (_error != null) ...[const FieldGap(), MessageBanner(_error!)],
           const FieldGap(),

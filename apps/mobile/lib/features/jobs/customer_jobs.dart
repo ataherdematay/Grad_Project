@@ -668,6 +668,7 @@ class _CancelState extends ConsumerState<CancelJobScreen> {
                       enabled: !_busy,
                       maxLength: 500,
                       keyboardType: TextInputType.multiline,
+                      minLines: 3,
                     ),
                     const FieldGap(),
                     AppButton(
@@ -999,6 +1000,7 @@ class _ReviewState extends ConsumerState<ReviewScreen> {
                     enabled: !_busy,
                     maxLength: 1000,
                     keyboardType: TextInputType.multiline,
+                    minLines: 3,
                   ),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
@@ -1184,6 +1186,7 @@ class _ComplaintState extends ConsumerState<ComplaintScreen> {
                     enabled: !_busy,
                     maxLength: 2000,
                     keyboardType: TextInputType.multiline,
+                    minLines: 3,
                     helperText: l.complaintDescriptionHelp(
                       len,
                       kComplaintMinChars,

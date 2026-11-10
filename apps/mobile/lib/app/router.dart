@@ -30,6 +30,22 @@ import '../features/shell/tab_shell.dart';
 import '../l10n/app_localizations.dart';
 import 'guards.dart';
 
+/// Tüm rotalar `MaterialPage` ile açılır: sayfa geçişi temadan gelir ve iOS'ta
+/// soldan kaydırarak geri (Cupertino geçişi) çalışır. go_router'ın varsayılan
+/// özel geçiş sayfası bu hareketi vermez.
+GoRoute appRoute({
+  required String path,
+  required Widget Function(BuildContext context, GoRouterState state) builder,
+}) => GoRoute(
+  path: path,
+  pageBuilder: (context, state) => MaterialPage<void>(
+    key: state.pageKey,
+    name: state.name ?? state.path,
+    arguments: state.extra,
+    child: builder(context, state),
+  ),
+);
+
 /// Testlerde belirli bir rotadan başlamak için ezilir.
 final initialLocationProvider = Provider<String>((ref) => '/');
 
@@ -45,82 +61,85 @@ final routerProvider = Provider<GoRouter>((ref) {
         guardRedirect(ref.read(sessionProvider), state.uri),
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
-      GoRoute(
+      appRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      appRoute(
         path: '/welcome',
         builder: (_, state) =>
             WelcomeScreen(next: safeNext(state.uri.queryParameters['next'])),
       ),
-      GoRoute(
+      appRoute(
         path: '/login',
         builder: (_, state) =>
             LoginScreen(next: safeNext(state.uri.queryParameters['next'])),
       ),
-      GoRoute(
+      appRoute(
         path: '/register',
         builder: (_, state) =>
             RegisterScreen(next: safeNext(state.uri.queryParameters['next'])),
       ),
-      GoRoute(
+      appRoute(
         path: '/forgot-password',
         builder: (_, _) => const ForgotPasswordScreen(),
       ),
-      GoRoute(
+      appRoute(
         path: '/reset-password',
         builder: (_, state) =>
             ResetPasswordScreen(initialEmail: state.extra as String?),
       ),
-      GoRoute(
+      appRoute(
         path: '/legal/:doc',
         builder: (_, state) => LegalScreen(doc: state.pathParameters['doc']!),
       ),
-      GoRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
-      GoRoute(
+      appRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
+      appRoute(
         path: '/notifications',
         builder: (context, _) => PlaceholderScreen(
           title: AppLocalizations.of(context).notificationsTitle,
         ),
       ),
-      GoRoute(
+      appRoute(
         path: '/jobs/:id/chat',
         builder: (_, state) => ChatScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(path: '/p/apply', builder: (_, _) => const ProApplyScreen()),
-      GoRoute(
+      appRoute(path: '/p/apply', builder: (_, _) => const ProApplyScreen()),
+      appRoute(
         path: '/p/application',
         builder: (_, _) => const ProApplicationScreen(),
       ),
       // Müşteri: kabuğun üstünde açılan tam ekran rotalar.
-      GoRoute(path: '/c/addresses', builder: (_, _) => const AddressesScreen()),
-      GoRoute(
+      appRoute(
+        path: '/c/addresses',
+        builder: (_, _) => const AddressesScreen(),
+      ),
+      appRoute(
         path: '/c/requests/new',
         builder: (_, _) => const RequestWizardScreen(),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id',
         builder: (_, state) =>
             RequestDetailScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id/edit',
         builder: (_, state) =>
             RequestWizardScreen(editId: state.pathParameters['id']),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id/cancel',
         builder: (_, state) =>
             CancelRequestScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id/published',
         builder: (_, state) => PublishedScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id/offers',
         builder: (_, state) =>
             RequestOffersScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/requests/:id/compare',
         builder: (_, state) => CompareOffersScreen(
           id: state.pathParameters['id']!,
@@ -130,129 +149,129 @@ final routerProvider = Provider<GoRouter>((ref) {
               .toList(),
         ),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/offers/:id',
         builder: (_, state) =>
             OfferDetailScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/offers/:id/decline',
         builder: (_, state) =>
             DeclineOfferScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/offers/:id/accept',
         builder: (_, state) =>
             AcceptOfferScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/offers/:id/pay',
         builder: (_, state) => PayScreen(offerId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/payments/:ref/3ds',
         builder: (_, state) => ThreeDsScreen(
           paymentRef: state.pathParameters['ref']!,
           html: state.extra as String?,
         ),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/payments/:ref/result',
         builder: (_, state) =>
             PaymentResultScreen(paymentRef: state.pathParameters['ref']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id',
         builder: (_, state) =>
             CustomerJobScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id/appointment',
         builder: (_, state) =>
             AppointmentScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id/cancel',
         builder: (_, state) =>
             CancelJobScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id/complete',
         builder: (_, state) =>
             CompleteJobScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id/review',
         builder: (_, state) => ReviewScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/jobs/:id/complaint',
         builder: (_, state) =>
             ComplaintScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/complaints/:id',
         builder: (_, state) =>
             ComplaintStatusScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/pros/:id',
         builder: (_, state) =>
             ProPublicProfileScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/c/pros/:id/reviews',
         builder: (_, state) =>
             ProReviewsScreen(id: state.pathParameters['id']!),
       ),
       // Usta
-      GoRoute(
+      appRoute(
         path: '/p/requests/:id',
         builder: (_, state) =>
             ProRequestScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/requests/:id/offer',
         builder: (_, state) =>
             OfferFormScreen(requestId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id',
         builder: (_, state) => ProJobScreen(id: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/appointment',
         builder: (_, state) =>
             AppointmentScreen(jobId: state.pathParameters['id']!, pro: true),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/cancel',
         builder: (_, state) =>
             CancelJobScreen(jobId: state.pathParameters['id']!, pro: true),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/cancelled',
         builder: (_, state) =>
             ProCancelledScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/finish',
         builder: (_, state) =>
             ProFinishScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/finished',
         builder: (_, state) =>
             ProFinishedScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(
+      appRoute(
         path: '/p/jobs/:id/note',
         builder: (_, state) =>
             ProNoteScreen(jobId: state.pathParameters['id']!),
       ),
-      GoRoute(path: '/p/earnings', builder: (_, _) => const EarningsScreen()),
-      GoRoute(path: '/p/offers', builder: (_, _) => const ProOffersScreen()),
-      GoRoute(
+      appRoute(path: '/p/earnings', builder: (_, _) => const EarningsScreen()),
+      appRoute(path: '/p/offers', builder: (_, _) => const ProOffersScreen()),
+      appRoute(
         path: '/p/offers/:id/sent',
         builder: (_, state) => OfferSentScreen(id: state.pathParameters['id']!),
       ),
@@ -291,7 +310,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/c/home',
                 builder: (_, _) => const CustomerHomeScreen(),
               ),
@@ -299,7 +318,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/c/requests',
                 builder: (_, _) => const RequestsScreen(),
               ),
@@ -307,7 +326,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/c/messages',
                 builder: (_, _) =>
                     const ConversationsScreen(role: PartyRole.customer),
@@ -316,7 +335,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/c/profile',
                 builder: (_, _) => const ProfileTab(proMode: false),
               ),
@@ -364,7 +383,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/p/feed',
                 builder: (_, _) => const ProFeedScreen(),
               ),
@@ -372,7 +391,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/p/jobs',
                 builder: (_, _) => const ProJobsScreen(),
               ),
@@ -380,7 +399,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/p/messages',
                 builder: (_, _) =>
                     const ConversationsScreen(role: PartyRole.pro),
@@ -389,7 +408,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(
+              appRoute(
                 path: '/p/profile',
                 builder: (_, _) => const ProProfileScreen(),
               ),

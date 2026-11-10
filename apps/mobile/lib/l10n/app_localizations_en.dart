@@ -2407,4 +2407,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offerFormRequestClosed =>
       'This request no longer accepts offers. The screen was refreshed.';
+
+  @override
+  String get homeActiveJobs => 'Your active jobs';
+
+  @override
+  String get homeOpenRequests => 'Your open requests';
+
+  @override
+  String get homeSeeAll => 'See all';
 }
