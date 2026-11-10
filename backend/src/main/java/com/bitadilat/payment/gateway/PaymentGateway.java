@@ -55,6 +55,15 @@ public interface PaymentGateway {
 
     GatewayPayment retrieve(Long paymentId);
 
+    /** Ödemenin Craftgate'teki iade durumu. İade denemeden önce sorulur: iade zaten yapıldıysa tekrar gönderilmez. */
+    RefundState refundState(Long paymentId);
+
+    enum RefundState {
+        NOT_REFUNDED,
+        PARTIALLY_REFUNDED,
+        FULLY_REFUNDED
+    }
+
     /** Callback imzası. Callback anahtarı tanımlı değilse doğrulama yapılamaz ve true döner. */
     boolean isCallbackAuthentic(Map<String, String> params);
 

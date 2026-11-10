@@ -61,6 +61,7 @@ public class PaymentService {
     static final String ALREADY_ASSIGNED_MESSAGE =
             "Bu talep için başka bir teklif az önce kabul edildi. Ödemeniz tamamen iade edilecektir.";
     static final String OFFER_EXPIRED_MESSAGE = "Teklifin süresi doldu. Ödemeniz tamamen iade edilecektir.";
+    static final String THREEDS_ABANDONED_MESSAGE = "Ödeme tamamlanmadı. Kartınızdan ücret alınmadı; yeniden deneyebilirsiniz.";
     static final String REFUND_PENDING_SUFFIX = " İade şu an yapılamadı; otomatik olarak yeniden denenecek.";
 
     private final EscrowPaymentRepository repository;
@@ -286,7 +287,8 @@ public class PaymentService {
      */
     @Transactional
     public void reconcileStale(String ref) {
-        EscrowPayment payment = repository.findForUpdate(ref).orElse(null);
+        // SKIP LOCKED: gerçek callback satırı tutuyorsa beklemeden geçilir; sonraki tur sonucu görür.
+        EscrowPayment payment = repository.findForUpdateSkipLocked(ref).orElse(null);
         if (payment == null || payment.getStatus() != EscrowStatus.INITIALIZED
                 || payment.getChannel() != EscrowChannel.APP) {
             return;
@@ -295,25 +297,48 @@ public class PaymentService {
             payment.fail("Ödeme oturumu açılamadı.");
             return;
         }
-        applyResult(payment, retrieveOrNull(payment.getCraftgatePaymentId()));
+        GatewayPayment actual = retrieveOrNull(payment.getCraftgatePaymentId());
+        if (actual != null && actual.status() == Status.IN_PROGRESS) {
+            // 30 dakikadır 3DS bitmedi: kullanıcı bankada vazgeçti. complete3ds hiç çağrılmadığı için para çekilmez.
+            log.info("Terk edilmiş 3DS ödemesi kapatıldı. ref={}", ref);
+            payment.abandon(THREEDS_ABANDONED_MESSAGE);
+            return;
+        }
+        applyResult(payment, actual); // null (Craftgate yanıt vermedi): kayıt değişmez
         acceptIfLocked(payment);
     }
 
     /** Zamanlayıcı: iade edilememiş öksüz (iş açılmamış) LOCKED ödemenin iadesini yeniden dener. */
     @Transactional
-    public void retryOrphanRefund(String ref) {
-        EscrowPayment payment = repository.findForUpdate(ref).orElse(null);
+    public void retryOrphanRefund(String ref, Instant now) {
+        EscrowPayment payment = repository.findForUpdateSkipLocked(ref).orElse(null);
         if (payment == null || payment.getStatus() != EscrowStatus.LOCKED || payment.getJobId() != null
-                || payment.getChannel() != EscrowChannel.APP || payment.getErrorCode() == null) {
+                || payment.getChannel() != EscrowChannel.APP || payment.getErrorCode() == null
+                || payment.needsRefundReview() || payment.getRefundAttempts() >= EscrowPayment.MAX_REFUND_ATTEMPTS
+                || (payment.getNextRefundAttemptAt() != null && payment.getNextRefundAttemptAt().isAfter(now))) {
             return;
         }
+        String reason = payment.getErrorCode();
         try {
-            escrow.refundFully(payment);
+            // İade Craftgate'te yapılmış ama yanıt bize ulaşmamış olabilir: önce sor, yapılmışsa yalnızca defteri düzelt.
+            if (!payment.isSeed() && payment.getCraftgatePaymentId() != null
+                    && gateway.refundState(payment.getCraftgatePaymentId()) == PaymentGateway.RefundState.FULLY_REFUNDED) {
+                log.warn("Ödeme Craftgate'te zaten iade edilmiş, yeniden iade gönderilmedi. ref={}", ref);
+                escrow.recordRefundAlreadyDone(payment);
+            } else {
+                escrow.refundFully(payment);
+            }
             payment.clearUncertain();
-            payment.markError(payment.getErrorCode(), messageFor(payment.getErrorCode()));
+            payment.markError(reason, messageFor(reason));
             repository.saveAndFlush(payment);
         } catch (GatewayException e) {
-            log.error("Öksüz ödemenin iadesi yeniden başarısız. ref={}", ref);
+            if (payment.recordRefundFailure(now)) {
+                log.error("Öksüz ödemenin iadesi {} denemede yapılamadı, elle incelenmeli. ref={} paymentId={}",
+                        payment.getRefundAttempts(), ref, payment.getCraftgatePaymentId());
+            } else {
+                log.warn("Öksüz ödemenin iadesi yeniden başarısız. ref={} deneme={}", ref, payment.getRefundAttempts());
+            }
+            repository.saveAndFlush(payment);
         }
     }
 
@@ -382,6 +407,7 @@ public class PaymentService {
             log.error("Otomatik iade başarısız, el ile veya zamanlayıcı ile iade gerekir. ref={}", payment.getRef());
             payment.markError(code, messageFor(code) + REFUND_PENDING_SUFFIX);
             payment.markUncertain();
+            payment.recordRefundFailure(Instant.now());
         }
         repository.saveAndFlush(payment);
     }

@@ -6,6 +6,7 @@ import io.craftgate.exception.CraftgateException;
 import io.craftgate.model.Currency;
 import io.craftgate.model.PaymentGroup;
 import io.craftgate.model.PaymentPhase;
+import io.craftgate.model.PaymentRefundStatus;
 import io.craftgate.model.RefundDestinationType;
 import io.craftgate.model.RefundStatus;
 import io.craftgate.request.CompleteThreeDSPaymentRequest;
@@ -17,6 +18,7 @@ import io.craftgate.request.dto.PaymentItem;
 import io.craftgate.response.InitThreeDSPaymentResponse;
 import io.craftgate.response.PaymentRefundResponse;
 import io.craftgate.response.PaymentResponse;
+import io.craftgate.response.ReportingPaymentResponse;
 import io.craftgate.response.PaymentTransactionRefundResponse;
 import io.craftgate.response.dto.PaymentTransaction;
 import java.math.BigDecimal;
@@ -90,6 +92,19 @@ public class CraftgateGateway implements PaymentGateway {
     @Override
     public GatewayPayment retrieve(Long paymentId) {
         return toGatewayPayment(call("retrieve", () -> craftgate.payment().retrievePayment(paymentId)));
+    }
+
+    @Override
+    public RefundState refundState(Long paymentId) {
+        ReportingPaymentResponse report = call("refundState",
+                () -> craftgate.paymentReporting().retrievePayment(paymentId));
+        if (report.getRefundStatus() == PaymentRefundStatus.FULLY_REFUNDED) {
+            return RefundState.FULLY_REFUNDED;
+        }
+        if (report.getRefundStatus() == PaymentRefundStatus.PARTIAL_REFUNDED) {
+            return RefundState.PARTIALLY_REFUNDED;
+        }
+        return RefundState.NOT_REFUNDED;
     }
 
     @Override

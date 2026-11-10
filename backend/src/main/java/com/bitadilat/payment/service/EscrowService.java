@@ -77,6 +77,19 @@ public class EscrowService {
         ledger(payment, amount, "REFUND");
     }
 
+    /**
+     * Craftgate ödemeyi zaten iade etmiş (iade yanıtı bize ulaşmamıştı): yeniden iade göndermeden yalnızca defteri
+     * düzeltir.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void recordRefundAlreadyDone(EscrowPayment payment) {
+        payment.requireRefundable();
+        BigDecimal amount = payment.getTotalAmount();
+        payment.refundFully();
+        repository.saveAndFlush(payment);
+        ledger(payment, amount, "REFUND");
+    }
+
     /** Şikayet: emanet DISPUTED olur. */
     @Transactional(propagation = Propagation.MANDATORY)
     public void dispute(EscrowPayment payment) {

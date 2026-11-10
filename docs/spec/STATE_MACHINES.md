@@ -136,6 +136,9 @@ Eklenenler:
 - Banka dönüşü `LOCKED` ürettiğinde, talep hâlâ `OPEN` ve teklif hâlâ `PENDING` ise **aynı işlemde**: teklif `ACCEPTED`, diğerleri `SUPERSEDED`, talep `ASSIGNED`, iş `AWAITING_APPOINTMENT`.
 - Talep bu arada başka yolla `ASSIGNED` olmuşsa ödeme `LOCKED` ardından hemen `REFUNDED_TO_CUSTOMER` olur, `error_code = REQUEST_ALREADY_ASSIGNED`.
 - Komisyon %10; `commission` ve `pro_payout` başlangıçta hesaplanır (mevcut kod).
+- Zamanlayıcı (5 dk), işe dönüşmemiş ödemeleri satır kilidi + `SKIP LOCKED` ile, gerçek callback'le yarışmadan ve tekrar çalışmaya dayanıklı işler:
+  - İadesi yapılamamış öksüz `LOCKED` kayıt: yeniden iade etmeden önce Craftgate'e ödemenin iade durumu sorulur; zaten iade edilmişse yalnızca defter düzeltilir (`REFUNDED_TO_CUSTOMER`). Aksi halde iade, artan aralıkla (5 dk'dan başlayıp ikiye katlanır, en çok 6 saat) en fazla 8 kez denenir (`refund_attempts`, `last_refund_attempt_at`). Sınır aşılırsa `error_code = REFUND_NEEDS_REVIEW`, ERROR logu yazılır ve zamanlayıcı kaydı bırakır (elle inceleme).
+  - 30 dakikadan eski `INITIALIZED` ödeme: sonuç Craftgate'ten sorulur. Başarılıysa normal callback yolu işler (kabul ya da yarış iadesi). Başarısızsa `FAILED` + `PAYMENT_DECLINED`; hâlâ 3DS'te/tamamlanmamışsa `FAILED` + `THREEDS_ABANDONED`; böylece talepteki tek `INITIALIZED` kısıtı kalkar ve müşteri yeniden dener. Craftgate yanıt vermezse kayıt değişmez, sonraki turda tekrar denenir.
 
 ## 7. Eski adlarla eşleme
 

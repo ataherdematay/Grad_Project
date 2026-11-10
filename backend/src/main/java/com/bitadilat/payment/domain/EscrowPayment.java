@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -26,6 +27,12 @@ import lombok.NoArgsConstructor;
 public class EscrowPayment {
 
     static final BigDecimal COMMISSION_RATE = new BigDecimal("0.10");
+
+    public static final int MAX_REFUND_ATTEMPTS = 8;
+    public static final String ERROR_THREEDS_ABANDONED = "THREEDS_ABANDONED";
+    public static final String ERROR_REFUND_NEEDS_REVIEW = "REFUND_NEEDS_REVIEW";
+    static final String REFUND_REVIEW_MESSAGE =
+            "Ödemenizin iadesi otomatik yapılamadı. Destek ekibi inceleyip sizinle iletişime geçecek.";
 
     @Id
     private String ref;
@@ -89,6 +96,12 @@ public class EscrowPayment {
     private EscrowProvider provider = EscrowProvider.CRAFTGATE;
 
     private String errorCode;
+
+    @Column(nullable = false)
+    private int refundAttempts;
+
+    private Instant lastRefundAttemptAt;
+    private Instant nextRefundAttemptAt;
 
     @Version
     private long version;
@@ -177,6 +190,38 @@ public class EscrowPayment {
         status = EscrowStatus.FAILED;
         errorMessage = message;
         errorCode = "PAYMENT_DECLINED";
+    }
+
+    /** Zamanlayıcı 3DS'i terk edilmiş (30 dk sonra hâlâ tamamlanmamış) ödemeyi kapatır; müşteri yeniden deneyebilir. */
+    public void abandon(String message) {
+        fail(message);
+        errorCode = ERROR_THREEDS_ABANDONED;
+    }
+
+    /**
+     * Otomatik iade başarısız oldu (para kartta). Sayaç artar; sınıra ulaşılırsa kayıt elle incelemeye düşer ve
+     * zamanlayıcı bırakır. Dönüş: sınıra ulaşıldı mı.
+     */
+    public boolean recordRefundFailure(Instant now) {
+        refundAttempts++;
+        lastRefundAttemptAt = now;
+        if (refundAttempts >= MAX_REFUND_ATTEMPTS) {
+            nextRefundAttemptAt = null;
+            markError(ERROR_REFUND_NEEDS_REVIEW, REFUND_REVIEW_MESSAGE);
+            return true;
+        }
+        nextRefundAttemptAt = now.plus(refundBackoff(refundAttempts));
+        return false;
+    }
+
+    /** 5 dk, 10 dk, 20 dk ... en çok 6 saat. {@code attempts}: şimdiye dek başarısız deneme sayısı. */
+    public static Duration refundBackoff(int attempts) {
+        long minutes = Math.min(5L << Math.min(Math.max(attempts - 1, 0), 10), 360L);
+        return Duration.ofMinutes(minutes);
+    }
+
+    public boolean needsRefundReview() {
+        return ERROR_REFUND_NEEDS_REVIEW.equals(errorCode);
     }
 
     /** Craftgate yanıtı kayıtla uyuşmadı: para çekilmiş olabilir, kullanıcıya "ücret alınmadı" denmez. */

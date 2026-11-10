@@ -1,10 +1,12 @@
 package com.bitadilat.payment.domain;
 
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 public interface EscrowPaymentRepository extends JpaRepository<EscrowPayment, String> {
@@ -18,6 +20,15 @@ public interface EscrowPaymentRepository extends JpaRepository<EscrowPayment, St
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from EscrowPayment p where p.ref = :ref")
     Optional<EscrowPayment> findForUpdate(@Param("ref") String ref);
+
+    /**
+     * Zamanlayıcı için: satır başka bir işlemde kilitliyse (gerçek callback gibi) beklemez, boş döner
+     * ({@code SKIP LOCKED}). Atlanan kayıt sonraki turda yeniden değerlendirilir.
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints(@QueryHint(name = "jakarta.persistence.lock.timeout", value = "-2"))
+    @Query("select p from EscrowPayment p where p.ref = :ref")
+    Optional<EscrowPayment> findForUpdateSkipLocked(@Param("ref") String ref);
 
     boolean existsByRequestIdAndStatus(java.util.UUID requestId, EscrowStatus status);
 

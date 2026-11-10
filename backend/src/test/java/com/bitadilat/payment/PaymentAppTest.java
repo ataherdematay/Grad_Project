@@ -258,7 +258,7 @@ class PaymentAppTest extends Wave3TestBase {
         assertThat(result.get("resultUncertain").asBoolean()).isTrue();
 
         org.mockito.Mockito.doNothing().when(gateway).refundFully(anyLong(), anyString());
-        sweeper.run(java.time.Instant.now());
+        sweeper.run(java.time.Instant.now().plus(java.time.Duration.ofHours(1))); // ilk bekleme süresi dolmuş
         assertThat(jdbc.queryForObject("select status from escrow_payment where ref = ?", String.class, ref))
                 .isEqualTo("REFUNDED_TO_CUSTOMER");
     }

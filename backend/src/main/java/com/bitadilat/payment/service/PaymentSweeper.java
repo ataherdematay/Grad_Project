@@ -1,5 +1,6 @@
 package com.bitadilat.payment.service;
 
+import com.bitadilat.payment.domain.EscrowPayment;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Component;
  * Para durumu belirsiz kalmış uygulama ödemelerini toparlar (5 dk'da bir):
  * <ul>
  *   <li>30 dakikadan eski INITIALIZED kayıtlar (kullanıcı WebView'i kapattı veya callback işlenemedi): Craftgate'e
- *       sorulur, kesin sonuç varsa kayıt kapanır ve başarılıysa teklif kabul edilir. Belirsizse dokunulmaz.</li>
- *   <li>İadesi yapılamamış öksüz LOCKED kayıtlar (iş açılmadı, hata kodu var): iade yeniden denenir.</li>
+ *       sorulur: başarılıysa teklif kabul edilir (yarışta iade), başarısız veya hâlâ 3DS'te ise FAILED olur
+ *       (talep serbest kalır). Craftgate yanıt vermezse dokunulmaz.</li>
+ *   <li>İadesi yapılamamış öksüz LOCKED kayıtlar (iş açılmadı, hata kodu var): önce Craftgate'e iade durumu sorulur,
+ *       artan aralıkla en fazla 8 deneme yapılır, sonra REFUND_NEEDS_REVIEW olur.</li>
  * </ul>
  * Her kayıt kendi işleminde ve satır kilidi altında ele alınır; tekrar çalışma zararsızdır.
  */
@@ -58,10 +61,13 @@ public class PaymentSweeper {
         List<String> orphans = jdbc.queryForList("""
                 select ref from escrow_payment
                 where status = 'LOCKED' and channel = 'APP' and job_id is null and error_code is not null
-                order by created_at limit ?""", String.class, BATCH);
+                  and error_code <> 'REFUND_NEEDS_REVIEW' and refund_attempts < ?
+                  and (next_refund_attempt_at is null or next_refund_attempt_at <= ?)
+                order by coalesce(next_refund_attempt_at, created_at) limit ?""", String.class,
+                EscrowPayment.MAX_REFUND_ATTEMPTS, Timestamp.from(now), BATCH);
         for (String ref : orphans) {
             try {
-                payments.retryOrphanRefund(ref);
+                payments.retryOrphanRefund(ref, now);
             } catch (RuntimeException e) {
                 log.error("Öksüz ödemenin iadesi denenemedi. ref={}", ref, e);
             }
