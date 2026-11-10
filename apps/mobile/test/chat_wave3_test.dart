@@ -200,6 +200,31 @@ void main() {
       expect(find.text('Müsaitim'), findsOneWidget);
     });
 
+    testWidgets(
+      'gönderim, karşı tarafın arada gelen mesajını atlatmaz (after= imleci)',
+      (t) async {
+        final s = FakeChatServer();
+        final h = await openChat(t, s);
+        // Son yoklamadan sonra karşı taraf yazdı (id 3), ben de gönderiyorum
+        // (sunucu bana id 4 verir).
+        s.messages.add(messageJson(3, body: 'Kapıdayım'));
+        await t.enterText(find.byType(TextField), 'Geliyorum');
+        await t.pump();
+        await t.tap(find.byTooltip('Gönder'));
+        await tick(t);
+        await tick(t);
+        expect(find.text('Geliyorum'), findsOneWidget);
+        await t.pump(const Duration(seconds: 3));
+        await tick(t);
+        await tick(t);
+        // Yoklama gönderdiğim mesajın değil, son okunan mesajın kimliğinden
+        // ister; aradaki mesaj kaybolmaz.
+        expect(h.adapter.last('/jobs/j1/messages').queryParameters['after'], 2);
+        expect(find.text('Kapıdayım'), findsOneWidget);
+        expect(find.text('Geliyorum'), findsOneWidget);
+      },
+    );
+
     testWidgets('hata: gönderilemedi, tekrar dene ile gider', (t) async {
       final s = FakeChatServer();
       var fail = true;

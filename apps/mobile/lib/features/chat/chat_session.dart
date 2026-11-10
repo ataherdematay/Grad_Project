@@ -53,8 +53,19 @@ class ChatSession extends ChangeNotifier {
   int _markedRead = 0;
   int _localSeq = 0;
 
+  /// `after=` imleci: yalnız liste yanıtından (yükleme ve yoklama) ilerler.
+  /// Gönderilen mesajın kimliği imleci ilerletmez; yoksa son yoklamadan sonra
+  /// karşı tarafın yazdığı (daha küçük kimlikli) mesaj hiç çekilmez.
+  int _cursor = 0;
+
   bool get isPolling => _timer != null;
   int get lastId => messages.isEmpty ? 0 : messages.last.id;
+
+  void _advance(List<Message> items) {
+    for (final m in items) {
+      if (m.id > _cursor) _cursor = m.id;
+    }
+  }
 
   void _notify() {
     if (!_disposed) notifyListeners();
@@ -69,10 +80,11 @@ class ChatSession extends ChangeNotifier {
       for (var guard = 0; guard < 40; guard++) {
         final page = await api.messages(
           jobId,
-          after: lastId == 0 ? null : lastId,
+          after: _cursor == 0 ? null : _cursor,
           limit: pageSize,
         );
         _merge(page.items);
+        _advance(page.items);
         otherLastReadId = page.otherLastReadId ?? otherLastReadId;
         if (page.items.length < pageSize) break;
       }
@@ -103,9 +115,10 @@ class ChatSession extends ChangeNotifier {
     try {
       final page = await api.messages(
         jobId,
-        after: lastId == 0 ? null : lastId,
+        after: _cursor == 0 ? null : _cursor,
         limit: pageSize,
       );
+      _advance(page.items);
       final changed =
           _merge(page.items) || page.otherLastReadId != otherLastReadId;
       otherLastReadId = page.otherLastReadId ?? otherLastReadId;
