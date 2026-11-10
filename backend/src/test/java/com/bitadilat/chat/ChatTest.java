@@ -7,12 +7,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bitadilat.Wave3TestBase;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.http.HttpMethod;
 import tools.jackson.databind.JsonNode;
 
 /** İş sohbeti: imleç, katılımcı kuralı, salt okunur süre, okundu bilgisi, mesaj kutusu ve bildirim kısıtı. */
 class ChatTest extends Wave3TestBase {
+
+    @Autowired
+    private ChatService chat;
+
+    @Autowired
+    private PlatformTransactionManager txManager;
 
     private JsonNode send(Account who, String jobId, String text) throws Exception {
         return body(jobPost(who, jobId, "/messages", Map.of("body", text)).andExpect(status().isCreated()));
@@ -224,5 +240,56 @@ class ChatTest extends Wave3TestBase {
         assertThat(notifications(s.pro(), "NEW_MESSAGE")).isEqualTo(2);
         send(s.customer(), jobId, "beş");
         assertThat(notifications(s.pro(), "NEW_MESSAGE")).isEqualTo(2);
+    }
+
+    /**
+     * İmleç (after=id) yalnızca aynı işin mesajları kimlik sırasıyla görünür olursa güvenlidir. Bir gönderim henüz
+     * commit edilmemişken (küçük id) ikinci gönderim (büyük id) commit edilirse, araya okuyan istemci büyük id'yi imleç
+     * yapar ve küçük id'yi bir daha hiç görmez. Aynı işe gönderimler sıraya girmelidir.
+     */
+    @Test
+    void concurrentSendsToTheSameJobCommitInIdOrderSoTheCursorNeverSkipsAMessage() throws Exception {
+        Setup s = openRequestWithOffer();
+        String jobId = payAndOpenJob(s);
+        CountDownLatch firstInserted = new CountDownLatch(1);
+        CountDownLatch releaseFirst = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+        try {
+            // İlk gönderim: mesaj eklendi (id alındı) ama işlem henüz commit edilmedi.
+            Future<?> first = pool.submit(() -> new TransactionTemplate(txManager).executeWithoutResult(st -> {
+                chat.send(UUID.fromString(s.customer().id()), UUID.fromString(jobId),
+                        new com.bitadilat.chat.dto.ChatDtos.SendMessage("ilk mesaj", null));
+                firstInserted.countDown();
+                try {
+                    releaseFirst.await(20, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }));
+            assertThat(firstInserted.await(10, TimeUnit.SECONDS)).isTrue();
+            Future<Integer> second = pool.submit(() -> jobPost(s.pro(), jobId, "/messages", Map.of("body", "ikinci"))
+                    .andReturn().getResponse().getStatus());
+            boolean secondFinishedEarly;
+            try {
+                second.get(1500, TimeUnit.MILLISECONDS);
+                secondFinishedEarly = true;
+            } catch (TimeoutException e) {
+                secondFinishedEarly = false;
+            }
+            // Bu arada okuyan istemci ilk mesaj commit edilmeden ikinciyi görmemeli.
+            JsonNode during = messages(s.pro(), jobId, "");
+            releaseFirst.countDown();
+            first.get(20, TimeUnit.SECONDS);
+            assertThat(second.get(20, TimeUnit.SECONDS)).isEqualTo(201);
+            assertThat(secondFinishedEarly).as("ikinci gönderim ilk işlem commit edilmeden tamamlanmamalı").isFalse();
+            assertThat(during.get("items").size()).isZero();
+        } finally {
+            releaseFirst.countDown();
+            pool.shutdownNow();
+        }
+        JsonNode all = messages(s.pro(), jobId, "");
+        assertThat(all.get("items").size()).isEqualTo(2);
+        assertThat(all.get("items").get(0).get("body").asString()).isEqualTo("ilk mesaj");
+        assertThat(all.get("items").get(1).get("body").asString()).isEqualTo("ikinci");
     }
 }

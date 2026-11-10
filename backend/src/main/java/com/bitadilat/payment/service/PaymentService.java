@@ -203,8 +203,12 @@ public class PaymentService {
                     callbackUrl,
                     card));
         } catch (GatewayException e) {
+            // Banka sayfası istemciye ulaşmadı: 3DS başlamadı, para çekilemez; kayıt kapanır ve talep serbest kalır.
             payment.fail(e.getMessage());
             repository.save(payment);
+            if (e.isConnectionProblem()) {
+                throw e; // Craftgate'e ulaşılamadı: kart reddi değil, 502 GATEWAY_ERROR (sözleşme)
+            }
             throw new PaymentDeclinedException(payment.getRef(), e.getMessage());
         }
         payment.attachCraftgatePayment(session.paymentId());

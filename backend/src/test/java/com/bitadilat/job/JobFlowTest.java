@@ -579,6 +579,65 @@ class JobFlowTest extends Wave3TestBase {
         assertThat(escrowStatus(jobId)).isEqualTo("DISPUTED");
     }
 
+    /**
+     * Gerçek paralel yarış: müşteri onayı (veya şikayet) ile 48 saat zamanlayıcısı aynı anda çalışır. Her koşuda emanet
+     * en fazla bir kez aktarılır (tek PAYOUT + tek COMMISSION), şikayet kazanırsa hiç aktarılmaz.
+     */
+    @Test
+    void confirmOrComplaintRacingTheSchedulerNeverReleasesTwice() throws Exception {
+        java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newFixedThreadPool(2);
+        try {
+            for (int round = 0; round < 4; round++) {
+                boolean complaint = round % 2 == 1;
+                Setup s = openRequestWithOffer();
+                String jobId = payAndOpenJob(s);
+                schedule(s, jobId);
+                startWork(s, jobId);
+                finishWork(s, jobId);
+                jdbc.update("update jobs set auto_complete_at = now() - interval '1 minute' where id = ?::uuid", jobId);
+                java.util.concurrent.CountDownLatch go = new java.util.concurrent.CountDownLatch(1);
+                java.util.concurrent.Future<Integer> user = pool.submit(() -> {
+                    go.await();
+                    return (complaint
+                            ? jobPost(s.customer(), jobId, "/complaint", Map.of("reason", "INCOMPLETE_WORK",
+                                    "description", "İş yarım bırakıldı, gider hâlâ tıkalı durumda."))
+                            : jobPost(s.customer(), jobId, "/confirm", null)).andReturn().getResponse().getStatus();
+                });
+                java.util.concurrent.Future<JobScheduler.Result> auto = pool.submit(() -> {
+                    go.await();
+                    return scheduler.run(Instant.now());
+                });
+                go.countDown();
+                int userStatus = user.get(30, java.util.concurrent.TimeUnit.SECONDS);
+                int autoCompleted = auto.get(30, java.util.concurrent.TimeUnit.SECONDS).completed();
+
+                String ref = jdbc.queryForObject("select ref from escrow_payment where job_id = ?::uuid", String.class,
+                        jobId);
+                long payouts = count("select count(*) from payout_ledger where payment_ref = ? and kind = 'PAYOUT'", ref);
+                long fees = count("select count(*) from payout_ledger where payment_ref = ? and kind = 'COMMISSION'", ref);
+                if (complaint && (userStatus == 201)) {
+                    assertThat(autoCompleted).isZero();
+                    assertThat(jobStatus(jobId)).isEqualTo("DISPUTED");
+                    assertThat(escrowStatus(jobId)).isEqualTo("DISPUTED");
+                    assertThat(payouts + fees).isZero();
+                } else {
+                    // Onay ile zamanlayıcıdan yalnızca biri tamamlar; diğeri 409 alır veya hiçbir şey yapmaz.
+                    assertThat(userStatus == 200 ? 1 : 0).isEqualTo(complaint ? 0 : 1 - autoCompleted);
+                    assertThat(userStatus).isIn(200, 201, 409);
+                    assertThat(jobStatus(jobId)).isEqualTo("COMPLETED");
+                    assertThat(escrowStatus(jobId)).isEqualTo("RELEASED_TO_PRO");
+                    assertThat(payouts).isEqualTo(1);
+                    assertThat(fees).isEqualTo(1);
+                    assertThat(jdbc.queryForObject("select completed_jobs from pro_profiles where user_id = ?::uuid",
+                            Integer.class, s.pro().id())).isEqualTo(21); // test ustası 20 ile başlar
+                    assertThat(notifications(s.pro(), "PAYOUT_RELEASED")).isEqualTo(1);
+                }
+            }
+        } finally {
+            pool.shutdownNow();
+        }
+    }
+
     @Test
     void reminderIsSentOnceInTheLast24Hours() throws Exception {
         Setup s = openRequestWithOffer();
@@ -642,6 +701,23 @@ class JobFlowTest extends Wave3TestBase {
     void accountWithOpenJobCannotBeDeleted() throws Exception {
         Setup s = openRequestWithOffer();
         payAndOpenJob(s);
+        call(HttpMethod.DELETE, "/api/v1/me", s.customer().access(), null)
+                .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
+    }
+
+    /** STATE_MACHINES §1: kilitli emanet (iade bekleyen öksüz ödeme) veya süren ödeme varken hesap silinemez. */
+    @Test
+    void accountWithLockedOrInFlightPaymentCannotBeDeleted() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = initPayment(s.customer(), s.offerId());
+        call(HttpMethod.DELETE, "/api/v1/me", s.customer().access(), null)
+                .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
+        // Teklif banka adımında düştü, otomatik iade başarısız: para kartta kilitli, iş yok.
+        jdbc.update("update offers set valid_until = now() - interval '1 minute' where id = ?::uuid", s.offerId());
+        doThrow(new GatewayException("zaman aşımı", true)).when(gateway).refundFully(anyLong(), anyString());
+        callback(ref);
+        assertThat(jdbc.queryForObject("select status from escrow_payment where ref = ?", String.class, ref))
+                .isEqualTo("LOCKED");
         call(HttpMethod.DELETE, "/api/v1/me", s.customer().access(), null)
                 .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
     }

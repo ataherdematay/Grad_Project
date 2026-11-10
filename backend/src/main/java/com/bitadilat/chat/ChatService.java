@@ -78,7 +78,12 @@ public class ChatService {
 
     @Transactional
     public Message send(UUID userId, UUID jobId, SendMessage b) {
-        Job job = participantJob(userId, jobId);
+        // İş satırı kilitlenir: aynı işe gönderimler sıraya girer, böylece mesaj kimlikleri commit sırasıyla görünür
+        // (after=id imleci mesaj atlamaz) ve NEW_MESSAGE tekilleştirmesi yarışmaz.
+        Job job = jobs.lockById(jobId).orElseThrow(() -> ApiException.notFound("İş bulunamadı."));
+        if (JobQueryService.roleOf(job, userId) == null) {
+            throw ApiException.notFound("İş bulunamadı.");
+        }
         Instant now = Instant.now();
         String body = b.body().trim();
         if (body.isEmpty() || body.length() > 2000) {

@@ -124,6 +124,18 @@ class PaymentAppTest extends Wave3TestBase {
         initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isOk());
     }
 
+    @Test
+    void gatewayOutageIs502GatewayErrorNotDeclinedAndFreesTheRequest() throws Exception {
+        Setup s = openRequestWithOffer();
+        org.mockito.Mockito.when(gateway.init3ds(any())).thenThrow(new GatewayException("Craftgate yanıt vermedi.", true));
+        initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
+        assertThat(jdbc.queryForObject("select status from escrow_payment", String.class)).isEqualTo("FAILED");
+        org.mockito.Mockito.reset(gateway);
+        stubGateway();
+        initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isOk());
+    }
+
     // ─── banka dönüşü ve kabul ──────────────────────────────────────────────
 
     @Test
