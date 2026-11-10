@@ -339,6 +339,32 @@ class PaymentFlowTest {
         verify(gateway, never()).complete3ds(anyLong());
     }
 
+    /**
+     * iOS E2E'de görüldü: banka sayfası callback'i kendi origin'inden form POST'u ile gönderir.
+     * CORS açıkken (dev ve admin web'li prod) bu istek "Invalid CORS request" 403 alıyor, ödeme
+     * INITIALIZED kalıyordu.
+     */
+    @Test
+    void bankCallbackFromBankOriginIsNotBlockedByCors() throws Exception {
+        startPayment();
+        when(gateway.retrieve(paymentId)).thenReturn(craftgate(Status.FAILURE, null, conversationId));
+
+        String page = mvc.perform(post("/api/payments/3ds/callback")
+                        .header("Origin", "https://sandbox-api.craftgate.io")
+                        .param("paymentId", "")
+                        .param("status", "FAILURE")
+                        .param("completeStatus", "")
+                        .param("conversationId", conversationId))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        assertThat(page).contains(FAILURE_SID);
+        assertStatus("FAILED");
+
+        mvc.perform(get("/api/payments/3ds/done").header("Origin", "https://sandbox-api.craftgate.io"))
+                .andExpect(status().isOk());
+    }
+
     /** Sandbox'ta görüldü: bankada iptal edilince callback'te paymentId boş, conversationId dolu gelir. */
     @Test
     void cancelledAtBankWithEmptyPaymentIdMarksFailed() throws Exception {

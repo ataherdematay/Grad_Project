@@ -112,6 +112,16 @@ public class SecurityConfig {
         if (!patterns.isEmpty()) {
             source.registerCorsConfiguration("/api/**", config);
         }
-        return source;
+        // Banka dönüşü XHR değil, bankanın sayfasından üst düzey form POST'udur: tarayıcı
+        // `Origin: https://<banka>` gönderir. CORS burada geçerli değildir; kural uygulanırsa
+        // Spring isteği "Invalid CORS request" (403) ile keser ve ödeme INITIALIZED kalır.
+        // Callback'in doğruluğu imza ve Craftgate sorgusuyla denetlenir.
+        return request -> THREEDS_BROWSER_PATHS.contains(request.getRequestURI())
+                ? null
+                : source.getCorsConfiguration(request);
     }
+
+    /** Bankanın tarayıcısının ulaştığı, CORS dışı bırakılan yollar. */
+    static final java.util.Set<String> THREEDS_BROWSER_PATHS =
+            java.util.Set.of("/api/payments/3ds/callback", "/api/payments/3ds/done");
 }
