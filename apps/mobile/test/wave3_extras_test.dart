@@ -21,6 +21,8 @@ import 'support/harness.dart';
 import 'support/wave3_fixtures.dart';
 
 void main() {
+  group('Taslak açıklama sayacı', draftCounterTests);
+
   group('Admin girişi ve Me.phone', () {
     test('phone null olabilir', () {
       final me = Me.fromJson({...meJson(isAdmin: true), 'phone': null});
@@ -465,5 +467,31 @@ void main() {
       expect(File(path).existsSync(), isFalse);
       expect(prefs.getString(draftKeyFor('u-1')), isNull);
     });
+  });
+}
+
+void draftCounterTests() {
+  testWidgets('geri yüklenen taslakta açıklama sayacı doğru sayıyı gösterir', (
+    t,
+  ) async {
+    final h = await pumpApp(
+      t,
+      session: SessionState.signedIn(testMe()),
+      initial: '/settings',
+      handler: routes(baseRoutes()),
+      size: const Size(390, 1400),
+    );
+    await h.container
+        .read(sharedPreferencesProvider)
+        .setString(
+          draftKeyFor('u-1'),
+          '{"draft":{"title":"Musluk damlıyor","description":"${'x' * 30}"},"step":3}',
+        );
+    h.router.push('/c/requests/new');
+    await t.pumpAndSettle();
+    expect(find.text('Musluk damlıyor'), findsOneWidget);
+    // Sayaç ilk çizimde geri yüklenen metni sayar (E2E O3: "0 / en az 20").
+    expect(find.text('30 / en az 20 karakter'), findsOneWidget);
+    expect(find.text('0 / en az 20 karakter'), findsNothing);
   });
 }

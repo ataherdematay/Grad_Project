@@ -49,6 +49,9 @@ class _WizardState extends ConsumerState<RequestWizardScreen> {
     if (widget.editId == null) {
       ctrl.enterNew();
       _syncTexts();
+      // Metin alanları ilk kareden sonra doldu: sayaç ve doğrulama yeniden
+      // çizilsin (yoksa geri yüklenen açıklama "0 karakter" görünür).
+      if (mounted) setState(() {});
       return;
     }
     setState(() {
