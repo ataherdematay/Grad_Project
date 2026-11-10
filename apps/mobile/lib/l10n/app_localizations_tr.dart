@@ -705,6 +705,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cancelConfirmTitle => 'Talep iptal edilsin mi?';
 
   @override
+  String get jobCancelConfirmTitle => 'İş iptal edilsin mi?';
+
+  @override
   String get cancelConfirmMessage =>
       'Bekleyen tüm teklifler kapanır. Bu işlem geri alınamaz.';
 
@@ -1483,10 +1486,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get jobScreenTitle => 'İş';
 
   @override
-  String get jobStatusAwaiting => 'Ustanın onayı bekleniyor';
+  String get jobStatusAwaiting => 'Randevu bekleniyor';
 
   @override
-  String get jobStatusAwaitingPro => 'Randevu onayın bekleniyor';
+  String get jobStatusAwaitingPro => 'Randevu bekleniyor';
 
   @override
   String get jobStatusScheduled => 'Randevun onaylandı';
@@ -1593,6 +1596,10 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get escrowExplain =>
       'Ödemen güvence havuzunda tutulur. İş bitip onayladığında ustaya aktarılır.';
+
+  @override
+  String get escrowExplainPro =>
+      'Ödeme güvence havuzunda tutulur. Müşteri işi onaylayınca ya da teslimden 48 saat sonra net kazancın sana aktarılır.';
 
   @override
   String get acceptTitle => 'Teklifi kabul et';

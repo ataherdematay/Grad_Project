@@ -7,6 +7,7 @@ import 'package:bitadilat_mobile/features/common/ui.dart' show MediaImage;
 import 'package:bitadilat_mobile/features/jobs/customer_jobs.dart';
 import 'package:bitadilat_mobile/features/jobs/job_ui.dart';
 import 'package:bitadilat_mobile/features/jobs/pro_jobs.dart';
+import 'package:bitadilat_mobile/l10n/app_localizations_tr.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
@@ -153,7 +154,7 @@ void main() {
         '/c/jobs/j1',
         jobDetailJson(status: 'AWAITING_APPOINTMENT', actions: ['CHAT']),
       );
-      expect(find.text('Ustanın onayı bekleniyor'), findsWidgets);
+      expect(find.text('Randevu bekleniyor'), findsWidgets);
       expect(find.text('Moda Cd. 1/3'), findsOneWidget);
       expect(find.text('Kapı notu: Zil bozuk'), findsOneWidget);
       expect(find.text('Teklif özeti'), findsOneWidget);
@@ -280,6 +281,13 @@ void main() {
       // Usta kazancı: hizmet bedeli ve net.
       expect(find.text('Hizmet bedeli (%10)'), findsWidgets);
       expect(find.text('₺1.080'), findsWidgets);
+      // Ödeme kartı ustaya müşteri diliyle ("Ödemen ... onayladığında")
+      // konuşmaz.
+      expect(
+        find.textContaining('net kazancın sana aktarılır'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Ödemen güvence havuzunda'), findsNothing);
       expect(find.text('Moda Cd. 1/3'), findsOneWidget);
       expect(find.text('Kapı notu: Zil bozuk'), findsOneWidget);
       expect(btn('Haritada aç'), findsOneWidget);
@@ -628,6 +636,7 @@ void main() {
       await t.enterText(find.byType(TextFormField), 'Taşınıyorum');
       await t.tap(btn('İptal et'));
       await t.pumpAndSettle();
+      expect(find.text('İş iptal edilsin mi?'), findsOneWidget);
       expect(
         find.text('Bu işlem geri alınamaz. ₺1.200 kartına iade edilir.'),
         findsOneWidget,
@@ -1600,5 +1609,104 @@ void main() {
         });
       }
     }
+  });
+
+  // E2E (iOS, 2026-11-10): zaman çizelgesinde ham sunucu kodları görünüyordu.
+  group('Zaman çizelgesi notları (E2E)', () {
+    final l = AppLocalizationsTr();
+    JobEvent ev(Map<String, dynamic> j) => JobEvent.fromJson(j);
+
+    test('randevu önerisi ISO aralığı yerine okunur aralık gösterir', () {
+      final from = DateTime(2026, 11, 11, 9).toUtc().toIso8601String();
+      final to = DateTime(2026, 11, 11, 11).toUtc().toIso8601String();
+      final e = ev(
+        eventJson(1, type: 'APPOINTMENT_PROPOSED', note: '$from/$to'),
+      );
+      expect(eventNoteText(l, e, kNow), 'Yarın, 09:00-11:00');
+    });
+
+    test('şikayet nedeni kodu etikete çevrilir', () {
+      final e = ev(
+        eventJson(
+          2,
+          to: 'DISPUTED',
+          note: 'INCOMPLETE_WORK',
+          actor: 'CUSTOMER',
+        ),
+      );
+      expect(eventNoteText(l, e, kNow), 'İş eksik ya da hatalı');
+    });
+
+    test('iptal nedeni (müşteri / usta) etikete çevrilir, not korunur', () {
+      final c = ev(
+        eventJson(3, to: 'CANCELLED', note: 'PLANS_CHANGED', actor: 'CUSTOMER'),
+      );
+      expect(eventNoteText(l, c, kNow), 'Planlarım değişti');
+      final p = ev(
+        eventJson(
+          4,
+          to: 'CANCELLED',
+          note: 'SCHEDULE_CONFLICT: Yarın şehir dışındayım',
+          actor: 'PRO',
+        ),
+      );
+      expect(
+        eventNoteText(l, p, kNow),
+        'Takvimim uygun değil: Yarın şehir dışındayım',
+      );
+    });
+
+    test('tanınmayan not ve usta notu aynen kalır', () {
+      final n = ev(eventJson(5, type: 'NOTE', note: 'INCOMPLETE_WORK'));
+      expect(eventNoteText(l, n, kNow), 'INCOMPLETE_WORK');
+      final f = ev(
+        eventJson(6, to: 'WORK_FINISHED', note: 'Sifon değişti', actor: 'PRO'),
+      );
+      expect(eventNoteText(l, f, kNow), 'Sifon değişti');
+    });
+
+    testWidgets('iş ekranında randevu ve şikayet olayları okunur görünür', (
+      t,
+    ) async {
+      final from = DateTime(2026, 11, 11, 9).toUtc().toIso8601String();
+      final to = DateTime(2026, 11, 11, 11).toUtc().toIso8601String();
+      await openJob(
+        t,
+        '/c/jobs/j1',
+        jobDetailJson(
+          status: 'DISPUTED',
+          actions: const ['CHAT'],
+          timeline: [
+            eventJson(
+              1,
+              type: 'APPOINTMENT_PROPOSED',
+              note: '$from/$to',
+              actor: 'CUSTOMER',
+            ),
+            eventJson(
+              2,
+              to: 'DISPUTED',
+              note: 'INCOMPLETE_WORK',
+              actor: 'CUSTOMER',
+            ),
+          ],
+        ),
+      );
+      await t.scrollUntilVisible(find.text('İş eksik ya da hatalı'), 200);
+      expect(find.textContaining('Z/'), findsNothing);
+      expect(find.text('INCOMPLETE_WORK'), findsNothing);
+      expect(find.text('Yarın, 09:00-11:00'), findsWidgets);
+    });
+
+    test('randevu bekleyen iş rolden bağımsız nötr etiket taşır', () {
+      expect(
+        jobStatusLabel(l, JobStatus.awaitingAppointment, PartyRole.customer),
+        'Randevu bekleniyor',
+      );
+      expect(
+        jobStatusLabel(l, JobStatus.awaitingAppointment, PartyRole.pro),
+        'Randevu bekleniyor',
+      );
+    });
   });
 }

@@ -508,23 +508,6 @@ class _AppointmentState extends ConsumerState<AppointmentScreen> {
 // 26: İptal (müşteri ve usta ortak)
 // =============================================================================
 
-String customerCancelReasonLabel(AppLocalizations l, CustomerCancelReason r) =>
-    switch (r) {
-      CustomerCancelReason.plansChanged => l.cancelReasonPlansChanged,
-      CustomerCancelReason.solved => l.cancelReasonSolved,
-      CustomerCancelReason.proUnreachable => l.cancelReasonProUnreachable,
-      CustomerCancelReason.otherProvider => l.cancelReasonOtherProvider,
-      CustomerCancelReason.other => l.cancelReasonOther,
-    };
-
-String proCancelReasonLabel(AppLocalizations l, ProCancelReason r) =>
-    switch (r) {
-      ProCancelReason.scheduleConflict => l.proCancelReasonSchedule,
-      ProCancelReason.cannotDoJob => l.proCancelReasonCannot,
-      ProCancelReason.customerUnreachable => l.proCancelReasonCustomer,
-      ProCancelReason.other => l.cancelReasonOther,
-    };
-
 /// İptalde iade edilecek tutar: ödenen − zaten iade edilen.
 Money refundAmount(JobDetail job) =>
     job.payment.totalAmount - job.payment.refundedAmount;
@@ -568,7 +551,7 @@ class _CancelState extends ConsumerState<CancelJobScreen> {
     if (_reason == null) return;
     final ok = await showConfirmDialog(
       context,
-      title: l.cancelConfirmTitle,
+      title: l.jobCancelConfirmTitle,
       message: cancelConfirmMessage(l, job, widget.pro),
       confirmLabel: l.cancelConfirmAction,
       cancelLabel: l.cancelConfirmKeep,
@@ -1046,15 +1029,6 @@ class _ReviewState extends ConsumerState<ReviewScreen> {
 // =============================================================================
 // 29: Şikayet oluştur
 // =============================================================================
-
-String complaintReasonLabel(AppLocalizations l, ComplaintReason r) =>
-    switch (r) {
-      ComplaintReason.noShow => l.complaintReasonNoShow,
-      ComplaintReason.incompleteWork => l.complaintReasonIncomplete,
-      ComplaintReason.extraCharge => l.complaintReasonExtraCharge,
-      ComplaintReason.rudeBehaviour => l.complaintReasonRude,
-      ComplaintReason.other => l.complaintReasonOther,
-    };
 
 const int kComplaintMinChars = 20;
 const int kComplaintMaxPhotos = 5;

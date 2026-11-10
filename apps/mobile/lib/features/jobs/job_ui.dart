@@ -109,6 +109,80 @@ String eventTitle(AppLocalizations l, JobEvent e, PartyRole viewer) =>
       JobEventType.appointmentAccepted => l.eventAccepted,
     };
 
+/// Olay notu. Sunucu bazı olaylarda kod yazar; kullanıcıya okunur metin
+/// gösterilir:
+/// - randevu olayları: `başlangıç/bitiş` (ISO-8601) → "Yarın, 09:00-11:00"
+/// - şikayet (→ DISPUTED): `INCOMPLETE_WORK` → "İş eksik ya da hatalı"
+/// - iptal (→ CANCELLED): `PLANS_CHANGED` ya da `PLANS_CHANGED: not`
+String eventNoteText(AppLocalizations l, JobEvent e, DateTime now) {
+  final note = e.note ?? '';
+  if (e.type == JobEventType.appointmentProposed ||
+      e.type == JobEventType.appointmentAccepted) {
+    final parts = note.split('/');
+    if (parts.length == 2) {
+      final from = DateTime.tryParse(parts[0]);
+      final to = DateTime.tryParse(parts[1]);
+      if (from != null && to != null) return formatWindow(l, from, to, now);
+    }
+    return note;
+  }
+  if (e.type != JobEventType.statusChanged) return note;
+  T? byWire<T extends Enum>(List<T> values, String code) {
+    for (final v in values) {
+      if (v.wire == code) return v;
+    }
+    return null;
+  }
+
+  switch (e.toStatus) {
+    case JobStatus.disputed:
+      final r = byWire(ComplaintReason.values, note.trim());
+      return r == null ? note : complaintReasonLabel(l, r);
+    case JobStatus.cancelled:
+      final i = note.indexOf(': ');
+      final code = (i < 0 ? note : note.substring(0, i)).trim();
+      final rest = i < 0 ? '' : note.substring(i + 2);
+      final String? label;
+      if (e.actorRole == ActorRole.pro) {
+        final r = byWire(ProCancelReason.values, code);
+        label = r == null ? null : proCancelReasonLabel(l, r);
+      } else {
+        final r = byWire(CustomerCancelReason.values, code);
+        label = r == null ? null : customerCancelReasonLabel(l, r);
+      }
+      if (label == null) return note;
+      return rest.isEmpty ? label : '$label: $rest';
+    default:
+      return note;
+  }
+}
+
+String customerCancelReasonLabel(AppLocalizations l, CustomerCancelReason r) =>
+    switch (r) {
+      CustomerCancelReason.plansChanged => l.cancelReasonPlansChanged,
+      CustomerCancelReason.solved => l.cancelReasonSolved,
+      CustomerCancelReason.proUnreachable => l.cancelReasonProUnreachable,
+      CustomerCancelReason.otherProvider => l.cancelReasonOtherProvider,
+      CustomerCancelReason.other => l.cancelReasonOther,
+    };
+
+String proCancelReasonLabel(AppLocalizations l, ProCancelReason r) =>
+    switch (r) {
+      ProCancelReason.scheduleConflict => l.proCancelReasonSchedule,
+      ProCancelReason.cannotDoJob => l.proCancelReasonCannot,
+      ProCancelReason.customerUnreachable => l.proCancelReasonCustomer,
+      ProCancelReason.other => l.cancelReasonOther,
+    };
+
+String complaintReasonLabel(AppLocalizations l, ComplaintReason r) =>
+    switch (r) {
+      ComplaintReason.noShow => l.complaintReasonNoShow,
+      ComplaintReason.incompleteWork => l.complaintReasonIncomplete,
+      ComplaintReason.extraCharge => l.complaintReasonExtraCharge,
+      ComplaintReason.rudeBehaviour => l.complaintReasonRude,
+      ComplaintReason.other => l.complaintReasonOther,
+    };
+
 // --- Randevu aralıkları ------------------------------------------------------
 
 /// Gün içindeki sabit aralıklar (başlangıç, bitiş saati).
@@ -268,7 +342,10 @@ class TimelineView extends ConsumerWidget {
                       if ((e.note ?? '').isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
-                          child: Text(e.note!, style: AppTypography.body),
+                          child: Text(
+                            eventNoteText(l, e, now),
+                            style: AppTypography.body,
+                          ),
                         ),
                       if (e.photo != null)
                         Padding(
@@ -394,7 +471,10 @@ class PaymentSummaryCard extends StatelessWidget {
           if (pro && p.netEarning != null)
             InfoRow(l.netEarningLabel, m(p.netEarning!)),
           const SizedBox(height: 4),
-          Text(l.escrowExplain, style: AppTypography.bodySecondary),
+          Text(
+            pro ? l.escrowExplainPro : l.escrowExplain,
+            style: AppTypography.bodySecondary,
+          ),
         ],
       ),
     );

@@ -1394,6 +1394,12 @@ abstract class AppLocalizations {
   /// **'Talep iptal edilsin mi?'**
   String get cancelConfirmTitle;
 
+  /// No description provided for @jobCancelConfirmTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş iptal edilsin mi?'**
+  String get jobCancelConfirmTitle;
+
   /// No description provided for @cancelConfirmMessage.
   ///
   /// In tr, this message translates to:
@@ -2789,13 +2795,13 @@ abstract class AppLocalizations {
   /// No description provided for @jobStatusAwaiting.
   ///
   /// In tr, this message translates to:
-  /// **'Ustanın onayı bekleniyor'**
+  /// **'Randevu bekleniyor'**
   String get jobStatusAwaiting;
 
   /// No description provided for @jobStatusAwaitingPro.
   ///
   /// In tr, this message translates to:
-  /// **'Randevu onayın bekleniyor'**
+  /// **'Randevu bekleniyor'**
   String get jobStatusAwaitingPro;
 
   /// No description provided for @jobStatusScheduled.
@@ -3007,6 +3013,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Ödemen güvence havuzunda tutulur. İş bitip onayladığında ustaya aktarılır.'**
   String get escrowExplain;
+
+  /// No description provided for @escrowExplainPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme güvence havuzunda tutulur. Müşteri işi onaylayınca ya da teslimden 48 saat sonra net kazancın sana aktarılır.'**
+  String get escrowExplainPro;
 
   /// No description provided for @acceptTitle.
   ///

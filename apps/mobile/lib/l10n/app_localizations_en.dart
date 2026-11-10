@@ -719,6 +719,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelConfirmTitle => 'Cancel this request?';
 
   @override
+  String get jobCancelConfirmTitle => 'Cancel this job?';
+
+  @override
   String get cancelConfirmMessage =>
       'All pending offers will close. This cannot be undone.';
 
@@ -1547,10 +1550,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobScreenTitle => 'Job';
 
   @override
-  String get jobStatusAwaiting => 'Awaiting pro confirmation';
+  String get jobStatusAwaiting => 'Awaiting appointment';
 
   @override
-  String get jobStatusAwaitingPro => 'Awaiting your appointment confirmation';
+  String get jobStatusAwaitingPro => 'Awaiting appointment';
 
   @override
   String get jobStatusScheduled => 'Appointment confirmed';
@@ -1657,6 +1660,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get escrowExplain =>
       'Your payment is kept in secure hold. It is paid out to the pro once the job is done and you approve it.';
+
+  @override
+  String get escrowExplainPro =>
+      'The payment is kept in secure hold. Your net earning is paid out once the customer approves the job, or 48 hours after delivery.';
 
   @override
   String get acceptTitle => 'Accept the offer';
