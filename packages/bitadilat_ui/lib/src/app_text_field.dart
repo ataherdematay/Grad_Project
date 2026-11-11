@@ -128,8 +128,11 @@ class _AppTextFieldState extends State<AppTextField> {
               prefixIcon: widget.prefixText == null
                   ? null
                   : Padding(
+                      // Material 3 çerçeveli alan metni içerik boşluğuna ek
+                      // 4 px (`inputGap`) içeriden başlatır; önek de diğer
+                      // alanların ipucu/metin sütunuyla aynı hizada başlar.
                       padding: const EdgeInsetsDirectional.only(
-                        start: AppSpacing.md,
+                        start: AppSpacing.md + 4,
                       ),
                       child: Text(
                         widget.prefixText!.trim(),

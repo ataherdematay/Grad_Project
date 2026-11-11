@@ -15,8 +15,10 @@ abstract final class AppTheme {
       onPrimaryContainer: AppColors.primaryDark,
       secondary: AppColors.urgency,
       onSecondary: Colors.white,
-      secondaryContainer: Color(0xFFFDF1E9),
-      onSecondaryContainer: AppColors.urgencyText,
+      // Seçili chip/segment rengi (Material 3 `secondaryContainer`).
+      // Turuncu yalnız aciliyet içindir; seçim teal tonuyla gösterilir.
+      secondaryContainer: Color(0xFFD7E8EC),
+      onSecondaryContainer: AppColors.primaryDark,
       tertiary: AppColors.success,
       onTertiary: Colors.white,
       error: AppColors.error,

@@ -1,4 +1,5 @@
 import 'package:bitadilat_api/bitadilat_api.dart' show PartyRole;
+import 'package:bitadilat_ui/bitadilat_ui.dart' show AppColors;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -49,9 +50,15 @@ GoRoute appRoute({
 /// Açılış ve karşılama kökleri: geri hareketi olmayan kök ekranlar yana
 /// kaymaz, yumuşakça belirir. Açılıştan karşılamaya geçişte yandan kayan
 /// sayfa ve arkada sıyrılan logo görünmez.
+///
+/// [fadeOutUnderNext]: sayfa, yerine geçen sayfa belirmeden önce (geçişin
+/// ilk %35'i) zemin rengine silinir. Yalnız üstüne hiçbir şey `push`
+/// edilmeyen açılış için: aksi halde arkadaki sayfa, üstte açılan sayfanın
+/// kaydırarak geri hareketinde boş görünür.
 GoRoute fadeRoute({
   required String path,
   required Widget Function(BuildContext context, GoRouterState state) builder,
+  bool fadeOutUnderNext = false,
 }) => GoRoute(
   path: path,
   pageBuilder: (context, state) => CustomTransitionPage<void>(
@@ -62,8 +69,28 @@ GoRoute fadeRoute({
     reverseTransitionDuration: const Duration(milliseconds: 200),
     transitionsBuilder: (context, animation, secondaryAnimation, child) =>
         FadeTransition(
-          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          child: child,
+          // Önce eski içerik silinir (ilk %35), sonra yenisi belirir: iki
+          // ekranın içeriği üst üste yarı saydam görünmez.
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: const Interval(0.35, 1, curve: Curves.easeOut),
+          ),
+          child: fadeOutUnderNext
+              // Zemin opak kalır; yalnız içerik silinir. Yeni sayfa yarı
+              // saydamken eski karo onun metninin üstünde görünmez.
+              ? ColoredBox(
+                  color: AppColors.canvas,
+                  child: FadeTransition(
+                    opacity: ReverseAnimation(
+                      CurvedAnimation(
+                        parent: secondaryAnimation,
+                        curve: const Interval(0, 0.35, curve: Curves.easeOut),
+                      ),
+                    ),
+                    child: child,
+                  ),
+                )
+              : child,
         ),
     child: builder(context, state),
   ),
@@ -84,7 +111,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         guardRedirect(ref.read(sessionProvider), state.uri),
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      fadeRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      fadeRoute(
+        path: '/',
+        builder: (_, _) => const SplashScreen(),
+        fadeOutUnderNext: true,
+      ),
       fadeRoute(
         path: '/welcome',
         builder: (_, state) =>

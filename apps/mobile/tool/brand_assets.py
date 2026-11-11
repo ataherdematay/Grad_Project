@@ -12,6 +12,7 @@ import json
 import os
 
 from PIL import Image, ImageDraw
+from PIL.PngImagePlugin import PngInfo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(HERE, "..", "ios", "Runner", "Assets.xcassets")
@@ -31,6 +32,14 @@ CHECK_PTS = [(11.5, 18), (14.5, 21), (20, 14.5)]
 CHECK_STROKE = 2.75
 
 SS = 8  # süper örnekleme
+
+
+def _srgb():
+    """PNG'ye sRGB parçası: etiketsiz PNG iOS'ta Display P3 sayılır ve renkler
+    Flutter'daki `BrandMark`'tan daha doygun çizilir."""
+    info = PngInfo()
+    info.add(b"sRGB", b"\x00")  # algısal yorumlama
+    return info
 
 
 def _gradient(size):
@@ -82,7 +91,9 @@ def app_icons():
         scale = int(item["scale"].rstrip("x"))
         px = round(pt * scale)
         out = master if px == 1024 else master.resize((px, px), Image.LANCZOS)
-        out.save(os.path.join(folder, item["filename"]), optimize=True)
+        out.save(
+            os.path.join(folder, item["filename"]), optimize=True, pnginfo=_srgb()
+        )
 
 
 # Açılış ekranındaki karo: 96 pt. `SplashScreen` aynı ölçüyü kullanır.
@@ -94,7 +105,7 @@ def launch_images():
     for scale, name in ((1, "LaunchImage.png"), (2, "LaunchImage@2x.png"),
                         (3, "LaunchImage@3x.png")):
         render(LAUNCH_PT * scale, rounded=True).save(
-            os.path.join(folder, name), optimize=True
+            os.path.join(folder, name), optimize=True, pnginfo=_srgb()
         )
 
 

@@ -60,8 +60,17 @@ abstract final class AppTypography {
   /// Etiket: 14 medium.
   static TextStyle get label => _style(14, FontWeight.w500, height: 1.3);
 
+  /// Material'in 15 metin rolünün hepsi. Boş bırakılan rol `ThemeData`
+  /// içinde platform fontuna düşer (iOS'ta SF: tarih/saat seçici başlığı,
+  /// büyük AppBar); bu yüzden tasarımda karşılığı olmayan roller de Manrope
+  /// ile ve Material 3 ölçüleriyle doldurulur.
   static TextTheme get textTheme => TextTheme(
+    displayLarge: _style(57, FontWeight.w400, height: 64 / 57),
+    displayMedium: _style(45, FontWeight.w400, height: 52 / 45),
+    displaySmall: _style(36, FontWeight.w400, height: 44 / 36),
+    headlineLarge: _style(32, FontWeight.w600, height: 1.25),
     headlineMedium: screenTitle,
+    headlineSmall: _style(24, FontWeight.w600, height: 1.3),
     titleLarge: section,
     titleMedium: cardTitle,
     titleSmall: cardTitle,

@@ -4,6 +4,8 @@ import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_mobile/core/error_messages.dart';
 import 'package:bitadilat_mobile/core/forms.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
+import 'package:bitadilat_mobile/features/auth/splash_screen.dart';
+import 'package:bitadilat_mobile/features/auth/welcome_screen.dart';
 import 'package:bitadilat_mobile/features/common/widgets.dart';
 import 'package:bitadilat_mobile/l10n/app_localizations.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
@@ -519,6 +521,55 @@ void main() {
       final bottom = t.getBottomLeft(button('Hesap oluştur')).dy;
       expect(bottom, greaterThan(844 - 120));
       expect(bottom, lessThanOrEqualTo(844 - 16));
+    });
+
+    testWidgets('açılıştan karşılamaya geçişte açılış karosu metnin üstünde '
+        'hayalet gibi kalmaz', (t) async {
+      // Gerçek oturum denetleyicisi: token yok → açılış → karşılama.
+      await pumpApp(t, settle: false);
+      double opacity(Finder f) {
+        var o = 1.0;
+        t.element(f).visitAncestorElements((e) {
+          final w = e.widget;
+          if (w is FadeTransition) o *= w.opacity.value;
+          if (w is Opacity) o *= w.opacity;
+          return true;
+        });
+        return o;
+      }
+
+      final splashMark = find.descendant(
+        of: find.byType(SplashScreen),
+        matching: find.byType(BrandMark),
+      );
+      // Geçişin ilk karesini bul: karşılama belirmeye başladı.
+      for (
+        var i = 0;
+        i < 20 && find.byType(WelcomeScreen).evaluate().isEmpty;
+        i++
+      ) {
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      expect(find.byType(WelcomeScreen), findsOneWidget);
+      expect(splashMark, findsOneWidget);
+      // Geçiş boyunca her karede: karşılama içeriği görünmeye başladığında
+      // karo silinmiş olmalı (yoksa karo değer önerisi satırlarının üstünde
+      // yarı saydam görünür). Önce içerik gider, sonra yenisi gelir.
+      var frames = 0;
+      while (splashMark.evaluate().isNotEmpty && frames < 40) {
+        final overlap = [
+          opacity(find.byType(WelcomeScreen)),
+          opacity(splashMark),
+        ].reduce((a, b) => a < b ? a : b);
+        expect(overlap, lessThanOrEqualTo(0.1), reason: 'kare $frames');
+        await t.pump(const Duration(milliseconds: 16));
+        frames++;
+      }
+      // Geçiş kısa kalır (~280 ms).
+      expect(frames, inInclusiveRange(10, 24));
+      await t.pumpAndSettle();
+      expect(find.byType(SplashScreen), findsNothing);
+      expect(opacity(find.byType(WelcomeScreen)), 1);
     });
 
     testWidgets('karşılama 320 px ve 3x yazıda taşmaz', (t) async {
