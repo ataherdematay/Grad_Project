@@ -277,6 +277,8 @@ abstract class Complaint with _$Complaint {
     String? decisionNote,
     required DateTime createdAt,
     DateTime? decidedAt,
+    @NullableMoneyConverter() Money? refundAmount,
+    @NullableMoneyConverter() Money? proAmount,
   }) = _Complaint;
 
   factory Complaint.fromJson(Map<String, dynamic> json) =>

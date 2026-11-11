@@ -2429,4 +2429,244 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeSeeAll => 'See all';
+
+  @override
+  String get notificationsMarkAllRead => 'Mark all as read';
+
+  @override
+  String get notificationsEmptyTitle => 'No notifications yet';
+
+  @override
+  String get notificationsEmptyBody => 'You\'ll see new updates here.';
+
+  @override
+  String get notificationsLoadMore => 'Show more';
+
+  @override
+  String get notificationUnread => 'Unread';
+
+  @override
+  String get notificationsCantOpenTitle => 'Can\'t open this notification';
+
+  @override
+  String get notificationsCantOpenBody =>
+      'The page for this notification doesn\'t exist, or you can\'t open it right now.';
+
+  @override
+  String get notificationsSwitchProTitle => 'Switch to pro mode and open it?';
+
+  @override
+  String get notificationsSwitchProBody =>
+      'This notification belongs to pro mode. We will open it after switching; you can return to customer mode from your profile.';
+
+  @override
+  String get notificationsSwitchCustomerTitle =>
+      'Switch to customer mode and open it?';
+
+  @override
+  String get notificationsSwitchCustomerBody =>
+      'This notification belongs to customer mode. We will open it after switching; you can return to pro mode from your profile.';
+
+  @override
+  String get notificationsBellLabel => 'Notifications';
+
+  @override
+  String notificationsBellLabelUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Notifications, $count unread',
+      one: 'Notifications, 1 unread',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifNewMatchingRequest(String title, String districtName) {
+    return 'New request that matches you: $title ($districtName).';
+  }
+
+  @override
+  String notifOfferReceived(
+    String proBusinessName,
+    String title,
+    String amount,
+  ) {
+    return '$proBusinessName offered $amount for $title.';
+  }
+
+  @override
+  String notifOfferDeclined(String title, String publicCode) {
+    return 'Your offer for $title ($publicCode) was declined.';
+  }
+
+  @override
+  String notifOfferSuperseded(String title, String publicCode) {
+    return 'The customer chose another offer for $title ($publicCode).';
+  }
+
+  @override
+  String notifOfferAccepted(String title, String publicCode, String amount) {
+    return 'Your offer was accepted: $title ($publicCode), $amount.';
+  }
+
+  @override
+  String notifRequestUpdated(String title, String publicCode) {
+    return 'The request $title ($publicCode) was updated. Review your offer.';
+  }
+
+  @override
+  String notifAppointmentProposed(String publicCode, String slot) {
+    return 'A new appointment was proposed for job $publicCode: $slot.';
+  }
+
+  @override
+  String notifAppointmentConfirmed(String publicCode, String slot) {
+    return 'The appointment for job $publicCode is confirmed: $slot.';
+  }
+
+  @override
+  String notifJobStageChanged(String publicCode, String status) {
+    return 'The status of job $publicCode changed: $status.';
+  }
+
+  @override
+  String notifWorkFinished(String publicCode, String deadline) {
+    return 'Job $publicCode is finished. If you do not confirm by $deadline, it completes automatically.';
+  }
+
+  @override
+  String notifAutoCompleteReminder(String publicCode, String deadline) {
+    return 'Job $publicCode completes automatically on $deadline. Report any problem now.';
+  }
+
+  @override
+  String notifPayoutReleased(String publicCode, String amount) {
+    return 'The $amount payment for job $publicCode was released.';
+  }
+
+  @override
+  String notifJobCancelledByCustomer(String publicCode, String refundAmount) {
+    return 'The customer cancelled job $publicCode. Refund: $refundAmount.';
+  }
+
+  @override
+  String notifJobCancelledByPro(String publicCode, String refundAmount) {
+    return 'The pro cancelled job $publicCode. Refund: $refundAmount.';
+  }
+
+  @override
+  String notifJobCancelledOther(String publicCode, String refundAmount) {
+    return 'Job $publicCode was cancelled. Refund: $refundAmount.';
+  }
+
+  @override
+  String notifNewMessage(String senderName, String publicCode) {
+    return '$senderName sent you a message ($publicCode).';
+  }
+
+  @override
+  String notifComplaintOpened(String publicCode, String complaintCode) {
+    return 'Complaint $complaintCode was opened for job $publicCode.';
+  }
+
+  @override
+  String notifComplaintDecided(String complaintCode, String decision) {
+    return 'Complaint $complaintCode was decided: $decision.';
+  }
+
+  @override
+  String notifComplaintDecidedAmount(
+    String complaintCode,
+    String decision,
+    String amount,
+  ) {
+    return 'Complaint $complaintCode was decided: $decision. Amount: $amount.';
+  }
+
+  @override
+  String get notifProApproved =>
+      'Your pro application was approved. You can now see requests that match you.';
+
+  @override
+  String notifProRejected(String note) {
+    return 'Your pro application was not accepted. Review note: $note';
+  }
+
+  @override
+  String notifProNeedsDocuments(String note) {
+    return 'Your application has missing documents. Review note: $note';
+  }
+
+  @override
+  String get notifUnknown => 'You have a new notification.';
+
+  @override
+  String get complaintDecisionFullRefund => 'Full refund';
+
+  @override
+  String get complaintDecisionSplit => 'Split in half (50% / 50%)';
+
+  @override
+  String get complaintDecisionRelease => 'Payment released to the pro';
+
+  @override
+  String get complaintAdminNote => 'Review team\'s note';
+
+  @override
+  String get complaintAmountsTitle => 'Amounts';
+
+  @override
+  String get complaintRefundAmount => 'Refunded to you';
+
+  @override
+  String get complaintProAmount => 'Paid to the pro';
+
+  @override
+  String get complaintDecidedAt => 'Decision date';
+
+  @override
+  String get applicationRejectedDocsTitle => 'Documents to upload again';
+
+  @override
+  String get applicationRejectedDocsHelp =>
+      'Replace only the rejected documents; accepted ones stay as they are.';
+
+  @override
+  String get applicationResubmitSend => 'Resubmit';
+
+  @override
+  String get applicationReapply => 'Apply again';
+
+  @override
+  String get applicationRejectedNext =>
+      'After reading the note and fixing the issues, you can apply again with your existing details.';
+
+  @override
+  String get suspendedTitle => 'Your pro profile is suspended';
+
+  @override
+  String get suspendedBody =>
+      'While suspended you cannot see requests or send offers. You can keep using the app as a customer.';
+
+  @override
+  String get suspendedWhyTitle => 'Why was it suspended?';
+
+  @override
+  String get suspendedWhyDefault =>
+      'Your profile was suspended after a review. You can ask the support team for details.';
+
+  @override
+  String get suspendedContactSupport => 'Contact support';
+
+  @override
+  String get suspendedSupportHelp =>
+      'Write to the support team to appeal or get more information.';
+
+  @override
+  String get suspendedMailSubject => 'My pro profile was suspended';
+
+  @override
+  String get suspendedMailFailed =>
+      'Could not open the email app. You can write to the support address yourself.';
 }

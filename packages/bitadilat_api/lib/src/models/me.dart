@@ -19,6 +19,7 @@ abstract class Me with _$Me {
     required bool isAdmin,
     required String status,
     ProSummary? pro,
+    @Default(0) int unreadNotifications,
   }) = _Me;
 
   factory Me.fromJson(Map<String, dynamic> json) => _$MeFromJson(json);

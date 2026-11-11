@@ -183,6 +183,32 @@ String complaintReasonLabel(AppLocalizations l, ComplaintReason r) =>
       ComplaintReason.other => l.complaintReasonOther,
     };
 
+/// Şikayet kararının etiketi; bilinmeyen değerde `null` (ham metin gösterilir).
+String? complaintDecisionLabel(AppLocalizations l, String? decision) =>
+    switch (decision) {
+      'FULL_REFUND' => l.complaintDecisionFullRefund,
+      'SPLIT_50_50' => l.complaintDecisionSplit,
+      'RELEASE_TO_PRO' => l.complaintDecisionRelease,
+      _ => null,
+    };
+
+/// Kararın para dağılımı (iade, usta payı). Sunucu tutarları göndermediyse
+/// iş toplamından, sözleşmedeki kurallarla hesaplanır: tam iade; yarı yarıya
+/// (iade kuruşa yuvarlanır, kalan ustaya); ustaya aktar (%10 hizmet bedeli
+/// düşülür). Kuruş (`int`) üzerinden çalışır.
+({Money refund, Money pro})? decisionAmounts(String? decision, Money total) {
+  switch (decision) {
+    case 'FULL_REFUND':
+      return (refund: total, pro: Money.zero);
+    case 'SPLIT_50_50':
+      final refund = Money.cents(total.cents ~/ 2);
+      return (refund: refund, pro: total - refund);
+    case 'RELEASE_TO_PRO':
+      return (refund: Money.zero, pro: total - total.percent(10));
+  }
+  return null;
+}
+
 // --- Randevu aralıkları ------------------------------------------------------
 
 /// Gün içindeki sabit aralıklar (başlangıç, bitiş saati).

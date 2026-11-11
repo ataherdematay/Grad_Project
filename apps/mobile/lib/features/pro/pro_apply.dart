@@ -16,6 +16,7 @@ import '../common/pickers.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
 import '../customer/pro_profile_screens.dart' show documentLabel;
+import '../jobs/pro_jobs.dart' show urlOpenerProvider;
 
 /// Başvuruda zorunlu belgeler.
 const Set<ProDocumentType> kRequiredDocs = {
@@ -304,7 +305,13 @@ class _ProApplyState extends ConsumerState<ProApplyScreen> {
   }
 }
 
-/// `/p/application`: başvuru durumu.
+/// Destek adresi. Yayın öncesi `--dart-define=SUPPORT_EMAIL=...` ile verilir.
+const String kSupportEmail = String.fromEnvironment(
+  'SUPPORT_EMAIL',
+  defaultValue: 'destek@bitadilat.com',
+);
+
+/// `/p/application`: başvuru durumu, yönetici notu ve kararın sonuçları.
 class ProApplicationScreen extends ConsumerWidget {
   const ProApplicationScreen({super.key});
 
@@ -357,8 +364,6 @@ class ProApplicationScreen extends ConsumerWidget {
         builder: (context, app) {
           final s = app?.reviewStatus ?? status;
           final c = s == null ? null : chip(s);
-          final canResubmit =
-              s == ReviewStatus.needsDocuments || s == ReviewStatus.rejected;
           return RefreshIndicator(
             onRefresh: refresh,
             child: ListView(
@@ -371,63 +376,298 @@ class ProApplicationScreen extends ConsumerWidget {
                     child: StatusChip(label: c.$1, icon: c.$2, tone: c.$3),
                   ),
                 const SizedBox(height: AppSpacing.sm),
-                Text(switch (s) {
-                  ReviewStatus.pendingReview => l.applicationPendingBody,
-                  ReviewStatus.needsDocuments => l.applicationNeedsBody,
-                  ReviewStatus.rejected => l.applicationRejectedBody,
-                  ReviewStatus.suspended => l.applicationSuspendedBody,
-                  _ => l.applicationPendingBody,
-                }, style: AppTypography.body),
-                if ((app?.reviewNote ?? '').isNotEmpty) ...[
-                  sectionTitle(l.adminNote),
-                  AppCard(child: Text(app!.reviewNote!)),
-                ],
-                if (app != null && app.documents.isNotEmpty) ...[
-                  sectionTitle(l.applyDocuments),
-                  for (final d in app.documents)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                      child: Row(
-                        children: [
-                          Expanded(child: Text(documentLabel(l, d.type))),
-                          StatusChip(
-                            label: switch (d.status) {
-                              DocumentStatus.pending => l.docStatusPending,
-                              DocumentStatus.accepted => l.docStatusAccepted,
-                              DocumentStatus.rejected => l.docStatusRejected,
-                            },
-                            icon: switch (d.status) {
-                              DocumentStatus.pending => Icons.hourglass_top,
-                              DocumentStatus.accepted => Icons.check,
-                              DocumentStatus.rejected => Icons.close,
-                            },
-                            tone: switch (d.status) {
-                              DocumentStatus.pending => StatusTone.urgent,
-                              DocumentStatus.accepted => StatusTone.success,
-                              DocumentStatus.rejected => StatusTone.error,
-                            },
-                          ),
-                        ],
+                if (s == ReviewStatus.suspended)
+                  _SuspendedView(note: app?.reviewNote)
+                else ...[
+                  Text(switch (s) {
+                    ReviewStatus.pendingReview => l.applicationPendingBody,
+                    ReviewStatus.needsDocuments => l.applicationNeedsBody,
+                    ReviewStatus.rejected => l.applicationRejectedBody,
+                    _ => l.applicationPendingBody,
+                  }, style: AppTypography.body),
+                  if ((app?.reviewNote ?? '').isNotEmpty) ...[
+                    sectionTitle(l.adminNote),
+                    AppCard(child: Text(app!.reviewNote!)),
+                  ],
+                  if (app != null && app.documents.isNotEmpty) ...[
+                    sectionTitle(l.applyDocuments),
+                    for (final d in app.documents)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                        child: Row(
+                          children: [
+                            Expanded(child: Text(documentLabel(l, d.type))),
+                            const SizedBox(width: AppSpacing.xs),
+                            StatusChip(
+                              label: switch (d.status) {
+                                DocumentStatus.pending => l.docStatusPending,
+                                DocumentStatus.accepted => l.docStatusAccepted,
+                                DocumentStatus.rejected => l.docStatusRejected,
+                              },
+                              icon: switch (d.status) {
+                                DocumentStatus.pending => Icons.hourglass_top,
+                                DocumentStatus.accepted => Icons.check,
+                                DocumentStatus.rejected => Icons.close,
+                              },
+                              tone: switch (d.status) {
+                                DocumentStatus.pending => StatusTone.urgent,
+                                DocumentStatus.accepted => StatusTone.success,
+                                DocumentStatus.rejected => StatusTone.error,
+                              },
+                            ),
+                          ],
+                        ),
                       ),
+                  ],
+                  if (s == ReviewStatus.needsDocuments &&
+                      app != null &&
+                      app.documents.any(
+                        (d) => d.status == DocumentStatus.rejected,
+                      ))
+                    _ResubmitDocuments(key: ValueKey(app), app: app),
+                  if (s == ReviewStatus.rejected) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      l.applicationRejectedNext,
+                      style: AppTypography.bodySecondary,
                     ),
-                ],
-                const SizedBox(height: AppSpacing.lg),
-                if (canResubmit)
+                    const SizedBox(height: AppSpacing.sm),
+                    AppButton(
+                      label: l.applicationReapply,
+                      onPressed: () => context.push('/p/apply'),
+                    ),
+                  ],
+                  const SizedBox(height: AppSpacing.xs),
                   AppButton(
-                    label: l.applyResubmit,
-                    onPressed: () => context.push('/p/apply'),
+                    label: l.backToCustomerMode,
+                    variant: AppButtonVariant.secondary,
+                    onPressed: () => context.go('/c/home'),
                   ),
-                const SizedBox(height: AppSpacing.xs),
-                AppButton(
-                  label: l.backToCustomerMode,
-                  variant: AppButtonVariant.secondary,
-                  onPressed: () => context.go('/c/home'),
-                ),
+                ],
               ],
             ),
           );
         },
       ),
+    );
+  }
+}
+
+/// `NEEDS_DOCUMENTS`: yalnız `REJECTED` belgeler yeniden yüklenir; kabul
+/// edilen ve inceleniyor durumundakiler olduğu gibi gönderilir.
+class _ResubmitDocuments extends ConsumerStatefulWidget {
+  const _ResubmitDocuments({super.key, required this.app});
+
+  final ProApplication app;
+
+  @override
+  ConsumerState<_ResubmitDocuments> createState() => _ResubmitDocumentsState();
+}
+
+class _ResubmitDocumentsState extends ConsumerState<_ResubmitDocuments> {
+  late final Map<ProDocumentType, PhotoSet> _sets;
+  bool _attempted = false;
+  bool _submitting = false;
+  String? _banner;
+
+  List<ApplicationDocument> get _rejected => [
+    for (final d in widget.app.documents)
+      if (d.status == DocumentStatus.rejected) d,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _sets = {
+      for (final d in _rejected)
+        d.type: PhotoSet(
+          api: ref.read(apiClientProvider).media,
+          picker: ref.read(photoPickerProvider),
+          recompress: ref.read(recompressProvider),
+          purpose: MediaPurpose.proDocument,
+          max: 1,
+        ),
+    };
+  }
+
+  @override
+  void dispose() {
+    for (final s in _sets.values) {
+      s.dispose();
+    }
+    super.dispose();
+  }
+
+  bool get _complete =>
+      _sets.values.every((s) => s.mediaIds.isNotEmpty) &&
+      !_sets.values.any((s) => s.isBusy);
+
+  Future<void> _submit() async {
+    if (_submitting) return;
+    final l = AppLocalizations.of(context);
+    setState(() {
+      _attempted = true;
+      _banner = null;
+    });
+    if (!_complete) return;
+    setState(() => _submitting = true);
+    final app = widget.app;
+    try {
+      await ref
+          .read(apiClientProvider)
+          .pro
+          .submitApplication(
+            ApplicationInput(
+              businessName: app.businessName,
+              bio: app.bio,
+              experienceYears: app.experienceYears,
+              categoryIds: app.categoryIds,
+              districtIds: app.districtIds,
+              documents: [
+                for (final d in app.documents)
+                  if (d.status != DocumentStatus.rejected)
+                    DocumentInput(type: d.type, mediaId: d.media.id),
+                for (final e in _sets.entries)
+                  DocumentInput(type: e.key, mediaId: e.value.mediaIds.first),
+              ],
+            ),
+          );
+      invalidateProData(ref);
+      await ref.read(sessionProvider.notifier).afterApplicationSubmitted();
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() => _banner = apiErrorMessage(l, e.code));
+      if (e.code == ApiErrorCode.illegalState) {
+        invalidateProData(ref);
+        await ref.read(sessionProvider.notifier).refreshMe();
+      }
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        sectionTitle(l.applicationRejectedDocsTitle),
+        Text(l.applicationRejectedDocsHelp, style: AppTypography.bodySecondary),
+        for (final d in _rejected) ...[
+          const FieldGap(),
+          Text(documentLabel(l, d.type), style: AppTypography.cardTitle),
+          const SizedBox(height: AppSpacing.xs),
+          PhotoSetView(set: _sets[d.type]!, enabled: !_submitting),
+          if (_attempted)
+            ListenableBuilder(
+              listenable: _sets[d.type]!,
+              builder: (_, _) => _sets[d.type]!.mediaIds.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text(
+                        l.docMissing(documentLabel(l, d.type)),
+                        style: AppTypography.label.copyWith(
+                          color: AppColors.error,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+        ],
+        if (_banner != null) ...[const FieldGap(), MessageBanner(_banner!)],
+        const FieldGap(big: true),
+        AppButton(
+          label: l.applicationResubmitSend,
+          isLoading: _submitting,
+          onPressed: _submit,
+        ),
+      ],
+    );
+  }
+}
+
+/// `SUSPENDED`: neden, destekle iletişim ve müşteri moduna geçiş.
+class _SuspendedView extends ConsumerStatefulWidget {
+  const _SuspendedView({this.note});
+
+  final String? note;
+
+  @override
+  ConsumerState<_SuspendedView> createState() => _SuspendedViewState();
+}
+
+class _SuspendedViewState extends ConsumerState<_SuspendedView> {
+  bool _switching = false;
+
+  Future<void> _contact() async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final uri = Uri(
+      scheme: 'mailto',
+      path: kSupportEmail,
+      queryParameters: {'subject': l.suspendedMailSubject},
+    );
+    bool ok;
+    try {
+      ok = await ref.read(urlOpenerProvider)(uri);
+    } catch (_) {
+      ok = false;
+    }
+    if (!ok) {
+      messenger.showSnackBar(SnackBar(content: Text(l.suspendedMailFailed)));
+    }
+  }
+
+  Future<void> _toCustomer() async {
+    if (_switching) return;
+    setState(() => _switching = true);
+    final router = GoRouter.of(context);
+    final session = ref.read(sessionProvider.notifier);
+    try {
+      // Son mod PRO kalırsa sonraki açılışta yine bu ekrana dönülür.
+      if (ref.read(sessionProvider).me?.lastMode == UserMode.pro) {
+        await session.switchMode(UserMode.customer);
+      }
+    } on ApiException {
+      // Mod kaydı olmasa da müşteri ekranına geçilir.
+    }
+    router.go('/c/home');
+    if (mounted) setState(() => _switching = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final note = widget.note;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l.suspendedTitle, style: AppTypography.screenTitle),
+        const SizedBox(height: AppSpacing.xs),
+        Text(l.suspendedBody, style: AppTypography.body),
+        sectionTitle(l.suspendedWhyTitle),
+        AppCard(
+          child: Text(
+            note != null && note.isNotEmpty ? note : l.suspendedWhyDefault,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(l.suspendedSupportHelp, style: AppTypography.bodySecondary),
+        const SizedBox(height: AppSpacing.sm),
+        AppButton(
+          label: l.suspendedContactSupport,
+          icon: Icons.mail_outline,
+          onPressed: _contact,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        AppButton(
+          label: l.switchToCustomer,
+          variant: AppButtonVariant.secondary,
+          isLoading: _switching,
+          onPressed: _toCustomer,
+        ),
+      ],
     );
   }
 }

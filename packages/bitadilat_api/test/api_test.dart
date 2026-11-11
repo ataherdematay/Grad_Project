@@ -49,6 +49,7 @@ Map<String, dynamic> meJson({Object? pro}) => {
   'isAdmin': false,
   'status': 'ACTIVE',
   'pro': pro,
+  'unreadNotifications': 0,
 };
 
 Map<String, dynamic> authJson(String access, String refresh) => {

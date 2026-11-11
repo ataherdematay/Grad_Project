@@ -22,6 +22,9 @@ const Set<String> _tabPaths = {
   '/p/profile',
 };
 
+/// Alt sekme kökü mü? Sekme kökleri `push` ile değil `go` ile açılır.
+bool isTabRoot(String path) => _tabPaths.contains(path);
+
 final RegExp _legalRe = RegExp(r'^/legal/[^/]+$');
 final RegExp _chatRe = RegExp(r'^/jobs/[^/]+/chat$');
 
