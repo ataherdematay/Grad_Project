@@ -46,6 +46,29 @@ GoRoute appRoute({
   ),
 );
 
+/// Açılış ve karşılama kökleri: geri hareketi olmayan kök ekranlar yana
+/// kaymaz, yumuşakça belirir. Açılıştan karşılamaya geçişte yandan kayan
+/// sayfa ve arkada sıyrılan logo görünmez.
+GoRoute fadeRoute({
+  required String path,
+  required Widget Function(BuildContext context, GoRouterState state) builder,
+}) => GoRoute(
+  path: path,
+  pageBuilder: (context, state) => CustomTransitionPage<void>(
+    key: state.pageKey,
+    name: state.name ?? state.path,
+    arguments: state.extra,
+    transitionDuration: const Duration(milliseconds: 280),
+    reverseTransitionDuration: const Duration(milliseconds: 200),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          child: child,
+        ),
+    child: builder(context, state),
+  ),
+);
+
 /// Testlerde belirli bir rotadan başlamak için ezilir.
 final initialLocationProvider = Provider<String>((ref) => '/');
 
@@ -61,8 +84,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         guardRedirect(ref.read(sessionProvider), state.uri),
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      appRoute(path: '/', builder: (_, _) => const SplashScreen()),
-      appRoute(
+      fadeRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      fadeRoute(
         path: '/welcome',
         builder: (_, state) =>
             WelcomeScreen(next: safeNext(state.uri.queryParameters['next'])),

@@ -16,8 +16,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get welcomeTagline => 'Evdeki tamir işi için teklif al, ustanı seç.';
 
   @override
-  String get welcomeBody =>
-      'Talebini aç, ustalardan teklif gelsin. Ödemeni güvence havuzunda tut, iş bitince onayla.';
+  String get welcomePointRequest => 'Talebini aç, ustalardan teklif gelsin.';
+
+  @override
+  String get welcomePointVerified =>
+      'Teklifler yalnız doğrulanmış ustalardan gelir.';
+
+  @override
+  String get welcomePointSecureHold =>
+      'Ödemen güvence havuzunda kalır, iş bitince onaylarsın.';
 
   @override
   String get actionLogin => 'Giriş yap';

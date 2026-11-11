@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'tokens.dart';
 
 /// Manrope tipografisi.
 ///
-/// Font şimdilik çalışma anında `google_fonts` ile alınır; dosya depoda yok.
-/// Pakete gömülmesi bekliyor. Testlerde `useGoogleFonts = false` yapılır.
+/// Font pakete gömülüdür (`fonts/Manrope-VariableFont_wght.ttf`, SIL OFL 1.1,
+/// kaynak: google/fonts `ofl/manrope/`); çalışma anında ağdan font
+/// indirilmez. Değişken fontun varsayılan örneği ExtraLight (200) olduğundan
+/// her stil `wght` eksenini kalınlıkla birlikte açıkça verir; kalınlığı
+/// değiştirmek için [AppTypography.weight] kullanılır.
+///
+/// Testlerde paket fontu yüklenmez; metin test fontuyla, deterministik çizilir.
 abstract final class AppTypography {
-  static bool useGoogleFonts = true;
+  /// Font ailesi ve paketi; `ThemeData` ve elle kurulan stiller içindir.
+  static const String fontFamily = 'Manrope';
+  static const String fontPackage = 'bitadilat_ui';
 
   static TextStyle _style(
     double size,
     FontWeight weight, {
     double? height,
     Color color = AppColors.textPrimary,
-  }) {
-    final base = TextStyle(
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      color: color,
-    );
-    return useGoogleFonts ? GoogleFonts.manrope(textStyle: base) : base;
-  }
+  }) => TextStyle(
+    fontFamily: fontFamily,
+    package: fontPackage,
+    fontSize: size,
+    fontWeight: weight,
+    fontVariations: [FontVariation.weight(weight.value.toDouble())],
+    height: height,
+    color: color,
+  );
+
+  /// [style]'ın kalınlığını değiştirir; değişken fontun `wght` ekseni de
+  /// birlikte güncellenir (yalnız `fontWeight` değiştirmek yetmez).
+  static TextStyle weight(TextStyle style, FontWeight weight) => style.copyWith(
+    fontWeight: weight,
+    fontVariations: [FontVariation.weight(weight.value.toDouble())],
+  );
 
   /// Ekran başlığı: 28 semibold.
   static TextStyle get screenTitle => _style(28, FontWeight.w600, height: 1.2);

@@ -122,7 +122,21 @@ class _AppTextFieldState extends State<AppTextField> {
               hintText: widget.hintText,
               helperText: widget.helperText,
               helperMaxLines: 3,
-              prefixText: widget.prefixText,
+              // Önek (+90, ₺) her zaman görünür. `prefixText` yalnız odakta
+              // çizilir ama yerini baştan tutar; boş alanda ipucu metni
+              // nedensiz içeride başlıyordu.
+              prefixIcon: widget.prefixText == null
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: AppSpacing.md,
+                      ),
+                      child: Text(
+                        widget.prefixText!.trim(),
+                        style: AppTypography.body,
+                      ),
+                    ),
+              prefixIconConstraints: const BoxConstraints(),
               counterText: '',
               constraints: const BoxConstraints(
                 minHeight: AppSizes.controlHeight,

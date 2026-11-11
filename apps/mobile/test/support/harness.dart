@@ -7,7 +7,6 @@ import 'package:bitadilat_mobile/app/app.dart';
 import 'package:bitadilat_mobile/app/router.dart';
 import 'package:bitadilat_mobile/core/providers.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
-import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,7 +148,6 @@ Future<Harness> pumpApp(
   /// `false` iken yalnız bir kare çizilir (zamanlayıcı ve yoklama testleri).
   bool settle = true,
 }) async {
-  AppTypography.useGoogleFonts = false;
   SharedPreferences.setMockInitialValues({'locale': locale});
   final prefs = await SharedPreferences.getInstance();
   final adapter = FakeAdapter(handler ?? (_) => apiError(404, 'NOT_FOUND'));

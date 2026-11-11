@@ -4,6 +4,7 @@ import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_mobile/core/error_messages.dart';
 import 'package:bitadilat_mobile/core/forms.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
+import 'package:bitadilat_mobile/features/common/widgets.dart';
 import 'package:bitadilat_mobile/l10n/app_localizations.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:dio/dio.dart';
@@ -486,6 +487,52 @@ void main() {
         expect(await h.store.read(), isNull);
       },
     );
+  });
+
+  group('İlk açılış', () {
+    testWidgets('açılış karosu ekranın tam ortasında (iOS açılışıyla aynı)', (
+      t,
+    ) async {
+      await pumpApp(t, session: const SessionState.unknown(), settle: false);
+      await t.pump(const Duration(seconds: 1));
+      final mark = find.byType(BrandMark);
+      expect(mark, findsOneWidget);
+      expect(t.getSize(mark), const Size(96, 96));
+      expect(t.getCenter(mark), const Offset(390 / 2, 844 / 2));
+      expect(find.bySemanticsLabel('Yükleniyor'), findsOneWidget);
+    });
+
+    testWidgets('karşılama: marka, tek giriş/kayıt çifti, dil anahtarı', (
+      t,
+    ) async {
+      await pumpApp(
+        t,
+        session: const SessionState.signedOut(),
+        initial: '/welcome',
+      );
+      expect(find.byType(BrandMark), findsOneWidget);
+      expect(find.text('BiTadilat'), findsOneWidget);
+      expect(find.byType(LanguageSwitch), findsOneWidget);
+      expect(button('Giriş yap'), findsOneWidget);
+      expect(button('Hesap oluştur'), findsOneWidget);
+      // Butonlar ekranın altına yaslanır, alt kenarda 16 px boşluk kalır.
+      final bottom = t.getBottomLeft(button('Hesap oluştur')).dy;
+      expect(bottom, greaterThan(844 - 120));
+      expect(bottom, lessThanOrEqualTo(844 - 16));
+    });
+
+    testWidgets('karşılama 320 px ve 3x yazıda taşmaz', (t) async {
+      await pumpApp(
+        t,
+        session: const SessionState.signedOut(),
+        initial: '/welcome',
+        size: const Size(320, 568),
+        textScale: 3,
+      );
+      expect(t.takeException(), isNull);
+      await t.ensureVisible(button('Hesap oluştur'));
+      expect(button('Hesap oluştur'), findsOneWidget);
+    });
   });
 
   group('Taşma (320 px, 2x yazı)', () {

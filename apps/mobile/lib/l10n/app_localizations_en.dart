@@ -17,8 +17,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Get offers for your home repair and pick your pro.';
 
   @override
-  String get welcomeBody =>
-      'Post a request and pros send offers. Keep your payment in secure hold and approve it when the job is done.';
+  String get welcomePointRequest => 'Post a request and pros send offers.';
+
+  @override
+  String get welcomePointVerified => 'Offers come only from verified pros.';
+
+  @override
+  String get welcomePointSecureHold =>
+      'Your payment stays in secure hold until you approve the job.';
 
   @override
   String get actionLogin => 'Log in';

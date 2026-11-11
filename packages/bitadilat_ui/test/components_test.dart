@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> pumpNarrow(WidgetTester tester, Widget child) async {
-  AppTypography.useGoogleFonts = false;
   tester.view.physicalSize = const Size(320, 640);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
@@ -54,7 +55,6 @@ void main() {
   });
 
   testWidgets('AppButton yüksekliği en az 52', (t) async {
-    AppTypography.useGoogleFonts = false;
     await t.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
@@ -72,7 +72,6 @@ void main() {
   });
 
   testWidgets('AppButton yüklemede ikinci basışı yok sayar', (t) async {
-    AppTypography.useGoogleFonts = false;
     var taps = 0;
     var loading = false;
     await t.pumpWidget(
@@ -130,7 +129,6 @@ void main() {
   });
 
   testWidgets('AppTextField yüksekliği en az 52', (t) async {
-    AppTypography.useGoogleFonts = false;
     await t.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
@@ -172,7 +170,6 @@ void main() {
   });
 
   testWidgets('showConfirmDialog taşmaz; onay true, vazgeç false', (t) async {
-    AppTypography.useGoogleFonts = false;
     t.view.physicalSize = const Size(320, 640);
     t.view.devicePixelRatio = 1;
     addTearDown(t.view.reset);
@@ -254,7 +251,6 @@ void main() {
   });
 
   testWidgets('AppIconButton en az 48x48 ve tooltip taşır', (t) async {
-    AppTypography.useGoogleFonts = false;
     await t.pumpWidget(
       MaterialApp(
         theme: AppTheme.light(),
@@ -283,6 +279,45 @@ void main() {
     final theme = AppTheme.light();
     expect(theme.useMaterial3, isTrue);
     expect(theme.colorScheme.primary, AppColors.primary);
+  });
+
+  group('Tipografi (gömülü Manrope)', () {
+    test(
+      'stiller paketteki Manrope ailesini ve kalınlık eksenini kullanır',
+      () {
+        for (final style in [
+          AppTypography.screenTitle,
+          AppTypography.body,
+          AppTypography.label,
+          AppTypography.button,
+        ]) {
+          expect(style.fontFamily, 'packages/bitadilat_ui/Manrope');
+          expect(style.fontVariations, [
+            FontVariation.weight(style.fontWeight!.value.toDouble()),
+          ]);
+        }
+      },
+    );
+
+    test('weight() kalınlıkla birlikte wght eksenini de günceller', () {
+      final bold = AppTypography.weight(AppTypography.body, FontWeight.w800);
+      expect(bold.fontWeight, FontWeight.w800);
+      expect(bold.fontVariations, [const FontVariation('wght', 800)]);
+    });
+
+    test('font dosyası ve OFL lisansı pakette, google_fonts yok', () {
+      expect(
+        File('fonts/Manrope-VariableFont_wght.ttf').lengthSync(),
+        greaterThan(100000),
+      );
+      expect(
+        File('fonts/OFL.txt').readAsStringSync(),
+        contains('SIL Open Font License'),
+      );
+      final pubspec = File('pubspec.yaml').readAsStringSync();
+      expect(pubspec, contains('asset: fonts/Manrope-VariableFont_wght.ttf'));
+      expect(pubspec, isNot(contains('google_fonts')));
+    });
   });
 }
 

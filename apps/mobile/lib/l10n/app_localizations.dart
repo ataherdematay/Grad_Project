@@ -110,11 +110,23 @@ abstract class AppLocalizations {
   /// **'Evdeki tamir işi için teklif al, ustanı seç.'**
   String get welcomeTagline;
 
-  /// No description provided for @welcomeBody.
+  /// No description provided for @welcomePointRequest.
   ///
   /// In tr, this message translates to:
-  /// **'Talebini aç, ustalardan teklif gelsin. Ödemeni güvence havuzunda tut, iş bitince onayla.'**
-  String get welcomeBody;
+  /// **'Talebini aç, ustalardan teklif gelsin.'**
+  String get welcomePointRequest;
+
+  /// No description provided for @welcomePointVerified.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifler yalnız doğrulanmış ustalardan gelir.'**
+  String get welcomePointVerified;
+
+  /// No description provided for @welcomePointSecureHold.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödemen güvence havuzunda kalır, iş bitince onaylarsın.'**
+  String get welcomePointSecureHold;
 
   /// No description provided for @actionLogin.
   ///

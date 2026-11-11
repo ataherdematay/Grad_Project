@@ -412,8 +412,12 @@ class _ConsentField extends StatelessWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional.centerStart,
+            // Bağlantı ve hata, onay metniyle aynı hizadan başlar (kutu 48,
+            // metin butonunun iç boşluğu 12).
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: AppSizes.minTouch - AppSpacing.sm,
+              ),
               child: AppButton(
                 label: readLabel,
                 variant: AppButtonVariant.tertiary,
@@ -423,7 +427,10 @@ class _ConsentField extends StatelessWidget {
             ),
             if (error != null)
               Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsetsDirectional.only(
+                  start: AppSizes.minTouch,
+                  bottom: 6,
+                ),
                 child: Text(
                   error,
                   style: AppTypography.label.copyWith(color: AppColors.error),

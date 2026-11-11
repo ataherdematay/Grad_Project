@@ -43,7 +43,6 @@ void main() {
   });
 
   testWidgets('her StatusChip tonunda etiket AA geçer', (t) async {
-    AppTypography.useGoogleFonts = false;
     for (final tone in StatusTone.values) {
       await t.pumpWidget(
         MaterialApp(
