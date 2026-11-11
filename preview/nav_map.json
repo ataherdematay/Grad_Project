@@ -1,148 +1,257 @@
 {
   "0c06b06e422b40daacbc0b8e6e8fb7bf": {
+    "next_sid": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+    "role_pro": "36002d69a9f546efa445efc687681f0f",
     "role_homeowner": "fbbe0f405e1f4531a14dcdd6b1c5736a",
-    "role_pro": "11b9cb02877746d580c5484512d0928f",
-    "login": "fbbe0f405e1f4531a14dcdd6b1c5736a",
-    "default_next": "fbbe0f405e1f4531a14dcdd6b1c5736a"
-  },
-  "fbbe0f405e1f4531a14dcdd6b1c5736a": {
-    "back": "0c06b06e422b40daacbc0b8e6e8fb7bf",
-    "next": "42c148a1fb25400ca549481fa6abe01f"
-  },
-  "42c148a1fb25400ca549481fa6abe01f": {
-    "back": "fbbe0f405e1f4531a14dcdd6b1c5736a",
-    "next": "cc1f55661a1a4036a890b43d9f15596a"
-  },
-  "cc1f55661a1a4036a890b43d9f15596a": {
-    "create_request": "44c003fee81d4a188f187608554efdd5",
-    "my_requests": "94a730cef5374f2ab9632d9acf0d7e19",
-    "messages": "c9aa92f5a4e04897952d05f30c2aef10",
-    "profile": "fc6f0f8e9b724365a5a0f124617dbe7a",
-    "active_job": "f3e7de808fdb49c18e3c5d430cb72528"
-  },
-  "44c003fee81d4a188f187608554efdd5": {
-    "back": "cc1f55661a1a4036a890b43d9f15596a",
-    "next": "b3c3c2845017451fb1b85b89f04fd4b8"
-  },
-  "b3c3c2845017451fb1b85b89f04fd4b8": {
-    "back": "44c003fee81d4a188f187608554efdd5",
-    "next": "585d649f4ea046ffa70e4cb481ddd030"
-  },
-  "585d649f4ea046ffa70e4cb481ddd030": {
-    "back": "b3c3c2845017451fb1b85b89f04fd4b8",
-    "next": "a0949c91cbe34557b16273c8e91d067a"
-  },
-  "a0949c91cbe34557b16273c8e91d067a": {
-    "back": "585d649f4ea046ffa70e4cb481ddd030",
-    "next": "94a730cef5374f2ab9632d9acf0d7e19"
-  },
-  "94a730cef5374f2ab9632d9acf0d7e19": {
-    "back": "cc1f55661a1a4036a890b43d9f15596a",
-    "view_offers": "994e3b4ffce942ce8778f7a6cfaa42c0",
-    "home": "cc1f55661a1a4036a890b43d9f15596a"
-  },
-  "994e3b4ffce942ce8778f7a6cfaa42c0": {
-    "back": "94a730cef5374f2ab9632d9acf0d7e19",
-    "offer_detail": "ea7af2d7298b4b6cb24e4603935503f0",
-    "compare": "1fc70722168942c4a1933cd9c641ad68"
-  },
-  "ea7af2d7298b4b6cb24e4603935503f0": {
-    "back": "994e3b4ffce942ce8778f7a6cfaa42c0",
-    "pro_profile": "98cd20d6ab4e4f8fbc29bc462ce55cca",
-    "accept_offer": "58f9993b5f444ff3a9f9361cb8d3b731",
-    "message": "c9aa92f5a4e04897952d05f30c2aef10"
-  },
-  "1fc70722168942c4a1933cd9c641ad68": {
-    "back": "994e3b4ffce942ce8778f7a6cfaa42c0",
-    "select_offer": "ea7af2d7298b4b6cb24e4603935503f0"
-  },
-  "98cd20d6ab4e4f8fbc29bc462ce55cca": {
-    "back": "ea7af2d7298b4b6cb24e4603935503f0",
-    "select_offer": "ea7af2d7298b4b6cb24e4603935503f0"
-  },
-  "58f9993b5f444ff3a9f9361cb8d3b731": {
-    "back": "ea7af2d7298b4b6cb24e4603935503f0",
-    "select_appointment": "7c6ec3a02d3347a997a3fc5b1a2c91d0"
-  },
-  "7c6ec3a02d3347a997a3fc5b1a2c91d0": {
-    "back": "58f9993b5f444ff3a9f9361cb8d3b731",
-    "send_appointment": "3bd2afe80ced4d2498ec9f16c7099326"
-  },
-  "3bd2afe80ced4d2498ec9f16c7099326": {
-    "back": "cc1f55661a1a4036a890b43d9f15596a",
-    "go_to_job": "f3e7de808fdb49c18e3c5d430cb72528"
-  },
-  "f3e7de808fdb49c18e3c5d430cb72528": {
-    "back": "cc1f55661a1a4036a890b43d9f15596a",
-    "chat": "c9aa92f5a4e04897952d05f30c2aef10",
-    "milestones": "b89d998c02d34e67b8e8f34334f87f02",
-    "reschedule": "6acc9307352f497ca6bd878d628c6a1a",
-    "complete_job": "d485263b3ae244a9b35500665b5c759b"
-  },
-  "c9aa92f5a4e04897952d05f30c2aef10": {
-    "back": "f3e7de808fdb49c18e3c5d430cb72528"
-  },
-  "b89d998c02d34e67b8e8f34334f87f02": {
-    "back": "f3e7de808fdb49c18e3c5d430cb72528",
-    "complete_job": "d485263b3ae244a9b35500665b5c759b"
-  },
-  "6acc9307352f497ca6bd878d628c6a1a": {
-    "back": "f3e7de808fdb49c18e3c5d430cb72528",
-    "confirm": "f3e7de808fdb49c18e3c5d430cb72528"
-  },
-  "d485263b3ae244a9b35500665b5c759b": {
-    "back": "f3e7de808fdb49c18e3c5d430cb72528",
-    "rate_job": "db8a1b368a7749cbb5fd6cf497f34de6",
-    "dispute": "488f3698f93c454099ca2382585aeb66"
-  },
-  "db8a1b368a7749cbb5fd6cf497f34de6": {
-    "back": "d485263b3ae244a9b35500665b5c759b",
-    "submit": "cc1f55661a1a4036a890b43d9f15596a"
-  },
-  "488f3698f93c454099ca2382585aeb66": {
-    "back": "d485263b3ae244a9b35500665b5c759b",
-    "submit": "3bb4b954e5224b0097b2bee12be9bcbf"
-  },
-  "3bb4b954e5224b0097b2bee12be9bcbf": {
-    "back": "cc1f55661a1a4036a890b43d9f15596a",
-    "home": "cc1f55661a1a4036a890b43d9f15596a"
+    "website": "164cd33666284338b929a8325dc5ea20"
   },
   "11b9cb02877746d580c5484512d0928f": {
-    "make_offer": "b9086f1030784def8eb267fd9110addd",
-    "availability": "fc6f0f8e9b724365a5a0f124617dbe7a",
-    "active_jobs": "8ba8c346d11c46f39163fd6ebf06dae1",
-    "switch_role": "0c06b06e422b40daacbc0b8e6e8fb7bf"
+    "back_sid": "36002d69a9f546efa445efc687681f0f",
+    "next_sid": "b9086f1030784def8eb267fd9110addd",
+    "tab_active_jobs": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "tab_messages": "c9aa92f5a4e04897952d05f30c2aef10",
+    "tab_availability": "fc6f0f8e9b724365a5a0f124617dbe7a",
+    "notifications_sid": "d072e6f007ec482e82a4a1c42cc58b18"
   },
-  "b9086f1030784def8eb267fd9110addd": {
-    "back": "11b9cb02877746d580c5484512d0928f",
-    "send_offer": "82f9d783b88b40ec8ca6260566c0f5cb"
+  "1476367258dd4a7aa4b9cbda6b0091c0": {
+    "back_sid": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "retry_sid": "d9247db4ce9b458781550be929121237",
+    "offer_sid": "ea7af2d7298b4b6cb24e4603935503f0"
   },
-  "82f9d783b88b40ec8ca6260566c0f5cb": {
-    "back": "11b9cb02877746d580c5484512d0928f",
-    "return_feed": "11b9cb02877746d580c5484512d0928f"
-  },
-  "fc6f0f8e9b724365a5a0f124617dbe7a": {
-    "back": "11b9cb02877746d580c5484512d0928f",
-    "feed": "11b9cb02877746d580c5484512d0928f"
-  },
-  "8ba8c346d11c46f39163fd6ebf06dae1": {
-    "back": "11b9cb02877746d580c5484512d0928f",
-    "feed": "11b9cb02877746d580c5484512d0928f"
-  },
-  "612429fdea1b42a1bf9e628883f7e58f": {
-    "disputes": "cb00d67723e34ec990786a82d25c77ca",
-    "accounts": "5ce8968e2703443ca129c0e7c9e9d145"
-  },
-  "cb00d67723e34ec990786a82d25c77ca": {
-    "documents": "612429fdea1b42a1bf9e628883f7e58f",
-    "accounts": "5ce8968e2703443ca129c0e7c9e9d145"
-  },
-  "5ce8968e2703443ca129c0e7c9e9d145": {
-    "documents": "612429fdea1b42a1bf9e628883f7e58f",
-    "disputes": "cb00d67723e34ec990786a82d25c77ca"
+  "160cfba8d24f4e9ea88ad3f591a803fb": {
+    "back_sid": "98cd20d6ab4e4f8fbc29bc462ce55cca",
+    "next_sid": "ea7af2d7298b4b6cb24e4603935503f0"
   },
   "164cd33666284338b929a8325dc5ea20": {
+    "back_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
     "start_customer": "0c06b06e422b40daacbc0b8e6e8fb7bf",
-    "start_pro": "11b9cb02877746d580c5484512d0928f"
+    "start_pro": "36002d69a9f546efa445efc687681f0f",
+    "admin_portal": "612429fdea1b42a1bf9e628883f7e58f"
+  },
+  "189f22fc95c34fe89e43f454a5146f5e": {
+    "back_sid": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "next_sid": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10"
+  },
+  "1fc70722168942c4a1933cd9c641ad68": {
+    "back_sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "next_sid": "ea7af2d7298b4b6cb24e4603935503f0"
+  },
+  "20de80b8dc984e86be873761409a2396": {
+    "back_sid": "cc1f55661a1a4036a890b43d9f15596a",
+    "tab_home": "cc1f55661a1a4036a890b43d9f15596a",
+    "tab_requests": "86fe79e681034183a8681bb0d2893e29",
+    "tab_messages": "c9aa92f5a4e04897952d05f30c2aef10",
+    "switch_to_pro": "36002d69a9f546efa445efc687681f0f",
+    "logout_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "notifications_sid": "d072e6f007ec482e82a4a1c42cc58b18"
+  },
+  "2de127e1fcd846f6b6018775836a1397": {
+    "back_sid": "b9086f1030784def8eb267fd9110addd",
+    "next_sid": "b9086f1030784def8eb267fd9110addd"
+  },
+  "36002d69a9f546efa445efc687681f0f": {
+    "back_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "next_sid": "def294a930bf4bb78f7ba4f857611884"
+  },
+  "3bb4b954e5224b0097b2bee12be9bcbf": {
+    "back_sid": "488f3698f93c454099ca2382585aeb66",
+    "next_sid": "cc1f55661a1a4036a890b43d9f15596a",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10"
+  },
+  "3bd2afe80ced4d2498ec9f16c7099326": {
+    "back_sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0",
+    "next_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "home_sid": "cc1f55661a1a4036a890b43d9f15596a"
+  },
+  "42c148a1fb25400ca549481fa6abe01f": {
+    "back_sid": "fbbe0f405e1f4531a14dcdd6b1c5736a",
+    "next_sid": "cc1f55661a1a4036a890b43d9f15596a"
+  },
+  "44c003fee81d4a188f187608554efdd5": {
+    "back_sid": "cc1f55661a1a4036a890b43d9f15596a",
+    "next_sid": "b3c3c2845017451fb1b85b89f04fd4b8"
+  },
+  "45350ca7f3de4ee6bedcde20b5a1b385": {
+    "back_sid": "ea7af2d7298b4b6cb24e4603935503f0",
+    "next_sid": "994e3b4ffce942ce8778f7a6cfaa42c0"
+  },
+  "488f3698f93c454099ca2382585aeb66": {
+    "back_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "next_sid": "3bb4b954e5224b0097b2bee12be9bcbf"
+  },
+  "585d649f4ea046ffa70e4cb481ddd030": {
+    "back_sid": "b3c3c2845017451fb1b85b89f04fd4b8",
+    "next_sid": "a0949c91cbe34557b16273c8e91d067a"
+  },
+  "58f9993b5f444ff3a9f9361cb8d3b731": {
+    "back_sid": "ea7af2d7298b4b6cb24e4603935503f0",
+    "next_sid": "d9247db4ce9b458781550be929121237",
+    "pay_error_sid": "1476367258dd4a7aa4b9cbda6b0091c0",
+    "direct_schedule_sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0"
+  },
+  "5ce8968e2703443ca129c0e7c9e9d145": {
+    "back_sid": "612429fdea1b42a1bf9e628883f7e58f",
+    "documents_sid": "612429fdea1b42a1bf9e628883f7e58f",
+    "disputes_sid": "cb00d67723e34ec990786a82d25c77ca"
+  },
+  "612429fdea1b42a1bf9e628883f7e58f": {
+    "back_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "disputes_sid": "cb00d67723e34ec990786a82d25c77ca",
+    "accounts_sid": "5ce8968e2703443ca129c0e7c9e9d145"
+  },
+  "6acc9307352f497ca6bd878d628c6a1a": {
+    "back_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "next_sid": "dbf40b28dba64bd1bedb40e075662c42",
+    "keep_sid": "f3e7de808fdb49c18e3c5d430cb72528"
+  },
+  "7c6ec3a02d3347a997a3fc5b1a2c91d0": {
+    "back_sid": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "next_sid": "3bd2afe80ced4d2498ec9f16c7099326"
+  },
+  "82f9d783b88b40ec8ca6260566c0f5cb": {
+    "back_sid": "b9086f1030784def8eb267fd9110addd",
+    "next_sid": "11b9cb02877746d580c5484512d0928f",
+    "tab_availability": "fc6f0f8e9b724365a5a0f124617dbe7a"
+  },
+  "86fe79e681034183a8681bb0d2893e29": {
+    "back_sid": "cc1f55661a1a4036a890b43d9f15596a",
+    "next_sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "tab_home": "cc1f55661a1a4036a890b43d9f15596a",
+    "tab_messages": "c9aa92f5a4e04897952d05f30c2aef10",
+    "tab_profile": "20de80b8dc984e86be873761409a2396",
+    "new_request_sid": "44c003fee81d4a188f187608554efdd5"
+  },
+  "8ba8c346d11c46f39163fd6ebf06dae1": {
+    "back_sid": "11b9cb02877746d580c5484512d0928f",
+    "next_sid": "c6ebf06dae18ba8c346d11c46f39163f",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10",
+    "cancel_sid": "dbf40b28dba64bd1bedb40e075662c42",
+    "navigation_sid": "189f22fc95c34fe89e43f454a5146f5e"
+  },
+  "904aa7f5da0d4c7dadac764de7cc04fc": {
+    "back_sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "next_sid": "994e3b4ffce942ce8778f7a6cfaa42c0"
+  },
+  "94a730cef5374f2ab9632d9acf0d7e19": {
+    "back_sid": "a0949c91cbe34557b16273c8e91d067a",
+    "next_sid": "86fe79e681034183a8681bb0d2893e29",
+    "see_offers_sid": "994e3b4ffce942ce8778f7a6cfaa42c0"
+  },
+  "98cd20d6ab4e4f8fbc29bc462ce55cca": {
+    "back_sid": "ea7af2d7298b4b6cb24e4603935503f0",
+    "next_sid": "ea7af2d7298b4b6cb24e4603935503f0",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10",
+    "reviews_sid": "160cfba8d24f4e9ea88ad3f591a803fb"
+  },
+  "994e3b4ffce942ce8778f7a6cfaa42c0": {
+    "back_sid": "86fe79e681034183a8681bb0d2893e29",
+    "next_sid": "ea7af2d7298b4b6cb24e4603935503f0",
+    "compare_sid": "1fc70722168942c4a1933cd9c641ad68",
+    "filter_sheet_sid": "904aa7f5da0d4c7dadac764de7cc04fc",
+    "notifications_sid": "d072e6f007ec482e82a4a1c42cc58b18",
+    "compare": "1fc70722168942c4a1933cd9c641ad68"
+  },
+  "9dde2e7ba4d246c68fc123ae27f731a0": {
+    "back_sid": "cb00d67723e34ec990786a82d25c77ca",
+    "next_sid": "cb00d67723e34ec990786a82d25c77ca"
+  },
+  "a0949c91cbe34557b16273c8e91d067a": {
+    "back_sid": "585d649f4ea046ffa70e4cb481ddd030",
+    "next_sid": "94a730cef5374f2ab9632d9acf0d7e19",
+    "edit_step1": "44c003fee81d4a188f187608554efdd5",
+    "edit_step2": "b3c3c2845017451fb1b85b89f04fd4b8",
+    "edit_step3": "585d649f4ea046ffa70e4cb481ddd030"
+  },
+  "b3c3c2845017451fb1b85b89f04fd4b8": {
+    "back_sid": "44c003fee81d4a188f187608554efdd5",
+    "next_sid": "585d649f4ea046ffa70e4cb481ddd030"
+  },
+  "b89d998c02d34e67b8e8f34334f87f02": {
+    "back_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "next_sid": "d485263b3ae244a9b35500665b5c759b",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10",
+    "dispute_sid": "488f3698f93c454099ca2382585aeb66"
+  },
+  "b9086f1030784def8eb267fd9110addd": {
+    "back_sid": "11b9cb02877746d580c5484512d0928f",
+    "next_sid": "82f9d783b88b40ec8ca6260566c0f5cb",
+    "material_modal_sid": "2de127e1fcd846f6b6018775836a1397"
+  },
+  "c6ebf06dae18ba8c346d11c46f39163f": {
+    "back_sid": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "next_sid": "11b9cb02877746d580c5484512d0928f",
+    "tab_availability": "fc6f0f8e9b724365a5a0f124617dbe7a"
+  },
+  "c9aa92f5a4e04897952d05f30c2aef10": {
+    "back_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "pro_back_sid": "8ba8c346d11c46f39163fd6ebf06dae1"
+  },
+  "cb00d67723e34ec990786a82d25c77ca": {
+    "back_sid": "612429fdea1b42a1bf9e628883f7e58f",
+    "documents_sid": "612429fdea1b42a1bf9e628883f7e58f",
+    "accounts_sid": "5ce8968e2703443ca129c0e7c9e9d145",
+    "decision_sid": "9dde2e7ba4d246c68fc123ae27f731a0"
+  },
+  "cc1f55661a1a4036a890b43d9f15596a": {
+    "back_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "next_sid": "44c003fee81d4a188f187608554efdd5",
+    "tab_requests": "86fe79e681034183a8681bb0d2893e29",
+    "tab_messages": "c9aa92f5a4e04897952d05f30c2aef10",
+    "tab_profile": "20de80b8dc984e86be873761409a2396",
+    "notifications_sid": "d072e6f007ec482e82a4a1c42cc58b18"
+  },
+  "d072e6f007ec482e82a4a1c42cc58b18": {
+    "back_sid": "cc1f55661a1a4036a890b43d9f15596a",
+    "offer_sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "job_sid": "f3e7de808fdb49c18e3c5d430cb72528"
+  },
+  "d485263b3ae244a9b35500665b5c759b": {
+    "back_sid": "f3e7de808fdb49c18e3c5d430cb72528",
+    "next_sid": "db8a1b368a7749cbb5fd6cf497f34de6",
+    "dispute_sid": "488f3698f93c454099ca2382585aeb66"
+  },
+  "d9247db4ce9b458781550be929121237": {
+    "back_sid": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "next_sid": "7c6ec3a02d3347a997a3fc5b1a2c91d0",
+    "cancel_sid": "1476367258dd4a7aa4b9cbda6b0091c0"
+  },
+  "db8a1b368a7749cbb5fd6cf497f34de6": {
+    "back_sid": "d485263b3ae244a9b35500665b5c759b",
+    "next_sid": "cc1f55661a1a4036a890b43d9f15596a"
+  },
+  "dbf40b28dba64bd1bedb40e075662c42": {
+    "back_sid": "8ba8c346d11c46f39163fd6ebf06dae1",
+    "next_sid": "11b9cb02877746d580c5484512d0928f",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10"
+  },
+  "def294a930bf4bb78f7ba4f857611884": {
+    "back_sid": "36002d69a9f546efa445efc687681f0f",
+    "next_sid": "11b9cb02877746d580c5484512d0928f",
+    "switch_customer_sid": "cc1f55661a1a4036a890b43d9f15596a"
+  },
+  "ea7af2d7298b4b6cb24e4603935503f0": {
+    "back_sid": "994e3b4ffce942ce8778f7a6cfaa42c0",
+    "next_sid": "58f9993b5f444ff3a9f9361cb8d3b731",
+    "reject_sid": "45350ca7f3de4ee6bedcde20b5a1b385",
+    "profile_sid": "98cd20d6ab4e4f8fbc29bc462ce55cca",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10"
+  },
+  "f3e7de808fdb49c18e3c5d430cb72528": {
+    "back_sid": "86fe79e681034183a8681bb0d2893e29",
+    "next_sid": "d485263b3ae244a9b35500665b5c759b",
+    "chat_sid": "c9aa92f5a4e04897952d05f30c2aef10",
+    "milestones_sid": "b89d998c02d34e67b8e8f34334f87f02",
+    "reschedule_sid": "6acc9307352f497ca6bd878d628c6a1a"
+  },
+  "fbbe0f405e1f4531a14dcdd6b1c5736a": {
+    "back_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf",
+    "next_sid": "42c148a1fb25400ca549481fa6abe01f"
+  },
+  "fc6f0f8e9b724365a5a0f124617dbe7a": {
+    "back_sid": "11b9cb02877746d580c5484512d0928f",
+    "next_sid": "11b9cb02877746d580c5484512d0928f",
+    "switch_to_customer": "cc1f55661a1a4036a890b43d9f15596a",
+    "logout_sid": "0c06b06e422b40daacbc0b8e6e8fb7bf"
   }
 }
