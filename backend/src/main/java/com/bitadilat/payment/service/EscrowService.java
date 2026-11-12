@@ -97,6 +97,27 @@ public class EscrowService {
         repository.saveAndFlush(payment);
     }
 
+    /**
+     * Admin %50 / %50 hakem kararı (STATE_MACHINES.md §5): yarısı müşteriye iade edilir, kalan yarısı komisyonsuz
+     * ustaya aktarılır; emanet SPLIT_SETTLED olur ve deftere REFUND + PAYOUT satırları yazılır.
+     */
+    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
+    public void settleSplit(EscrowPayment payment) {
+        payment.requireSplittable();
+        BigDecimal refundPart = payment.splitRefundAmount();
+        if (payment.isSeed()) {
+            requireDevForSeed();
+        } else {
+            gateway.refundPartially(payment.getCraftgatePaymentId(), refundPart, payment.getConversationId());
+        }
+        payment.settleSplit();
+        repository.saveAndFlush(payment);
+        ledger(payment, payment.getRefundedAmount(), "REFUND");
+        ledger(payment, payment.getProPayout(), "PAYOUT");
+        log.info("Emanet %50/%50 bölüşüldü. ref={} iade={} usta={}", payment.getRef(),
+                payment.getRefundedAmount(), payment.getProPayout());
+    }
+
     private void requireDevForSeed() {
         if (!environment.acceptsProfiles(Profiles.of("dev"))) {
             throw new IllegalStateException("SEED emaneti yalnızca dev profilinde işlenebilir.");
