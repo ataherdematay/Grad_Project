@@ -34,7 +34,7 @@ class AdminAndNotificationFlowTest extends Wave3TestBase {
         Account customer = register();
         call(HttpMethod.GET, "/api/v1/admin/applications", customer.access(), null)
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.error.code").value("FORBIDDEN"));
+                .andExpect(jsonPath("$.code").value("FORBIDDEN"));
     }
 
     @Test
@@ -88,7 +88,7 @@ class AdminAndNotificationFlowTest extends Wave3TestBase {
 
         // Customer opens a complaint while job is DELIVERED
         JsonNode createdComplaint = body(jobPost(s.customer(), jobId, "/complaint",
-                Map.of("reason", "DEFECTIVE_WORK",
+                Map.of("reason", "INCOMPLETE_WORK",
                         "description", "Musluk bağlantısı hala su kaçırıyor, işçilik kusurlu.",
                         "evidenceIds", List.of()))
                 .andExpect(status().isCreated()));
@@ -135,7 +135,7 @@ class AdminAndNotificationFlowTest extends Wave3TestBase {
         call(HttpMethod.POST, "/api/v1/admin/users/" + admin.id() + "/suspend", admin.access(),
                 Map.of("reason", "Kendi hesabımı askıya alamam."))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.error.code").value("SELF_ACTION_FORBIDDEN"));
+                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
 
         // Suspend pro account -> pending offer becomes WITHDRAWN
         call(HttpMethod.POST, "/api/v1/admin/users/" + s.pro().id() + "/suspend", admin.access(),
@@ -172,6 +172,10 @@ class AdminAndNotificationFlowTest extends Wave3TestBase {
         // Mark notification as read
         call(HttpMethod.POST, "/api/v1/notifications/read", pro.access(),
                 Map.of("ids", List.of(notifId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.markedCount").value(1));
+
+        call(HttpMethod.GET, "/api/v1/notifications", pro.access(), null)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.unreadCount").value(0));
 
