@@ -80,7 +80,8 @@ public class EscrowService {
     /**
      * Hakem kararı %50/%50: yarısı Craftgate üzerinden müşteriye iade edilir, yarısı ustaya yazılır (komisyon yok).
      * Yalnızca DISPUTED emanette; hata durumunda GatewayException fırlar ve emanet kaydı değişmez. Defter: müşteri
-     * yarısı REFUND, usta yarısı PAYOUT.
+     * yarısı REFUND, usta yarısı PAYOUT. İade göndermeden önce Craftgate'teki iade toplamı sorulur: tam bu yarı zaten
+     * iade edilmişse (önceki deneme 502 almış ama para gitmiş) yeniden gönderilmez; başka bir tutar görünürse 409.
      */
     @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
     public void settleSplit(EscrowPayment payment) {
@@ -89,7 +90,19 @@ public class EscrowService {
         if (payment.isSeed()) {
             requireDevForSeed();
         } else {
-            gateway.refundPartially(payment.getCraftgatePaymentId(), refund, payment.getConversationId());
+            // Önceki deneme zaman aşımına uğramış ama Craftgate'te gerçekleşmiş olabilir: kısmi iade iki kez gitmesin.
+            BigDecimal already = gateway.refundedTotal(payment.getCraftgatePaymentId());
+            if (already == null || already.signum() == 0) {
+                gateway.refundPartially(payment.getCraftgatePaymentId(), refund, payment.getConversationId());
+            } else if (already.compareTo(refund) == 0) {
+                log.warn("Kısmi iade Craftgate'te zaten yapılmış; yeniden gönderilmedi, yalnızca defter işlendi. ref={}"
+                        + " tutar={}", payment.getRef(), already);
+            } else {
+                log.error("Craftgate'te beklenmeyen iade tutarı; %50/%50 kararı uygulanmadı. ref={} iade={} beklenen={}",
+                        payment.getRef(), already, refund);
+                throw ApiException.illegalState("Bu ödemede Craftgate'te " + already.toPlainString()
+                        + " TL iade görünüyor; karar elle incelenmeli.");
+            }
         }
         payment.settleSplit();
         repository.saveAndFlush(payment);

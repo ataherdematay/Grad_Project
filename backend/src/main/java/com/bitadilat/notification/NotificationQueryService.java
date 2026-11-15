@@ -20,6 +20,7 @@ public class NotificationQueryService {
 
     static final int DEFAULT_LIMIT = 20;
     static final int MAX_LIMIT = 50;
+    static final int MAX_READ_IDS = 500;
     private static final Set<String> PLATFORMS = Set.of("IOS", "ANDROID", "WEB");
     private static final TypeReference<Map<String, Object>> PARAMS = new TypeReference<>() {
     };
@@ -89,6 +90,9 @@ public class NotificationQueryService {
         }
         if (ids.isEmpty()) {
             return;
+        }
+        if (ids.size() > MAX_READ_IDS || ids.contains(null)) {
+            throw ApiException.validation("ids", "ids en çok " + MAX_READ_IDS + " geçerli kimlik içerebilir.");
         }
         String marks = String.join(",", java.util.Collections.nCopies(ids.size(), "?"));
         Object[] args = new Object[ids.size() + 2];

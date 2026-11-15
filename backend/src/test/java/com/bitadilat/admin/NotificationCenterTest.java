@@ -275,6 +275,17 @@ class NotificationCenterTest extends AdminTestBase {
         assertThat(latest(s.customer(), "JOB_STAGE_CHANGED").get("params").get("status").asString())
                 .isEqualTo("IN_PROGRESS");
         assertThat(notifications(s.customer(), "JOB_STAGE_CHANGED")).isEqualTo(2);
+        assertThat(latest(s.customer(), "JOB_STAGE_CHANGED").get("params").get("event").asString())
+                .isEqualTo("STATUS_CHANGED");
+
+        // Ustanın notu da müşteriye JOB_STAGE_CHANGED olarak gider (wave 3 davranışı): status o anki durum, event NOTE.
+        jobPost(s.pro(), jobId, "/events", Map.of("note", "Eski boru değiştirildi.")).andExpect(status().isOk());
+        JsonNode noted = latest(s.customer(), "JOB_STAGE_CHANGED");
+        assertParams(noted, "publicCode", "status");
+        assertThat(noted.get("params").get("status").asString()).isEqualTo("IN_PROGRESS");
+        assertThat(noted.get("params").get("event").asString()).isEqualTo("NOTE");
+        assertThat(noted.get("targetRoute").asString()).isEqualTo("/c/jobs/" + jobId);
+        assertThat(notifications(s.customer(), "JOB_STAGE_CHANGED")).isEqualTo(3);
 
         // Sohbet → NEW_MESSAGE (senderName, sohbet rotası).
         call(HttpMethod.POST, "/api/v1/jobs/" + jobId + "/messages", s.pro().access(), Map.of("body", "Geliyorum."))

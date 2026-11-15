@@ -141,7 +141,7 @@ public class AdminComplaintService {
     // ─── Karar ──────────────────────────────────────────────────────────────
 
     @Transactional
-    public ComplaintDetail decide(UUID adminId, UUID complaintId, DecisionBody body) {
+    public void decide(UUID adminId, UUID complaintId, DecisionBody body) {
         if (body.decision() == null) {
             throw ApiException.validation("decision", "decision gerekli.");
         }
@@ -244,7 +244,8 @@ public class AdminComplaintService {
             case SPLIT_50_50 -> escrow.settleSplit(payment);
             default -> escrow.release(payment);
         }
-        return buildDetail(adminId, complaintId);
+        // Ayrıntı burada kurulmaz: para hareketi gerçekleştikten sonra salt okuma bir hata (ör. imzalı URL)
+        // işlemi geri alıp parayı defterden düşürmesin. Denetleyici ayrıntıyı işlem kesinleştikten sonra okur.
     }
 
     private static Map<String, Object> decidedParams(UUID complaintId, String code, UUID jobId, String decision,

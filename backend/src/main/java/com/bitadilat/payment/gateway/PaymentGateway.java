@@ -75,4 +75,11 @@ public interface PaymentGateway {
     void refundFully(Long paymentId, String conversationId);
 
     void refundPartially(Long paymentId, BigDecimal amount, String conversationId);
+
+    /**
+     * Ödemeye Craftgate'te başarıyla yapılmış iadelerin toplamı (ödeme ve kalem düzeyi). Bir iade sonuç bekliyorsa
+     * {@code GatewayException} fırlar: sonuç belli olmadan yeni iade gönderilmez. Kısmi iadeden önce sorulur; böylece
+     * zaman aşımına uğramış ama Craftgate'te gerçekleşmiş bir iade, karar yeniden denendiğinde ikinci kez gönderilmez.
+     */
+    BigDecimal refundedTotal(Long paymentId);
 }

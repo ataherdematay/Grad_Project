@@ -156,7 +156,7 @@ public class JobCommandService {
         if (trigger == Trigger.ARRIVE) {
             closePendingProposal(jobId);
         }
-        notifyCustomerStage(job);
+        notifyCustomerStage(job, EventType.STATUS_CHANGED);
         return views.detail(job, ActorRole.PRO, userId);
     }
 
@@ -209,6 +209,7 @@ public class JobCommandService {
             events.record(jobId, userId, ActorRole.PRO, EventType.PHOTO, null, null, null, photo, now);
         }
         touch(job);
+        notifyCustomerStage(job, note != null ? EventType.NOTE : EventType.PHOTO);
         return views.detail(job, ActorRole.PRO, userId);
     }
 
@@ -349,10 +350,15 @@ public class JobCommandService {
         jobs.saveAndFlush(job);
     }
 
-    /** Müşteriye "usta yolda/işe başladı": params {@code status} yeni iş durumudur (ARRIVED, IN_PROGRESS). */
-    private void notifyCustomerStage(Job job) {
+    /**
+     * Müşteriye iş aşaması bildirimi ({@code JOB_STAGE_CHANGED}): varış, başlangıç ve ustanın notu/fotoğrafı.
+     * {@code status} işin o anki durumudur (ARRIVED, IN_PROGRESS); ek {@code event} anahtarı neyin olduğunu söyler
+     * ({@code STATUS_CHANGED}, {@code NOTE}, {@code PHOTO}).
+     */
+    private void notifyCustomerStage(Job job, EventType event) {
         notifications.notify(job.getCustomerId(), NotificationService.JOB_STAGE_CHANGED,
-                Map.of("jobId", job.getId().toString(), "publicCode", code(job), "status", job.getStatus().name()),
+                Map.of("jobId", job.getId().toString(), "publicCode", code(job), "status", job.getStatus().name(),
+                        "event", event.name()),
                 route(job, ActorRole.CUSTOMER));
     }
 

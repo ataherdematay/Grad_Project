@@ -114,7 +114,9 @@ public class AdminController {
     @PostMapping("/complaints/{id}/decision")
     public ComplaintDetail decide(@AuthenticationPrincipal AuthPrincipal me, @PathVariable UUID id,
                                   @RequestBody DecisionBody body) {
-        return complaints.decide(admin(me), id, body);
+        UUID adminId = admin(me);
+        complaints.decide(adminId, id, body); // kendi işlemi: para hareketi kesinleşir
+        return complaints.detail(adminId, id);
     }
 
     // ─── Hesaplar ───────────────────────────────────────────────────────────

@@ -346,6 +346,48 @@ class AdminComplaintTest extends AdminTestBase {
         assertThat(adminActions("DECIDE_COMPLAINT", d.complaintId())).isEqualTo(1);
     }
 
+    /**
+     * Kısmi iade zaman aşımına uğradı (502) ama Craftgate'te gerçekleşti: yeniden denenen karar iadeyi ikinci kez
+     * göndermez, yalnızca defteri işler. Craftgate'te başka bir tutar görünürse karar 409 ile durur.
+     */
+    @Test
+    void splitRetryAfterATimedOutButLandedRefundDoesNotRefundTwice() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob(); // 1200.00 → 600.00 / 600.00
+        long paymentId = cgPaymentId(d);
+        doThrow(new GatewayException("Craftgate yanıt vermedi.", true)).when(gateway)
+                .refundPartially(anyLong(), any(), anyString());
+        decide(admin, d, "SPLIT_50_50").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
+        // Craftgate'te 600.00 iade görünüyor: aynı karar yeniden gönderilmeden uygulanır.
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("600.00"));
+        JsonNode c = ok(decide(admin, d, "SPLIT_50_50"));
+        assertAmounts(c, d, "600.00", "600.00");
+        verify(gateway, times(1)).refundPartially(anyLong(), any(), anyString());
+        assertThat(escrowStatus(d.jobId())).isEqualTo("SPLIT_SETTLED");
+        assertThat(ledger(d.ref(), "REFUND")).isEqualByComparingTo("600.00");
+        assertThat(ledger(d.ref(), "PAYOUT")).isEqualByComparingTo("600.00");
+    }
+
+    @Test
+    void splitStopsWhenCraftgateShowsAnUnexpectedRefundOrAPendingOne() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        long paymentId = cgPaymentId(d);
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("100.00"));
+        decide(admin, d, "SPLIT_50_50").andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
+        assertNothingChanged(d);
+
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId))
+                .thenThrow(new GatewayException("Önceki iade isteği sonuç bekliyor.", true));
+        decide(admin, d, "SPLIT_50_50").andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
+        assertNothingChanged(d);
+        verify(gateway, never()).refundPartially(anyLong(), any(), anyString());
+    }
+
     private void assertNothingChanged(Disputed d) {
         assertThat(escrowStatus(d.jobId())).isEqualTo("DISPUTED");
         assertThat(jobStatus(d.jobId())).isEqualTo("DISPUTED");

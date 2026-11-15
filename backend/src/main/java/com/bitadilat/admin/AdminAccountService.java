@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Hesap listesi, askıya alma ve yeniden etkinleştirme (STATE_MACHINES §1). Askı: tüm oturumlar kapanır
  * ({@code revokeAllForUser}), bekleyen teklifler {@code WITHDRAWN} olur, açık işlere dokunulmaz. Admin hesabı
- * (kendisi dahil) askıya alınamaz.
+ * (kendisi dahil) askıya alınamaz. Yeniden etkinleştirme hesabı ACTIVE, admin askısındaki usta profilini APPROVED yapar
+ * (ikisi de aynı işlemde, ayrı {@code admin_actions} satırlarıyla).
  */
 @Service
 public class AdminAccountService {
@@ -98,17 +99,27 @@ public class AdminAccountService {
 
     @Transactional
     public UserItem reactivate(UUID adminId, UUID userId) {
-        boolean exists = Boolean.TRUE.equals(jdbc.queryForObject(
-                "select exists (select 1 from users where id = ?)", Boolean.class, userId));
-        if (!exists) {
-            throw ApiException.notFound("Kullanıcı bulunamadı.");
+        String current = jdbc.queryForList("select status from users where id = ? for update", String.class, userId)
+                .stream().findFirst().orElseThrow(() -> ApiException.notFound("Kullanıcı bulunamadı."));
+        if ("DELETED".equals(current)) {
+            throw ApiException.illegalState("Silinmiş hesap yeniden etkinleştirilemez.");
         }
-        int changed = jdbc.update("update users set status = 'ACTIVE', updated_at = now() "
+        int account = jdbc.update("update users set status = 'ACTIVE', updated_at = now() "
                 + "where id = ? and status = 'SUSPENDED'", userId);
-        if (changed == 0) {
-            throw ApiException.illegalState("Yalnızca SUSPENDED hesap yeniden etkinleştirilir.");
+        // Admin askısındaki usta profili (şikayet kararı suspendPro) aynı işlemde yeniden APPROVED olur
+        // (STATE_MACHINES §1: SUSPENDED → APPROVED, admin). Hesabı ACTIVE olup yalnız profili askıda olan usta için
+        // de tek geri dönüş yolu budur.
+        int profile = jdbc.update("update pro_profiles set review_status = 'APPROVED', review_note = null, "
+                + "updated_at = now(), version = version + 1 where user_id = ? and review_status = 'SUSPENDED'", userId);
+        if (account == 0 && profile == 0) {
+            throw ApiException.illegalState("Yalnızca askıdaki hesap veya usta profili yeniden etkinleştirilir.");
         }
-        audit.record(adminId, "REACTIVATE_USER", AdminAudit.USER, userId, null);
+        if (account > 0) {
+            audit.record(adminId, "REACTIVATE_USER", AdminAudit.USER, userId, null);
+        }
+        if (profile > 0) {
+            audit.record(adminId, "REACTIVATE_PRO", AdminAudit.PRO_PROFILE, userId, null);
+        }
         return fetch(userId, null);
     }
 

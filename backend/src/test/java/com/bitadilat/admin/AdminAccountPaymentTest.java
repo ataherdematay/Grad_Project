@@ -152,6 +152,58 @@ class AdminAccountPaymentTest extends AdminTestBase {
         post(admin, "/admin/users/" + gone.id() + "/suspend", Map.of("note", NOTE)).andExpect(status().isConflict());
     }
 
+    private String reviewStatus(Account a) {
+        return jdbc.queryForObject("select review_status from pro_profiles where user_id = ?::uuid", String.class,
+                a.id());
+    }
+
+    /** Lider kararı: reactivate, admin askısındaki usta profilini aynı işlemde APPROVED yapar ve denetlenir. */
+    @Test
+    void reactivateRestoresAnAdminSuspendedProProfileTogetherWithTheAccount() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        Account pro = d.s().pro();
+        ok(decide(admin, d, "RELEASE_TO_PRO", false, true));
+        assertThat(reviewStatus(pro)).isEqualTo("SUSPENDED");
+        ok(post(admin, "/admin/users/" + pro.id() + "/suspend", Map.of("note", NOTE)));
+
+        JsonNode r = ok(post(admin, "/admin/users/" + pro.id() + "/reactivate", null));
+        assertThat(r.get("status").asString()).isEqualTo("ACTIVE");
+        assertThat(r.get("pro").get("reviewStatus").asString()).isEqualTo("APPROVED");
+        assertThat(reviewStatus(pro)).isEqualTo("APPROVED");
+        assertThat(jdbc.queryForObject("select review_note from pro_profiles where user_id = ?::uuid", String.class,
+                pro.id())).isNull();
+        assertThat(adminActions("REACTIVATE_USER", pro.id())).isEqualTo(1);
+        assertThat(adminActions("REACTIVATE_PRO", pro.id())).isEqualTo(1);
+        assertThat(count("select count(*) from admin_actions where action = 'REACTIVATE_PRO' and target_type = "
+                + "'PRO_PROFILE' and target_id = ? and admin_id = ?::uuid", pro.id(), admin.id())).isEqualTo(1);
+
+        // Usta yeniden girip usta uç noktalarını kullanabilir.
+        String access = login(pro).get("accessToken").asString();
+        call(HttpMethod.GET, "/api/v1/pro/profile", access, null).andExpect(status().isOk());
+        post(admin, "/admin/users/" + pro.id() + "/reactivate", null).andExpect(status().isConflict());
+        assertThat(adminActions("REACTIVATE_PRO", pro.id())).isEqualTo(1);
+    }
+
+    @Test
+    void reactivateRestoresAProfileSuspendedByAComplaintWhileTheAccountStayedActive() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        Account pro = d.s().pro();
+        ok(decide(admin, d, "SPLIT_50_50", false, true));
+        call(HttpMethod.GET, "/api/v1/pro/profile", pro.access(), null).andExpect(status().isForbidden());
+
+        JsonNode r = ok(post(admin, "/admin/users/" + pro.id() + "/reactivate", null));
+        assertThat(r.get("status").asString()).isEqualTo("ACTIVE");
+        assertThat(reviewStatus(pro)).isEqualTo("APPROVED");
+        assertThat(adminActions("REACTIVATE_USER", pro.id())).isZero();
+        assertThat(adminActions("REACTIVATE_PRO", pro.id())).isEqualTo(1);
+        call(HttpMethod.GET, "/api/v1/pro/profile", pro.access(), null).andExpect(status().isOk());
+        // Başvuru geçmişinde görünür.
+        assertThat(ok(get(admin, "/admin/applications/" + pro.id())).get("history").toString())
+                .contains("REACTIVATE_PRO");
+    }
+
     // ─── Emanet defteri ─────────────────────────────────────────────────────
 
     @Test
