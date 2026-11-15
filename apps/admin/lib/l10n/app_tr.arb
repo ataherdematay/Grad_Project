@@ -142,6 +142,7 @@
   "colTotal": "Toplam tutar",
   "colServiceFee": "Hizmet bedeli",
   "colProPayout": "Ustaya ödeme",
+  "paymentAwaitingDecision": "Karar bekleyen güvence havuzu tutarı",
   "colRefunded": "İade",
 
   "applicationsTitle": "Usta başvuruları",

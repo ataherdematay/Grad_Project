@@ -410,6 +410,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get colProPayout => 'Ustaya ödeme';
 
   @override
+  String get paymentAwaitingDecision => 'Karar bekleyen güvence havuzu tutarı';
+
+  @override
   String get colRefunded => 'İade';
 
   @override
