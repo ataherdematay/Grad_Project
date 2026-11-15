@@ -182,12 +182,34 @@ class SessionController extends Notifier<SessionState> {
   /// `GET /me` ile kullanıcıyı yeniler (başvuru ve müsaitlik değişince).
   Future<void> refreshMe() async {
     if (!state.isSignedIn) return;
+    final before = state.me!;
     try {
       final me = await _client.me.get();
+      // İstek sürerken çıkış yapıldı, hesap değişti ya da mod değiştirildiyse
+      // eski yanıt yeni durumun üstüne yazılmaz.
+      final now = state.me;
+      if (!state.isSignedIn ||
+          now == null ||
+          now.id != before.id ||
+          now.lastMode != before.lastMode) {
+        return;
+      }
       state = SessionState.signedIn(me);
     } on ApiException {
       // Mevcut durum korunur.
     }
+  }
+
+  /// Zil rozetinin sayısı: bildirim listesi ya da okundu işlemi sonrası
+  /// sunucunun verdiği `unreadCount` ile `/me` beklenmeden güncellenir.
+  void setUnreadNotifications(int count) {
+    final me = state.me;
+    if (!state.isSignedIn || me == null) return;
+    if (me.unreadNotifications == count) return;
+    state = SessionState.signedIn(
+      me.copyWith(unreadNotifications: count),
+      landing: state.landing,
+    );
   }
 
   /// Başvuru gönderildikten sonra: kayıtta `wantsPro` seçilmişse son mod PRO

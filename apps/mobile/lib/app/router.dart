@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitadilat_api/bitadilat_api.dart' show PartyRole;
 import 'package:bitadilat_ui/bitadilat_ui.dart' show AppColors;
 import 'package:flutter/material.dart';
@@ -21,6 +23,7 @@ import '../features/customer/requests_screens.dart';
 import '../features/customer/wizard_screen.dart';
 import '../features/jobs/customer_jobs.dart';
 import '../features/jobs/pro_jobs.dart';
+import '../features/notifications/notifications_screen.dart';
 import '../features/payment/payment_screens.dart';
 import '../features/pro/pro_apply.dart';
 import '../features/pro/pro_feed.dart';
@@ -147,9 +150,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       appRoute(path: '/settings', builder: (_, _) => const SettingsScreen()),
       appRoute(
         path: '/notifications',
-        builder: (context, _) => PlaceholderScreen(
-          title: AppLocalizations.of(context).notificationsTitle,
-        ),
+        builder: (_, _) => const NotificationsScreen(),
       ),
       appRoute(
         path: '/jobs/:id/chat',
@@ -339,9 +340,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.home_outlined,
                 Icons.home,
                 l.tabHome,
-                refresh: (ref) => ref
-                  ..invalidate(requestsProvider)
-                  ..invalidate(jobsProvider),
+                refresh: (ref) {
+                  ref
+                    ..invalidate(requestsProvider)
+                    ..invalidate(jobsProvider);
+                  // Zil rozeti: sekmeye dönünce okunmamış sayısı yenilenir.
+                  unawaited(ref.read(sessionProvider.notifier).refreshMe());
+                },
               ),
               TabSpec(
                 Icons.assignment_outlined,
@@ -407,9 +412,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.search_outlined,
                 Icons.search,
                 l.tabFeed,
-                refresh: (ref) => ref
-                  ..invalidate(feedProvider)
-                  ..invalidate(proOffersProvider),
+                refresh: (ref) {
+                  ref
+                    ..invalidate(feedProvider)
+                    ..invalidate(proOffersProvider);
+                  unawaited(ref.read(sessionProvider.notifier).refreshMe());
+                },
               ),
               TabSpec(
                 Icons.handyman_outlined,

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Me {
 
-@JsonKey(fromJson: idFromJson) String get id; String get fullName; String get email; String? get phone; String get locale; UserMode get lastMode; bool get isAdmin; String get status; ProSummary? get pro;
+@JsonKey(fromJson: idFromJson) String get id; String get fullName; String get email; String? get phone; String get locale; UserMode get lastMode; bool get isAdmin; String get status; ProSummary? get pro; int get unreadNotifications;
 /// Create a copy of Me
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MeCopyWith<Me> get copyWith => _$MeCopyWithImpl<Me>(this as Me, _$identity);
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Me&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lastMode, lastMode) || other.lastMode == lastMode)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.status, status) || other.status == status)&&(identical(other.pro, pro) || other.pro == pro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Me&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lastMode, lastMode) || other.lastMode == lastMode)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.status, status) || other.status == status)&&(identical(other.pro, pro) || other.pro == pro)&&(identical(other.unreadNotifications, unreadNotifications) || other.unreadNotifications == unreadNotifications));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,email,phone,locale,lastMode,isAdmin,status,pro);
+int get hashCode => Object.hash(runtimeType,id,fullName,email,phone,locale,lastMode,isAdmin,status,pro,unreadNotifications);
 
 @override
 String toString() {
-  return 'Me(id: $id, fullName: $fullName, email: $email, phone: $phone, locale: $locale, lastMode: $lastMode, isAdmin: $isAdmin, status: $status, pro: $pro)';
+  return 'Me(id: $id, fullName: $fullName, email: $email, phone: $phone, locale: $locale, lastMode: $lastMode, isAdmin: $isAdmin, status: $status, pro: $pro, unreadNotifications: $unreadNotifications)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MeCopyWith<$Res>  {
   factory $MeCopyWith(Me value, $Res Function(Me) _then) = _$MeCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String fullName, String email, String? phone, String locale, UserMode lastMode, bool isAdmin, String status, ProSummary? pro
+@JsonKey(fromJson: idFromJson) String id, String fullName, String email, String? phone, String locale, UserMode lastMode, bool isAdmin, String status, ProSummary? pro, int unreadNotifications
 });
 
 
@@ -65,7 +65,7 @@ class _$MeCopyWithImpl<$Res>
 
 /// Create a copy of Me
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? email = null,Object? phone = freezed,Object? locale = null,Object? lastMode = null,Object? isAdmin = null,Object? status = null,Object? pro = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? email = null,Object? phone = freezed,Object? locale = null,Object? lastMode = null,Object? isAdmin = null,Object? status = null,Object? pro = freezed,Object? unreadNotifications = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,8 @@ as String,lastMode: null == lastMode ? _self.lastMode : lastMode // ignore: cast
 as UserMode,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pro: freezed == pro ? _self.pro : pro // ignore: cast_nullable_to_non_nullable
-as ProSummary?,
+as ProSummary?,unreadNotifications: null == unreadNotifications ? _self.unreadNotifications : unreadNotifications // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 /// Create a copy of Me
@@ -173,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro,  int unreadNotifications)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Me() when $default != null:
-return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro);case _:
+return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro,_that.unreadNotifications);case _:
   return orElse();
 
 }
@@ -194,10 +195,10 @@ return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro,  int unreadNotifications)  $default,) {final _that = this;
 switch (_that) {
 case _Me():
-return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro);case _:
+return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro,_that.unreadNotifications);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +215,10 @@ return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String fullName,  String email,  String? phone,  String locale,  UserMode lastMode,  bool isAdmin,  String status,  ProSummary? pro,  int unreadNotifications)?  $default,) {final _that = this;
 switch (_that) {
 case _Me() when $default != null:
-return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro);case _:
+return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_that.lastMode,_that.isAdmin,_that.status,_that.pro,_that.unreadNotifications);case _:
   return null;
 
 }
@@ -229,7 +230,7 @@ return $default(_that.id,_that.fullName,_that.email,_that.phone,_that.locale,_th
 @JsonSerializable()
 
 class _Me implements Me {
-  const _Me({@JsonKey(fromJson: idFromJson) required this.id, required this.fullName, required this.email, this.phone, required this.locale, required this.lastMode, required this.isAdmin, required this.status, this.pro});
+  const _Me({@JsonKey(fromJson: idFromJson) required this.id, required this.fullName, required this.email, this.phone, required this.locale, required this.lastMode, required this.isAdmin, required this.status, this.pro, this.unreadNotifications = 0});
   factory _Me.fromJson(Map<String, dynamic> json) => _$MeFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -241,6 +242,7 @@ class _Me implements Me {
 @override final  bool isAdmin;
 @override final  String status;
 @override final  ProSummary? pro;
+@override@JsonKey() final  int unreadNotifications;
 
 /// Create a copy of Me
 /// with the given fields replaced by the non-null parameter values.
@@ -255,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Me&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lastMode, lastMode) || other.lastMode == lastMode)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.status, status) || other.status == status)&&(identical(other.pro, pro) || other.pro == pro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Me&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lastMode, lastMode) || other.lastMode == lastMode)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.status, status) || other.status == status)&&(identical(other.pro, pro) || other.pro == pro)&&(identical(other.unreadNotifications, unreadNotifications) || other.unreadNotifications == unreadNotifications));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,email,phone,locale,lastMode,isAdmin,status,pro);
+int get hashCode => Object.hash(runtimeType,id,fullName,email,phone,locale,lastMode,isAdmin,status,pro,unreadNotifications);
 
 @override
 String toString() {
-  return 'Me(id: $id, fullName: $fullName, email: $email, phone: $phone, locale: $locale, lastMode: $lastMode, isAdmin: $isAdmin, status: $status, pro: $pro)';
+  return 'Me(id: $id, fullName: $fullName, email: $email, phone: $phone, locale: $locale, lastMode: $lastMode, isAdmin: $isAdmin, status: $status, pro: $pro, unreadNotifications: $unreadNotifications)';
 }
 
 
@@ -275,7 +277,7 @@ abstract mixin class _$MeCopyWith<$Res> implements $MeCopyWith<$Res> {
   factory _$MeCopyWith(_Me value, $Res Function(_Me) _then) = __$MeCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String fullName, String email, String? phone, String locale, UserMode lastMode, bool isAdmin, String status, ProSummary? pro
+@JsonKey(fromJson: idFromJson) String id, String fullName, String email, String? phone, String locale, UserMode lastMode, bool isAdmin, String status, ProSummary? pro, int unreadNotifications
 });
 
 
@@ -292,7 +294,7 @@ class __$MeCopyWithImpl<$Res>
 
 /// Create a copy of Me
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? email = null,Object? phone = freezed,Object? locale = null,Object? lastMode = null,Object? isAdmin = null,Object? status = null,Object? pro = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? email = null,Object? phone = freezed,Object? locale = null,Object? lastMode = null,Object? isAdmin = null,Object? status = null,Object? pro = freezed,Object? unreadNotifications = null,}) {
   return _then(_Me(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -303,7 +305,8 @@ as String,lastMode: null == lastMode ? _self.lastMode : lastMode // ignore: cast
 as UserMode,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,pro: freezed == pro ? _self.pro : pro // ignore: cast_nullable_to_non_nullable
-as ProSummary?,
+as ProSummary?,unreadNotifications: null == unreadNotifications ? _self.unreadNotifications : unreadNotifications // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

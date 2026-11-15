@@ -183,6 +183,15 @@ String complaintReasonLabel(AppLocalizations l, ComplaintReason r) =>
       ComplaintReason.other => l.complaintReasonOther,
     };
 
+/// Şikayet kararının etiketi; bilinmeyen değerde `null` (ham metin gösterilir).
+String? complaintDecisionLabel(AppLocalizations l, String? decision) =>
+    switch (decision) {
+      'FULL_REFUND' => l.complaintDecisionFullRefund,
+      'SPLIT_50_50' => l.complaintDecisionSplit,
+      'RELEASE_TO_PRO' => l.complaintDecisionRelease,
+      _ => null,
+    };
+
 // --- Randevu aralıkları ------------------------------------------------------
 
 /// Gün içindeki sabit aralıklar (başlangıç, bitiş saati).

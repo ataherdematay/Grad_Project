@@ -1294,21 +1294,7 @@ class ComplaintStatusScreen extends ConsumerWidget {
                     sectionTitle(l.complaintEvidenceTitle),
                     PhotoStrip(photos: c.evidence),
                   ],
-                  if ((c.decision ?? '').isNotEmpty ||
-                      (c.decisionNote ?? '').isNotEmpty) ...[
-                    sectionTitle(l.complaintDecisionTitle),
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if ((c.decision ?? '').isNotEmpty)
-                            Text(c.decision!, style: AppTypography.cardTitle),
-                          if ((c.decisionNote ?? '').isNotEmpty)
-                            Text(c.decisionNote!, style: AppTypography.body),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ..._decisionSection(context, c, now),
                   const SizedBox(height: AppSpacing.lg),
                   AppButton(
                     label: l.complaintGoChat,
@@ -1329,4 +1315,51 @@ class ComplaintStatusScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Karar verildiyse: karar türü, inceleme ekibinin notu ve tutarlar (iade,
+/// usta payı). Tutarların tek kaynağı sunucudur (`refundAmount`,
+/// `proAmount`); gelmezlerse istemci hesaplamaz, "tutar bilgisi yok" der.
+List<Widget> _decisionSection(BuildContext context, Complaint c, DateTime now) {
+  final l = AppLocalizations.of(context);
+  final decision = c.decision ?? '';
+  final note = c.decisionNote ?? '';
+  if (decision.isEmpty && note.isEmpty) return const [];
+  final label = complaintDecisionLabel(l, c.decision);
+  final refund = c.refundAmount;
+  final pro = c.proAmount;
+  return [
+    sectionTitle(l.complaintDecisionTitle),
+    AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (decision.isNotEmpty)
+            Text(label ?? decision, style: AppTypography.cardTitle),
+          if (c.decidedAt != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                '${l.complaintDecidedAt}: ${formatDayTime(l, c.decidedAt!, now)}',
+                style: AppTypography.bodySecondary,
+              ),
+            ),
+          if (note.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(l.complaintAdminNote, style: AppTypography.bodySecondary),
+            Text(note, style: AppTypography.body),
+          ],
+        ],
+      ),
+    ),
+    if (decision.isNotEmpty) ...[
+      sectionTitle(l.complaintAmountsTitle),
+      if (refund == null && pro == null)
+        Text(l.complaintAmountsUnknown, style: AppTypography.bodySecondary),
+      if (refund != null)
+        InfoRow(l.complaintRefundAmount, formatMoney(refund, l.localeName)),
+      if (pro != null)
+        InfoRow(l.complaintProAmount, formatMoney(pro, l.localeName)),
+    ],
+  ];
 }

@@ -1092,5 +1092,290 @@
   "offerFormRequestClosed": "Bu talep artık teklif almıyor. Ekran güncellendi.",
   "homeActiveJobs": "Aktif işlerin",
   "homeOpenRequests": "Açık taleplerin",
-  "homeSeeAll": "Tümünü gör"
+  "homeSeeAll": "Tümünü gör",
+  "notificationsMarkAllRead": "Tümünü okundu say",
+  "notificationsEmptyTitle": "Henüz bildirimin yok",
+  "notificationsEmptyBody": "Yeni gelişmeler olunca burada görürsün.",
+  "notificationsLoadMore": "Daha fazla göster",
+  "notificationUnread": "Okunmamış",
+  "notificationsCantOpenTitle": "Bu bildirim açılamıyor",
+  "notificationsCantOpenBody": "Bildirimin gittiği sayfa yok ya da şu an bu sayfaya erişemiyorsun.",
+  "notificationsSwitchProTitle": "Usta moduna geçip açalım mı?",
+  "notificationsSwitchProBody": "Bu bildirim usta moduna ait. Geçince açılır; müşteri moduna profilinden dönebilirsin.",
+  "notificationsSwitchCustomerTitle": "Müşteri moduna geçip açalım mı?",
+  "notificationsSwitchCustomerBody": "Bu bildirim müşteri moduna ait. Geçince açılır; usta moduna profilinden dönebilirsin.",
+  "notificationsBellLabel": "Bildirimler",
+  "notificationsBellLabelUnread": "{count, plural, other{Bildirimler, {count} okunmamış}}",
+  "@notificationsBellLabelUnread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifNewMatchingRequest": "Sana uygun yeni talep: {title} ({districtName}).",
+  "@notifNewMatchingRequest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "districtName": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferReceived": "{proBusinessName}, {title} talebine {amount} teklif verdi.",
+  "@notifOfferReceived": {
+    "placeholders": {
+      "proBusinessName": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferDeclined": "{title} ({publicCode}) için verdiğin teklif reddedildi.",
+  "@notifOfferDeclined": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferSuperseded": "{title} ({publicCode}) için müşteri başka bir teklifi seçti.",
+  "@notifOfferSuperseded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferAccepted": "Teklifin kabul edildi: {title} ({publicCode}), {amount}.",
+  "@notifOfferAccepted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifRequestUpdated": "{title} ({publicCode}) talebi güncellendi. Teklifini gözden geçir.",
+  "@notifRequestUpdated": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAppointmentProposed": "{publicCode} işi için yeni bir randevu önerildi: {slot}.",
+  "@notifAppointmentProposed": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAppointmentConfirmed": "{publicCode} işi için randevu onaylandı: {slot}.",
+  "@notifAppointmentConfirmed": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobStageChanged": "{publicCode} işinin durumu değişti: {status}.",
+  "@notifJobStageChanged": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "notifWorkFinished": "{publicCode} işi bitti. {deadline} tarihine kadar onaylamazsan iş kendiliğinden tamamlanır.",
+  "@notifWorkFinished": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAutoCompleteReminder": "{publicCode} işi {deadline} tarihinde kendiliğinden tamamlanacak. Sorun varsa şimdi bildir.",
+  "@notifAutoCompleteReminder": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "notifPayoutReleased": "{publicCode} işinin {amount} tutarındaki ödemesi sana aktarıldı.",
+  "@notifPayoutReleased": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledByCustomer": "{publicCode} işini müşteri iptal etti. İade tutarı: {refundAmount}.",
+  "@notifJobCancelledByCustomer": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledByPro": "{publicCode} işini usta iptal etti. İade tutarı: {refundAmount}.",
+  "@notifJobCancelledByPro": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledOther": "{publicCode} işi iptal edildi. İade tutarı: {refundAmount}.",
+  "@notifJobCancelledOther": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifNewMessage": "{senderName} sana mesaj gönderdi ({publicCode}).",
+  "@notifNewMessage": {
+    "placeholders": {
+      "senderName": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintOpened": "{publicCode} işi için {complaintCode} numaralı şikayet açıldı.",
+  "@notifComplaintOpened": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "complaintCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintDecided": "{complaintCode} şikayeti karara bağlandı: {decision}.",
+  "@notifComplaintDecided": {
+    "placeholders": {
+      "complaintCode": {
+        "type": "String"
+      },
+      "decision": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintDecidedAmount": "{complaintCode} şikayeti karara bağlandı: {decision}. Tutar: {amount}.",
+  "@notifComplaintDecidedAmount": {
+    "placeholders": {
+      "complaintCode": {
+        "type": "String"
+      },
+      "decision": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifProApproved": "Usta başvurun onaylandı. Artık sana uygun talepleri görebilirsin.",
+  "notifProRejected": "Usta başvurun kabul edilmedi. İnceleme notu: {note}",
+  "@notifProRejected": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifProNeedsDocuments": "Başvurunda eksik belgeler var. İnceleme notu: {note}",
+  "@notifProNeedsDocuments": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifUnknown": "Yeni bir bildirimin var.",
+  "complaintDecisionFullRefund": "Tam iade",
+  "complaintDecisionSplit": "Yarı yarıya paylaşım (%50 / %50)",
+  "complaintDecisionRelease": "Ödeme ustaya aktarıldı",
+  "complaintAdminNote": "İnceleme ekibinin notu",
+  "complaintAmountsTitle": "Tutarlar",
+  "complaintRefundAmount": "Sana iade edilen",
+  "complaintProAmount": "Ustaya aktarılan",
+  "complaintDecidedAt": "Karar tarihi",
+  "complaintAmountsUnknown": "Tutar bilgisi henüz yok.",
+  "applicationRejectedDocsTitle": "Yeniden yüklemen gereken belgeler",
+  "applicationRejectedDocsHelp": "Yalnızca reddedilen belgeleri yenile; kabul edilenler olduğu gibi kalır.",
+  "applicationResubmitSend": "Yeniden gönder",
+  "applicationReapply": "Yeniden başvur",
+  "applicationRejectedNext": "Notu okuyup eksikleri düzelttikten sonra aynı bilgilerinle yeniden başvurabilirsin.",
+  "suspendedTitle": "Usta profilin askıya alındı",
+  "suspendedBody": "Askıdayken talepleri göremez ve teklif veremezsin. Müşteri olarak uygulamayı kullanmaya devam edebilirsin.",
+  "suspendedWhyTitle": "Neden askıya alındı?",
+  "suspendedWhyDefault": "Profilin bir inceleme sonucunda askıya alındı. Ayrıntıyı destek ekibinden öğrenebilirsin.",
+  "suspendedContactSupport": "Destekle iletişime geç",
+  "suspendedSupportHelp": "İtiraz etmek ya da bilgi almak için destek ekibine yaz.",
+  "suspendedMailSubject": "Usta profilim askıya alındı",
+  "suspendedMailFailed": "E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.",
+  "@suspendedMailFailed": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

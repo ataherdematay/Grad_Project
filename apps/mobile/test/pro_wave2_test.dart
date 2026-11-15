@@ -613,7 +613,26 @@ void main() {
       expect(find.text('Belge eksik'), findsWidgets);
       expect(find.text('Kimlik okunmuyor.'), findsOneWidget);
       expect(btn('Müşteri moduna dön'), findsOneWidget);
-      await t.tap(btn('Belgeleri güncelle ve yeniden gönder'));
+      // Dalga 4: eksik belgeler artık tam form açılmadan, bu ekrandan yalnız
+      // reddedilen belge için yeniden yüklenir (bkz. notifications_wave4_test).
+      expect(find.text('Yeniden yüklemen gereken belgeler'), findsOneWidget);
+      expect(btn('Yeniden gönder'), findsOneWidget);
+      expect(h.location, '/p/application');
+    });
+
+    testWidgets('REJECTED: /p/apply dolu açılır (yeniden başvur)', (t) async {
+      final h = await pumpApp(
+        t,
+        session: SessionState.signedIn(testMe(proStatus: 'REJECTED')),
+        initial: '/p/application',
+        size: tall,
+        handler: routes({
+          ...baseRoutes(),
+          'GET /pro/application': (_) =>
+              json(200, applicationJson(status: 'REJECTED', note: 'Olmadı.')),
+        }),
+      );
+      await t.tap(btn('Yeniden başvur'));
       await t.pumpAndSettle();
       expect(h.location, '/p/apply');
       final name = t.widget<TextFormField>(find.byType(TextFormField).first);

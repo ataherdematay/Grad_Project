@@ -2363,4 +2363,249 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get homeSeeAll => 'Tümünü gör';
+
+  @override
+  String get notificationsMarkAllRead => 'Tümünü okundu say';
+
+  @override
+  String get notificationsEmptyTitle => 'Henüz bildirimin yok';
+
+  @override
+  String get notificationsEmptyBody =>
+      'Yeni gelişmeler olunca burada görürsün.';
+
+  @override
+  String get notificationsLoadMore => 'Daha fazla göster';
+
+  @override
+  String get notificationUnread => 'Okunmamış';
+
+  @override
+  String get notificationsCantOpenTitle => 'Bu bildirim açılamıyor';
+
+  @override
+  String get notificationsCantOpenBody =>
+      'Bildirimin gittiği sayfa yok ya da şu an bu sayfaya erişemiyorsun.';
+
+  @override
+  String get notificationsSwitchProTitle => 'Usta moduna geçip açalım mı?';
+
+  @override
+  String get notificationsSwitchProBody =>
+      'Bu bildirim usta moduna ait. Geçince açılır; müşteri moduna profilinden dönebilirsin.';
+
+  @override
+  String get notificationsSwitchCustomerTitle =>
+      'Müşteri moduna geçip açalım mı?';
+
+  @override
+  String get notificationsSwitchCustomerBody =>
+      'Bu bildirim müşteri moduna ait. Geçince açılır; usta moduna profilinden dönebilirsin.';
+
+  @override
+  String get notificationsBellLabel => 'Bildirimler';
+
+  @override
+  String notificationsBellLabelUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bildirimler, $count okunmamış',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notifNewMatchingRequest(String title, String districtName) {
+    return 'Sana uygun yeni talep: $title ($districtName).';
+  }
+
+  @override
+  String notifOfferReceived(
+    String proBusinessName,
+    String title,
+    String amount,
+  ) {
+    return '$proBusinessName, $title talebine $amount teklif verdi.';
+  }
+
+  @override
+  String notifOfferDeclined(String title, String publicCode) {
+    return '$title ($publicCode) için verdiğin teklif reddedildi.';
+  }
+
+  @override
+  String notifOfferSuperseded(String title, String publicCode) {
+    return '$title ($publicCode) için müşteri başka bir teklifi seçti.';
+  }
+
+  @override
+  String notifOfferAccepted(String title, String publicCode, String amount) {
+    return 'Teklifin kabul edildi: $title ($publicCode), $amount.';
+  }
+
+  @override
+  String notifRequestUpdated(String title, String publicCode) {
+    return '$title ($publicCode) talebi güncellendi. Teklifini gözden geçir.';
+  }
+
+  @override
+  String notifAppointmentProposed(String publicCode, String slot) {
+    return '$publicCode işi için yeni bir randevu önerildi: $slot.';
+  }
+
+  @override
+  String notifAppointmentConfirmed(String publicCode, String slot) {
+    return '$publicCode işi için randevu onaylandı: $slot.';
+  }
+
+  @override
+  String notifJobStageChanged(String publicCode, String status) {
+    return '$publicCode işinin durumu değişti: $status.';
+  }
+
+  @override
+  String notifWorkFinished(String publicCode, String deadline) {
+    return '$publicCode işi bitti. $deadline tarihine kadar onaylamazsan iş kendiliğinden tamamlanır.';
+  }
+
+  @override
+  String notifAutoCompleteReminder(String publicCode, String deadline) {
+    return '$publicCode işi $deadline tarihinde kendiliğinden tamamlanacak. Sorun varsa şimdi bildir.';
+  }
+
+  @override
+  String notifPayoutReleased(String publicCode, String amount) {
+    return '$publicCode işinin $amount tutarındaki ödemesi sana aktarıldı.';
+  }
+
+  @override
+  String notifJobCancelledByCustomer(String publicCode, String refundAmount) {
+    return '$publicCode işini müşteri iptal etti. İade tutarı: $refundAmount.';
+  }
+
+  @override
+  String notifJobCancelledByPro(String publicCode, String refundAmount) {
+    return '$publicCode işini usta iptal etti. İade tutarı: $refundAmount.';
+  }
+
+  @override
+  String notifJobCancelledOther(String publicCode, String refundAmount) {
+    return '$publicCode işi iptal edildi. İade tutarı: $refundAmount.';
+  }
+
+  @override
+  String notifNewMessage(String senderName, String publicCode) {
+    return '$senderName sana mesaj gönderdi ($publicCode).';
+  }
+
+  @override
+  String notifComplaintOpened(String publicCode, String complaintCode) {
+    return '$publicCode işi için $complaintCode numaralı şikayet açıldı.';
+  }
+
+  @override
+  String notifComplaintDecided(String complaintCode, String decision) {
+    return '$complaintCode şikayeti karara bağlandı: $decision.';
+  }
+
+  @override
+  String notifComplaintDecidedAmount(
+    String complaintCode,
+    String decision,
+    String amount,
+  ) {
+    return '$complaintCode şikayeti karara bağlandı: $decision. Tutar: $amount.';
+  }
+
+  @override
+  String get notifProApproved =>
+      'Usta başvurun onaylandı. Artık sana uygun talepleri görebilirsin.';
+
+  @override
+  String notifProRejected(String note) {
+    return 'Usta başvurun kabul edilmedi. İnceleme notu: $note';
+  }
+
+  @override
+  String notifProNeedsDocuments(String note) {
+    return 'Başvurunda eksik belgeler var. İnceleme notu: $note';
+  }
+
+  @override
+  String get notifUnknown => 'Yeni bir bildirimin var.';
+
+  @override
+  String get complaintDecisionFullRefund => 'Tam iade';
+
+  @override
+  String get complaintDecisionSplit => 'Yarı yarıya paylaşım (%50 / %50)';
+
+  @override
+  String get complaintDecisionRelease => 'Ödeme ustaya aktarıldı';
+
+  @override
+  String get complaintAdminNote => 'İnceleme ekibinin notu';
+
+  @override
+  String get complaintAmountsTitle => 'Tutarlar';
+
+  @override
+  String get complaintRefundAmount => 'Sana iade edilen';
+
+  @override
+  String get complaintProAmount => 'Ustaya aktarılan';
+
+  @override
+  String get complaintDecidedAt => 'Karar tarihi';
+
+  @override
+  String get complaintAmountsUnknown => 'Tutar bilgisi henüz yok.';
+
+  @override
+  String get applicationRejectedDocsTitle =>
+      'Yeniden yüklemen gereken belgeler';
+
+  @override
+  String get applicationRejectedDocsHelp =>
+      'Yalnızca reddedilen belgeleri yenile; kabul edilenler olduğu gibi kalır.';
+
+  @override
+  String get applicationResubmitSend => 'Yeniden gönder';
+
+  @override
+  String get applicationReapply => 'Yeniden başvur';
+
+  @override
+  String get applicationRejectedNext =>
+      'Notu okuyup eksikleri düzelttikten sonra aynı bilgilerinle yeniden başvurabilirsin.';
+
+  @override
+  String get suspendedTitle => 'Usta profilin askıya alındı';
+
+  @override
+  String get suspendedBody =>
+      'Askıdayken talepleri göremez ve teklif veremezsin. Müşteri olarak uygulamayı kullanmaya devam edebilirsin.';
+
+  @override
+  String get suspendedWhyTitle => 'Neden askıya alındı?';
+
+  @override
+  String get suspendedWhyDefault =>
+      'Profilin bir inceleme sonucunda askıya alındı. Ayrıntıyı destek ekibinden öğrenebilirsin.';
+
+  @override
+  String get suspendedContactSupport => 'Destekle iletişime geç';
+
+  @override
+  String get suspendedSupportHelp =>
+      'İtiraz etmek ya da bilgi almak için destek ekibine yaz.';
+
+  @override
+  String get suspendedMailSubject => 'Usta profilim askıya alındı';
+
+  @override
+  String suspendedMailFailed(String email) {
+    return 'E-posta uygulaması açılamadı. $email adresine kendin yazabilirsin.';
+  }
 }

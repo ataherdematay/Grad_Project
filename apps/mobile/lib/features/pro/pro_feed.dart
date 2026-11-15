@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,9 @@ import '../../core/data.dart';
 import '../../core/formatters.dart';
 import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
+import '../auth/session.dart';
 import '../common/ui.dart';
+import '../notifications/notification_bell.dart';
 
 /// `/p/feed`: eşleşen talepler.
 class ProFeedScreen extends ConsumerStatefulWidget {
@@ -49,6 +53,7 @@ class _ProFeedState extends ConsumerState<ProFeedScreen> {
         automaticallyImplyLeading: false,
         title: Text(l.tabFeed),
         actions: [
+          const NotificationBell(),
           AppIconButton(
             icon: Icons.local_offer_outlined,
             tooltip: l.myOffersTitle,
@@ -101,8 +106,10 @@ class _ProFeedState extends ConsumerState<ProFeedScreen> {
                     );
                   }
                   return RefreshIndicator(
-                    onRefresh: () async =>
-                        ref.refresh(feedProvider(_urgency).future),
+                    onRefresh: () {
+                      unawaited(ref.read(sessionProvider.notifier).refreshMe());
+                      return ref.refresh(feedProvider(_urgency).future);
+                    },
                     child: page.items.isEmpty
                         ? LayoutBuilder(
                             builder: (context, c) => ListView(

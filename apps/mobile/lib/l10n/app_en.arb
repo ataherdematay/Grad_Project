@@ -1078,5 +1078,290 @@
   "offerFormRequestClosed": "This request no longer accepts offers. The screen was refreshed.",
   "homeActiveJobs": "Your active jobs",
   "homeOpenRequests": "Your open requests",
-  "homeSeeAll": "See all"
+  "homeSeeAll": "See all",
+  "notificationsMarkAllRead": "Mark all as read",
+  "notificationsEmptyTitle": "No notifications yet",
+  "notificationsEmptyBody": "You'll see new updates here.",
+  "notificationsLoadMore": "Show more",
+  "notificationUnread": "Unread",
+  "notificationsCantOpenTitle": "Can't open this notification",
+  "notificationsCantOpenBody": "The page for this notification doesn't exist, or you can't open it right now.",
+  "notificationsSwitchProTitle": "Switch to pro mode and open it?",
+  "notificationsSwitchProBody": "This notification belongs to pro mode. We will open it after switching; you can return to customer mode from your profile.",
+  "notificationsSwitchCustomerTitle": "Switch to customer mode and open it?",
+  "notificationsSwitchCustomerBody": "This notification belongs to customer mode. We will open it after switching; you can return to pro mode from your profile.",
+  "notificationsBellLabel": "Notifications",
+  "notificationsBellLabelUnread": "{count, plural, =1{Notifications, 1 unread} other{Notifications, {count} unread}}",
+  "@notificationsBellLabelUnread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifNewMatchingRequest": "New request that matches you: {title} ({districtName}).",
+  "@notifNewMatchingRequest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "districtName": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferReceived": "{proBusinessName} offered {amount} for {title}.",
+  "@notifOfferReceived": {
+    "placeholders": {
+      "proBusinessName": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferDeclined": "Your offer for {title} ({publicCode}) was declined.",
+  "@notifOfferDeclined": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferSuperseded": "The customer chose another offer for {title} ({publicCode}).",
+  "@notifOfferSuperseded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOfferAccepted": "Your offer was accepted: {title} ({publicCode}), {amount}.",
+  "@notifOfferAccepted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifRequestUpdated": "The request {title} ({publicCode}) was updated. Review your offer.",
+  "@notifRequestUpdated": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAppointmentProposed": "A new appointment was proposed for job {publicCode}: {slot}.",
+  "@notifAppointmentProposed": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAppointmentConfirmed": "The appointment for job {publicCode} is confirmed: {slot}.",
+  "@notifAppointmentConfirmed": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobStageChanged": "The status of job {publicCode} changed: {status}.",
+  "@notifJobStageChanged": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "notifWorkFinished": "Job {publicCode} is finished. If you do not confirm by {deadline}, it completes automatically.",
+  "@notifWorkFinished": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAutoCompleteReminder": "Job {publicCode} completes automatically on {deadline}. Report any problem now.",
+  "@notifAutoCompleteReminder": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "deadline": {
+        "type": "String"
+      }
+    }
+  },
+  "notifPayoutReleased": "The {amount} payment for job {publicCode} was paid out to you.",
+  "@notifPayoutReleased": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledByCustomer": "The customer cancelled job {publicCode}. Refund: {refundAmount}.",
+  "@notifJobCancelledByCustomer": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledByPro": "The pro cancelled job {publicCode}. Refund: {refundAmount}.",
+  "@notifJobCancelledByPro": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifJobCancelledOther": "Job {publicCode} was cancelled. Refund: {refundAmount}.",
+  "@notifJobCancelledOther": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "refundAmount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifNewMessage": "{senderName} sent you a message ({publicCode}).",
+  "@notifNewMessage": {
+    "placeholders": {
+      "senderName": {
+        "type": "String"
+      },
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintOpened": "Complaint {complaintCode} was opened for job {publicCode}.",
+  "@notifComplaintOpened": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "complaintCode": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintDecided": "Complaint {complaintCode} was decided: {decision}.",
+  "@notifComplaintDecided": {
+    "placeholders": {
+      "complaintCode": {
+        "type": "String"
+      },
+      "decision": {
+        "type": "String"
+      }
+    }
+  },
+  "notifComplaintDecidedAmount": "Complaint {complaintCode} was decided: {decision}. Amount: {amount}.",
+  "@notifComplaintDecidedAmount": {
+    "placeholders": {
+      "complaintCode": {
+        "type": "String"
+      },
+      "decision": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifProApproved": "Your pro application was approved. You can now see requests that match you.",
+  "notifProRejected": "Your pro application was not accepted. Review note: {note}",
+  "@notifProRejected": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifProNeedsDocuments": "Your application has missing documents. Review note: {note}",
+  "@notifProNeedsDocuments": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "notifUnknown": "You have a new notification.",
+  "complaintDecisionFullRefund": "Full refund",
+  "complaintDecisionSplit": "Split in half (50% / 50%)",
+  "complaintDecisionRelease": "Payment released to the pro",
+  "complaintAdminNote": "Review team's note",
+  "complaintAmountsTitle": "Amounts",
+  "complaintRefundAmount": "Refunded to you",
+  "complaintProAmount": "Paid to the pro",
+  "complaintDecidedAt": "Decision date",
+  "complaintAmountsUnknown": "No amount information yet.",
+  "applicationRejectedDocsTitle": "Documents to upload again",
+  "applicationRejectedDocsHelp": "Replace only the rejected documents; accepted ones stay as they are.",
+  "applicationResubmitSend": "Resubmit",
+  "applicationReapply": "Apply again",
+  "applicationRejectedNext": "After reading the note and fixing the issues, you can apply again with your existing details.",
+  "suspendedTitle": "Your pro profile is suspended",
+  "suspendedBody": "While suspended you cannot see requests or send offers. You can keep using the app as a customer.",
+  "suspendedWhyTitle": "Why was it suspended?",
+  "suspendedWhyDefault": "Your profile was suspended after a review. You can ask the support team for details.",
+  "suspendedContactSupport": "Contact support",
+  "suspendedSupportHelp": "Write to the support team to appeal or get more information.",
+  "suspendedMailSubject": "My pro profile was suspended",
+  "suspendedMailFailed": "Could not open the email app. You can write to {email} yourself.",
+  "@suspendedMailFailed": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

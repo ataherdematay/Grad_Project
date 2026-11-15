@@ -4393,6 +4393,362 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Tümünü gör'**
   String get homeSeeAll;
+
+  /// No description provided for @notificationsMarkAllRead.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tümünü okundu say'**
+  String get notificationsMarkAllRead;
+
+  /// No description provided for @notificationsEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz bildirimin yok'**
+  String get notificationsEmptyTitle;
+
+  /// No description provided for @notificationsEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni gelişmeler olunca burada görürsün.'**
+  String get notificationsEmptyBody;
+
+  /// No description provided for @notificationsLoadMore.
+  ///
+  /// In tr, this message translates to:
+  /// **'Daha fazla göster'**
+  String get notificationsLoadMore;
+
+  /// No description provided for @notificationUnread.
+  ///
+  /// In tr, this message translates to:
+  /// **'Okunmamış'**
+  String get notificationUnread;
+
+  /// No description provided for @notificationsCantOpenTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu bildirim açılamıyor'**
+  String get notificationsCantOpenTitle;
+
+  /// No description provided for @notificationsCantOpenBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bildirimin gittiği sayfa yok ya da şu an bu sayfaya erişemiyorsun.'**
+  String get notificationsCantOpenBody;
+
+  /// No description provided for @notificationsSwitchProTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta moduna geçip açalım mı?'**
+  String get notificationsSwitchProTitle;
+
+  /// No description provided for @notificationsSwitchProBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu bildirim usta moduna ait. Geçince açılır; müşteri moduna profilinden dönebilirsin.'**
+  String get notificationsSwitchProBody;
+
+  /// No description provided for @notificationsSwitchCustomerTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri moduna geçip açalım mı?'**
+  String get notificationsSwitchCustomerTitle;
+
+  /// No description provided for @notificationsSwitchCustomerBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu bildirim müşteri moduna ait. Geçince açılır; usta moduna profilinden dönebilirsin.'**
+  String get notificationsSwitchCustomerBody;
+
+  /// No description provided for @notificationsBellLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bildirimler'**
+  String get notificationsBellLabel;
+
+  /// No description provided for @notificationsBellLabelUnread.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count, plural, other{Bildirimler, {count} okunmamış}}'**
+  String notificationsBellLabelUnread(int count);
+
+  /// No description provided for @notifNewMatchingRequest.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sana uygun yeni talep: {title} ({districtName}).'**
+  String notifNewMatchingRequest(String title, String districtName);
+
+  /// No description provided for @notifOfferReceived.
+  ///
+  /// In tr, this message translates to:
+  /// **'{proBusinessName}, {title} talebine {amount} teklif verdi.'**
+  String notifOfferReceived(
+    String proBusinessName,
+    String title,
+    String amount,
+  );
+
+  /// No description provided for @notifOfferDeclined.
+  ///
+  /// In tr, this message translates to:
+  /// **'{title} ({publicCode}) için verdiğin teklif reddedildi.'**
+  String notifOfferDeclined(String title, String publicCode);
+
+  /// No description provided for @notifOfferSuperseded.
+  ///
+  /// In tr, this message translates to:
+  /// **'{title} ({publicCode}) için müşteri başka bir teklifi seçti.'**
+  String notifOfferSuperseded(String title, String publicCode);
+
+  /// No description provided for @notifOfferAccepted.
+  ///
+  /// In tr, this message translates to:
+  /// **'Teklifin kabul edildi: {title} ({publicCode}), {amount}.'**
+  String notifOfferAccepted(String title, String publicCode, String amount);
+
+  /// No description provided for @notifRequestUpdated.
+  ///
+  /// In tr, this message translates to:
+  /// **'{title} ({publicCode}) talebi güncellendi. Teklifini gözden geçir.'**
+  String notifRequestUpdated(String title, String publicCode);
+
+  /// No description provided for @notifAppointmentProposed.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi için yeni bir randevu önerildi: {slot}.'**
+  String notifAppointmentProposed(String publicCode, String slot);
+
+  /// No description provided for @notifAppointmentConfirmed.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi için randevu onaylandı: {slot}.'**
+  String notifAppointmentConfirmed(String publicCode, String slot);
+
+  /// No description provided for @notifJobStageChanged.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işinin durumu değişti: {status}.'**
+  String notifJobStageChanged(String publicCode, String status);
+
+  /// No description provided for @notifWorkFinished.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi bitti. {deadline} tarihine kadar onaylamazsan iş kendiliğinden tamamlanır.'**
+  String notifWorkFinished(String publicCode, String deadline);
+
+  /// No description provided for @notifAutoCompleteReminder.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi {deadline} tarihinde kendiliğinden tamamlanacak. Sorun varsa şimdi bildir.'**
+  String notifAutoCompleteReminder(String publicCode, String deadline);
+
+  /// No description provided for @notifPayoutReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işinin {amount} tutarındaki ödemesi sana aktarıldı.'**
+  String notifPayoutReleased(String publicCode, String amount);
+
+  /// No description provided for @notifJobCancelledByCustomer.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işini müşteri iptal etti. İade tutarı: {refundAmount}.'**
+  String notifJobCancelledByCustomer(String publicCode, String refundAmount);
+
+  /// No description provided for @notifJobCancelledByPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işini usta iptal etti. İade tutarı: {refundAmount}.'**
+  String notifJobCancelledByPro(String publicCode, String refundAmount);
+
+  /// No description provided for @notifJobCancelledOther.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi iptal edildi. İade tutarı: {refundAmount}.'**
+  String notifJobCancelledOther(String publicCode, String refundAmount);
+
+  /// No description provided for @notifNewMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'{senderName} sana mesaj gönderdi ({publicCode}).'**
+  String notifNewMessage(String senderName, String publicCode);
+
+  /// No description provided for @notifComplaintOpened.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işi için {complaintCode} numaralı şikayet açıldı.'**
+  String notifComplaintOpened(String publicCode, String complaintCode);
+
+  /// No description provided for @notifComplaintDecided.
+  ///
+  /// In tr, this message translates to:
+  /// **'{complaintCode} şikayeti karara bağlandı: {decision}.'**
+  String notifComplaintDecided(String complaintCode, String decision);
+
+  /// No description provided for @notifComplaintDecidedAmount.
+  ///
+  /// In tr, this message translates to:
+  /// **'{complaintCode} şikayeti karara bağlandı: {decision}. Tutar: {amount}.'**
+  String notifComplaintDecidedAmount(
+    String complaintCode,
+    String decision,
+    String amount,
+  );
+
+  /// No description provided for @notifProApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta başvurun onaylandı. Artık sana uygun talepleri görebilirsin.'**
+  String get notifProApproved;
+
+  /// No description provided for @notifProRejected.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta başvurun kabul edilmedi. İnceleme notu: {note}'**
+  String notifProRejected(String note);
+
+  /// No description provided for @notifProNeedsDocuments.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başvurunda eksik belgeler var. İnceleme notu: {note}'**
+  String notifProNeedsDocuments(String note);
+
+  /// No description provided for @notifUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni bir bildirimin var.'**
+  String get notifUnknown;
+
+  /// No description provided for @complaintDecisionFullRefund.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tam iade'**
+  String get complaintDecisionFullRefund;
+
+  /// No description provided for @complaintDecisionSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yarı yarıya paylaşım (%50 / %50)'**
+  String get complaintDecisionSplit;
+
+  /// No description provided for @complaintDecisionRelease.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme ustaya aktarıldı'**
+  String get complaintDecisionRelease;
+
+  /// No description provided for @complaintAdminNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'İnceleme ekibinin notu'**
+  String get complaintAdminNote;
+
+  /// No description provided for @complaintAmountsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutarlar'**
+  String get complaintAmountsTitle;
+
+  /// No description provided for @complaintRefundAmount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sana iade edilen'**
+  String get complaintRefundAmount;
+
+  /// No description provided for @complaintProAmount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya aktarılan'**
+  String get complaintProAmount;
+
+  /// No description provided for @complaintDecidedAt.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar tarihi'**
+  String get complaintDecidedAt;
+
+  /// No description provided for @complaintAmountsUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar bilgisi henüz yok.'**
+  String get complaintAmountsUnknown;
+
+  /// No description provided for @applicationRejectedDocsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeniden yüklemen gereken belgeler'**
+  String get applicationRejectedDocsTitle;
+
+  /// No description provided for @applicationRejectedDocsHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yalnızca reddedilen belgeleri yenile; kabul edilenler olduğu gibi kalır.'**
+  String get applicationRejectedDocsHelp;
+
+  /// No description provided for @applicationResubmitSend.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeniden gönder'**
+  String get applicationResubmitSend;
+
+  /// No description provided for @applicationReapply.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeniden başvur'**
+  String get applicationReapply;
+
+  /// No description provided for @applicationRejectedNext.
+  ///
+  /// In tr, this message translates to:
+  /// **'Notu okuyup eksikleri düzelttikten sonra aynı bilgilerinle yeniden başvurabilirsin.'**
+  String get applicationRejectedNext;
+
+  /// No description provided for @suspendedTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profilin askıya alındı'**
+  String get suspendedTitle;
+
+  /// No description provided for @suspendedBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Askıdayken talepleri göremez ve teklif veremezsin. Müşteri olarak uygulamayı kullanmaya devam edebilirsin.'**
+  String get suspendedBody;
+
+  /// No description provided for @suspendedWhyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Neden askıya alındı?'**
+  String get suspendedWhyTitle;
+
+  /// No description provided for @suspendedWhyDefault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profilin bir inceleme sonucunda askıya alındı. Ayrıntıyı destek ekibinden öğrenebilirsin.'**
+  String get suspendedWhyDefault;
+
+  /// No description provided for @suspendedContactSupport.
+  ///
+  /// In tr, this message translates to:
+  /// **'Destekle iletişime geç'**
+  String get suspendedContactSupport;
+
+  /// No description provided for @suspendedSupportHelp.
+  ///
+  /// In tr, this message translates to:
+  /// **'İtiraz etmek ya da bilgi almak için destek ekibine yaz.'**
+  String get suspendedSupportHelp;
+
+  /// No description provided for @suspendedMailSubject.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profilim askıya alındı'**
+  String get suspendedMailSubject;
+
+  /// No description provided for @suspendedMailFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.'**
+  String suspendedMailFailed(String email);
 }
 
 class _AppLocalizationsDelegate

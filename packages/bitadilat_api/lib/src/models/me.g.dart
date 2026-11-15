@@ -18,6 +18,7 @@ _Me _$MeFromJson(Map<String, dynamic> json) => _Me(
   pro: json['pro'] == null
       ? null
       : ProSummary.fromJson(json['pro'] as Map<String, dynamic>),
+  unreadNotifications: (json['unreadNotifications'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$MeToJson(_Me instance) => <String, dynamic>{
@@ -30,6 +31,7 @@ Map<String, dynamic> _$MeToJson(_Me instance) => <String, dynamic>{
   'isAdmin': instance.isAdmin,
   'status': instance.status,
   'pro': instance.pro?.toJson(),
+  'unreadNotifications': instance.unreadNotifications,
 };
 
 const _$UserModeEnumMap = {UserMode.customer: 'CUSTOMER', UserMode.pro: 'PRO'};

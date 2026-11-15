@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import '../auth/session.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
 import '../jobs/job_ui.dart';
+import '../notifications/notification_bell.dart';
 
 /// Talep kartı: başlık, kategori, konum, etiketler.
 class RequestCard extends ConsumerWidget {
@@ -89,7 +92,11 @@ class CustomerHomeScreen extends ConsumerWidget {
       sessionProvider.select((s) => s.me?.fullName.split(' ').first),
     );
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: Text(l.tabHome)),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(l.tabHome),
+        actions: const [NotificationBell()],
+      ),
       body: SafeArea(
         child: AsyncView<Paged<RequestSummary>>(
           value: async,
@@ -107,6 +114,7 @@ class CustomerHomeScreen extends ConsumerWidget {
             return RefreshIndicator(
               onRefresh: () {
                 ref.invalidate(jobsProvider);
+                unawaited(ref.read(sessionProvider.notifier).refreshMe());
                 return ref.refresh(requestsProvider('active').future);
               },
               child: ListView(
