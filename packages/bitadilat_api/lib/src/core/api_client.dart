@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../admin.dart';
 import '../api/auth_api.dart';
 import '../api/catalog_api.dart';
 import '../api/chat_api.dart';
@@ -51,6 +52,7 @@ class ApiClient {
     jobs = JobsApi(this.dio);
     chat = ChatApi(this.dio);
     complaints = ComplaintsApi(this.dio);
+    admin = AdminApi(this.dio);
   }
 
   final ApiConfig config;
@@ -69,6 +71,7 @@ class ApiClient {
   late final JobsApi jobs;
   late final ChatApi chat;
   late final ComplaintsApi complaints;
+  late final AdminApi admin;
 
   /// Oturum istemcide kapanınca (token'lar silindikten sonra) nedeniyle olay
   /// verir: refresh reddedildi ya da hesap askıya alındı.

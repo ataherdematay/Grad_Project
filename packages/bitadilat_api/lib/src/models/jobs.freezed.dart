@@ -4362,7 +4362,7 @@ as List<String>,
 /// @nodoc
 mixin _$Complaint {
 
-@JsonKey(fromJson: idFromJson) String get id; String get publicCode;@JsonKey(fromJson: idFromJson) String get jobId; ComplaintReason get reason; String get description; List<MediaRef> get evidence; ComplaintStatus get status; String? get decision; String? get decisionNote; DateTime get createdAt; DateTime? get decidedAt;
+@JsonKey(fromJson: idFromJson) String get id; String get publicCode;@JsonKey(fromJson: idFromJson) String get jobId; ComplaintReason get reason; String get description; List<MediaRef> get evidence; ComplaintStatus get status; String? get decision; String? get decisionNote;@NullableMoneyConverter() Money? get refundAmount;@NullableMoneyConverter() Money? get proAmount; DateTime get createdAt; DateTime? get decidedAt;
 /// Create a copy of Complaint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -4375,16 +4375,16 @@ $ComplaintCopyWith<Complaint> get copyWith => _$ComplaintCopyWithImpl<Complaint>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Complaint&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Complaint&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,createdAt,decidedAt);
+int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt);
 
 @override
 String toString() {
-  return 'Complaint(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, createdAt: $createdAt, decidedAt: $decidedAt)';
+  return 'Complaint(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt)';
 }
 
 
@@ -4395,7 +4395,7 @@ abstract mixin class $ComplaintCopyWith<$Res>  {
   factory $ComplaintCopyWith(Complaint value, $Res Function(Complaint) _then) = _$ComplaintCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote, DateTime createdAt, DateTime? decidedAt
+@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt
 });
 
 
@@ -4412,7 +4412,7 @@ class _$ComplaintCopyWithImpl<$Res>
 
 /// Create a copy of Complaint
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? createdAt = null,Object? decidedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -4423,7 +4423,9 @@ as String,evidence: null == evidence ? _self.evidence : evidence // ignore: cast
 as List<MediaRef>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ComplaintStatus,decision: freezed == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
 as String?,decisionNote: freezed == decisionNote ? _self.decisionNote : decisionNote // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAmount // ignore: cast_nullable_to_non_nullable
+as Money?,proAmount: freezed == proAmount ? _self.proAmount : proAmount // ignore: cast_nullable_to_non_nullable
+as Money?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,decidedAt: freezed == decidedAt ? _self.decidedAt : decidedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -4510,10 +4512,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote,  DateTime createdAt,  DateTime? decidedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Complaint() when $default != null:
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.createdAt,_that.decidedAt);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt);case _:
   return orElse();
 
 }
@@ -4531,10 +4533,10 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote,  DateTime createdAt,  DateTime? decidedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Complaint():
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.createdAt,_that.decidedAt);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -4551,10 +4553,10 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote,  DateTime createdAt,  DateTime? decidedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Complaint() when $default != null:
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.createdAt,_that.decidedAt);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt);case _:
   return null;
 
 }
@@ -4566,7 +4568,7 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 @JsonSerializable()
 
 class _Complaint implements Complaint {
-  const _Complaint({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, @JsonKey(fromJson: idFromJson) required this.jobId, required this.reason, required this.description, this.evidence = const <MediaRef>[], required this.status, this.decision, this.decisionNote, required this.createdAt, this.decidedAt});
+  const _Complaint({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, @JsonKey(fromJson: idFromJson) required this.jobId, required this.reason, required this.description, this.evidence = const <MediaRef>[], required this.status, this.decision, this.decisionNote, @NullableMoneyConverter() this.refundAmount, @NullableMoneyConverter() this.proAmount, required this.createdAt, this.decidedAt});
   factory _Complaint.fromJson(Map<String, dynamic> json) => _$ComplaintFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -4578,6 +4580,8 @@ class _Complaint implements Complaint {
 @override final  ComplaintStatus status;
 @override final  String? decision;
 @override final  String? decisionNote;
+@override@NullableMoneyConverter() final  Money? refundAmount;
+@override@NullableMoneyConverter() final  Money? proAmount;
 @override final  DateTime createdAt;
 @override final  DateTime? decidedAt;
 
@@ -4594,16 +4598,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Complaint&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Complaint&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,createdAt,decidedAt);
+int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt);
 
 @override
 String toString() {
-  return 'Complaint(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, createdAt: $createdAt, decidedAt: $decidedAt)';
+  return 'Complaint(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt)';
 }
 
 
@@ -4614,7 +4618,7 @@ abstract mixin class _$ComplaintCopyWith<$Res> implements $ComplaintCopyWith<$Re
   factory _$ComplaintCopyWith(_Complaint value, $Res Function(_Complaint) _then) = __$ComplaintCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote, DateTime createdAt, DateTime? decidedAt
+@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt
 });
 
 
@@ -4631,7 +4635,7 @@ class __$ComplaintCopyWithImpl<$Res>
 
 /// Create a copy of Complaint
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? createdAt = null,Object? decidedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,}) {
   return _then(_Complaint(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -4642,7 +4646,9 @@ as String,evidence: null == evidence ? _self.evidence : evidence // ignore: cast
 as List<MediaRef>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ComplaintStatus,decision: freezed == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
 as String?,decisionNote: freezed == decisionNote ? _self.decisionNote : decisionNote // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAmount // ignore: cast_nullable_to_non_nullable
+as Money?,proAmount: freezed == proAmount ? _self.proAmount : proAmount // ignore: cast_nullable_to_non_nullable
+as Money?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,decidedAt: freezed == decidedAt ? _self.decidedAt : decidedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

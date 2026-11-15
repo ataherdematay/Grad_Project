@@ -406,23 +406,28 @@ _Complaint _$ComplaintFromJson(Map<String, dynamic> json) => _Complaint(
   status: $enumDecode(_$ComplaintStatusEnumMap, json['status']),
   decision: json['decision'] as String?,
   decisionNote: json['decisionNote'] as String?,
+  refundAmount: const NullableMoneyConverter().fromJson(json['refundAmount']),
+  proAmount: const NullableMoneyConverter().fromJson(json['proAmount']),
   createdAt: DateTime.parse(json['createdAt'] as String),
   decidedAt: json['decidedAt'] == null
       ? null
       : DateTime.parse(json['decidedAt'] as String),
 );
 
-Map<String, dynamic> _$ComplaintToJson(_Complaint instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'publicCode': instance.publicCode,
-      'jobId': instance.jobId,
-      'reason': _$ComplaintReasonEnumMap[instance.reason]!,
-      'description': instance.description,
-      'evidence': instance.evidence.map((e) => e.toJson()).toList(),
-      'status': _$ComplaintStatusEnumMap[instance.status]!,
-      'decision': instance.decision,
-      'decisionNote': instance.decisionNote,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'decidedAt': instance.decidedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$ComplaintToJson(
+  _Complaint instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'publicCode': instance.publicCode,
+  'jobId': instance.jobId,
+  'reason': _$ComplaintReasonEnumMap[instance.reason]!,
+  'description': instance.description,
+  'evidence': instance.evidence.map((e) => e.toJson()).toList(),
+  'status': _$ComplaintStatusEnumMap[instance.status]!,
+  'decision': instance.decision,
+  'decisionNote': instance.decisionNote,
+  'refundAmount': const NullableMoneyConverter().toJson(instance.refundAmount),
+  'proAmount': const NullableMoneyConverter().toJson(instance.proAmount),
+  'createdAt': instance.createdAt.toIso8601String(),
+  'decidedAt': instance.decidedAt?.toIso8601String(),
+};

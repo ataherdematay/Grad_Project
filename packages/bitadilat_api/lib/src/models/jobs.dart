@@ -275,6 +275,8 @@ abstract class Complaint with _$Complaint {
     required ComplaintStatus status,
     String? decision,
     String? decisionNote,
+    @NullableMoneyConverter() Money? refundAmount,
+    @NullableMoneyConverter() Money? proAmount,
     required DateTime createdAt,
     DateTime? decidedAt,
   }) = _Complaint;
