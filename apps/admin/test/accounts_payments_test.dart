@@ -43,7 +43,7 @@ void main() {
       // Satır başına bir rol metni: usta (u-2) "Usta", sıradan hesap "Müşteri".
       // ("Usta"/"Müşteri" süzgeç çipinde de geçer: satır metni +1.)
       expect(find.text('Usta'), findsNWidgets(2));
-      expect(find.text('Müşteri'), findsNWidgets(2));
+      expect(find.text('Müşteri'), findsNWidgets(3));
       expect(find.text('Yönetici'), findsNWidgets(2));
     });
 
