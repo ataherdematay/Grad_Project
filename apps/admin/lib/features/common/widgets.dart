@@ -356,6 +356,8 @@ class ResponsiveTable<T> extends StatelessWidget {
   }
 
   Widget _stacked(BuildContext context) => Column(
+    // Kartlar tam genişlik; yoksa içerik kadar daralıp ortada kalır.
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       for (final r in rows)
         Padding(

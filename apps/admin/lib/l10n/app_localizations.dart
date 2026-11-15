@@ -1112,6 +1112,18 @@ abstract class AppLocalizations {
   /// **'{min}-{max} karakter'**
   String noteHelper(int min, int max);
 
+  /// No description provided for @noteOptionalHelper.
+  ///
+  /// In tr, this message translates to:
+  /// **'İsteğe bağlı, en fazla {max} karakter'**
+  String noteOptionalHelper(int max);
+
+  /// No description provided for @approveNoteLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Onay notu (isteğe bağlı)'**
+  String get approveNoteLabel;
+
   /// No description provided for @noteTooShort.
   ///
   /// In tr, this message translates to:
@@ -1543,6 +1555,30 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Hesap yeniden aktifleştirildi.'**
   String get reactivatedNotice;
+
+  /// No description provided for @reactivatePro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profilini aç'**
+  String get reactivatePro;
+
+  /// No description provided for @reactivateProTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'{business} usta profilini yeniden aç'**
+  String reactivateProTitle(String business);
+
+  /// No description provided for @reactivateProMessage.
+  ///
+  /// In tr, this message translates to:
+  /// **'Askıdaki usta profili yeniden doğrulanmış duruma döner ve usta yeniden talep görür.'**
+  String get reactivateProMessage;
+
+  /// No description provided for @proReactivatedNotice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profili yeniden açıldı.'**
+  String get proReactivatedNotice;
 
   /// No description provided for @cannotSuspendSelf.
   ///

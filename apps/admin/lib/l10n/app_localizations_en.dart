@@ -544,6 +544,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String noteOptionalHelper(int max) {
+    return 'Optional, up to $max characters';
+  }
+
+  @override
+  String get approveNoteLabel => 'Approval note (optional)';
+
+  @override
   String noteTooShort(int min) {
     return 'The note must be at least $min characters.';
   }
@@ -789,6 +797,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reactivatedNotice => 'Account reactivated.';
+
+  @override
+  String get reactivatePro => 'Restore pro profile';
+
+  @override
+  String reactivateProTitle(String business) {
+    return 'Restore $business\'s pro profile';
+  }
+
+  @override
+  String get reactivateProMessage =>
+      'The suspended pro profile goes back to approved and the pro sees requests again.';
+
+  @override
+  String get proReactivatedNotice => 'Pro profile restored.';
 
   @override
   String get cannotSuspendSelf => 'You can\'t suspend your own account.';

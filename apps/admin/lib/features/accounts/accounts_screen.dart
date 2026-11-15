@@ -84,15 +84,22 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
 
   Future<void> _reactivate(AdminUser u) {
     final l = AppLocalizations.of(context);
+    // Hesap etkin, yalnız usta profili askıda (şikayet kararı): aynı uç nokta
+    // profili yeniden doğrulanmış duruma döndürür.
+    final proOnly =
+        u.status == AccountStatus.active &&
+        u.pro?.reviewStatus == ReviewStatus.suspended;
     return _run(
       () => confirmAndRun(
         context,
-        title: l.reactivateTitle(u.fullName),
-        message: l.reactivateMessage,
+        title: proOnly
+            ? l.reactivateProTitle(u.pro!.businessName)
+            : l.reactivateTitle(u.fullName),
+        message: proOnly ? l.reactivateProMessage : l.reactivateMessage,
         confirmLabel: l.reactivate,
         run: () => _track(() => _api.reactivateUser(u.id)),
       ),
-      () => l.reactivatedNotice,
+      () => proOnly ? l.proReactivatedNotice : l.reactivatedNotice,
     );
   }
 
@@ -168,8 +175,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
               );
             }
             return ResponsiveTable<AdminUser>(
-              stackBelow: 640,
-              minWidth: 880,
+              // 880 altında kartlar: işlem sütunu hiç kırpılmaz.
+              stackBelow: 880,
               rowKey: (u) => Key('user-${u.id}'),
               columns: [
                 TableColumn(
@@ -276,6 +283,23 @@ class _ActionCell extends StatelessWidget {
           expand: false,
           onPressed: busy || blocked ? null : onSuspend,
         );
+        // Yalnız usta profili askıda: profil buradan geri açılabilir.
+        if (!blocked && user.pro?.reviewStatus == ReviewStatus.suspended) {
+          return Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: [
+              AppButton(
+                key: Key('reactivate-pro-${user.id}'),
+                label: l.reactivatePro,
+                variant: AppButtonVariant.secondary,
+                expand: false,
+                onPressed: busy ? null : onReactivate,
+              ),
+              button,
+            ],
+          );
+        }
         if (!blocked) return button;
         return Tooltip(
           message: isSelf ? l.cannotSuspendSelf : l.cannotSuspendAdmin,

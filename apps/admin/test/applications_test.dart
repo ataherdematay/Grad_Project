@@ -172,6 +172,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(fake.count('POST', '/admin/applications/p9/approve'), 1);
+      // Not yazılmadı: gövdede not yok.
+      expect(fake.last('POST', '/admin/applications/p9/approve').data, {});
       expect(find.text('Başvuru onaylandı.'), findsOneWidget);
       // Ekran yenilendi: karar düğmeleri kalktı.
       expect(find.byKey(const Key('approve')), findsNothing);
@@ -408,7 +410,8 @@ void main() {
       );
       await tester.tap(find.byKey(const Key('approve')), warnIfMissed: false);
       await tester.pump();
-      expect(find.text('Başvuruyu onayla'), findsNothing);
+      // Diyalog istek bitene kadar açık kalır; ikinci istek gitmez.
+      expect(find.text('Başvuruyu onayla'), findsOneWidget);
       expect(fake.count('POST', '/admin/applications/p9/approve'), 1);
 
       gate.complete();

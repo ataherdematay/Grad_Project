@@ -142,6 +142,46 @@ void main() {
       expect(find.text('Hesap yeniden aktifleştirildi.'), findsOneWidget);
     });
 
+    testWidgets('yalnız usta profili askıdaysa profil buradan geri açılır', (
+      tester,
+    ) async {
+      final fake = FakeApi()
+        ..onJson('GET', '/admin/users', {
+          'items': [
+            {
+              'id': 'u-4',
+              'fullName': 'Emre Usta',
+              'email': 'emre@example.com',
+              'phone': null,
+              'isAdmin': false,
+              'status': 'ACTIVE',
+              'createdAt': '2026-10-06T09:00:00Z',
+              'pro': {
+                'businessName': 'Eller Tesisat',
+                'reviewStatus': 'SUSPENDED',
+              },
+            },
+          ],
+        })
+        ..on('POST', '/admin/users/u-4/reactivate', (_) => empty(204));
+      await pumpAdmin(tester, fake: fake, initial: '/accounts');
+
+      // Hesap etkin: askıya alma da açık kalır.
+      expect(_onPressed(tester, 'suspend-u-4'), isNotNull);
+      await tester.tap(find.byKey(const Key('reactivate-pro-u-4')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Eller Tesisat usta profilini yeniden aç'),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.widgetWithText(FilledButton, 'Yeniden aktifleştir'),
+      );
+      await tester.pumpAndSettle();
+      expect(fake.count('POST', '/admin/users/u-4/reactivate'), 1);
+      expect(find.text('Usta profili yeniden açıldı.'), findsOneWidget);
+    });
+
     testWidgets(
       'sunucu yönetici askısını reddederse (ILLEGAL_STATE) yenilenir',
       (tester) async {

@@ -161,10 +161,9 @@ class _ActionDialogState extends State<_ActionDialog> {
                     controller: _note,
                     enabled: !_busy,
                     minLines: 3,
-                    helperText: l.noteHelper(
-                      widget.minLength,
-                      widget.maxLength,
-                    ),
+                    helperText: widget.minLength == 0
+                        ? l.noteOptionalHelper(widget.maxLength)
+                        : l.noteHelper(widget.minLength, widget.maxLength),
                     validator: (v) =>
                         validateNote(l, v, widget.minLength, widget.maxLength),
                   ),

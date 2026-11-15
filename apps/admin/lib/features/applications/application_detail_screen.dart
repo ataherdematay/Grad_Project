@@ -66,13 +66,19 @@ class _ApplicationDetailScreenState
 
   Future<void> _approve(AdminApplicationDetail d) {
     final l = AppLocalizations.of(context);
+    // Not isteğe bağlı (`{note?}`); yazılırsa başvuru geçmişine kaydedilir.
     return _run(
-      () => confirmAndRun(
+      () => showActionDialog(
         context,
         title: l.approveTitle,
-        message: l.approveMessage(d.businessName),
+        intro: l.approveMessage(d.businessName),
+        noteLabel: l.approveNoteLabel,
+        minLength: 0,
+        maxLength: 1000,
         confirmLabel: l.approve,
-        run: () => _track(() => _api.approve(d.proId)),
+        onSubmit: (note) => _track(
+          () => _api.approve(d.proId, note: note.isEmpty ? null : note),
+        ),
       ),
       l.approvedNotice,
     );

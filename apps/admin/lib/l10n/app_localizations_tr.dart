@@ -543,6 +543,14 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String noteOptionalHelper(int max) {
+    return 'İsteğe bağlı, en fazla $max karakter';
+  }
+
+  @override
+  String get approveNoteLabel => 'Onay notu (isteğe bağlı)';
+
+  @override
   String noteTooShort(int min) {
     return 'Not en az $min karakter olmalı.';
   }
@@ -786,6 +794,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get reactivatedNotice => 'Hesap yeniden aktifleştirildi.';
+
+  @override
+  String get reactivatePro => 'Usta profilini aç';
+
+  @override
+  String reactivateProTitle(String business) {
+    return '$business usta profilini yeniden aç';
+  }
+
+  @override
+  String get reactivateProMessage =>
+      'Askıdaki usta profili yeniden doğrulanmış duruma döner ve usta yeniden talep görür.';
+
+  @override
+  String get proReactivatedNotice => 'Usta profili yeniden açıldı.';
 
   @override
   String get cannotSuspendSelf => 'Kendi hesabını askıya alamazsın.';
