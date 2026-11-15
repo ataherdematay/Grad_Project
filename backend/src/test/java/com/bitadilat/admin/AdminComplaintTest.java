@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bitadilat.payment.exception.GatewayException;
+import com.bitadilat.payment.gateway.PaymentGateway.RefundState;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -386,6 +387,67 @@ class AdminComplaintTest extends AdminTestBase {
                 .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
         assertNothingChanged(d);
         verify(gateway, never()).refundPartially(anyLong(), any(), anyString());
+    }
+
+    /**
+     * Tam iade zaman aşımına uğradı (502) ama Craftgate'te gerçekleşti (sandbox'ta görüldü: ikinci istek "önceden iptal
+     * edilmiştir" 4010 ile reddedilir ve karar her denemede 502 alır). Yeniden denenen karar Craftgate'e sorar, iadeyi
+     * ikinci kez göndermez ve defteri işler.
+     */
+    @Test
+    void fullRefundRetryAfterATimedOutButLandedRefundDoesNotRefundTwice() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        long paymentId = cgPaymentId(d);
+        doThrow(new GatewayException("Craftgate yanıt vermedi.", true)).when(gateway).refundFully(anyLong(), anyString());
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.FULLY_REFUNDED);
+        JsonNode c = ok(decide(admin, d, "FULL_REFUND"));
+        assertAmounts(c, d, "1200.00", "0.00");
+        verify(gateway, times(1)).refundFully(anyLong(), anyString());
+        assertThat(escrowStatus(d.jobId())).isEqualTo("REFUNDED_TO_CUSTOMER");
+        assertThat(jobStatus(d.jobId())).isEqualTo("CANCELLED");
+        assertThat(ledgerRows(d.ref())).isEqualTo(1);
+        assertThat(ledger(d.ref(), "REFUND")).isEqualByComparingTo("1200.00");
+    }
+
+    @Test
+    void fullRefundStopsWhenCraftgateShowsAPartialOrAPendingRefund() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        long paymentId = cgPaymentId(d);
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        decide(admin, d, "FULL_REFUND").andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
+        assertNothingChanged(d);
+
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.REFUND_PENDING);
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
+        assertNothingChanged(d);
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+    }
+
+    /**
+     * Önceki bir iade kararı Craftgate'te gerçekleşip bizde geri alındıysa müşteri parasını almıştır: ustaya aktarım
+     * kararı 409 ile durur, para iki kez dağıtılmaz.
+     */
+    @Test
+    void releaseToProStopsWhenCraftgateShowsARefund() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        long paymentId = cgPaymentId(d);
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("600.00"));
+        decide(admin, d, "RELEASE_TO_PRO").andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"))
+                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("600.00 TL")));
+        assertNothingChanged(d);
+
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(BigDecimal.ZERO);
+        ok(decide(admin, d, "RELEASE_TO_PRO"));
+        assertThat(escrowStatus(d.jobId())).isEqualTo("RELEASED_TO_PRO");
     }
 
     private void assertNothingChanged(Disputed d) {

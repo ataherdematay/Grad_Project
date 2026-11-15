@@ -242,7 +242,7 @@ public class AdminComplaintService {
         switch (decision) {
             case FULL_REFUND -> escrow.refundFully(payment);
             case SPLIT_50_50 -> escrow.settleSplit(payment);
-            default -> escrow.release(payment);
+            default -> escrow.releaseAfterDispute(payment);
         }
         // Ayrıntı burada kurulmaz: para hareketi gerçekleştikten sonra salt okuma bir hata (ör. imzalı URL)
         // işlemi geri alıp parayı defterden düşürmesin. Denetleyici ayrıntıyı işlem kesinleştikten sonra okur.

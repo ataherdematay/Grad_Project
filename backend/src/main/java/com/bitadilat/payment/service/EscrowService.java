@@ -6,6 +6,7 @@ import com.bitadilat.payment.domain.EscrowPaymentRepository;
 import com.bitadilat.payment.exception.GatewayException;
 import com.bitadilat.payment.gateway.PaymentGateway;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -47,6 +48,27 @@ public class EscrowService {
                 .orElseThrow(() -> ApiException.illegalState("İşin emanet kaydı bulunamadı."));
     }
 
+    /**
+     * Hakem kararıyla ustaya aktarım. Önce Craftgate'te bu ödemeye iade yapılmış mı diye sorulur: önceki bir iade kararı
+     * Craftgate'te gerçekleşip bizde geri alındıysa (zaman aşımı) müşteri parasını almıştır; ustaya da aktarılırsa
+     * para iki kez dağıtılır. İade görünürse 409 (elle incelenir), sonuç bekleyen iade varsa 502.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void releaseAfterDispute(EscrowPayment payment) {
+        payment.requireRefundable();
+        if (!payment.isSeed()) {
+            BigDecimal already = gateway.refundedTotal(payment.getCraftgatePaymentId());
+            if (already != null && already.signum() > 0) {
+                log.error("Craftgate'te iade görünen ödeme ustaya aktarılmadı; elle incelenmeli. ref={} iade={}",
+                        payment.getRef(), already);
+                throw ApiException.illegalState("Bu ödemede Craftgate'te "
+                        + already.setScale(2, RoundingMode.HALF_UP).toPlainString()
+                        + " TL iade görünüyor; karar elle incelenmeli.");
+            }
+        }
+        release(payment);
+    }
+
     /** Teslim onayı: emanet ustaya aktarılır, PAYOUT ve COMMISSION defter satırları yazılır. */
     @Transactional(propagation = Propagation.MANDATORY)
     public void release(EscrowPayment payment) {
@@ -62,6 +84,11 @@ public class EscrowService {
      * Tam iade. Craftgate hatasında GatewayException fırlar ve emanet kaydı değişmez. {@code noRollbackFor}: çağıranın
      * işlemi bu çağrı yüzünden "yalnızca geri al" işaretlenmez; çağıran istisnayı yakalayıp devam edebilir (banka
      * dönüşündeki otomatik iade) veya yayarak kendi işlemini geri alabilir (iş iptali, 502).
+     *
+     * <p>İade göndermeden önce Craftgate'teki iade durumu sorulur. Önceki deneme zaman aşımına uğramış ama Craftgate'te
+     * gerçekleşmiş olabilir (bizde işlem geri alındı): ödeme zaten tam iade edildiyse yeniden gönderilmez, yalnızca defter
+     * işlenir. Aksi halde Craftgate ikinci isteği "önceden iptal edilmiş" diye reddeder ve karar her denemede 502 alır.
+     * Sonuç bekleyen iade varsa yeniden denenebilir 502; kısmi iade görünürse 409 (elle incelenir).
      */
     @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
     public void refundFully(EscrowPayment payment) {
@@ -70,7 +97,19 @@ public class EscrowService {
         if (payment.isSeed()) {
             requireDevForSeed();
         } else {
-            gateway.refundFully(payment.getCraftgatePaymentId(), payment.getConversationId());
+            PaymentGateway.RefundState state = gateway.refundState(payment.getCraftgatePaymentId());
+            if (state == PaymentGateway.RefundState.FULLY_REFUNDED) {
+                log.warn("Ödeme Craftgate'te zaten tam iade edilmiş; yeniden gönderilmedi, yalnızca defter işlendi. ref={}",
+                        payment.getRef());
+            } else if (state == PaymentGateway.RefundState.REFUND_PENDING) {
+                throw new GatewayException("Önceki iade isteği sonuç bekliyor. Lütfen biraz sonra tekrar deneyin.", true);
+            } else if (state == PaymentGateway.RefundState.PARTIALLY_REFUNDED) {
+                log.error("Ödeme Craftgate'te kısmen iade edilmiş; tam iade gönderilmedi, elle incelenmeli. ref={}",
+                        payment.getRef());
+                throw ApiException.illegalState("Bu ödemede Craftgate'te kısmi iade görünüyor; işlem elle incelenmeli.");
+            } else {
+                gateway.refundFully(payment.getCraftgatePaymentId(), payment.getConversationId());
+            }
         }
         payment.refundFully();
         repository.saveAndFlush(payment);
@@ -100,7 +139,8 @@ public class EscrowService {
             } else {
                 log.error("Craftgate'te beklenmeyen iade tutarı; %50/%50 kararı uygulanmadı. ref={} iade={} beklenen={}",
                         payment.getRef(), already, refund);
-                throw ApiException.illegalState("Bu ödemede Craftgate'te " + already.toPlainString()
+                throw ApiException.illegalState("Bu ödemede Craftgate'te "
+                        + already.setScale(2, RoundingMode.HALF_UP).toPlainString()
                         + " TL iade görünüyor; karar elle incelenmeli.");
             }
         }
