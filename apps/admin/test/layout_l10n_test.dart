@@ -92,6 +92,23 @@ void main() {
       expect(find.byKey(const Key('nav-complaints')), findsNothing);
     });
 
+    testWidgets('detay sayfasında menüden seçince çekmece kapanır', (
+      tester,
+    ) async {
+      final h = await pumpAdmin(
+        tester,
+        size: const Size(700, 800),
+        initial: '/applications/p9',
+      );
+      await tester.tap(find.byTooltip('Menüyü aç'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('nav-payments')));
+      await tester.pumpAndSettle();
+      expect(h.location, Routes.payments);
+      expect(find.byKey(const Key('nav-payments')), findsNothing);
+      expect(find.byType(Drawer), findsNothing);
+    });
+
     testWidgets('1023 px sınırı: çekmece, 1024 px sabit gezinme', (
       tester,
     ) async {

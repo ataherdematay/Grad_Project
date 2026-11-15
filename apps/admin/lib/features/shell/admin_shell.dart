@@ -57,10 +57,7 @@ class AdminShell extends ConsumerWidget {
         final selected = _selectedIndex(location);
         final sidebar = _Sidebar(
           selected: selected,
-          onSelect: (i) {
-            if (!wide) Navigator.of(context).maybePop();
-            context.go(_items[i].route);
-          },
+          onSelect: (i) => context.go(_items[i].route),
         );
         return Scaffold(
           drawer: wide ? null : Drawer(child: SafeArea(child: sidebar)),
@@ -126,7 +123,12 @@ class _Sidebar extends StatelessWidget {
                       icon: _items[i].icon,
                       label: _label(l, _items[i].id),
                       selected: i == selected,
-                      onTap: () => onSelect(i),
+                      onTap: () {
+                        // Çekmeceyi Scaffold üzerinden kapat: Navigator.maybePop
+                        // detay sayfasındayken çekmeceyi açık bırakıyordu.
+                        Scaffold.maybeOf(context)?.closeDrawer();
+                        onSelect(i);
+                      },
                     ),
                 ],
               ),
