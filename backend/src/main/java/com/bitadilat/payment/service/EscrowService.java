@@ -78,6 +78,26 @@ public class EscrowService {
     }
 
     /**
+     * Hakem kararı %50/%50: yarısı Craftgate üzerinden müşteriye iade edilir, yarısı ustaya yazılır (komisyon yok).
+     * Yalnızca DISPUTED emanette; hata durumunda GatewayException fırlar ve emanet kaydı değişmez. Defter: müşteri
+     * yarısı REFUND, usta yarısı PAYOUT.
+     */
+    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
+    public void settleSplit(EscrowPayment payment) {
+        payment.requireSplittable();
+        BigDecimal refund = payment.splitRefundAmount();
+        if (payment.isSeed()) {
+            requireDevForSeed();
+        } else {
+            gateway.refundPartially(payment.getCraftgatePaymentId(), refund, payment.getConversationId());
+        }
+        payment.settleSplit();
+        repository.saveAndFlush(payment);
+        ledger(payment, refund, "REFUND");
+        ledger(payment, payment.getProPayout(), "PAYOUT");
+    }
+
+    /**
      * Craftgate ödemeyi zaten iade etmiş (iade yanıtı bize ulaşmamıştı): yeniden iade göndermeden yalnızca defteri
      * düzeltir.
      */
@@ -99,7 +119,7 @@ public class EscrowService {
 
     private void requireDevForSeed() {
         if (!environment.acceptsProfiles(Profiles.of("dev"))) {
-            throw new IllegalStateException("SEED emaneti yalnızca dev profilinde işlenebilir.");
+            throw ApiException.illegalState("SEED emaneti yalnızca dev profilinde işlenebilir.");
         }
     }
 

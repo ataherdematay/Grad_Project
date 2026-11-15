@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 /**
- * Bildirim satırı yazar (uç noktalar sonraki dalgada). Çağıranın işlemine katılır: iş geri alınırsa bildirim de gider.
- * Başlık ve gövde anahtarları istemcide çevrilir: {@code notification.<TYPE>.title} / {@code .body}.
+ * Bildirim satırı yazar. Çağıranın işlemine katılır: iş geri alınırsa bildirim de gider. Metni istemci {@code type} ve
+ * {@code params}'tan kurar (TR/EN); {@code title_key}/{@code body_key} yalnızca eski çeviri anahtarlarıdır.
+ * Listeleme, okundu işaretleme ve cihaz kaydı {@link NotificationController} ve {@link NotificationQueryService}'tedir.
  */
 @Service
 public class NotificationService {
@@ -28,10 +29,15 @@ public class NotificationService {
     public static final String COMPLAINT_OPENED = "COMPLAINT_OPENED";
     public static final String AUTO_COMPLETE_REMINDER = "AUTO_COMPLETE_REMINDER";
     public static final String NEW_MESSAGE = "NEW_MESSAGE";
-    // Sözleşmede tür adı verilmeyen iş bildirimleri
     public static final String APPOINTMENT_PROPOSED = "APPOINTMENT_PROPOSED";
-    public static final String APPOINTMENT_ACCEPTED = "APPOINTMENT_ACCEPTED";
-    public static final String JOB_STAGE_UPDATED = "JOB_STAGE_UPDATED";
+    public static final String APPOINTMENT_CONFIRMED = "APPOINTMENT_CONFIRMED";
+    public static final String JOB_STAGE_CHANGED = "JOB_STAGE_CHANGED";
+
+    // Wave 4 (admin kararları)
+    public static final String COMPLAINT_DECIDED = "COMPLAINT_DECIDED";
+    public static final String PRO_APPROVED = "PRO_APPROVED";
+    public static final String PRO_REJECTED = "PRO_REJECTED";
+    public static final String PRO_NEEDS_DOCUMENTS = "PRO_NEEDS_DOCUMENTS";
 
     private final JdbcTemplate jdbc;
     private final ObjectMapper json;

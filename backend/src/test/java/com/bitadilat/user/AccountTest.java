@@ -24,12 +24,13 @@ class AccountTest extends ApiTestBase {
         JsonNode me = body(call(HttpMethod.GET, ME, a.access(), null).andExpect(status().isOk()));
 
         assertThat(me.propertyNames()).containsExactlyInAnyOrder(
-                "id", "fullName", "email", "phone", "locale", "lastMode", "isAdmin", "status", "pro");
+                "id", "fullName", "email", "phone", "locale", "lastMode", "isAdmin", "status", "pro", "unreadNotifications");
         assertThat(me.get("id").asString()).isEqualTo(a.id());
         assertThat(me.get("phone").asString()).matches("\\+90532\\d{7}");
         assertThat(me.get("locale").asString()).isEqualTo("tr");
         assertThat(me.get("isAdmin").asBoolean()).isFalse();
         assertThat(me.get("pro").isNull()).isTrue();
+        assertThat(me.get("unreadNotifications").asInt()).isZero();
     }
 
     @Test

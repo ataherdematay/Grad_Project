@@ -607,3 +607,172 @@ The admin panel and its decisions, notification endpoints, push notifications, a
 - `GET /requests?scope=active`: `ASSIGNED` talep, işi `COMPLETED`/`RESOLVED` olana kadar etkindir.
 - `rating_avg`/`rating_count` `reviews` satırlarından yeniden hesaplanır.
 
+
+
+## Ayrıntılı sözleşme (wave 4)
+
+### Wave 4 contract: admin panel and notification centre
+
+Binding for backend, the admin web app and the mobile app. The contracts from waves 1-3 still apply. Field names, enum values and status codes below are exact. General rules:
+
+- Base path is `/api/v1`. JSON keys are camelCase.
+- Errors use `{code, message, field?}`.
+- Lists use `{items, nextCursor}` unless a list below says `{items}` only.
+- Money is TRY with 2 decimals.
+- State rules come from `docs/spec/STATE_MACHINES.md` (§1 accounts and pros, §5 complaints, §6 escrow).
+
+#### Admin
+
+Every `/admin/**` endpoint requires `isAdmin = true`. Anyone else gets 403 `FORBIDDEN`. Each state-changing admin call writes an `admin_actions` row (admin, action, target type, target id, note, time) in the same transaction. Admins can open `PRO_DOCUMENT` and `COMPLAINT` media through `MediaRef` signed URLs.
+
+##### Stats
+
+`GET /admin/stats` returns `{pendingApplications, openComplaints, activeJobs, lockedEscrowTotal}`.
+
+##### Pro applications
+
+`GET /admin/applications?status=&q=` returns `{items: [AdminApplicationSummary]}`.
+- `status` is one of `PENDING_REVIEW`, `NEEDS_DOCUMENTS`, `REJECTED`, `APPROVED`, `SUSPENDED`. The default is `PENDING_REVIEW`.
+- `q` searches the name, business name, email and phone.
+- `AdminApplicationSummary` = `{proId, fullName, businessName, categoryIds, districtNames, submittedAt, reviewStatus, documentCount}`.
+- Items are ordered oldest first, so the earliest submitted application is reviewed first.
+
+`GET /admin/applications/{proId}` returns `AdminApplicationDetail`:
+- every summary field, plus
+- `email`, `phone`, `bio`, `experienceYears`, `reviewNote`
+- `documents`: `[{id, type, status, media}]`, where `media` is a `MediaRef`
+- `history`: `[AdminAction {id, action, note, adminName, createdAt}]`
+
+Review actions:
+
+| Endpoint | Body | Allowed from | Result | Notifies the pro with |
+|---|---|---|---|---|
+| `POST /admin/applications/{proId}/approve` | `{note?}` | `PENDING_REVIEW` | `APPROVED`; every document `ACCEPTED`; `approved_at` set | `PRO_APPROVED` |
+| `POST /admin/applications/{proId}/reject` | `{note (10-1000)}` | `PENDING_REVIEW` | `REJECTED`; `review_note` set | `PRO_REJECTED` |
+| `POST /admin/applications/{proId}/request-documents` | `{note (10-1000), documentTypes (≥1)}` | `PENDING_REVIEW` | `NEEDS_DOCUMENTS`; the listed document types become `REJECTED` | `PRO_NEEDS_DOCUMENTS` |
+
+- Each action returns `AdminApplicationDetail`.
+- Any other starting state returns 409 `ILLEGAL_STATE`.
+
+##### Complaints
+
+`GET /admin/complaints?status=` returns `{items}`.
+- `status` is `OPEN`, `IN_REVIEW`, `RESOLVED` or `DISMISSED`. The default is "OPEN and IN_REVIEW".
+- Each item is `{id, publicCode, jobId, jobPublicCode, reason, status, customerName, proBusinessName, amount, createdAt}`.
+- Items are ordered oldest first.
+
+`GET /admin/complaints/{id}` returns `AdminComplaintDetail`:
+- every `Complaint` field (wave 3), plus
+- `warnPro`, `suspendPro`
+- `job`: `{id, publicCode, title, status, statusBeforeDispute, timeline [JobEvent], offer OfferDetail, districtName}`
+- `payment`: `{ref, status, provider, totalAmount, commission, proPayout, refundedAmount}`
+- `messages`: `[{id, senderRole, body, photo, createdAt}]`, the whole job chat
+- `customer`: `{id, fullName}`
+- `pro`: `{id, businessName, fullName, warningCount, cancellationCount}`
+
+`POST /admin/complaints/{id}/review` moves `OPEN` to `IN_REVIEW` and returns the detail.
+
+`POST /admin/complaints/{id}/decision` decides an `OPEN` or `IN_REVIEW` complaint.
+- Body: `{decision, note (10-2000), warnPro (bool), suspendPro (bool)}`.
+- `decision` is one of:
+
+| `decision` | Escrow | Job | Complaint | Fee |
+|---|---|---|---|---|
+| `FULL_REFUND` | `REFUNDED_TO_CUSTOMER`; full refund through the gateway | `CANCELLED`; request `CANCELLED` | `RESOLVED` | none |
+| `SPLIT_50_50` | `SPLIT_SETTLED`; 50% refund through the gateway, 50% to the pro | `RESOLVED` | `RESOLVED` | none |
+| `RELEASE_TO_PRO` | `RELEASED_TO_PRO`; 10% fee kept | `COMPLETED` | `DISMISSED` | 10% |
+
+- `payout_ledger` rows are written for every outcome.
+- `warnPro` adds 1 to `warning_count`.
+- `suspendPro` sets the pro profile to `SUSPENDED` and withdraws their PENDING offers. The user account itself is not suspended.
+- The decision fields are recorded on the complaint.
+- Both sides are notified with `COMPLAINT_DECIDED`.
+- If the gateway fails: 502 `GATEWAY_ERROR`, and nothing changes.
+- A `provider=SEED` payment is ledger-only, and only in `dev`.
+- Returns the detail.
+
+##### Accounts
+
+`GET /admin/users?q=&role=&status=` returns `{items}`.
+- `role` is `CUSTOMER`, `PRO` or `ADMIN`.
+- `status` is `ACTIVE`, `SUSPENDED` or `DELETED`.
+- Each item is `{id, fullName, email, phone, isAdmin, status, createdAt, pro}`, where `pro` is `{businessName, reviewStatus}` or null.
+
+`POST /admin/users/{id}/suspend` with `{note (10-1000)}`:
+- sets the user to `SUSPENDED`;
+- calls `revokeAllForUser`, which ends every session;
+- withdraws their PENDING offers;
+- leaves active jobs untouched; they are listed in the response warning field `activeJobCount`.
+- An admin can't suspend themself or another admin: 409 `ILLEGAL_STATE`.
+
+`POST /admin/users/{id}/reactivate` sets `SUSPENDED` back to `ACTIVE`.
+
+##### Payments ledger
+
+`GET /admin/payments?status=` returns `{items, totals}`.
+- Each item is `{ref, jobPublicCode, status, provider, totalAmount, commission, proPayout, refundedAmount, customerName, proBusinessName, createdAt, lockedAt, releasedAt, refundedAt, errorCode}`.
+- `totals` is `{lockedTotal, releasedTotal, commissionTotal, refundedTotal}`.
+
+#### Complaint amounts (leader addendum)
+
+`Complaint` (`GET /complaints/{id}` and the admin detail) gains two nullable fields: `refundAmount` (refunded to the customer) and `proAmount` (net amount transferred to the pro). Both are null before a decision. `FULL_REFUND` → refund = total, pro = 0; `SPLIT_50_50` → refund = half (HALF_UP), pro = the rest, no fee; `RELEASE_TO_PRO` → refund = 0, pro = total − 10%. Values are read from the escrow row (`refunded_amount`, `pro_payout`).
+
+#### Notifications
+
+`Notification` = `{id, type, params, targetRoute, read, createdAt}`.
+- `params` is a flat JSON object of strings and numbers that the client needs to build the text, such as `publicCode`, `title`, `amount`, `proBusinessName`, `customerName` and `slotFrom`.
+- `targetRoute` is an in-app route such as `/c/jobs/<id>`, `/p/jobs/<id>`, `/c/requests/<id>/offers`, `/p/requests/<id>`, `/p/application`, `/c/complaints/<id>` or `/jobs/<id>/chat`, or it is null.
+- The client builds the TR or EN text from `type` and `params`.
+
+Endpoints:
+- `GET /notifications?cursor=&limit=` returns `{items: [Notification], nextCursor, unreadCount}`, newest first.
+- `POST /notifications/read` takes `{ids?: [..]}`. Without `ids` it marks everything read. Returns 204.
+- `GET /me` gains `unreadNotifications` (int).
+- `PUT /devices` takes `{platform ("IOS"|"ANDROID"|"WEB"), token}` and returns 204. The token is only stored; push is not sent yet.
+
+Types, with the params each one must carry:
+
+| Type | Params | Target |
+|---|---|---|
+| `NEW_MATCHING_REQUEST` | `publicCode`, `title`, `districtName` | `/p/requests/<id>` |
+| `OFFER_RECEIVED` | `publicCode`, `title`, `proBusinessName`, `amount` | `/c/requests/<id>/offers` |
+| `OFFER_DECLINED` | `publicCode`, `title` | `/p/offers` |
+| `OFFER_SUPERSEDED` | `publicCode`, `title` | `/p/offers` |
+| `OFFER_ACCEPTED` | `publicCode`, `title`, `amount` | `/p/jobs/<id>` |
+| `REQUEST_UPDATED` | `publicCode`, `title` | `/p/requests/<id>` |
+| `APPOINTMENT_PROPOSED` | `publicCode`, `slotFrom`, `slotTo` | job route for that side |
+| `APPOINTMENT_CONFIRMED` | `publicCode`, `slotFrom`, `slotTo` | job route for that side |
+| `JOB_STAGE_CHANGED` | `publicCode`, `status` | `/c/jobs/<id>` |
+| `WORK_FINISHED` | `publicCode`, `autoCompleteAt` | `/c/jobs/<id>` |
+| `AUTO_COMPLETE_REMINDER` | `publicCode`, `autoCompleteAt` | `/c/jobs/<id>` |
+| `PAYOUT_RELEASED` | `publicCode`, `amount` | `/p/earnings` |
+| `JOB_CANCELLED` | `publicCode`, `byRole`, `refundAmount` | job route for that side |
+| `NEW_MESSAGE` | `publicCode`, `senderName` | `/jobs/<id>/chat` |
+| `COMPLAINT_OPENED` | `publicCode`, `complaintCode` | `/p/jobs/<id>` for the pro; the admin web for admins |
+| `COMPLAINT_DECIDED` | `complaintCode`, `decision`, `amount` | `/c/complaints/<id>` or `/p/jobs/<id>` |
+| `PRO_APPROVED` | none | `/p/feed` |
+| `PRO_REJECTED` | `note` | `/p/application` |
+| `PRO_NEEDS_DOCUMENTS` | `note` | `/p/application` |
+
+Existing notify calls get the missing params and targets. `APPOINTMENT_PROPOSED`, `APPOINTMENT_CONFIRMED` and `JOB_STAGE_CHANGED` are emitted where they were not emitted before.
+
+#### Seed (dev)
+
+- Hasan's application stays `PENDING_REVIEW`.
+- Selim stays `NEEDS_DOCUMENTS` with a note.
+- SK-1001 stays `OPEN`.
+- Each seeded account gets a few notifications of the new types, with correct params and targets (Hasan, whose application is still pending, has none).
+- The admin account is `admin@bitadilat.test` with password `Demo1234!`.
+
+#### Uygulama notları (backend, wave 4)
+
+- Kod: `com.bitadilat.admin` (denetleyici + dört servis + `AdminAudit`), `com.bitadilat.notification` (`NotificationController`, `NotificationQueryService`). Şema değişikliği yok (`admin_actions`, `notifications`, `device_tokens` V2'de vardı). Güvenlik zinciri `/api/v1/admin/**` için `ROLE_ADMIN` ister; denetleyici `isAdmin` bayrağını ayrıca kontrol eder.
+- `admin_actions.action` değerleri: `APPROVE_APPLICATION`, `REJECT_APPLICATION`, `REQUEST_DOCUMENTS`, `REVIEW_COMPLAINT`, `DECIDE_COMPLAINT`, `WARN_PRO`, `SUSPEND_PRO`, `SUSPEND_USER`, `REACTIVATE_USER`. Hedef türleri `PRO_PROFILE`, `COMPLAINT`, `USER`; `AdminApplicationDetail.history` bir ustanın tüm `PRO_PROFILE` eylemlerini (şikayetten gelen `WARN_PRO`/`SUSPEND_PRO` dahil) yeniden eskiye listeler.
+- Başvuru kararında profil satırı `FOR UPDATE` ile kilitlenir. `request-documents`: başvuruda olmayan bir belge türü 400 `VALIDATION_FAILED` (`documentTypes`); listede olmayan belgelere dokunulmaz.
+- Şikayet kararında kilit sırası iş, şikayet satırı, emanet, talep. Craftgate çağrısı tüm veritabanı yazımlarından sonra, işlem kesinleşmeden hemen önce yapılır: gateway hatası (502 `GATEWAY_ERROR`) bildirim, denetim satırı, uyarı/askı dahil her şeyi geri alır. Eşzamanlı iki karardan biri 200, diğeri 409 alır.
+- Tutarlar: `FULL_REFUND` müşteriye toplamın tamamı (`REFUND` defter satırı); `SPLIT_50_50` müşteriye `round(total/2, HALF_UP)` (`REFUND`), kalan usta payı (`PAYOUT`), komisyon yok; `RELEASE_TO_PRO` `PAYOUT` (%90) ve `COMMISSION` (%10), ustanın `completed_jobs` sayacı bir artar. `COMPLAINT_DECIDED.amount` alıcıya göredir: müşteride iade edilen, ustada aktarılan tutar (`0.00` olabilir). Karar bildirimi admin'e gitmez. `warnPro`/`suspendPro` verilmezse `false` sayılır; `suspendPro` ustanın profilini `SUSPENDED` yapar ve `review_note`'u karar notuyla yazar.
+- `SEED` emaneti dev dışında iade edilemez (409 `ILLEGAL_STATE`, hiçbir şey değişmez); dev'de iade yalnızca defterde işlenir.
+- Hesap listesi: `role=PRO` usta profili olanlar, `ADMIN` admin bayrağı olanlar, `CUSTOMER` ikisi de olmayanlar; en yeni önce, en çok 500 satır. Ödeme defteri de en yeni önce en çok 500 satırdır; `totals` süzgece uyan tüm satırlardan hesaplanır: `lockedTotal` LOCKED/DISPUTED tutarı, `releasedTotal` ustalara yazılan pay (RELEASED_TO_PRO ve SPLIT_SETTLED), `commissionTotal` RELEASED_TO_PRO komisyonu, `refundedTotal` müşteriye iade edilen. Bu değerler `payout_ledger` ile birebir tutar.
+- `stats.activeJobs` COMPLETED, CANCELLED ve RESOLVED dışındaki işlerdir (DISPUTED dahil); `lockedEscrowTotal` LOCKED + DISPUTED emanet toplamıdır.
+- Bildirimler: `APPOINTMENT_ACCEPTED` → `APPOINTMENT_CONFIRMED`, `JOB_STAGE_UPDATED` → `JOB_STAGE_CHANGED` olarak yeniden adlandırıldı. `JOB_STAGE_CHANGED` yalnızca varış ve başlangıçta (`status` = `ARRIVED` / `IN_PROGRESS`) müşteriye gider; usta notu/fotoğrafı artık bildirim üretmez. Sözleşmedeki parametrelere ek olarak kimlik anahtarları (`jobId`, `requestId`, `offerId`, `complaintId`) taşınır; para tutarları iki ondalıklı dizedir (`"1200.00"`). `NEW_MESSAGE.senderName` ustada işletme adı, müşteride kısa addır ("Ali Y."). Admin'e giden `COMPLAINT_OPENED` hedefi `/complaints/<id>`'dir.
+- `GET /notifications` imleci sıra numarasıdır (opak dize), varsayılan `limit` 20, en çok 50. `POST /notifications/read` başkasının kimliklerini sessizce yok sayar, boş `ids` listesi hiçbir şeyi değiştirmez, gövdesiz çağrı ve `{}` hepsini okundu yapar. `PUT /devices` token'a göre upsert eder; token başka kullanıcıdaysa yeni sahibine taşınır.

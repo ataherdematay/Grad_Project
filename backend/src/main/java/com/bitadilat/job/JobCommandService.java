@@ -129,7 +129,7 @@ public class JobCommandService {
         } else {
             touch(job); // SCHEDULED iken yalnızca yeniden planlama
         }
-        notifications.notify(otherParty(job, l.role()), NotificationService.APPOINTMENT_ACCEPTED,
+        notifications.notify(otherParty(job, l.role()), NotificationService.APPOINTMENT_CONFIRMED,
                 Map.of("jobId", jobId.toString(), "publicCode", code(job), "slotFrom", p.getSlotFrom().toString(),
                         "slotTo", p.getSlotTo().toString()),
                 route(job, l.role() == ActorRole.CUSTOMER ? ActorRole.PRO : ActorRole.CUSTOMER));
@@ -140,15 +140,15 @@ public class JobCommandService {
 
     @Transactional
     public JobDetail arrived(UUID userId, UUID jobId) {
-        return stage(userId, jobId, Trigger.ARRIVE, "ARRIVED");
+        return stage(userId, jobId, Trigger.ARRIVE);
     }
 
     @Transactional
     public JobDetail start(UUID userId, UUID jobId) {
-        return stage(userId, jobId, Trigger.START, "IN_PROGRESS");
+        return stage(userId, jobId, Trigger.START);
     }
 
-    private JobDetail stage(UUID userId, UUID jobId, Trigger trigger, String stage) {
+    private JobDetail stage(UUID userId, UUID jobId, Trigger trigger) {
         Locked l = lock(userId, jobId);
         requireRole(l, ActorRole.PRO);
         Job job = l.job();
@@ -156,7 +156,7 @@ public class JobCommandService {
         if (trigger == Trigger.ARRIVE) {
             closePendingProposal(jobId);
         }
-        notifyCustomerStage(job, stage);
+        notifyCustomerStage(job);
         return views.detail(job, ActorRole.PRO, userId);
     }
 
@@ -209,7 +209,6 @@ public class JobCommandService {
             events.record(jobId, userId, ActorRole.PRO, EventType.PHOTO, null, null, null, photo, now);
         }
         touch(job);
-        notifyCustomerStage(job, note != null ? "NOTE" : "PHOTO");
         return views.detail(job, ActorRole.PRO, userId);
     }
 
@@ -267,7 +266,8 @@ public class JobCommandService {
 
         notifyOther(job, l.role(), NotificationService.JOB_CANCELLED,
                 Map.of("jobId", jobId.toString(), "publicCode", request.getPublicCode(),
-                        "cancelledBy", l.role().name(), "reason", body.reason().name()));
+                        "byRole", l.role().name(), "reason", body.reason().name(),
+                        "refundAmount", payment.getRefundedAmount().toPlainString()));
         return views.detail(job, l.role(), userId);
     }
 
@@ -349,9 +349,10 @@ public class JobCommandService {
         jobs.saveAndFlush(job);
     }
 
-    private void notifyCustomerStage(Job job, String stage) {
-        notifications.notify(job.getCustomerId(), NotificationService.JOB_STAGE_UPDATED,
-                Map.of("jobId", job.getId().toString(), "publicCode", code(job), "stage", stage),
+    /** Müşteriye "usta yolda/işe başladı": params {@code status} yeni iş durumudur (ARRIVED, IN_PROGRESS). */
+    private void notifyCustomerStage(Job job) {
+        notifications.notify(job.getCustomerId(), NotificationService.JOB_STAGE_CHANGED,
+                Map.of("jobId", job.getId().toString(), "publicCode", code(job), "status", job.getStatus().name()),
                 route(job, ActorRole.CUSTOMER));
     }
 

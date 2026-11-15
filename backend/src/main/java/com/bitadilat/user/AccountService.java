@@ -3,6 +3,7 @@ package com.bitadilat.user;
 import com.bitadilat.auth.PasswordResetCodeRepository;
 import com.bitadilat.auth.RefreshTokenRepository;
 import com.bitadilat.common.ApiException;
+import com.bitadilat.notification.NotificationQueryService;
 import com.bitadilat.pro.ProProfile;
 import com.bitadilat.pro.ProProfileRepository;
 import com.bitadilat.user.dto.ChangePasswordRequest;
@@ -25,10 +26,12 @@ public class AccountService {
     private final PasswordResetCodeRepository resetCodes;
     private final PasswordEncoder encoder;
     private final List<AccountDeletionGuard> deletionGuards;
+    private final NotificationQueryService notifications;
 
     public AccountService(UserRepository users, ProProfileRepository proProfiles, AddressRepository addresses,
                           RefreshTokenRepository refreshTokens, PasswordResetCodeRepository resetCodes,
-                          PasswordEncoder encoder, List<AccountDeletionGuard> deletionGuards) {
+                          PasswordEncoder encoder, List<AccountDeletionGuard> deletionGuards,
+                          NotificationQueryService notifications) {
         this.users = users;
         this.proProfiles = proProfiles;
         this.addresses = addresses;
@@ -36,6 +39,7 @@ public class AccountService {
         this.resetCodes = resetCodes;
         this.encoder = encoder;
         this.deletionGuards = deletionGuards;
+        this.notifications = notifications;
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +47,7 @@ public class AccountService {
         Me.ProSummary pro = proProfiles.findById(user.getId())
                 .map(AccountService::summary).orElse(null);
         return new Me(user.getId(), user.getFullName(), user.getEmail(), user.getPhone(), user.getLocale(),
-                user.getLastMode(), user.isAdmin(), user.getStatus(), pro);
+                user.getLastMode(), user.isAdmin(), user.getStatus(), pro, notifications.unreadCount(user.getId()));
     }
 
     private static Me.ProSummary summary(ProProfile p) {

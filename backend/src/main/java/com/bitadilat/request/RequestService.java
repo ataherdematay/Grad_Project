@@ -169,7 +169,7 @@ public class RequestService {
             notifications.notify(pending.getProId(), NotificationService.REQUEST_UPDATED,
                     Map.of("offerId", pending.getId().toString(), "requestId", r.getId().toString(),
                             "publicCode", r.getPublicCode(), "title", r.getTitle()),
-                    "/p/offers");
+                    "/p/requests/" + r.getId());
         }
         offerLifecycle.expirePendingOf(r.getId());
         r.setMatchedProCount(matching.matchedProIds(r.getCategoryId(), r.getDistrictId(), userId).size());

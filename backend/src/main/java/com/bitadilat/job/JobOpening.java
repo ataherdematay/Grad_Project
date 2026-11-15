@@ -79,7 +79,7 @@ public class JobOpening {
             offers.save(other);
             notifications.notify(other.getProId(), NotificationService.OFFER_SUPERSEDED,
                     Map.of("offerId", other.getId().toString(), "requestId", requestId.toString(),
-                            "publicCode", request.getPublicCode()),
+                            "publicCode", request.getPublicCode(), "title", request.getTitle()),
                     "/p/offers");
         }
         offers.flush();
@@ -98,7 +98,7 @@ public class JobOpening {
         notifications.notify(offer.getProId(), NotificationService.OFFER_ACCEPTED,
                 Map.of("offerId", offerId.toString(), "jobId", job.getId().toString(),
                         "requestId", requestId.toString(), "publicCode", request.getPublicCode(),
-                        "totalAmount", offer.getTotalAmount().toPlainString()),
+                        "title", request.getTitle(), "amount", offer.getTotalAmount().toPlainString()),
                 "/p/jobs/" + job.getId());
         return new Result(job, null);
     }

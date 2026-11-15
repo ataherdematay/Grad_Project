@@ -156,14 +156,17 @@ public class JobFeedbackService {
         List<UUID> evidence = jdbc.queryForList(
                 "select media_id from complaint_evidence where complaint_id = ? order by media_id", UUID.class, id);
         return jdbc.queryForObject("""
-                select id, public_code, job_id, reason, description, status, decision, decision_note, created_at,
-                       decided_at
-                from complaints where id = ?""", (rs, i) -> new ComplaintView(rs.getObject("id", UUID.class),
+                select c.id, c.public_code, c.job_id, c.reason, c.description, c.status, c.decision, c.decision_note,
+                       c.created_at, c.decided_at,
+                       case when c.decision is null then null else e.refunded_amount end as refund_amount,
+                       case when c.decision is null then null else e.pro_payout end as pro_amount
+                from complaints c left join escrow_payment e on e.job_id = c.job_id where c.id = ?""", (rs, i) -> new ComplaintView(rs.getObject("id", UUID.class),
                 rs.getString("public_code"), rs.getObject("job_id", UUID.class),
                 ComplaintReason.valueOf(rs.getString("reason")), rs.getString("description"),
                 media.refs(evidence), rs.getString("status"), rs.getString("decision"),
                 rs.getString("decision_note"), rs.getTimestamp("created_at").toInstant(),
-                rs.getTimestamp("decided_at") == null ? null : rs.getTimestamp("decided_at").toInstant()), id);
+                rs.getTimestamp("decided_at") == null ? null : rs.getTimestamp("decided_at").toInstant(),
+                rs.getBigDecimal("refund_amount"), rs.getBigDecimal("pro_amount")), id);
     }
 
     private Job lockCustomerJob(UUID userId, UUID jobId) {

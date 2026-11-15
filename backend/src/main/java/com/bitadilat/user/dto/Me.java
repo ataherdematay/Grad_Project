@@ -7,7 +7,7 @@ import com.bitadilat.user.UserStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
-/** İstemcinin gördüğü kullanıcı. {@code pro} usta profili yoksa null. */
+/** İstemcinin gördüğü kullanıcı. {@code pro} usta profili yoksa null; {@code unreadNotifications} okunmamış bildirim sayısı. */
 public record Me(
         UUID id,
         String fullName,
@@ -17,7 +17,8 @@ public record Me(
         UserMode lastMode,
         @JsonProperty("isAdmin") boolean isAdmin,
         UserStatus status,
-        ProSummary pro) {
+        ProSummary pro,
+        int unreadNotifications) {
 
     public record ProSummary(ReviewStatus reviewStatus, Availability availability, String businessName) {
     }
