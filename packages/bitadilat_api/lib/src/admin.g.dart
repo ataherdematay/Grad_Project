@@ -366,10 +366,12 @@ _AdminComplaintDetail _$AdminComplaintDetailFromJson(
   decidedAt: json['decidedAt'] == null
       ? null
       : DateTime.parse(json['decidedAt'] as String),
+  warnPro: json['warnPro'] as bool? ?? false,
+  suspendPro: json['suspendPro'] as bool? ?? false,
   job: AdminComplaintJob.fromJson(json['job'] as Map<String, dynamic>),
-  payment: AdminPaymentSummary.fromJson(
-    json['payment'] as Map<String, dynamic>,
-  ),
+  payment: json['payment'] == null
+      ? null
+      : AdminPaymentSummary.fromJson(json['payment'] as Map<String, dynamic>),
   messages:
       (json['messages'] as List<dynamic>?)
           ?.map((e) => AdminMessage.fromJson(e as Map<String, dynamic>))
@@ -397,8 +399,10 @@ Map<String, dynamic> _$AdminComplaintDetailToJson(
   'proAmount': const NullableMoneyConverter().toJson(instance.proAmount),
   'createdAt': instance.createdAt.toIso8601String(),
   'decidedAt': instance.decidedAt?.toIso8601String(),
+  'warnPro': instance.warnPro,
+  'suspendPro': instance.suspendPro,
   'job': instance.job.toJson(),
-  'payment': instance.payment.toJson(),
+  'payment': instance.payment?.toJson(),
   'messages': instance.messages.map((e) => e.toJson()).toList(),
   'customer': instance.customer.toJson(),
   'pro': instance.pro.toJson(),

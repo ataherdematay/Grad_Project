@@ -99,6 +99,13 @@ class _ApplicationDetailScreenState
   Future<void> _requestDocuments(AdminApplicationDetail d) {
     final l = AppLocalizations.of(context);
     final selected = <ProDocumentType>{};
+    // Sunucu başvuruda olmayan türü 400 VALIDATION_FAILED ile reddeder; yalnız
+    // başvurudaki belge türleri sunulur (belge yoksa hepsi).
+    final present = {for (final doc in d.documents) doc.type};
+    final types = [
+      for (final t in ProDocumentType.values)
+        if (present.isEmpty || present.contains(t)) t,
+    ];
     return _run(
       () => showActionDialog(
         context,
@@ -114,7 +121,7 @@ class _ApplicationDetailScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l.requestDocsTypes, style: AppTypography.label),
-            for (final t in ProDocumentType.values)
+            for (final t in types)
               CheckboxListTile(
                 key: Key('doc-type-${t.name}'),
                 contentPadding: EdgeInsets.zero,

@@ -3656,7 +3656,9 @@ as int,
 /// @nodoc
 mixin _$AdminComplaintDetail {
 
-@JsonKey(fromJson: idFromJson) String get id; String get publicCode;@JsonKey(fromJson: idFromJson) String get jobId; ComplaintReason get reason; String get description; List<MediaRef> get evidence; ComplaintStatus get status; String? get decision; String? get decisionNote;@NullableMoneyConverter() Money? get refundAmount;@NullableMoneyConverter() Money? get proAmount; DateTime get createdAt; DateTime? get decidedAt; AdminComplaintJob get job; AdminPaymentSummary get payment; List<AdminMessage> get messages; AdminPartyCustomer get customer; AdminPartyPro get pro;
+@JsonKey(fromJson: idFromJson) String get id; String get publicCode;@JsonKey(fromJson: idFromJson) String get jobId; ComplaintReason get reason; String get description; List<MediaRef> get evidence; ComplaintStatus get status; String? get decision; String? get decisionNote;@NullableMoneyConverter() Money? get refundAmount;@NullableMoneyConverter() Money? get proAmount; DateTime get createdAt; DateTime? get decidedAt;/// Karar bayrakları (karar verilmeden önce `false`).
+ bool get warnPro; bool get suspendPro; AdminComplaintJob get job;/// Sunucu emanet kaydı yoksa `null` döner.
+ AdminPaymentSummary? get payment; List<AdminMessage> get messages; AdminPartyCustomer get customer; AdminPartyPro get pro;
 /// Create a copy of AdminComplaintDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3669,16 +3671,16 @@ $AdminComplaintDetailCopyWith<AdminComplaintDetail> get copyWith => _$AdminCompl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminComplaintDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt)&&(identical(other.job, job) || other.job == job)&&(identical(other.payment, payment) || other.payment == payment)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.customer, customer) || other.customer == customer)&&(identical(other.pro, pro) || other.pro == pro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminComplaintDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt)&&(identical(other.warnPro, warnPro) || other.warnPro == warnPro)&&(identical(other.suspendPro, suspendPro) || other.suspendPro == suspendPro)&&(identical(other.job, job) || other.job == job)&&(identical(other.payment, payment) || other.payment == payment)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.customer, customer) || other.customer == customer)&&(identical(other.pro, pro) || other.pro == pro));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt,job,payment,const DeepCollectionEquality().hash(messages),customer,pro);
+int get hashCode => Object.hashAll([runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt,warnPro,suspendPro,job,payment,const DeepCollectionEquality().hash(messages),customer,pro]);
 
 @override
 String toString() {
-  return 'AdminComplaintDetail(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt, job: $job, payment: $payment, messages: $messages, customer: $customer, pro: $pro)';
+  return 'AdminComplaintDetail(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt, warnPro: $warnPro, suspendPro: $suspendPro, job: $job, payment: $payment, messages: $messages, customer: $customer, pro: $pro)';
 }
 
 
@@ -3689,11 +3691,11 @@ abstract mixin class $AdminComplaintDetailCopyWith<$Res>  {
   factory $AdminComplaintDetailCopyWith(AdminComplaintDetail value, $Res Function(AdminComplaintDetail) _then) = _$AdminComplaintDetailCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt, AdminComplaintJob job, AdminPaymentSummary payment, List<AdminMessage> messages, AdminPartyCustomer customer, AdminPartyPro pro
+@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt, bool warnPro, bool suspendPro, AdminComplaintJob job, AdminPaymentSummary? payment, List<AdminMessage> messages, AdminPartyCustomer customer, AdminPartyPro pro
 });
 
 
-$AdminComplaintJobCopyWith<$Res> get job;$AdminPaymentSummaryCopyWith<$Res> get payment;$AdminPartyCustomerCopyWith<$Res> get customer;$AdminPartyProCopyWith<$Res> get pro;
+$AdminComplaintJobCopyWith<$Res> get job;$AdminPaymentSummaryCopyWith<$Res>? get payment;$AdminPartyCustomerCopyWith<$Res> get customer;$AdminPartyProCopyWith<$Res> get pro;
 
 }
 /// @nodoc
@@ -3706,7 +3708,7 @@ class _$AdminComplaintDetailCopyWithImpl<$Res>
 
 /// Create a copy of AdminComplaintDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,Object? job = null,Object? payment = null,Object? messages = null,Object? customer = null,Object? pro = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,Object? warnPro = null,Object? suspendPro = null,Object? job = null,Object? payment = freezed,Object? messages = null,Object? customer = null,Object? pro = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -3721,9 +3723,11 @@ as String?,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAm
 as Money?,proAmount: freezed == proAmount ? _self.proAmount : proAmount // ignore: cast_nullable_to_non_nullable
 as Money?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,decidedAt: freezed == decidedAt ? _self.decidedAt : decidedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,job: null == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
-as AdminComplaintJob,payment: null == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
-as AdminPaymentSummary,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
+as DateTime?,warnPro: null == warnPro ? _self.warnPro : warnPro // ignore: cast_nullable_to_non_nullable
+as bool,suspendPro: null == suspendPro ? _self.suspendPro : suspendPro // ignore: cast_nullable_to_non_nullable
+as bool,job: null == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
+as AdminComplaintJob,payment: freezed == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as AdminPaymentSummary?,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<AdminMessage>,customer: null == customer ? _self.customer : customer // ignore: cast_nullable_to_non_nullable
 as AdminPartyCustomer,pro: null == pro ? _self.pro : pro // ignore: cast_nullable_to_non_nullable
 as AdminPartyPro,
@@ -3742,9 +3746,12 @@ $AdminComplaintJobCopyWith<$Res> get job {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AdminPaymentSummaryCopyWith<$Res> get payment {
-  
-  return $AdminPaymentSummaryCopyWith<$Res>(_self.payment, (value) {
+$AdminPaymentSummaryCopyWith<$Res>? get payment {
+    if (_self.payment == null) {
+    return null;
+  }
+
+  return $AdminPaymentSummaryCopyWith<$Res>(_self.payment!, (value) {
     return _then(_self.copyWith(payment: value));
   });
 }/// Create a copy of AdminComplaintDetail
@@ -3847,10 +3854,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  AdminComplaintJob job,  AdminPaymentSummary payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  bool warnPro,  bool suspendPro,  AdminComplaintJob job,  AdminPaymentSummary? payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AdminComplaintDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.warnPro,_that.suspendPro,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
   return orElse();
 
 }
@@ -3868,10 +3875,10 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  AdminComplaintJob job,  AdminPaymentSummary payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  bool warnPro,  bool suspendPro,  AdminComplaintJob job,  AdminPaymentSummary? payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)  $default,) {final _that = this;
 switch (_that) {
 case _AdminComplaintDetail():
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.warnPro,_that.suspendPro,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -3888,10 +3895,10 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  AdminComplaintJob job,  AdminPaymentSummary payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: idFromJson)  String id,  String publicCode, @JsonKey(fromJson: idFromJson)  String jobId,  ComplaintReason reason,  String description,  List<MediaRef> evidence,  ComplaintStatus status,  String? decision,  String? decisionNote, @NullableMoneyConverter()  Money? refundAmount, @NullableMoneyConverter()  Money? proAmount,  DateTime createdAt,  DateTime? decidedAt,  bool warnPro,  bool suspendPro,  AdminComplaintJob job,  AdminPaymentSummary? payment,  List<AdminMessage> messages,  AdminPartyCustomer customer,  AdminPartyPro pro)?  $default,) {final _that = this;
 switch (_that) {
 case _AdminComplaintDetail() when $default != null:
-return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
+return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.description,_that.evidence,_that.status,_that.decision,_that.decisionNote,_that.refundAmount,_that.proAmount,_that.createdAt,_that.decidedAt,_that.warnPro,_that.suspendPro,_that.job,_that.payment,_that.messages,_that.customer,_that.pro);case _:
   return null;
 
 }
@@ -3903,7 +3910,7 @@ return $default(_that.id,_that.publicCode,_that.jobId,_that.reason,_that.descrip
 @JsonSerializable()
 
 class _AdminComplaintDetail implements AdminComplaintDetail {
-  const _AdminComplaintDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, @JsonKey(fromJson: idFromJson) required this.jobId, required this.reason, required this.description, this.evidence = const <MediaRef>[], required this.status, this.decision, this.decisionNote, @NullableMoneyConverter() this.refundAmount, @NullableMoneyConverter() this.proAmount, required this.createdAt, this.decidedAt, required this.job, required this.payment, this.messages = const <AdminMessage>[], required this.customer, required this.pro});
+  const _AdminComplaintDetail({@JsonKey(fromJson: idFromJson) required this.id, required this.publicCode, @JsonKey(fromJson: idFromJson) required this.jobId, required this.reason, required this.description, this.evidence = const <MediaRef>[], required this.status, this.decision, this.decisionNote, @NullableMoneyConverter() this.refundAmount, @NullableMoneyConverter() this.proAmount, required this.createdAt, this.decidedAt, this.warnPro = false, this.suspendPro = false, required this.job, this.payment, this.messages = const <AdminMessage>[], required this.customer, required this.pro});
   factory _AdminComplaintDetail.fromJson(Map<String, dynamic> json) => _$AdminComplaintDetailFromJson(json);
 
 @override@JsonKey(fromJson: idFromJson) final  String id;
@@ -3919,8 +3926,12 @@ class _AdminComplaintDetail implements AdminComplaintDetail {
 @override@NullableMoneyConverter() final  Money? proAmount;
 @override final  DateTime createdAt;
 @override final  DateTime? decidedAt;
+/// Karar bayrakları (karar verilmeden önce `false`).
+@override@JsonKey() final  bool warnPro;
+@override@JsonKey() final  bool suspendPro;
 @override final  AdminComplaintJob job;
-@override final  AdminPaymentSummary payment;
+/// Sunucu emanet kaydı yoksa `null` döner.
+@override final  AdminPaymentSummary? payment;
 @override@JsonKey() final  List<AdminMessage> messages;
 @override final  AdminPartyCustomer customer;
 @override final  AdminPartyPro pro;
@@ -3938,16 +3949,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminComplaintDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt)&&(identical(other.job, job) || other.job == job)&&(identical(other.payment, payment) || other.payment == payment)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.customer, customer) || other.customer == customer)&&(identical(other.pro, pro) || other.pro == pro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminComplaintDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.publicCode, publicCode) || other.publicCode == publicCode)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.evidence, evidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.decisionNote, decisionNote) || other.decisionNote == decisionNote)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.proAmount, proAmount) || other.proAmount == proAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.decidedAt, decidedAt) || other.decidedAt == decidedAt)&&(identical(other.warnPro, warnPro) || other.warnPro == warnPro)&&(identical(other.suspendPro, suspendPro) || other.suspendPro == suspendPro)&&(identical(other.job, job) || other.job == job)&&(identical(other.payment, payment) || other.payment == payment)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.customer, customer) || other.customer == customer)&&(identical(other.pro, pro) || other.pro == pro));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt,job,payment,const DeepCollectionEquality().hash(messages),customer,pro);
+int get hashCode => Object.hashAll([runtimeType,id,publicCode,jobId,reason,description,const DeepCollectionEquality().hash(evidence),status,decision,decisionNote,refundAmount,proAmount,createdAt,decidedAt,warnPro,suspendPro,job,payment,const DeepCollectionEquality().hash(messages),customer,pro]);
 
 @override
 String toString() {
-  return 'AdminComplaintDetail(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt, job: $job, payment: $payment, messages: $messages, customer: $customer, pro: $pro)';
+  return 'AdminComplaintDetail(id: $id, publicCode: $publicCode, jobId: $jobId, reason: $reason, description: $description, evidence: $evidence, status: $status, decision: $decision, decisionNote: $decisionNote, refundAmount: $refundAmount, proAmount: $proAmount, createdAt: $createdAt, decidedAt: $decidedAt, warnPro: $warnPro, suspendPro: $suspendPro, job: $job, payment: $payment, messages: $messages, customer: $customer, pro: $pro)';
 }
 
 
@@ -3958,11 +3969,11 @@ abstract mixin class _$AdminComplaintDetailCopyWith<$Res> implements $AdminCompl
   factory _$AdminComplaintDetailCopyWith(_AdminComplaintDetail value, $Res Function(_AdminComplaintDetail) _then) = __$AdminComplaintDetailCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt, AdminComplaintJob job, AdminPaymentSummary payment, List<AdminMessage> messages, AdminPartyCustomer customer, AdminPartyPro pro
+@JsonKey(fromJson: idFromJson) String id, String publicCode,@JsonKey(fromJson: idFromJson) String jobId, ComplaintReason reason, String description, List<MediaRef> evidence, ComplaintStatus status, String? decision, String? decisionNote,@NullableMoneyConverter() Money? refundAmount,@NullableMoneyConverter() Money? proAmount, DateTime createdAt, DateTime? decidedAt, bool warnPro, bool suspendPro, AdminComplaintJob job, AdminPaymentSummary? payment, List<AdminMessage> messages, AdminPartyCustomer customer, AdminPartyPro pro
 });
 
 
-@override $AdminComplaintJobCopyWith<$Res> get job;@override $AdminPaymentSummaryCopyWith<$Res> get payment;@override $AdminPartyCustomerCopyWith<$Res> get customer;@override $AdminPartyProCopyWith<$Res> get pro;
+@override $AdminComplaintJobCopyWith<$Res> get job;@override $AdminPaymentSummaryCopyWith<$Res>? get payment;@override $AdminPartyCustomerCopyWith<$Res> get customer;@override $AdminPartyProCopyWith<$Res> get pro;
 
 }
 /// @nodoc
@@ -3975,7 +3986,7 @@ class __$AdminComplaintDetailCopyWithImpl<$Res>
 
 /// Create a copy of AdminComplaintDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,Object? job = null,Object? payment = null,Object? messages = null,Object? customer = null,Object? pro = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? publicCode = null,Object? jobId = null,Object? reason = null,Object? description = null,Object? evidence = null,Object? status = null,Object? decision = freezed,Object? decisionNote = freezed,Object? refundAmount = freezed,Object? proAmount = freezed,Object? createdAt = null,Object? decidedAt = freezed,Object? warnPro = null,Object? suspendPro = null,Object? job = null,Object? payment = freezed,Object? messages = null,Object? customer = null,Object? pro = null,}) {
   return _then(_AdminComplaintDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,publicCode: null == publicCode ? _self.publicCode : publicCode // ignore: cast_nullable_to_non_nullable
@@ -3990,9 +4001,11 @@ as String?,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAm
 as Money?,proAmount: freezed == proAmount ? _self.proAmount : proAmount // ignore: cast_nullable_to_non_nullable
 as Money?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,decidedAt: freezed == decidedAt ? _self.decidedAt : decidedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,job: null == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
-as AdminComplaintJob,payment: null == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
-as AdminPaymentSummary,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
+as DateTime?,warnPro: null == warnPro ? _self.warnPro : warnPro // ignore: cast_nullable_to_non_nullable
+as bool,suspendPro: null == suspendPro ? _self.suspendPro : suspendPro // ignore: cast_nullable_to_non_nullable
+as bool,job: null == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
+as AdminComplaintJob,payment: freezed == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as AdminPaymentSummary?,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<AdminMessage>,customer: null == customer ? _self.customer : customer // ignore: cast_nullable_to_non_nullable
 as AdminPartyCustomer,pro: null == pro ? _self.pro : pro // ignore: cast_nullable_to_non_nullable
 as AdminPartyPro,
@@ -4012,9 +4025,12 @@ $AdminComplaintJobCopyWith<$Res> get job {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AdminPaymentSummaryCopyWith<$Res> get payment {
-  
-  return $AdminPaymentSummaryCopyWith<$Res>(_self.payment, (value) {
+$AdminPaymentSummaryCopyWith<$Res>? get payment {
+    if (_self.payment == null) {
+    return null;
+  }
+
+  return $AdminPaymentSummaryCopyWith<$Res>(_self.payment!, (value) {
     return _then(_self.copyWith(payment: value));
   });
 }/// Create a copy of AdminComplaintDetail

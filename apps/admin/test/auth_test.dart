@@ -123,6 +123,19 @@ void main() {
       expect(find.textContaining('askıya alındı'), findsOneWidget);
     });
 
+    testWidgets('askıdaki hesabın girişi açık mesajla reddedilir', (
+      tester,
+    ) async {
+      final fake = FakeApi()
+        ..on('POST', '/auth/login', (_) => apiError(401, 'ACCOUNT_SUSPENDED'));
+      final h = await pumpAdmin(tester, fake: fake, signedIn: false);
+      await submitLogin(tester);
+      expect(h.location, '/login');
+      expect(find.textContaining('askıya alındı'), findsOneWidget);
+      expect(await h.store.read(), isNull);
+      expect(fake.count('GET', '/admin/stats'), 0);
+    });
+
     testWidgets('sunucu adresi varsayılanı localhost:8090', (tester) async {
       expect(kApiBaseUrl, 'http://localhost:8090');
     });

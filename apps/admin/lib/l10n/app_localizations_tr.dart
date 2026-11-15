@@ -188,7 +188,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get reviewNeedsDocuments => 'Eksik belge';
 
   @override
-  String get reviewApproved => 'Onaylandı';
+  String get reviewApproved => 'Doğrulandı';
 
   @override
   String get reviewRejected => 'Reddedildi';
@@ -333,6 +333,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get actionDecided => 'Karar verdi';
+
+  @override
+  String get actionWarned => 'Ustaya uyarı yazdı';
+
+  @override
+  String get decisionResultWarned => 'Ustaya uyarı yazıldı.';
+
+  @override
+  String get decisionResultSuspended => 'Usta profili askıya alındı.';
+
+  @override
+  String get paymentMissing => 'Bu iş için güvence havuzu kaydı yok.';
 
   @override
   String get colPro => 'Usta';
@@ -659,17 +671,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get outcomeProPayout => 'Ustaya ödeme';
 
   @override
-  String get outcomeServiceFee => 'Hizmet bedeli';
-
-  @override
   String decisionDialogTitle(String code) {
     return '$code için karar';
   }
 
   @override
   String decisionDialogIntro(String total) {
-    return 'Güvence havuzundaki tutar $total. Her seçenekte paranın nereye gideceği altta yazıyor.';
+    return 'Güvence havuzundaki tutar $total. İade ve usta payını karar verilince sunucu hesaplar; sonuç şikayet ekranında görünür.';
   }
+
+  @override
+  String get decisionDialogIntroNoPayment =>
+      'Bu iş için güvence havuzu kaydı bulunamadı. İade ve usta payını karar verilince sunucu hesaplar.';
 
   @override
   String get decisionPickOne => 'Bir karar seç.';
@@ -697,13 +710,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get decisionConfirmTitle => 'Kararı kesinleştir';
 
   @override
-  String decisionConfirmMessage(
-    String decision,
-    String refund,
-    String payout,
-    String fee,
-  ) {
-    return 'Seçtiğin karar: $decision.\n\nMüşteriye iade: $refund\nUstaya ödeme: $payout\nHizmet bedeli: $fee\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.';
+  String decisionConfirmMessage(String decision) {
+    return 'Seçtiğin karar: $decision.\n\nTutarları sunucu hesaplar; sonuç şikayet ekranında görünür.\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.';
   }
 
   @override

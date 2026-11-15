@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewApproved.
   ///
   /// In tr, this message translates to:
-  /// **'Onaylandı'**
+  /// **'Doğrulandı'**
   String get reviewApproved;
 
   /// No description provided for @reviewRejected.
@@ -715,6 +715,30 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Karar verdi'**
   String get actionDecided;
+
+  /// No description provided for @actionWarned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya uyarı yazdı'**
+  String get actionWarned;
+
+  /// No description provided for @decisionResultWarned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya uyarı yazıldı.'**
+  String get decisionResultWarned;
+
+  /// No description provided for @decisionResultSuspended.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta profili askıya alındı.'**
+  String get decisionResultSuspended;
+
+  /// No description provided for @paymentMissing.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu iş için güvence havuzu kaydı yok.'**
+  String get paymentMissing;
 
   /// No description provided for @colPro.
   ///
@@ -1322,12 +1346,6 @@ abstract class AppLocalizations {
   /// **'Ustaya ödeme'**
   String get outcomeProPayout;
 
-  /// No description provided for @outcomeServiceFee.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hizmet bedeli'**
-  String get outcomeServiceFee;
-
   /// No description provided for @decisionDialogTitle.
   ///
   /// In tr, this message translates to:
@@ -1337,8 +1355,14 @@ abstract class AppLocalizations {
   /// No description provided for @decisionDialogIntro.
   ///
   /// In tr, this message translates to:
-  /// **'Güvence havuzundaki tutar {total}. Her seçenekte paranın nereye gideceği altta yazıyor.'**
+  /// **'Güvence havuzundaki tutar {total}. İade ve usta payını karar verilince sunucu hesaplar; sonuç şikayet ekranında görünür.'**
   String decisionDialogIntro(String total);
+
+  /// No description provided for @decisionDialogIntroNoPayment.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu iş için güvence havuzu kaydı bulunamadı. İade ve usta payını karar verilince sunucu hesaplar.'**
+  String get decisionDialogIntroNoPayment;
 
   /// No description provided for @decisionPickOne.
   ///
@@ -1391,13 +1415,8 @@ abstract class AppLocalizations {
   /// No description provided for @decisionConfirmMessage.
   ///
   /// In tr, this message translates to:
-  /// **'Seçtiğin karar: {decision}.\n\nMüşteriye iade: {refund}\nUstaya ödeme: {payout}\nHizmet bedeli: {fee}\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.'**
-  String decisionConfirmMessage(
-    String decision,
-    String refund,
-    String payout,
-    String fee,
-  );
+  /// **'Seçtiğin karar: {decision}.\n\nTutarları sunucu hesaplar; sonuç şikayet ekranında görünür.\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.'**
+  String decisionConfirmMessage(String decision);
 
   /// No description provided for @decisionConfirmWarn.
   ///

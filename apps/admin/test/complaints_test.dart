@@ -15,9 +15,6 @@ Future<Harness> openComplaint(
   return h;
 }
 
-Finder _outcome(String decision, String part) =>
-    find.byKey(Key('outcome-$decision-$part'));
-
 Future<void> _tapScrolled(WidgetTester tester, Finder f) async {
   await tester.ensureVisible(f);
   await tester.pumpAndSettle();
@@ -164,6 +161,31 @@ void main() {
         '₺1.100',
       );
       expect(find.byKey(const Key('decide-complaint')), findsNothing);
+      expect(find.byKey(const Key('result-warned')), findsNothing);
+    });
+
+    testWidgets('karar sonucu sunucu tutarlarını ve bayrakları gösterir', (
+      tester,
+    ) async {
+      final detail =
+          complaintDetailJson(
+              status: 'RESOLVED',
+              decision: 'SPLIT_50_50',
+              decisionNote: 'İki taraf da kısmen haklı.',
+            )
+            ..['refundAmount'] = 1250.50
+            ..['proAmount'] = '1250.49'
+            ..['warnPro'] = true
+            ..['suspendPro'] = true;
+      final fake = FakeApi()..onJson('GET', '/admin/complaints/c1', detail);
+      await openComplaint(tester, fake);
+      expect(
+        _text(tester, find.byKey(const Key('result-refund'))),
+        '₺1.250,50',
+      );
+      expect(_text(tester, find.byKey(const Key('result-pro'))), '₺1.250,49');
+      expect(find.byKey(const Key('result-warned')), findsOneWidget);
+      expect(find.byKey(const Key('result-suspended')), findsOneWidget);
     });
 
     testWidgets('/complaints/:id/decision rotası diyaloğu açar', (
@@ -181,47 +203,56 @@ void main() {
       expect(find.byKey(const Key('decision-dialog')), findsOneWidget);
     }
 
-    testWidgets('₺2.200 için üç seçeneğin gerçek tutarları', (tester) async {
+    testWidgets('tutarlar istemcide hesaplanmaz; sunucu toplamı yazılır', (
+      tester,
+    ) async {
       await openComplaint(tester, FakeApi());
       await openDialog(tester);
-
-      // Tam iade: müşteriye 2.200, usta 0, bedel 0.
-      expect(_text(tester, _outcome('fullRefund', 'refund')), '₺2.200');
-      expect(_text(tester, _outcome('fullRefund', 'payout')), '₺0');
-      expect(_text(tester, _outcome('fullRefund', 'fee')), '₺0');
-      // %50 / %50: 1.100 + 1.100, bedel yok.
-      expect(_text(tester, _outcome('split5050', 'refund')), '₺1.100');
-      expect(_text(tester, _outcome('split5050', 'payout')), '₺1.100');
-      expect(_text(tester, _outcome('split5050', 'fee')), '₺0');
-      // Ustaya aktar: usta 1.980, bedel 220, müşteri 0.
-      expect(_text(tester, _outcome('releaseToPro', 'refund')), '₺0');
-      expect(_text(tester, _outcome('releaseToPro', 'payout')), '₺1.980');
-      expect(_text(tester, _outcome('releaseToPro', 'fee')), '₺220');
+      final intro = _text(tester, find.byKey(const Key('decision-intro')));
+      expect(intro, contains('₺2.200'));
+      expect(intro, contains('sunucu hesaplar'));
+      // Seçeneklerde istemci hesaplı iade / pay / bedel yok.
+      expect(find.byKey(const Key('outcome-split5050-refund')), findsNothing);
+      expect(find.text('₺1.100'), findsNothing);
+      expect(find.text('Tam iade'), findsOneWidget);
     });
 
-    testWidgets('tutarlar EN dilinde ₺2,200 biçiminde', (tester) async {
+    testWidgets('kuruşlu tutar: sunucu toplamı ₺1.250,50 olarak yazılır', (
+      tester,
+    ) async {
+      final detail = complaintDetailJson();
+      (detail['payment'] as Map<String, dynamic>)['totalAmount'] = 1250.50;
+      final fake = FakeApi()..onJson('GET', '/admin/complaints/c1', detail);
+      await openComplaint(tester, fake);
+      await openDialog(tester);
+      final intro = _text(tester, find.byKey(const Key('decision-intro')));
+      expect(intro, contains('₺1.250,50'));
+      expect(intro, isNot(contains('125.050')));
+    });
+
+    testWidgets('EN dilinde toplam ₺2,200 biçiminde', (tester) async {
       await openComplaint(tester, FakeApi());
-      // Dili değiştir.
       await tester.tap(find.text('EN'));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('decide-complaint')));
       await tester.pumpAndSettle();
-      expect(_text(tester, _outcome('fullRefund', 'refund')), '₺2,200');
-      expect(_text(tester, _outcome('releaseToPro', 'payout')), '₺1,980');
+      expect(
+        _text(tester, find.byKey(const Key('decision-intro'))),
+        contains('₺2,200'),
+      );
       expect(find.text('Full refund'), findsOneWidget);
     });
 
-    testWidgets('kuruşlu tutar toplamı korur', (tester) async {
-      final detail = complaintDetailJson();
-      (detail['payment'] as Map<String, dynamic>)['totalAmount'] = 1225.5;
+    testWidgets('emanet kaydı yoksa ekran ve diyalog çalışır', (tester) async {
+      final detail = complaintDetailJson()..['payment'] = null;
       final fake = FakeApi()..onJson('GET', '/admin/complaints/c1', detail);
       await openComplaint(tester, fake);
+      expect(find.byKey(const Key('payment-missing')), findsOneWidget);
       await openDialog(tester);
-      expect(_text(tester, _outcome('fullRefund', 'refund')), '₺1.225,50');
-      expect(_text(tester, _outcome('split5050', 'refund')), '₺612,75');
-      expect(_text(tester, _outcome('split5050', 'payout')), '₺612,75');
-      expect(_text(tester, _outcome('releaseToPro', 'fee')), '₺122,55');
-      expect(_text(tester, _outcome('releaseToPro', 'payout')), '₺1.102,95');
+      expect(
+        _text(tester, find.byKey(const Key('decision-intro'))),
+        contains('güvence havuzu kaydı bulunamadı'),
+      );
     });
 
     testWidgets('karar ve not zorunlu; istek gitmez', (tester) async {
@@ -266,9 +297,8 @@ void main() {
         findsNWidgets(2),
       ); // başlık + düğme
       expect(find.textContaining('geri alınamaz'), findsOneWidget);
-      expect(find.textContaining('Müşteriye iade: ₺0'), findsOneWidget);
-      expect(find.textContaining('Ustaya ödeme: ₺1.980'), findsOneWidget);
-      expect(find.textContaining('Hizmet bedeli: ₺220'), findsOneWidget);
+      expect(find.textContaining('Tutarları sunucu hesaplar'), findsOneWidget);
+      expect(find.textContaining('Ustaya ödeme:'), findsNothing);
       expect(find.textContaining('askıya alınacak'), findsOneWidget);
       expect(find.textContaining('uyarı kaydı'), findsNothing);
 

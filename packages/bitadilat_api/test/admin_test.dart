@@ -239,8 +239,12 @@ void main() {
       expect(d.job.statusBeforeDispute, JobStatus.workFinished);
       expect(d.job.timeline, hasLength(2));
       expect(d.job.offer.totalAmount, const Money.lira(2200));
-      expect(d.payment.totalAmount, const Money.lira(2200));
-      expect(d.payment.refundedAmount, Money.zero);
+      expect(d.payment!.totalAmount, const Money.lira(2200));
+      expect(d.payment!.refundedAmount, Money.zero);
+      expect(d.warnPro, isFalse);
+      expect(d.suspendPro, isFalse);
+      expect(d.refundAmount, isNull);
+      expect(d.proAmount, isNull);
       expect(d.messages.single.senderRole, PartyRole.customer);
       expect(d.pro.warningCount, 2);
       expect(AdminComplaintDetail.fromJson(d.toJson()), d);
@@ -317,33 +321,43 @@ void main() {
     });
   });
 
-  group('DecisionOutcome', () {
-    test('₺2.200: iade 2.200 / 1.100+1.100 / usta 1.980 bedel 220', () {
-      const total = Money.lira(2200);
-      final full = DecisionOutcome.of(ComplaintDecision.fullRefund, total);
-      expect(full.customerRefund, const Money.lira(2200));
-      expect(full.proPayout, Money.zero);
-      expect(full.serviceFee, Money.zero);
-
-      final split = DecisionOutcome.of(ComplaintDecision.split5050, total);
-      expect(split.customerRefund, const Money.lira(1100));
-      expect(split.proPayout, const Money.lira(1100));
-      expect(split.serviceFee, Money.zero);
-
-      final release = DecisionOutcome.of(ComplaintDecision.releaseToPro, total);
-      expect(release.customerRefund, Money.zero);
-      expect(release.proPayout, const Money.lira(1980));
-      expect(release.serviceFee, const Money.lira(220));
+  group('AdminComplaintDetail sözleşme alanları', () {
+    test('karar sonrası tutarlar sunucudan okunur (1250.50 -> 125050 kuruş)',
+        () {
+      final d = AdminComplaintDetail.fromJson({
+        ...complaintDetail(),
+        'status': 'RESOLVED',
+        'decision': 'SPLIT_50_50',
+        'decisionNote': 'Her iki taraf da kısmen haklı.',
+        'decidedAt': '2026-11-11T09:00:00Z',
+        'refundAmount': 1250.50,
+        'proAmount': '1250.49',
+        'warnPro': true,
+        'suspendPro': true,
+      });
+      expect(d.refundAmount, const Money.cents(125050));
+      expect(d.proAmount, const Money.cents(125049));
+      expect(d.warnPro, isTrue);
+      expect(d.suspendPro, isTrue);
+      expect(ComplaintDecision.tryParse(d.decision),
+          ComplaintDecision.split5050);
     });
 
-    test('tek kuruş toplamı bozmaz', () {
-      const total = Money.cents(100001);
-      final split = DecisionOutcome.of(ComplaintDecision.split5050, total);
-      expect(split.customerRefund + split.proPayout, total);
-      final release = DecisionOutcome.of(ComplaintDecision.releaseToPro, total);
-      expect(release.proPayout + release.serviceFee, total);
-      // %10 yarım kuruş yukarı yuvarlanır: 1000,01 -> 100,00.
-      expect(release.serviceFee, const Money.cents(10000));
+    test('emanet kaydı yoksa payment null olabilir', () {
+      final d = AdminComplaintDetail.fromJson({
+        ...complaintDetail(),
+        'payment': null,
+      });
+      expect(d.payment, isNull);
+    });
+
+    test('karar gövdesi tutar taşımaz', () {
+      const req = ComplaintDecisionRequest(
+        decision: ComplaintDecision.fullRefund,
+        note: 'Usta adrese hiç gelmedi.',
+      );
+      expect(req.toJson().keys.toSet(),
+          {'decision', 'note', 'warnPro', 'suspendPro'});
     });
   });
 

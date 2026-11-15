@@ -49,64 +49,6 @@ enum ComplaintDecision {
   }
 }
 
-// --- Karar hesabı --------------------------------------------------------------
-
-/// Kararın gerçek para sonucu. Tutarlar `Money` (kuruş, `int`) ile hesaplanır.
-@immutable
-class DecisionOutcome {
-  const DecisionOutcome({
-    required this.customerRefund,
-    required this.proPayout,
-    required this.serviceFee,
-  });
-
-  /// Sözleşme kuralı: tam iade; %50 / %50 hizmet bedeli yok; ustaya aktarımda
-  /// %10 hizmet bedeli. Tek kuruşluk fark ustaya yazılır (toplam korunur).
-  factory DecisionOutcome.of(ComplaintDecision decision, Money total) {
-    switch (decision) {
-      case ComplaintDecision.fullRefund:
-        return DecisionOutcome(
-          customerRefund: total,
-          proPayout: Money.zero,
-          serviceFee: Money.zero,
-        );
-      case ComplaintDecision.split5050:
-        final refund = Money.cents(total.cents ~/ 2);
-        return DecisionOutcome(
-          customerRefund: refund,
-          proPayout: total - refund,
-          serviceFee: Money.zero,
-        );
-      case ComplaintDecision.releaseToPro:
-        final fee = total.percent(10);
-        return DecisionOutcome(
-          customerRefund: Money.zero,
-          proPayout: total - fee,
-          serviceFee: fee,
-        );
-    }
-  }
-
-  /// Müşteriye iade.
-  final Money customerRefund;
-
-  /// Ustaya ödeme (hizmet bedeli düşülmüş).
-  final Money proPayout;
-
-  /// Platformun tuttuğu hizmet bedeli.
-  final Money serviceFee;
-
-  @override
-  bool operator ==(Object other) =>
-      other is DecisionOutcome &&
-      other.customerRefund == customerRefund &&
-      other.proPayout == proPayout &&
-      other.serviceFee == serviceFee;
-
-  @override
-  int get hashCode => Object.hash(customerRefund, proPayout, serviceFee);
-}
-
 // --- Modeller --------------------------------------------------------------------
 
 @freezed
@@ -323,8 +265,13 @@ abstract class AdminComplaintDetail with _$AdminComplaintDetail {
     @NullableMoneyConverter() Money? proAmount,
     required DateTime createdAt,
     DateTime? decidedAt,
+    /// Karar bayrakları (karar verilmeden önce `false`).
+    @Default(false) bool warnPro,
+    @Default(false) bool suspendPro,
     required AdminComplaintJob job,
-    required AdminPaymentSummary payment,
+
+    /// Sunucu emanet kaydı yoksa `null` döner.
+    AdminPaymentSummary? payment,
     @Default(<AdminMessage>[]) List<AdminMessage> messages,
     required AdminPartyCustomer customer,
     required AdminPartyPro pro,

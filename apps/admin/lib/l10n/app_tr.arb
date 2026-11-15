@@ -61,7 +61,7 @@
 
   "reviewPending": "İnceleniyor",
   "reviewNeedsDocuments": "Eksik belge",
-  "reviewApproved": "Onaylandı",
+  "reviewApproved": "Doğrulandı",
   "reviewRejected": "Reddedildi",
   "reviewSuspended": "Askıda",
 
@@ -116,6 +116,10 @@
   "actionReactivated": "Yeniden aktifleştirdi",
   "actionReviewed": "İncelemeye aldı",
   "actionDecided": "Karar verdi",
+  "actionWarned": "Ustaya uyarı yazdı",
+  "decisionResultWarned": "Ustaya uyarı yazıldı.",
+  "decisionResultSuspended": "Usta profili askıya alındı.",
+  "paymentMissing": "Bu iş için güvence havuzu kaydı yok.",
 
   "colPro": "Usta",
   "colCategories": "Kategoriler",
@@ -229,11 +233,11 @@
   "decisionReleaseDesc": "Şikayet reddedilir, tutar ustaya aktarılır ve %10 hizmet bedeli alınır.",
   "outcomeCustomerRefund": "Müşteriye iade",
   "outcomeProPayout": "Ustaya ödeme",
-  "outcomeServiceFee": "Hizmet bedeli",
   "decisionDialogTitle": "{code} için karar",
   "@decisionDialogTitle": { "placeholders": { "code": { "type": "String" } } },
-  "decisionDialogIntro": "Güvence havuzundaki tutar {total}. Her seçenekte paranın nereye gideceği altta yazıyor.",
+  "decisionDialogIntro": "Güvence havuzundaki tutar {total}. İade ve usta payını karar verilince sunucu hesaplar; sonuç şikayet ekranında görünür.",
   "@decisionDialogIntro": { "placeholders": { "total": { "type": "String" } } },
+  "decisionDialogIntroNoPayment": "Bu iş için güvence havuzu kaydı bulunamadı. İade ve usta payını karar verilince sunucu hesaplar.",
   "decisionPickOne": "Bir karar seç.",
   "decisionNoteLabel": "Karar gerekçesi",
   "warnPro": "Ustaya uyarı yaz",
@@ -242,13 +246,10 @@
   "suspendProProfileHint": "Bekleyen teklifleri geri çekilir. Kullanıcı hesabı askıya alınmaz.",
   "decisionSubmit": "Kararı ver",
   "decisionConfirmTitle": "Kararı kesinleştir",
-  "decisionConfirmMessage": "Seçtiğin karar: {decision}.\n\nMüşteriye iade: {refund}\nUstaya ödeme: {payout}\nHizmet bedeli: {fee}\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.",
+  "decisionConfirmMessage": "Seçtiğin karar: {decision}.\n\nTutarları sunucu hesaplar; sonuç şikayet ekranında görünür.\n\nBu karar geri alınamaz. Para hareketi hemen yapılır, karar iki tarafa bildirilir ve şikayet kapanır.",
   "@decisionConfirmMessage": {
     "placeholders": {
-      "decision": { "type": "String" },
-      "refund": { "type": "String" },
-      "payout": { "type": "String" },
-      "fee": { "type": "String" }
+      "decision": { "type": "String" }
     }
   },
   "decisionConfirmWarn": "Ustaya uyarı kaydı da düşülecek.",

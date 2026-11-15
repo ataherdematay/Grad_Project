@@ -445,6 +445,18 @@ class _ActionCard extends ConsumerWidget {
                   key: const Key('result-pro'),
                 ),
               ),
+            if (detail.warnPro)
+              Text(
+                l.decisionResultWarned,
+                key: const Key('result-warned'),
+                style: AppTypography.bodySecondary,
+              ),
+            if (detail.suspendPro)
+              Text(
+                l.decisionResultSuspended,
+                key: const Key('result-suspended'),
+                style: AppTypography.bodySecondary,
+              ),
             if (detail.decisionNote != null) ...[
               const SizedBox(height: AppSpacing.xs),
               Text(detail.decisionNote!, style: AppTypography.bodySecondary),
@@ -491,6 +503,16 @@ class _PaymentCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final p = detail.payment;
     final loc = l.localeName;
+    if (p == null) {
+      return SectionCard(
+        title: l.paymentSummaryTitle,
+        child: Text(
+          l.paymentMissing,
+          key: const Key('payment-missing'),
+          style: AppTypography.bodySecondary,
+        ),
+      );
+    }
     return SectionCard(
       title: l.paymentSummaryTitle,
       trailing: escrowChip(l, p.status),

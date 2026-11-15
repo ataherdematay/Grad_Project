@@ -9,9 +9,12 @@ import '../common/action_dialog.dart';
 import '../common/labels.dart';
 import '../common/widgets.dart';
 
-/// Karar diyaloğu: üç seçenek, her birinin gerçek para sonucu, zorunlu not,
-/// "ustaya uyarı" ve "usta profilini askıya al". Kesinleştirmeden önce
-/// geri alınamazlığı yazan ikinci bir onay gelir.
+/// Karar diyaloğu: üç seçenek, zorunlu not, "ustaya uyarı" ve "usta profilini
+/// askıya al". Kesinleştirmeden önce geri alınamazlığı yazan ikinci bir onay
+/// gelir. İade, usta payı ve hizmet bedeli istemcide hesaplanmaz ve
+/// gönderilmez: sunucu hesaplar, karar sonrası `refundAmount`/`proAmount`
+/// detay ekranında gösterilir. Burada yalnız sunucunun döndüğü emanet toplamı
+/// yazılır.
 Future<DialogOutcome?> showDecisionDialog(
   BuildContext context, {
   required AdminComplaintDetail complaint,
@@ -42,7 +45,8 @@ class _DecisionDialogState extends State<_DecisionDialog> {
   bool _busy = false;
   String? _error;
 
-  Money get _total => widget.complaint.payment.totalAmount;
+  /// Sunucunun döndüğü emanet toplamı; emanet kaydı yoksa `null`.
+  Money? get _total => widget.complaint.payment?.totalAmount;
 
   @override
   void dispose() {
@@ -57,8 +61,6 @@ class _DecisionDialogState extends State<_DecisionDialog> {
     if (_decision == null) setState(() => _showPickError = true);
     if (!formOk || _decision == null) return;
     final decision = _decision!;
-    final outcome = DecisionOutcome.of(decision, _total);
-    final locale = l.localeName;
     final extras = [
       if (_warnPro) l.decisionConfirmWarn,
       if (_suspendPro) l.decisionConfirmSuspend,
@@ -67,12 +69,7 @@ class _DecisionDialogState extends State<_DecisionDialog> {
       context,
       title: l.decisionConfirmTitle,
       message: [
-        l.decisionConfirmMessage(
-          decisionLabel(l, decision),
-          formatMoney(outcome.customerRefund, locale),
-          formatMoney(outcome.proPayout, locale),
-          formatMoney(outcome.serviceFee, locale),
-        ),
+        l.decisionConfirmMessage(decisionLabel(l, decision)),
         ...extras,
       ].join('\n\n'),
       confirmLabel: l.decisionConfirmAction,
@@ -129,7 +126,10 @@ class _DecisionDialogState extends State<_DecisionDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l.decisionDialogIntro(formatMoney(_total, locale)),
+                    _total == null
+                        ? l.decisionDialogIntroNoPayment
+                        : l.decisionDialogIntro(formatMoney(_total!, locale)),
+                    key: const Key('decision-intro'),
                     style: AppTypography.bodySecondary,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -138,7 +138,6 @@ class _DecisionDialogState extends State<_DecisionDialog> {
                       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                       child: _OptionCard(
                         decision: d,
-                        total: _total,
                         selected: _decision == d,
                         enabled: !_busy,
                         onTap: () => setState(() {
@@ -237,14 +236,12 @@ class _DecisionDialogState extends State<_DecisionDialog> {
 class _OptionCard extends StatelessWidget {
   const _OptionCard({
     required this.decision,
-    required this.total,
     required this.selected,
     required this.enabled,
     required this.onTap,
   });
 
   final ComplaintDecision decision;
-  final Money total;
   final bool selected;
   final bool enabled;
   final VoidCallback onTap;
@@ -252,30 +249,11 @@ class _OptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final outcome = DecisionOutcome.of(decision, total);
-    final locale = l.localeName;
     final description = switch (decision) {
       ComplaintDecision.fullRefund => l.decisionFullRefundDesc,
       ComplaintDecision.split5050 => l.decisionSplitDesc,
       ComplaintDecision.releaseToPro => l.decisionReleaseDesc,
     };
-    Widget amount(String keyPart, String label, Money m) => Padding(
-      padding: const EdgeInsets.only(right: AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: AppTypography.label.copyWith(color: AppColors.textSecondary),
-          ),
-          Text(
-            formatMoney(m, locale),
-            key: Key('outcome-${decision.name}-$keyPart'),
-            style: AppTypography.cardTitle,
-          ),
-        ],
-      ),
-    );
     return Semantics(
       inMutuallyExclusiveGroup: true,
       checked: selected,
@@ -315,27 +293,6 @@ class _OptionCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(description, style: AppTypography.bodySecondary),
-                      const SizedBox(height: AppSpacing.xs),
-                      Wrap(
-                        runSpacing: 4,
-                        children: [
-                          amount(
-                            'refund',
-                            l.outcomeCustomerRefund,
-                            outcome.customerRefund,
-                          ),
-                          amount(
-                            'payout',
-                            l.outcomeProPayout,
-                            outcome.proPayout,
-                          ),
-                          amount(
-                            'fee',
-                            l.outcomeServiceFee,
-                            outcome.serviceFee,
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),

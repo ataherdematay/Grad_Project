@@ -188,7 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewNeedsDocuments => 'Documents needed';
 
   @override
-  String get reviewApproved => 'Approved';
+  String get reviewApproved => 'Verified';
 
   @override
   String get reviewRejected => 'Rejected';
@@ -333,6 +333,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionDecided => 'Made a decision';
+
+  @override
+  String get actionWarned => 'Warned the pro';
+
+  @override
+  String get decisionResultWarned => 'A warning was recorded for the pro.';
+
+  @override
+  String get decisionResultSuspended => 'The pro profile was suspended.';
+
+  @override
+  String get paymentMissing => 'There is no secure hold record for this job.';
 
   @override
   String get colPro => 'Pro';
@@ -660,17 +672,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get outcomeProPayout => 'Payout to pro';
 
   @override
-  String get outcomeServiceFee => 'Service fee';
-
-  @override
   String decisionDialogTitle(String code) {
     return 'Decision for $code';
   }
 
   @override
   String decisionDialogIntro(String total) {
-    return 'The amount in secure hold is $total. Each option shows where the money goes.';
+    return 'The amount in secure hold is $total. The server calculates the refund and the pro\'s share when you decide; the result shows on the complaint page.';
   }
+
+  @override
+  String get decisionDialogIntroNoPayment =>
+      'No secure hold record was found for this job. The server calculates the refund and the pro\'s share when you decide.';
 
   @override
   String get decisionPickOne => 'Pick a decision.';
@@ -698,13 +711,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decisionConfirmTitle => 'Finalize the decision';
 
   @override
-  String decisionConfirmMessage(
-    String decision,
-    String refund,
-    String payout,
-    String fee,
-  ) {
-    return 'Your decision: $decision.\n\nRefund to customer: $refund\nPayout to pro: $payout\nService fee: $fee\n\nThis can\'t be undone. The money moves right away, both sides are notified and the complaint closes.';
+  String decisionConfirmMessage(String decision) {
+    return 'Your decision: $decision.\n\nThe server calculates the amounts; the result shows on the complaint page.\n\nThis can\'t be undone. The money moves right away, both sides are notified and the complaint closes.';
   }
 
   @override

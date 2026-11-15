@@ -61,7 +61,7 @@
 
   "reviewPending": "Under review",
   "reviewNeedsDocuments": "Documents needed",
-  "reviewApproved": "Approved",
+  "reviewApproved": "Verified",
   "reviewRejected": "Rejected",
   "reviewSuspended": "Suspended",
 
@@ -116,6 +116,10 @@
   "actionReactivated": "Reactivated",
   "actionReviewed": "Took into review",
   "actionDecided": "Made a decision",
+  "actionWarned": "Warned the pro",
+  "decisionResultWarned": "A warning was recorded for the pro.",
+  "decisionResultSuspended": "The pro profile was suspended.",
+  "paymentMissing": "There is no secure hold record for this job.",
 
   "colPro": "Pro",
   "colCategories": "Categories",
@@ -229,11 +233,11 @@
   "decisionReleaseDesc": "The complaint is dismissed, the amount goes to the pro and a 10% service fee is kept.",
   "outcomeCustomerRefund": "Refund to customer",
   "outcomeProPayout": "Payout to pro",
-  "outcomeServiceFee": "Service fee",
   "decisionDialogTitle": "Decision for {code}",
   "@decisionDialogTitle": { "placeholders": { "code": { "type": "String" } } },
-  "decisionDialogIntro": "The amount in secure hold is {total}. Each option shows where the money goes.",
+  "decisionDialogIntro": "The amount in secure hold is {total}. The server calculates the refund and the pro's share when you decide; the result shows on the complaint page.",
   "@decisionDialogIntro": { "placeholders": { "total": { "type": "String" } } },
+  "decisionDialogIntroNoPayment": "No secure hold record was found for this job. The server calculates the refund and the pro's share when you decide.",
   "decisionPickOne": "Pick a decision.",
   "decisionNoteLabel": "Reason for the decision",
   "warnPro": "Record a warning for the pro",
@@ -242,13 +246,10 @@
   "suspendProProfileHint": "Their pending offers are withdrawn. The user account isn't suspended.",
   "decisionSubmit": "Decide",
   "decisionConfirmTitle": "Finalize the decision",
-  "decisionConfirmMessage": "Your decision: {decision}.\n\nRefund to customer: {refund}\nPayout to pro: {payout}\nService fee: {fee}\n\nThis can't be undone. The money moves right away, both sides are notified and the complaint closes.",
+  "decisionConfirmMessage": "Your decision: {decision}.\n\nThe server calculates the amounts; the result shows on the complaint page.\n\nThis can't be undone. The money moves right away, both sides are notified and the complaint closes.",
   "@decisionConfirmMessage": {
     "placeholders": {
-      "decision": { "type": "String" },
-      "refund": { "type": "String" },
-      "payout": { "type": "String" },
-      "fee": { "type": "String" }
+      "decision": { "type": "String" }
     }
   },
   "decisionConfirmWarn": "A warning will also be recorded for the pro.",

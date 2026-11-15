@@ -180,17 +180,17 @@ String decisionLabel(AppLocalizations l, ComplaintDecision d) => switch (d) {
   ComplaintDecision.releaseToPro => l.decisionRelease,
 };
 
-/// Sunucudaki yönetici işlem kodu; bilinmeyen kod okunur hale getirilir.
-String adminActionLabel(AppLocalizations l, String raw) {
-  final key = raw.toUpperCase();
-  if (key.contains('APPROVE')) return l.actionApproved;
-  if (key.contains('REJECT')) return l.actionRejected;
-  if (key.contains('REQUEST_DOC')) return l.actionDocumentsRequested;
-  if (key.contains('SUSPEND')) return l.actionSuspended;
-  if (key.contains('REACTIVATE')) return l.actionReactivated;
-  if (key.contains('REVIEW')) return l.actionReviewed;
-  if (key.contains('DECISION') || key.contains('DECIDE')) {
-    return l.actionDecided;
-  }
-  return raw;
-}
+/// Sunucudaki yönetici işlem kodu (`admin_actions.action`, API_V1 wave 4).
+/// Bilinmeyen kod olduğu gibi gösterilir.
+String adminActionLabel(AppLocalizations l, String raw) =>
+    switch (raw.toUpperCase()) {
+      'APPROVE_APPLICATION' => l.actionApproved,
+      'REJECT_APPLICATION' => l.actionRejected,
+      'REQUEST_DOCUMENTS' => l.actionDocumentsRequested,
+      'REVIEW_COMPLAINT' => l.actionReviewed,
+      'DECIDE_COMPLAINT' => l.actionDecided,
+      'WARN_PRO' => l.actionWarned,
+      'SUSPEND_PRO' || 'SUSPEND_USER' => l.actionSuspended,
+      'REACTIVATE_USER' => l.actionReactivated,
+      _ => raw,
+    };

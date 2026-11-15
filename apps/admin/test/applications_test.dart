@@ -266,8 +266,11 @@ void main() {
       expect(find.text('En az bir belge türü seç.'), findsOneWidget);
       expect(fake.count('POST', '/admin/applications/p9/request-documents'), 0);
 
+      // Yalnız başvurudaki türler (kimlik, vergi) sunulur.
+      expect(find.byKey(const Key('doc-type-criminalRecord')), findsNothing);
+      expect(find.byKey(const Key('doc-type-tradeCert')), findsNothing);
+      await tester.tap(find.byKey(const Key('doc-type-identity')));
       await tester.tap(find.byKey(const Key('doc-type-tax')));
-      await tester.tap(find.byKey(const Key('doc-type-criminalRecord')));
       await tester.pump();
       await tester.tap(confirm);
       await tester.pumpAndSettle();
@@ -276,7 +279,7 @@ void main() {
         fake.last('POST', '/admin/applications/p9/request-documents').data,
         {
           'note': 'Vergi levhası okunmuyor.',
-          'documentTypes': ['TAX', 'CRIMINAL_RECORD'],
+          'documentTypes': ['IDENTITY', 'TAX'],
         },
       );
       expect(find.text('Eksik belge istendi.'), findsOneWidget);
