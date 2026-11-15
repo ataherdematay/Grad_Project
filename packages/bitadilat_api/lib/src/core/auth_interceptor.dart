@@ -107,6 +107,17 @@ class AuthInterceptor extends Interceptor {
       }
       return handler.next(err);
     }
+    if (code == ApiErrorCode.unauthenticated) {
+      // Sunucu güncel access token'ı tanımıyor (kullanıcı yok, hesap silinmiş,
+      // imza anahtarı değişmiş): refresh de kurtarmaz, oturum kapanır ve
+      // kullanıcı girişe döner. Eski token'la gitmiş istek oturumu kapatmaz.
+      final used = _bearerOf(options.headers[_authHeader]);
+      final current = await tokenStore.read();
+      if (used != null && current != null && used == current.accessToken) {
+        await _end(SessionEndReason.expired);
+      }
+      return handler.next(err);
+    }
     if (code != ApiErrorCode.tokenExpired ||
         options.extra[_retriedKey] == true) {
       return handler.next(err);

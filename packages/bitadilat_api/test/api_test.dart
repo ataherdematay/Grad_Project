@@ -210,6 +210,28 @@ void main() {
       expect(await store.read(), isNotNull);
     });
 
+    test(
+      'güncel token 401 UNAUTHENTICATED alırsa oturum kapanır (refresh yok)',
+      () async {
+        final store = MemoryTokenStore(
+          const TokenPair(accessToken: 'CUR', refreshToken: 'R1'),
+        );
+        final adapter = FakeAdapter(
+          (o) async => jsonBody(401, {'code': 'UNAUTHENTICATED'}),
+        );
+        final client = clientWith(adapter, store);
+        var events = 0;
+        client.sessionExpired.listen((_) => events++);
+
+        await expectLater(client.me.get(), throwsA(isA<ApiException>()));
+        await Future<void>.delayed(Duration.zero);
+
+        expect(await store.read(), isNull);
+        expect(events, 1);
+        expect(adapter.count('/auth/refresh'), 0);
+      },
+    );
+
     test('giriş token\'ları depoya yazar', () async {
       final store = MemoryTokenStore();
       final adapter = FakeAdapter((_) => jsonBody(200, authJson('A', 'R')));
