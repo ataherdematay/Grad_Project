@@ -60,6 +60,8 @@ public class SecurityConfig {
                         .permitAll()
                         // Dev bean'i yalnız dev profilinde vardır; loopback kontrolü denetleyicidedir.
                         .requestMatchers(HttpMethod.POST, "/api/v1/dev/reset").permitAll()
+                        // Admin: ROLE_ADMIN (users.is_admin) olmayan 403 FORBIDDEN alır; denetleyici ayrıca kontrol eder.
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/**").authenticated()
                         // v1 dışındaki yollar eskisi gibi çalışır (statik dosya yoksa 404).
                         .anyRequest().permitAll())

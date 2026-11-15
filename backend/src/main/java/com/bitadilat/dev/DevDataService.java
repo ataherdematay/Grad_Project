@@ -38,12 +38,14 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * docs/spec/SEED_DATA.md demo seti (hesaplar, usta profilleri, Ali'nin adresi). Yalnızca {@code dev}.
@@ -105,6 +107,7 @@ public class DevDataService {
     private final RequestParts requestParts;
     private final MatchingService matching;
     private final DevJobSeeder jobSeeder;
+    private final ObjectMapper json;
 
     public DevDataService(UserRepository users, ProProfileRepository proProfiles,
                           ProCategoryRepository proCategories, ProDistrictRepository proDistricts,
@@ -112,8 +115,9 @@ public class DevDataService {
                           DistrictRepository districts, PasswordEncoder encoder, AesGcmCrypto crypto,
                           JdbcTemplate jdbc, ServiceRequestRepository serviceRequests, OfferRepository offers,
                           OfferItemRepository offerItems, RequestParts requestParts, MatchingService matching,
-                          DevJobSeeder jobSeeder) {
+                          DevJobSeeder jobSeeder, ObjectMapper json) {
         this.jobSeeder = jobSeeder;
+        this.json = json;
         this.users = users;
         this.proProfiles = proProfiles;
         this.proCategories = proCategories;
@@ -174,7 +178,111 @@ public class DevDataService {
         // İşler önce, BD-88412 en son: Ali'nin listesinde en yeni talep BD-88412'dir.
         jobSeeder.seedJobs();
         seedRequest88412();
+        seedNotifications();
         log.info("Demo verisi yüklendi: {} hesap (şifre {}).", DEMOS.size(), DEMO_PASSWORD);
+    }
+
+    // ─── Bildirimler ─────────────────────────────────────────────────────────
+
+    /**
+     * Seed akışlarının yan ürünü bildirimler silinir; yerine her hesap için (başvurusu henüz bekleyen Hasan hariç)
+     * wave 4 sözleşmesindeki parametre ve hedeflerle birkaç bildirim yazılır. Kimlikler seed kayıtlarından okunur.
+     */
+    private void seedNotifications() {
+        jdbc.update("delete from notifications");
+        UUID ali = userId("ali"), zeynep = userId("zeynep"), mehmet = userId("mehmet"), ahmet = userId("ahmet"),
+                emre = userId("emre"), selim = userId("selim"), admin = userId("admin");
+
+        Map<String, Object> req = jdbc.queryForMap(
+                "select id, title from service_requests where public_code = 'BD-88412'");
+        String req88412 = req.get("id").toString();
+        String title88412 = (String) req.get("title");
+        Map<String, Object> j09 = jobRow("BD-88409");
+        Map<String, Object> j07 = jobRow("BD-88407");
+        Map<String, Object> j98 = jobRow("BD-88398");
+        String complaintId = jdbc.queryForObject("select id::text from complaints where public_code = 'SK-1001'",
+                String.class);
+
+        // Ali: BD-88412 için gelen üç teklif (okunmamış), BD-88409 randevusu (okundu).
+        offerReceived(ali, req88412, title88412, "T-10003", 5);
+        offerReceived(ali, req88412, title88412, "T-10002", 12);
+        offerReceived(ali, req88412, title88412, "T-10001", 20);
+        note(ali, "APPOINTMENT_CONFIRMED", Map.of("jobId", j09.get("id").toString(), "publicCode", "BD-88409",
+                "slotFrom", j09.get("scheduled_from").toString(), "slotTo", j09.get("scheduled_to").toString()),
+                "/c/jobs/" + j09.get("id"), 240, true);
+
+        // Zeynep: BD-88398 aşaması ve sohbet (okunmamış mesaj), şikayet açık olduğu için karar bildirimi yok.
+        note(zeynep, "JOB_STAGE_CHANGED", Map.of("jobId", j98.get("id").toString(), "publicCode", "BD-88398",
+                "status", "IN_PROGRESS"), "/c/jobs/" + j98.get("id"), 2900, true);
+        note(zeynep, "NEW_MESSAGE", Map.of("jobId", j98.get("id").toString(), "publicCode", "BD-88398",
+                "senderRole", "PRO", "senderName", "Usta Eller Tesisat"), "/jobs/" + j98.get("id") + "/chat",
+                2850, false);
+
+        // Mehmet (Mavi Hat): yeni eşleşen talep, kabul edilen teklif, randevu.
+        matching(mehmet, req88412, title88412, 6);
+        note(mehmet, "OFFER_ACCEPTED", Map.of("jobId", j09.get("id").toString(), "publicCode", "BD-88409",
+                "title", j09.get("title"), "amount", j09.get("total_amount").toString()),
+                "/p/jobs/" + j09.get("id"), 300, true);
+        note(mehmet, "APPOINTMENT_PROPOSED", Map.of("jobId", j09.get("id").toString(), "publicCode", "BD-88409",
+                "slotFrom", j09.get("scheduled_from").toString(), "slotTo", j09.get("scheduled_to").toString()),
+                "/p/jobs/" + j09.get("id"), 280, true);
+
+        // Ahmet (Kaya Tesisat): yeni eşleşen talep, BD-88407 ödemesi.
+        matching(ahmet, req88412, title88412, 8);
+        note(ahmet, "PAYOUT_RELEASED", Map.of("jobId", j07.get("id").toString(), "publicCode", "BD-88407",
+                "amount", jdbc.queryForObject("select pro_payout from escrow_payment where job_id = ?",
+                        java.math.BigDecimal.class, j07.get("id")).toPlainString()), "/p/earnings", 16000, true);
+
+        // Emre (Usta Eller): yeni eşleşen talep, açılan şikayet.
+        matching(emre, req88412, title88412, 10);
+        note(emre, "COMPLAINT_OPENED", Map.of("jobId", j98.get("id").toString(), "complaintId", complaintId,
+                "complaintCode", "SK-1001", "publicCode", "BD-88398", "reason", "EXTRA_CHARGE"),
+                "/p/jobs/" + j98.get("id"), 2700, false);
+
+        // Selim: başvurusu belge bekliyor (profildeki reviewNote ile aynı metin).
+        note(selim, "PRO_NEEDS_DOCUMENTS", Map.of("note", "Vergi levhası eksik. Belgeyi yükleyip yeniden gönder."),
+                "/p/application", 1500, false);
+
+        // Admin: açık şikayet.
+        note(admin, "COMPLAINT_OPENED", Map.of("jobId", j98.get("id").toString(), "complaintId", complaintId,
+                "complaintCode", "SK-1001", "publicCode", "BD-88398", "reason", "EXTRA_CHARGE"),
+                "/complaints/" + complaintId, 2700, false);
+    }
+
+    private UUID userId(String prefix) {
+        return jdbc.queryForObject("select id from users where email = ?", UUID.class, prefix + "@bitadilat.test");
+    }
+
+    private Map<String, Object> jobRow(String requestCode) {
+        return jdbc.queryForMap("""
+                select j.id, j.scheduled_from, j.scheduled_to, r.title, o.total_amount
+                from jobs j join service_requests r on r.id = j.request_id join offers o on o.id = j.offer_id
+                where r.public_code = ?""", requestCode);
+    }
+
+    private void offerReceived(UUID customer, String requestId, String title, String offerCode, int minutesAgo) {
+        Map<String, Object> o = jdbc.queryForMap("""
+                select o.id, o.total_amount, p.business_name from offers o
+                join pro_profiles p on p.user_id = o.pro_id where o.public_code = ?""", offerCode);
+        note(customer, "OFFER_RECEIVED", Map.of("offerId", o.get("id").toString(), "requestId", requestId,
+                "publicCode", "BD-88412", "title", title, "proBusinessName", o.get("business_name"),
+                "amount", o.get("total_amount").toString()), "/c/requests/" + requestId + "/offers", minutesAgo,
+                false);
+    }
+
+    private void matching(UUID pro, String requestId, String title, int minutesAgo) {
+        note(pro, "NEW_MATCHING_REQUEST", Map.of("requestId", requestId, "publicCode", "BD-88412", "title", title,
+                "districtName", "Kadıköy"), "/p/requests/" + requestId, minutesAgo, false);
+    }
+
+    private void note(UUID user, String type, Map<String, Object> params, String route, int minutesAgo, boolean read) {
+        Instant created = Instant.now().minus(Duration.ofMinutes(minutesAgo));
+        jdbc.update("""
+                insert into notifications (user_id, type, title_key, body_key, params, target_route, read_at,
+                                           created_at)
+                values (?, ?, ?, ?, cast(? as jsonb), ?, ?, ?)""", user, type, "notification." + type + ".title",
+                "notification." + type + ".body", json.writeValueAsString(params), route,
+                read ? java.sql.Timestamp.from(created.plusSeconds(60)) : null, java.sql.Timestamp.from(created));
     }
 
     private void seedPro(User user, Pro p, Instant now) {

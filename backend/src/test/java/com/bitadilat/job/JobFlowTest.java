@@ -152,7 +152,7 @@ class JobFlowTest extends Wave3TestBase {
         assertThat(scheduled.get("status").asString()).isEqualTo("SCHEDULED");
         assertThat(scheduled.get("appointment").get("scheduledFrom").isNull()).isFalse();
         assertThat(scheduled.get("appointment").get("pendingProposal").isNull()).isTrue();
-        assertThat(notifications(s.pro(), "APPOINTMENT_ACCEPTED")).isEqualTo(1);
+        assertThat(notifications(s.pro(), "APPOINTMENT_CONFIRMED")).isEqualTo(1);
         assertThat(count("select count(*) from job_events where job_id = ?::uuid and type = 'APPOINTMENT_ACCEPTED'",
                 jobId)).isEqualTo(1);
 
@@ -210,7 +210,7 @@ class JobFlowTest extends Wave3TestBase {
         JsonNode arrived = body(jobPost(s.pro(), jobId, "/arrived", null).andExpect(status().isOk()));
         assertThat(arrived.get("status").asString()).isEqualTo("ARRIVED");
         jobPost(s.pro(), jobId, "/arrived", null).andExpect(status().isConflict()); // tekrar
-        assertThat(notifications(s.customer(), "JOB_STAGE_UPDATED")).isEqualTo(1);
+        assertThat(notifications(s.customer(), "JOB_STAGE_CHANGED")).isEqualTo(1);
         assertThat(actions(job(s.pro(), jobId))).contains("START_WORK", "ADD_NOTE", "CANCEL");
 
         JsonNode started = body(jobPost(s.pro(), jobId, "/start", null).andExpect(status().isOk()));

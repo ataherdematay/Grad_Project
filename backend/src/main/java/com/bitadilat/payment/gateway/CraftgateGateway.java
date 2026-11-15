@@ -21,6 +21,9 @@ import io.craftgate.response.PaymentRefundResponse;
 import io.craftgate.response.PaymentResponse;
 import io.craftgate.response.ReportingPaymentRefundResponse;
 import io.craftgate.response.ReportingPaymentResponse;
+import io.craftgate.response.ReportingPaymentTransactionRefundListResponse;
+import io.craftgate.response.ReportingPaymentTransactionRefundResponse;
+import io.craftgate.response.dto.ReportingPaymentTransaction;
 import io.craftgate.response.PaymentTransactionRefundResponse;
 import io.craftgate.response.dto.PaymentTransaction;
 import java.math.BigDecimal;
@@ -113,6 +116,35 @@ public class CraftgateGateway implements PaymentGateway {
             return RefundState.PARTIALLY_REFUNDED;
         }
         return RefundState.NOT_REFUNDED;
+    }
+
+    @Override
+    public BigDecimal refundedTotal(Long paymentId) {
+        ReportingPaymentResponse report = call("refundedTotal",
+                () -> craftgate.paymentReporting().retrievePayment(paymentId));
+        BigDecimal total = BigDecimal.ZERO;
+        List<ReportingPaymentRefundResponse> refunds = report.getRefunds() == null ? List.of() : report.getRefunds();
+        for (ReportingPaymentRefundResponse r : refunds) {
+            total = total.add(count(r.getStatus(), r.getRefundPrice(), paymentId));
+        }
+        List<ReportingPaymentTransaction> transactions =
+                report.getPaymentTransactions() == null ? List.of() : report.getPaymentTransactions();
+        for (ReportingPaymentTransaction t : transactions) {
+            ReportingPaymentTransactionRefundListResponse list = call("refundedTotal",
+                    () -> craftgate.paymentReporting().retrievePaymentTransactionRefunds(paymentId, t.getId()));
+            for (ReportingPaymentTransactionRefundResponse r : list.getItems()) {
+                total = total.add(count(r.getStatus(), r.getRefundPrice(), paymentId));
+            }
+        }
+        return total;
+    }
+
+    private static BigDecimal count(RefundStatus status, BigDecimal price, Long paymentId) {
+        if (status == RefundStatus.WAITING) {
+            log.warn("Craftgate'te sonuç bekleyen iade var. paymentId={}", paymentId);
+            throw new GatewayException("Önceki iade isteği sonuç bekliyor. Lütfen biraz sonra tekrar deneyin.", true);
+        }
+        return status == RefundStatus.SUCCESS && price != null ? price : BigDecimal.ZERO;
     }
 
     @Override

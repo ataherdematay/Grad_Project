@@ -110,10 +110,21 @@ public class ChatService {
             String code = requests.findById(job.getRequestId()).map(ServiceRequest::getPublicCode).orElse("");
             notifications.notify(other, NotificationService.NEW_MESSAGE,
                     Map.of("jobId", jobId.toString(), "publicCode", code,
-                            "senderRole", JobQueryService.roleOf(job, userId).name()),
+                            "senderRole", JobQueryService.roleOf(job, userId).name(),
+                            "senderName", senderName(job, userId)),
                     "/jobs/" + jobId + "/chat");
         }
         return toMessage(id, userId, body, b.photoId(), created, job, userId);
+    }
+
+    /** Karşı tarafın göreceği ad: ustanın işletme adı, müşterinin kısa adı ("Ali Y."). */
+    private String senderName(Job job, UUID senderId) {
+        if (senderId.equals(job.getProId())) {
+            return jdbc.queryForObject("select business_name from pro_profiles where user_id = ?", String.class,
+                    senderId);
+        }
+        return JobQueryService.shortName(
+                jdbc.queryForObject("select full_name from users where id = ?", String.class, senderId));
     }
 
     /** Okundu bilgisi geriye gitmez ve işteki son mesajın ötesine geçmez. Aynı işin NEW_MESSAGE bildirimleri okunur olur. */

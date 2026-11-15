@@ -165,7 +165,7 @@ public class OfferService {
         }
         notifications.notify(o.getProId(), NotificationService.OFFER_DECLINED,
                 Map.of("offerId", o.getId().toString(), "requestId", r.getId().toString(),
-                        "publicCode", r.getPublicCode(), "reason", body.reason().name()),
+                        "publicCode", r.getPublicCode(), "title", r.getTitle(), "reason", body.reason().name()),
                 "/p/offers");
         return detail(o, false, now, r.isOpenAt(now));
     }
@@ -248,8 +248,8 @@ public class OfferService {
 
         notifications.notify(r.getCustomerId(), NotificationService.OFFER_RECEIVED,
                 Map.of("offerId", o.getId().toString(), "requestId", r.getId().toString(),
-                        "publicCode", r.getPublicCode(), "proName", pro.getBusinessName(),
-                        "totalAmount", o.getTotalAmount().toPlainString()),
+                        "publicCode", r.getPublicCode(), "title", r.getTitle(),
+                        "proBusinessName", pro.getBusinessName(), "amount", o.getTotalAmount().toPlainString()),
                 "/c/requests/" + r.getId() + "/offers");
         return detail(o, true, now, true);
     }
