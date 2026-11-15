@@ -1,6 +1,7 @@
 /// BiTadilat API istemcisi (saf Dart).
 library;
 
+export 'src/admin.dart';
 export 'src/api/auth_api.dart';
 export 'src/api/catalog_api.dart';
 export 'src/api/chat_api.dart';

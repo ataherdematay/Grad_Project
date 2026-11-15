@@ -6,3 +6,4 @@ workspace:
   - packages/bitadilat_ui
   - packages/bitadilat_api
   - apps/mobile
+  - apps/admin
