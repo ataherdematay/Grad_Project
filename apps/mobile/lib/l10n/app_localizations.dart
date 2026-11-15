@@ -4545,7 +4545,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifPayoutReleased.
   ///
   /// In tr, this message translates to:
-  /// **'{publicCode} işinin {amount} tutarındaki ödemesi serbest bırakıldı.'**
+  /// **'{publicCode} işinin {amount} tutarındaki ödemesi sana aktarıldı.'**
   String notifPayoutReleased(String publicCode, String amount);
 
   /// No description provided for @notifJobCancelledByCustomer.
@@ -4666,6 +4666,12 @@ abstract class AppLocalizations {
   /// **'Karar tarihi'**
   String get complaintDecidedAt;
 
+  /// No description provided for @complaintAmountsUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar bilgisi henüz yok.'**
+  String get complaintAmountsUnknown;
+
   /// No description provided for @applicationRejectedDocsTitle.
   ///
   /// In tr, this message translates to:
@@ -4741,8 +4747,8 @@ abstract class AppLocalizations {
   /// No description provided for @suspendedMailFailed.
   ///
   /// In tr, this message translates to:
-  /// **'E-posta uygulaması açılamadı. Destek adresine kendin yazabilirsin.'**
-  String get suspendedMailFailed;
+  /// **'E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.'**
+  String suspendedMailFailed(String email);
 }
 
 class _AppLocalizationsDelegate

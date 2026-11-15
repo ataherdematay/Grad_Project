@@ -20,7 +20,8 @@ String notificationText(AppLocalizations l, Notification n, DateTime now) {
     if (raw == null) return _dash;
     try {
       return formatMoney(Money.fromJson(raw), l.localeName);
-    } on FormatException {
+    } catch (_) {
+      // Bozuk tutar (metin, `NaN`, nesne) listeyi düşürmesin.
       return _dash;
     }
   }

@@ -2542,7 +2542,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notifPayoutReleased(String publicCode, String amount) {
-    return 'The $amount payment for job $publicCode was released.';
+    return 'The $amount payment for job $publicCode was paid out to you.';
   }
 
   @override
@@ -2626,6 +2626,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get complaintDecidedAt => 'Decision date';
 
   @override
+  String get complaintAmountsUnknown => 'No amount information yet.';
+
+  @override
   String get applicationRejectedDocsTitle => 'Documents to upload again';
 
   @override
@@ -2667,6 +2670,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get suspendedMailSubject => 'My pro profile was suspended';
 
   @override
-  String get suspendedMailFailed =>
-      'Could not open the email app. You can write to the support address yourself.';
+  String suspendedMailFailed(String email) {
+    return 'Could not open the email app. You can write to $email yourself.';
+  }
 }

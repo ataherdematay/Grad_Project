@@ -45,6 +45,10 @@ class NotificationsState {
 class NotificationsController extends AsyncNotifier<NotificationsState> {
   NotificationsApi get _api => ref.read(apiClientProvider).notifications;
 
+  /// Okundu isteği sürenler: çift dokunma iki istek atıp rozeti iki kez
+  /// düşürmesin.
+  final Set<String> _marking = {};
+
   @override
   Future<NotificationsState> build() async {
     final page = await _api.list(limit: kNotificationsPageSize);
@@ -103,10 +107,13 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     final s = state.value;
     final target = s?.items.where((n) => n.id == id).firstOrNull;
     if (s == null || target == null || target.read) return true;
+    if (!_marking.add(id)) return true;
     try {
       await _api.markRead(ids: [id]);
     } on ApiException {
       return false;
+    } finally {
+      _marking.remove(id);
     }
     if (!ref.mounted) return true;
     final cur = state.value ?? s;

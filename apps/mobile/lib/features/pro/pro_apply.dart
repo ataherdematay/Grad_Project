@@ -305,11 +305,12 @@ class _ProApplyState extends ConsumerState<ProApplyScreen> {
   }
 }
 
-/// Destek adresi. Yayın öncesi `--dart-define=SUPPORT_EMAIL=...` ile verilir.
-const String kSupportEmail = String.fromEnvironment(
-  'SUPPORT_EMAIL',
-  defaultValue: 'destek@bitadilat.com',
-);
+/// Destek adresi yalnız `--dart-define=SUPPORT_EMAIL=...` ile verilir.
+/// Tanımsızsa e-posta bağlantısı gösterilmez (uydurma adres yok).
+const String kSupportEmail = String.fromEnvironment('SUPPORT_EMAIL');
+
+/// Ekranlarda kullanılan destek adresi; boşsa genel destek metni gösterilir.
+final supportEmailProvider = Provider<String>((_) => kSupportEmail.trim());
 
 /// `/p/application`: başvuru durumu, yönetici notu ve kararın sonuçları.
 class ProApplicationScreen extends ConsumerWidget {
@@ -603,9 +604,11 @@ class _SuspendedViewState extends ConsumerState<_SuspendedView> {
   Future<void> _contact() async {
     final l = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    final email = ref.read(supportEmailProvider);
+    if (email.isEmpty) return;
     final uri = Uri(
       scheme: 'mailto',
-      path: kSupportEmail,
+      path: email,
       queryParameters: {'subject': l.suspendedMailSubject},
     );
     bool ok;
@@ -615,7 +618,9 @@ class _SuspendedViewState extends ConsumerState<_SuspendedView> {
       ok = false;
     }
     if (!ok) {
-      messenger.showSnackBar(SnackBar(content: Text(l.suspendedMailFailed)));
+      messenger.showSnackBar(
+        SnackBar(content: Text(l.suspendedMailFailed(email))),
+      );
     }
   }
 
@@ -640,6 +645,7 @@ class _SuspendedViewState extends ConsumerState<_SuspendedView> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final note = widget.note;
+    final hasEmail = ref.watch(supportEmailProvider).isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -654,12 +660,14 @@ class _SuspendedViewState extends ConsumerState<_SuspendedView> {
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(l.suspendedSupportHelp, style: AppTypography.bodySecondary),
-        const SizedBox(height: AppSpacing.sm),
-        AppButton(
-          label: l.suspendedContactSupport,
-          icon: Icons.mail_outline,
-          onPressed: _contact,
-        ),
+        if (hasEmail) ...[
+          const SizedBox(height: AppSpacing.sm),
+          AppButton(
+            label: l.suspendedContactSupport,
+            icon: Icons.mail_outline,
+            onPressed: _contact,
+          ),
+        ],
         const SizedBox(height: AppSpacing.xs),
         AppButton(
           label: l.switchToCustomer,

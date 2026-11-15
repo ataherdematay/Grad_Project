@@ -1226,7 +1226,7 @@
       }
     }
   },
-  "notifPayoutReleased": "The {amount} payment for job {publicCode} was released.",
+  "notifPayoutReleased": "The {amount} payment for job {publicCode} was paid out to you.",
   "@notifPayoutReleased": {
     "placeholders": {
       "publicCode": {
@@ -1343,6 +1343,7 @@
   "complaintRefundAmount": "Refunded to you",
   "complaintProAmount": "Paid to the pro",
   "complaintDecidedAt": "Decision date",
+  "complaintAmountsUnknown": "No amount information yet.",
   "applicationRejectedDocsTitle": "Documents to upload again",
   "applicationRejectedDocsHelp": "Replace only the rejected documents; accepted ones stay as they are.",
   "applicationResubmitSend": "Resubmit",
@@ -1355,5 +1356,12 @@
   "suspendedContactSupport": "Contact support",
   "suspendedSupportHelp": "Write to the support team to appeal or get more information.",
   "suspendedMailSubject": "My pro profile was suspended",
-  "suspendedMailFailed": "Could not open the email app. You can write to the support address yourself."
+  "suspendedMailFailed": "Could not open the email app. You can write to {email} yourself.",
+  "@suspendedMailFailed": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

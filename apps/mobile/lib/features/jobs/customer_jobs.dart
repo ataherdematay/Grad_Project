@@ -1240,10 +1240,6 @@ class ComplaintStatusScreen extends ConsumerWidget {
     final jobPath = async.value == null
         ? '/c/requests'
         : '/c/jobs/${async.requireValue.jobId}';
-    // Sunucu tutarları göndermezse karar tutarları iş toplamından hesaplanır.
-    final jobTotal = async.value == null
-        ? null
-        : ref.watch(jobProvider(async.requireValue.jobId)).value?.totalAmount;
     return StackFallback(
       fallback: jobPath,
       child: ListPage(
@@ -1298,7 +1294,7 @@ class ComplaintStatusScreen extends ConsumerWidget {
                     sectionTitle(l.complaintEvidenceTitle),
                     PhotoStrip(photos: c.evidence),
                   ],
-                  ..._decisionSection(context, c, now, jobTotal),
+                  ..._decisionSection(context, c, now),
                   const SizedBox(height: AppSpacing.lg),
                   AppButton(
                     label: l.complaintGoChat,
@@ -1322,27 +1318,16 @@ class ComplaintStatusScreen extends ConsumerWidget {
 }
 
 /// Karar verildiyse: karar türü, inceleme ekibinin notu ve tutarlar (iade,
-/// usta payı). Tutarlar sunucudan gelmediyse iş toplamından hesaplanır.
-List<Widget> _decisionSection(
-  BuildContext context,
-  Complaint c,
-  DateTime now,
-  Money? jobTotal,
-) {
+/// usta payı). Tutarların tek kaynağı sunucudur (`refundAmount`,
+/// `proAmount`); gelmezlerse istemci hesaplamaz, "tutar bilgisi yok" der.
+List<Widget> _decisionSection(BuildContext context, Complaint c, DateTime now) {
   final l = AppLocalizations.of(context);
   final decision = c.decision ?? '';
   final note = c.decisionNote ?? '';
   if (decision.isEmpty && note.isEmpty) return const [];
   final label = complaintDecisionLabel(l, c.decision);
-  var refund = c.refundAmount;
-  var pro = c.proAmount;
-  if (refund == null || pro == null) {
-    final derived = jobTotal == null
-        ? null
-        : decisionAmounts(c.decision, jobTotal);
-    refund ??= derived?.refund;
-    pro ??= derived?.pro;
-  }
+  final refund = c.refundAmount;
+  final pro = c.proAmount;
   return [
     sectionTitle(l.complaintDecisionTitle),
     AppCard(
@@ -1367,8 +1352,10 @@ List<Widget> _decisionSection(
         ],
       ),
     ),
-    if (refund != null || pro != null) ...[
+    if (decision.isNotEmpty) ...[
       sectionTitle(l.complaintAmountsTitle),
+      if (refund == null && pro == null)
+        Text(l.complaintAmountsUnknown, style: AppTypography.bodySecondary),
       if (refund != null)
         InfoRow(l.complaintRefundAmount, formatMoney(refund, l.localeName)),
       if (pro != null)

@@ -73,11 +73,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   /// Sekme kökleri `go` ile, diğer rotalar `push` ile açılır (sekme kökü
   /// ikinci kez yığına eklenmez).
-  void _openRoute(GoRouter router, String route) {
+  Future<void> _openRoute(GoRouter router, String route) async {
     if (isTabRoot(Uri.parse(route).path)) {
       router.go(route);
     } else {
-      unawaited(router.push<void>(route));
+      await router.push<void>(route);
     }
   }
 
@@ -85,6 +85,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     if (_opening) return;
     final me = ref.read(sessionProvider).me;
     if (me == null) return;
+    // Çift dokunma hedefi iki kez açmasın: hedef ekran kapanana dek kilitli.
+    _opening = true;
+    try {
+      await _handleTap(n, me);
+    } finally {
+      if (mounted) setState(() => _opening = false);
+    }
+  }
+
+  Future<void> _handleTap(Notification n, Me me) async {
     final l = AppLocalizations.of(context);
     final router = GoRouter.of(context);
     final session = ref.read(sessionProvider.notifier);
@@ -95,7 +105,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       case TargetAction.blocked:
         await _showCantOpen();
       case TargetAction.open:
-        _openRoute(router, target.route!);
+        await _openRoute(router, target.route!);
       case TargetAction.switchToPro || TargetAction.switchToCustomer:
         final toPro = target.action == TargetAction.switchToPro;
         final ok = await showConfirmDialog(
@@ -110,16 +120,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           cancelLabel: l.cancel,
         );
         if (!ok || !mounted) return;
-        setState(() => _opening = true);
         try {
           await session.switchMode(toPro ? UserMode.pro : UserMode.customer);
           // Mod değişimi yığını sıfırlar; hedef sekme kökünün üstüne açılır.
           router.go(toPro ? '/p/feed' : '/c/home');
-          _openRoute(router, target.route!);
+          unawaited(_openRoute(router, target.route!));
         } on ApiException catch (e) {
           if (mounted) reportActionError(context, e);
-        } finally {
-          if (mounted) setState(() => _opening = false);
         }
     }
   }

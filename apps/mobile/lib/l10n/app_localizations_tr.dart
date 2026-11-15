@@ -2476,7 +2476,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String notifPayoutReleased(String publicCode, String amount) {
-    return '$publicCode işinin $amount tutarındaki ödemesi serbest bırakıldı.';
+    return '$publicCode işinin $amount tutarındaki ödemesi sana aktarıldı.';
   }
 
   @override
@@ -2560,6 +2560,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get complaintDecidedAt => 'Karar tarihi';
 
   @override
+  String get complaintAmountsUnknown => 'Tutar bilgisi henüz yok.';
+
+  @override
   String get applicationRejectedDocsTitle =>
       'Yeniden yüklemen gereken belgeler';
 
@@ -2602,6 +2605,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get suspendedMailSubject => 'Usta profilim askıya alındı';
 
   @override
-  String get suspendedMailFailed =>
-      'E-posta uygulaması açılamadı. Destek adresine kendin yazabilirsin.';
+  String suspendedMailFailed(String email) {
+    return 'E-posta uygulaması açılamadı. $email adresine kendin yazabilirsin.';
+  }
 }

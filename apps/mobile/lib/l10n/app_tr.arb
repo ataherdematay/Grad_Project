@@ -1240,7 +1240,7 @@
       }
     }
   },
-  "notifPayoutReleased": "{publicCode} işinin {amount} tutarındaki ödemesi serbest bırakıldı.",
+  "notifPayoutReleased": "{publicCode} işinin {amount} tutarındaki ödemesi sana aktarıldı.",
   "@notifPayoutReleased": {
     "placeholders": {
       "publicCode": {
@@ -1357,6 +1357,7 @@
   "complaintRefundAmount": "Sana iade edilen",
   "complaintProAmount": "Ustaya aktarılan",
   "complaintDecidedAt": "Karar tarihi",
+  "complaintAmountsUnknown": "Tutar bilgisi henüz yok.",
   "applicationRejectedDocsTitle": "Yeniden yüklemen gereken belgeler",
   "applicationRejectedDocsHelp": "Yalnızca reddedilen belgeleri yenile; kabul edilenler olduğu gibi kalır.",
   "applicationResubmitSend": "Yeniden gönder",
@@ -1369,5 +1370,12 @@
   "suspendedContactSupport": "Destekle iletişime geç",
   "suspendedSupportHelp": "İtiraz etmek ya da bilgi almak için destek ekibine yaz.",
   "suspendedMailSubject": "Usta profilim askıya alındı",
-  "suspendedMailFailed": "E-posta uygulaması açılamadı. Destek adresine kendin yazabilirsin."
+  "suspendedMailFailed": "E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.",
+  "@suspendedMailFailed": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

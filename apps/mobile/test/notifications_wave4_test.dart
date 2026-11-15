@@ -7,12 +7,14 @@ import 'package:bitadilat_mobile/core/formatters.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
 import 'package:bitadilat_mobile/features/common/widgets.dart'
     show MessageBanner;
-import 'package:bitadilat_mobile/features/jobs/job_ui.dart';
 import 'package:bitadilat_mobile/features/jobs/pro_jobs.dart'
     show urlOpenerProvider;
+import 'package:bitadilat_mobile/features/pro/pro_apply.dart'
+    show kSupportEmail, supportEmailProvider;
 import 'package:bitadilat_mobile/features/notifications/notification_bell.dart';
 import 'package:bitadilat_mobile/features/notifications/notification_target.dart';
 import 'package:bitadilat_mobile/features/notifications/notification_text.dart';
+import 'package:bitadilat_mobile/features/notifications/notifications_controller.dart';
 import 'package:bitadilat_mobile/core/photos.dart';
 import 'package:bitadilat_mobile/l10n/app_localizations.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
@@ -205,8 +207,8 @@ List<_Case> get _cases => [
     'PAYOUT_RELEASED',
     {'publicCode': 'IS-00001', 'amount': 1080},
     '/p/earnings',
-    'IS-00001 işinin ₺1.080 tutarındaki ödemesi serbest bırakıldı.',
-    'The ₺1,080 payment for job IS-00001 was released.',
+    'IS-00001 işinin ₺1.080 tutarındaki ödemesi sana aktarıldı.',
+    'The ₺1,080 payment for job IS-00001 was paid out to you.',
   ),
   const _Case(
     'JOB_CANCELLED',
@@ -339,6 +341,23 @@ void main() {
         params: {'publicCode': 'X', 'slotFrom': 'yarın', 'slotTo': 5},
       );
       expect(notificationText(lang('tr'), badSlot, now0), contains('–'));
+      // `NaN`, sonsuz ve nesne tutar da çökertmez.
+      for (final amount in <Object>[
+        'NaN',
+        'Infinity',
+        {'x': 1},
+        true,
+      ]) {
+        final n = notif(
+          'PAYOUT_RELEASED',
+          params: {'publicCode': 'X', 'amount': amount},
+        );
+        expect(
+          notificationText(lang('tr'), n, now0),
+          contains('–'),
+          reason: '$amount',
+        );
+      }
     });
 
     test('iptal eden role göre metin; bilinmeyen rol genel iptal', () {
@@ -407,6 +426,11 @@ void main() {
         '/notifications',
         '/c/jobs/1/',
         '   ',
+        '/c/jobs/%2e%2e',
+        '/c/jobs/%2E%2E/offers',
+        '/c/jobs/a%2Fb',
+        '/c/jobs/a%5Cb',
+        '/c/jobs/.',
       ]) {
         expect(
           resolveNotificationTarget(customer, bad).action,
@@ -463,7 +487,7 @@ void main() {
       );
     });
 
-    test('onaysız usta: /p/application açılır, diğer /p/ rotaları değil', () {
+    test('onaysız usta: /p/ hedefleri /p/application açar', () {
       for (final st in [
         'PENDING_REVIEW',
         'NEEDS_DOCUMENTS',
@@ -476,11 +500,10 @@ void main() {
           TargetAction.open,
           reason: st,
         );
-        expect(
-          resolveNotificationTarget(me, '/p/jobs/1').action,
-          TargetAction.blocked,
-          reason: st,
-        );
+        // Askıdaki ya da onaysız ustanın usta hedefi: durum ekranı açılır.
+        final t = resolveNotificationTarget(me, '/p/jobs/1');
+        expect(t.action, TargetAction.open, reason: st);
+        expect(t.route, '/p/application', reason: st);
       }
     });
   });
@@ -492,24 +515,6 @@ void main() {
       expect(badgeText(99), '99');
       expect(badgeText(100), '99+');
       expect(badgeText(2500), '99+');
-    });
-
-    test('karar dağılımı kuruş hassasiyetiyle', () {
-      final full = decisionAmounts('FULL_REFUND', const Money.lira(1200))!;
-      expect(full.refund, const Money.lira(1200));
-      expect(full.pro, Money.zero);
-
-      final split = decisionAmounts('SPLIT_50_50', const Money.cents(100001))!;
-      expect(split.refund.cents, 50000);
-      expect(split.pro.cents, 50001);
-      expect(split.refund + split.pro, const Money.cents(100001));
-
-      final rel = decisionAmounts('RELEASE_TO_PRO', const Money.lira(1200))!;
-      expect(rel.refund, Money.zero);
-      expect(rel.pro, const Money.lira(1080));
-
-      expect(decisionAmounts('NOPE', const Money.lira(1)), isNull);
-      expect(decisionAmounts(null, const Money.lira(1)), isNull);
     });
   });
 
@@ -554,9 +559,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text(
-          'IS-00001 işinin ₺1.080 tutarındaki ödemesi serbest bırakıldı.',
-        ),
+        find.text('IS-00001 işinin ₺1.080 tutarındaki ödemesi sana aktarıldı.'),
         findsOneWidget,
       );
       // Yalnız okunmamış olanda nokta var.
@@ -602,6 +605,96 @@ void main() {
       expect(find.byKey(const ValueKey('unread-dot')), findsNothing);
       expect(btn('Tümünü okundu say'), findsNothing);
       expect(h.container.read(sessionProvider).me!.unreadNotifications, 0);
+    });
+
+    testWidgets('çift dokunma: tek okundu isteği, hedef bir kez açılır', (
+      t,
+    ) async {
+      final gate = Completer<void>();
+      final h = await pumpApp(
+        t,
+        session: signedInWith(unread: 1),
+        initial: '/notifications',
+        handler: notifServer(
+          pages: {null: page(sample, unread: 1)},
+          extra: {
+            'POST /notifications/read': (_) async {
+              await gate.future;
+              return empty(204);
+            },
+          },
+        ),
+      );
+      final n = h.container.read(notificationsProvider.notifier);
+      // Denetleyici düzeyi: istek sürerken ikinci çağrı yeni istek atmaz.
+      unawaited(n.markRead('n1'));
+      unawaited(n.markRead('n1'));
+      for (var i = 0; i < 5; i++) {
+        await t.pump(const Duration(milliseconds: 10));
+      }
+      expect(h.adapter.count('POST', '/notifications/read'), 1);
+      gate.complete();
+      await t.pumpAndSettle();
+      expect(h.container.read(sessionProvider).me!.unreadNotifications, 0);
+      expect(h.container.read(notificationsProvider).value!.unreadCount, 0);
+    });
+
+    testWidgets('satıra iki kez hızlı dokunmak hedefi bir kez açar', (t) async {
+      final h = await pumpApp(
+        t,
+        session: signedInWith(unread: 1),
+        initial: '/notifications',
+        handler: notifServer(pages: {null: page(sample, unread: 1)}),
+      );
+      final row = find.textContaining('Usta Tesisat, Musluk');
+      await t.tap(row);
+      await t.tap(row, warnIfMissed: false);
+      await t.pumpAndSettle();
+      expect(h.location, '/c/requests/r1/offers');
+      await t.binding.handlePopRoute();
+      await t.pumpAndSettle();
+      expect(h.location, '/notifications');
+      // Dönüşte kilit kalkar: yeniden açılabilir.
+      await t.tap(row);
+      await t.pumpAndSettle();
+      expect(h.location, '/c/requests/r1/offers');
+    });
+
+    testWidgets('askıdaki usta: usta hedefi başvuru durumu ekranını açar', (
+      t,
+    ) async {
+      final h = await pumpApp(
+        t,
+        session: signedInWith(unread: 1, proStatus: 'SUSPENDED'),
+        initial: '/notifications',
+        handler: notifServer(
+          pages: {
+            null: page([
+              nj(
+                'n1',
+                'COMPLAINT_DECIDED',
+                params: {'complaintCode': 'SK-1', 'decision': 'FULL_REFUND'},
+                target: '/p/jobs/j1',
+              ),
+            ], unread: 1),
+          },
+          extra: {
+            'GET /me': (_) => json(200, {
+              ...meJson(pro: proJson('SUSPENDED')),
+              'unreadNotifications': 1,
+            }),
+            'GET /pro/application': (_) => json(
+              200,
+              applicationJson(status: 'SUSPENDED', note: 'Tekrarlanan.'),
+            ),
+          },
+        ),
+      );
+      await t.tap(find.textContaining('SK-1'));
+      await t.pumpAndSettle();
+      expect(find.text('Bu bildirim açılamıyor'), findsNothing);
+      expect(h.location, '/p/application');
+      expect(find.text('Usta profilin askıya alındı'), findsOneWidget);
     });
 
     testWidgets('okunmuş bildirime dokunmak okundu isteği göndermez', (
@@ -907,6 +1000,39 @@ void main() {
         await t.pumpAndSettle();
         expect(h.location, '/p/feed');
         expect(h.container.read(sessionProvider).me!.lastMode, UserMode.pro);
+      });
+
+      testWidgets('Ana sayfa > zil > bildirim: mod değişir, yığın sıfırlanır', (
+        t,
+      ) async {
+        final h = await pumpApp(
+          t,
+          session: signedInWith(unread: 1, proStatus: 'APPROVED'),
+          initial: '/c/home',
+          handler: notifServer(
+            pages: {null: toPro},
+            extra: {
+              ...proRoutes(),
+              'GET /requests': (_) => json(200, {'items': <Object>[]}),
+              'GET /jobs': (_) => json(200, {'items': <Object>[]}),
+            },
+          ),
+        );
+        await t.tap(find.byTooltip('Bildirimler, 1 okunmamış'));
+        await t.pumpAndSettle();
+        expect(h.location, '/notifications');
+        await t.tap(find.textContaining('Teklifin kabul edildi'));
+        await t.pumpAndSettle();
+        await t.tap(find.widgetWithText(FilledButton, 'Usta moduna geç'));
+        await t.pumpAndSettle();
+        expect(h.location, '/p/jobs/j1');
+        await t.binding.handlePopRoute();
+        await t.pumpAndSettle();
+        expect(h.location, '/p/feed');
+        // Eski müşteri yığını (Ana sayfa, bildirimler) kalmadı.
+        await t.binding.handlePopRoute();
+        await t.pumpAndSettle();
+        expect(h.location, '/p/feed');
       });
 
       testWidgets('Vazgeç: mod ve ekran değişmez', (t) async {
@@ -1455,6 +1581,9 @@ void main() {
           session: signedInWith(proStatus: 'SUSPENDED', mode: UserMode.pro),
           initial: '/p/feed',
           size: tall,
+          overrides: [
+            supportEmailProvider.overrideWithValue('yardim@ornek.test'),
+          ],
           handler: suspendedServer(note: 'Tekrarlanan şikayetler.'),
         );
         expect(h.location, '/p/application');
@@ -1490,6 +1619,7 @@ void main() {
           initial: '/p/application',
           size: tall,
           overrides: [
+            supportEmailProvider.overrideWithValue('yardim@ornek.test'),
             urlOpenerProvider.overrideWithValue((u) async {
               opened.add(u);
               return true;
@@ -1500,7 +1630,7 @@ void main() {
         await t.tap(btn('Destekle iletişime geç'));
         await t.pumpAndSettle();
         expect(opened.single.scheme, 'mailto');
-        expect(opened.single.path, isNotEmpty);
+        expect(opened.single.path, 'yardim@ornek.test');
         expect(
           opened.single.queryParameters['subject'],
           'Usta profilim askıya alındı',
@@ -1513,7 +1643,10 @@ void main() {
           session: signedInWith(proStatus: 'SUSPENDED'),
           initial: '/p/application',
           size: tall,
-          overrides: [urlOpenerProvider.overrideWithValue((_) async => false)],
+          overrides: [
+            supportEmailProvider.overrideWithValue('yardim@ornek.test'),
+            urlOpenerProvider.overrideWithValue((_) async => false),
+          ],
           handler: suspendedServer(),
         );
         await t.tap(btn('Destekle iletişime geç'));
@@ -1522,6 +1655,31 @@ void main() {
           find.textContaining('E-posta uygulaması açılamadı'),
           findsOneWidget,
         );
+        expect(find.textContaining('yardim@ornek.test'), findsOneWidget);
+      });
+
+      testWidgets('destek adresi tanımsızsa e-posta düğmesi ve adres yok', (
+        t,
+      ) async {
+        final opened = <Uri>[];
+        await pumpApp(
+          t,
+          session: signedInWith(proStatus: 'SUSPENDED'),
+          initial: '/p/application',
+          size: tall,
+          overrides: [
+            urlOpenerProvider.overrideWithValue((u) async {
+              opened.add(u);
+              return true;
+            }),
+          ],
+          handler: suspendedServer(),
+        );
+        expect(kSupportEmail, isEmpty);
+        expect(btn('Destekle iletişime geç'), findsNothing);
+        expect(find.textContaining('@'), findsNothing);
+        expect(find.textContaining('destek ekibine yaz'), findsOneWidget);
+        expect(opened, isEmpty);
       });
 
       testWidgets('Müşteri moduna geç: son mod kaydedilir, Ana sayfa açılır', (
@@ -1547,6 +1705,9 @@ void main() {
           session: signedInWith(proStatus: 'SUSPENDED'),
           initial: '/p/application',
           size: tall,
+          overrides: [
+            supportEmailProvider.overrideWithValue('yardim@ornek.test'),
+          ],
           handler: suspendedServer(),
         );
         expect(find.text('Your pro profile is suspended'), findsOneWidget);
@@ -1600,7 +1761,7 @@ void main() {
       expect(find.textContaining('Karar tarihi'), findsOneWidget);
     });
 
-    testWidgets('tam iade: tutarlar iş toplamından hesaplanır', (t) async {
+    testWidgets('tutarlar gelmezse hesaplanmaz: tutar bilgisi yok', (t) async {
       await pumpApp(
         t,
         session: signedInWith(),
@@ -1609,21 +1770,30 @@ void main() {
         handler: complaintServer(decided('FULL_REFUND')),
       );
       expect(find.text('Tam iade'), findsOneWidget);
-      expect(find.text('₺1.200'), findsOneWidget);
-      expect(find.text('₺0'), findsOneWidget);
+      expect(find.text('Tutar bilgisi henüz yok.'), findsOneWidget);
+      // İş toplamı (₺1.200) karar tutarı gibi gösterilmez.
+      expect(find.text('Sana iade edilen'), findsNothing);
+      expect(find.text('₺1.200'), findsNothing);
+      expect(find.text('₺0'), findsNothing);
     });
 
-    testWidgets('ustaya aktar: iade yok, %10 hizmet bedeli düşülür', (t) async {
+    testWidgets('ustaya aktar: sunucunun tutarları olduğu gibi', (t) async {
       await pumpApp(
         t,
         session: signedInWith(),
         initial: '/c/complaints/5',
         size: tall,
-        handler: complaintServer(decided('RELEASE_TO_PRO')),
+        handler: complaintServer(
+          decided(
+            'RELEASE_TO_PRO',
+            extra: {'refundAmount': 0, 'proAmount': 1080},
+          ),
+        ),
       );
       expect(find.text('Ödeme ustaya aktarıldı'), findsOneWidget);
       expect(find.text('₺0'), findsOneWidget);
       expect(find.text('₺1.080'), findsOneWidget);
+      expect(find.text('Tutar bilgisi henüz yok.'), findsNothing);
     });
 
     testWidgets('EN karar metni', (t) async {
@@ -1633,7 +1803,9 @@ void main() {
         session: signedInWith(),
         initial: '/c/complaints/5',
         size: tall,
-        handler: complaintServer(decided('FULL_REFUND')),
+        handler: complaintServer(
+          decided('FULL_REFUND', extra: {'refundAmount': 1200, 'proAmount': 0}),
+        ),
       );
       expect(find.text('Full refund'), findsOneWidget);
       expect(find.text('Refunded to you'), findsOneWidget);
@@ -1665,7 +1837,7 @@ void main() {
       );
       expect(find.text('Tam iade'), findsOneWidget);
       expect(find.text('Kanıtlar incelendi.'), findsOneWidget);
-      expect(find.text('Tutarlar'), findsNothing);
+      expect(find.text('Tutar bilgisi henüz yok.'), findsOneWidget);
     });
   });
 

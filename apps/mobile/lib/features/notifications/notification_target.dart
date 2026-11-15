@@ -36,6 +36,13 @@ String? internalRoute(String? raw) {
   if (raw.contains('\\') || raw.contains('..')) return null;
   final uri = Uri.tryParse(raw);
   if (uri == null || uri.hasScheme || uri.hasAuthority) return null;
+  // Kodlanmış `..`, `/` ya da `\` (`%2e%2e`, `%2F`, `%5C`) parametre olarak
+  // çözülüp başka bir API yoluna gitmesin.
+  for (final seg in uri.pathSegments) {
+    if (seg == '.' || seg == '..' || seg.contains('/') || seg.contains('\\')) {
+      return null;
+    }
+  }
   final path = uri.path;
   if (path == '/' || path == '/notifications') return null;
   if (guestPaths.contains(path)) return null;
@@ -59,6 +66,11 @@ NotificationTarget resolveNotificationTarget(Me me, String? raw) {
   }
   if (path.startsWith('/c/') && isProMode(me)) {
     return NotificationTarget(TargetAction.switchToCustomer, route);
+  }
+  // Onaysız ya da askıdaki usta: korumalar gibi başvuru durumu ekranı açılır
+  // (askı nedeni ve sonraki adım orada anlatılır).
+  if (path.startsWith('/p/') && redirect == '/p/application') {
+    return const NotificationTarget(TargetAction.open, '/p/application');
   }
   return const NotificationTarget(TargetAction.blocked);
 }
