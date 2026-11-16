@@ -28,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EscrowService {
 
+    private static final String REFUND_PENDING_MESSAGE =
+            "Önceki iade isteği sonuç bekliyor. Lütfen biraz sonra tekrar deneyin.";
+
     private final EscrowPaymentRepository repository;
     private final PaymentGateway gateway;
     private final JdbcTemplate jdbc;
@@ -60,7 +63,7 @@ public class EscrowService {
             BigDecimal already = gateway.refundedTotal(payment.getCraftgatePaymentId());
             if (already != null && already.signum() > 0) {
                 log.error("Craftgate'te iade görünen ödeme ustaya aktarılmadı; elle incelenmeli. ref={} iade={}",
-                        payment.getRef(), already);
+                        payment.getRef(), money(already).toPlainString());
                 throw ApiException.illegalState("Bu ödemede Craftgate'te "
                         + already.setScale(2, RoundingMode.HALF_UP).toPlainString()
                         + " TL iade görünüyor; karar elle incelenmeli.");
@@ -88,7 +91,9 @@ public class EscrowService {
      * <p>İade göndermeden önce Craftgate'teki iade durumu sorulur. Önceki deneme zaman aşımına uğramış ama Craftgate'te
      * gerçekleşmiş olabilir (bizde işlem geri alındı): ödeme zaten tam iade edildiyse yeniden gönderilmez, yalnızca defter
      * işlenir. Aksi halde Craftgate ikinci isteği "önceden iptal edilmiş" diye reddeder ve karar her denemede 502 alır.
-     * Sonuç bekleyen iade varsa yeniden denenebilir 502; kısmi iade görünürse 409 (elle incelenir).
+     * Sonuç bekleyen iade varsa yeniden denenebilir 502. Kısmi iade görünürse (ör. panelden elle) yalnızca kalan tutar
+     * iade edilir (toplam − iade edilmiş, asla fazlası değil): müşteri toplamı tam bir kez almış olur. Defterde tek REFUND
+     * satırı toplam tutarla yazılır; {@code refundedAmount} = toplam.
      */
     @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
     public void refundFully(EscrowPayment payment) {
@@ -97,19 +102,7 @@ public class EscrowService {
         if (payment.isSeed()) {
             requireDevForSeed();
         } else {
-            PaymentGateway.RefundState state = gateway.refundState(payment.getCraftgatePaymentId());
-            if (state == PaymentGateway.RefundState.FULLY_REFUNDED) {
-                log.warn("Ödeme Craftgate'te zaten tam iade edilmiş; yeniden gönderilmedi, yalnızca defter işlendi. ref={}",
-                        payment.getRef());
-            } else if (state == PaymentGateway.RefundState.REFUND_PENDING) {
-                throw new GatewayException("Önceki iade isteği sonuç bekliyor. Lütfen biraz sonra tekrar deneyin.", true);
-            } else if (state == PaymentGateway.RefundState.PARTIALLY_REFUNDED) {
-                log.error("Ödeme Craftgate'te kısmen iade edilmiş; tam iade gönderilmedi, elle incelenmeli. ref={}",
-                        payment.getRef());
-                throw ApiException.illegalState("Bu ödemede Craftgate'te kısmi iade görünüyor; işlem elle incelenmeli.");
-            } else {
-                gateway.refundFully(payment.getCraftgatePaymentId(), payment.getConversationId());
-            }
+            refundRemainderOnCraftgate(payment, amount);
         }
         payment.refundFully();
         repository.saveAndFlush(payment);
@@ -135,10 +128,10 @@ public class EscrowService {
                 gateway.refundPartially(payment.getCraftgatePaymentId(), refund, payment.getConversationId());
             } else if (already.compareTo(refund) == 0) {
                 log.warn("Kısmi iade Craftgate'te zaten yapılmış; yeniden gönderilmedi, yalnızca defter işlendi. ref={}"
-                        + " tutar={}", payment.getRef(), already);
+                        + " tutar={}", payment.getRef(), money(already).toPlainString());
             } else {
                 log.error("Craftgate'te beklenmeyen iade tutarı; %50/%50 kararı uygulanmadı. ref={} iade={} beklenen={}",
-                        payment.getRef(), already, refund);
+                        payment.getRef(), money(already).toPlainString(), refund.toPlainString());
                 throw ApiException.illegalState("Bu ödemede Craftgate'te "
                         + already.setScale(2, RoundingMode.HALF_UP).toPlainString()
                         + " TL iade görünüyor; karar elle incelenmeli.");
@@ -168,6 +161,58 @@ public class EscrowService {
     public void dispute(EscrowPayment payment) {
         payment.dispute();
         repository.saveAndFlush(payment);
+    }
+
+    /**
+     * Craftgate'teki duruma göre tam iadeyi tamamlar; emanet kaydına dokunmaz. Hiçbir yol toplamdan fazlasını iade etmez:
+     * <ul>
+     *   <li>FULLY_REFUNDED: yeni iade yok (önceki deneme gerçekleşmiş).</li>
+     *   <li>REFUND_PENDING veya kalemde sonuç bekleyen iade: 502, yeniden denenebilir.</li>
+     *   <li>İade yok: tam iade.</li>
+     *   <li>0 &lt; iade edilmiş &lt; toplam: kalan tutar kalem iadesiyle gönderilir.</li>
+     *   <li>iade edilmiş ≥ toplam ama durum "tam iade" değil, ya da durum kısmi ama tutar okunamıyor: tutarsız, para
+     *       gönderilmez (409 / 502).</li>
+     * </ul>
+     */
+    private void refundRemainderOnCraftgate(EscrowPayment payment, BigDecimal total) {
+        Long paymentId = payment.getCraftgatePaymentId();
+        PaymentGateway.RefundState state = gateway.refundState(paymentId);
+        if (state == PaymentGateway.RefundState.FULLY_REFUNDED) {
+            log.warn("Ödeme Craftgate'te zaten tam iade edilmiş; yeniden gönderilmedi, yalnızca defter işlendi. ref={}"
+                    + " paymentId={}", payment.getRef(), paymentId);
+            return;
+        }
+        if (state == PaymentGateway.RefundState.REFUND_PENDING) {
+            throw new GatewayException(REFUND_PENDING_MESSAGE, true);
+        }
+        // Kalem düzeyindeki iadeler de sayılır; kalemde sonuç bekleyen iade varsa burada 502 fırlar.
+        BigDecimal already = money(gateway.refundedTotal(paymentId));
+        if (already.signum() == 0) {
+            if (state == PaymentGateway.RefundState.PARTIALLY_REFUNDED) {
+                log.error("Craftgate kısmi iade diyor ama başarılı iade tutarı okunamadı; iade gönderilmedi. ref={}"
+                        + " paymentId={}", payment.getRef(), paymentId);
+                throw new GatewayException("Craftgate'teki iade durumu doğrulanamadı; para hareketi yapılmadı. "
+                        + "Lütfen biraz sonra tekrar deneyin.", true);
+            }
+            gateway.refundFully(paymentId, payment.getConversationId());
+            return;
+        }
+        if (already.compareTo(total) >= 0) {
+            log.error("Craftgate'te toplam kadar veya fazla iade görünüyor ama durum tam iade değil; iade gönderilmedi,"
+                    + " elle incelenmeli. ref={} paymentId={} iade={} toplam={} durum={}",
+                    payment.getRef(), paymentId, already.toPlainString(), total.toPlainString(), state);
+            throw ApiException.illegalState("Bu ödemede Craftgate'te " + already.toPlainString()
+                    + " TL iade görünüyor; tam iade elle incelenmeli.");
+        }
+        BigDecimal remainder = money(total.subtract(already));
+        log.warn("Ödeme Craftgate'te kısmen iade edilmiş; yalnızca kalan tutar iade ediliyor. ref={} paymentId={}"
+                + " toplam={} iadeEdilmiş={} kalan={}", payment.getRef(), paymentId, total.toPlainString(),
+                already.toPlainString(), remainder.toPlainString());
+        gateway.refundPartially(paymentId, remainder, payment.getConversationId());
+    }
+
+    private static BigDecimal money(BigDecimal value) {
+        return (value == null ? BigDecimal.ZERO : value).setScale(2, RoundingMode.HALF_UP);
     }
 
     private void requireDevForSeed() {

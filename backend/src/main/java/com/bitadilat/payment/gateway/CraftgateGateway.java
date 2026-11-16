@@ -39,6 +39,10 @@ import org.springframework.stereotype.Component;
 public class CraftgateGateway implements PaymentGateway {
 
     private static final String SDK_GENERAL_ERROR_CODE = "0";
+    static final String REFUND_FAILED =
+            "İade Craftgate'te tamamlanamadı. Lütfen biraz sonra tekrar deneyin; sorun sürerse ödeme kaydını inceleyin.";
+    static final String REFUND_STATUS_UNKNOWN =
+            "Craftgate'teki iade durumu okunamadı; para hareketi yapılmadı. Lütfen biraz sonra tekrar deneyin.";
 
     private final Craftgate craftgate;
     private final String callbackKey;
@@ -102,7 +106,7 @@ public class CraftgateGateway implements PaymentGateway {
     @Override
     public RefundState refundState(Long paymentId) {
         ReportingPaymentResponse report = call("refundState",
-                () -> craftgate.paymentReporting().retrievePayment(paymentId));
+                () -> craftgate.paymentReporting().retrievePayment(paymentId), REFUND_STATUS_UNKNOWN);
         if (report.getRefundStatus() == PaymentRefundStatus.FULLY_REFUNDED) {
             return RefundState.FULLY_REFUNDED;
         }
@@ -121,7 +125,7 @@ public class CraftgateGateway implements PaymentGateway {
     @Override
     public BigDecimal refundedTotal(Long paymentId) {
         ReportingPaymentResponse report = call("refundedTotal",
-                () -> craftgate.paymentReporting().retrievePayment(paymentId));
+                () -> craftgate.paymentReporting().retrievePayment(paymentId), REFUND_STATUS_UNKNOWN);
         BigDecimal total = BigDecimal.ZERO;
         List<ReportingPaymentRefundResponse> refunds = report.getRefunds() == null ? List.of() : report.getRefunds();
         for (ReportingPaymentRefundResponse r : refunds) {
@@ -131,7 +135,8 @@ public class CraftgateGateway implements PaymentGateway {
                 report.getPaymentTransactions() == null ? List.of() : report.getPaymentTransactions();
         for (ReportingPaymentTransaction t : transactions) {
             ReportingPaymentTransactionRefundListResponse list = call("refundedTotal",
-                    () -> craftgate.paymentReporting().retrievePaymentTransactionRefunds(paymentId, t.getId()));
+                    () -> craftgate.paymentReporting().retrievePaymentTransactionRefunds(paymentId, t.getId()),
+                    REFUND_STATUS_UNKNOWN);
             for (ReportingPaymentTransactionRefundResponse r : list.getItems()) {
                 total = total.add(count(r.getStatus(), r.getRefundPrice(), paymentId));
             }
@@ -162,15 +167,17 @@ public class CraftgateGateway implements PaymentGateway {
                         .paymentId(paymentId)
                         .conversationId(conversationId)
                         .refundDestinationType(RefundDestinationType.PROVIDER)
-                        .build()));
+                        .build()), REFUND_FAILED);
         requireRefundAccepted(response.getStatus(), paymentId);
-        log.info("Tam iade yapıldı. paymentId={} refundId={} type={} amount={}",
-                paymentId, response.getId(), response.getRefundType(), response.getRefundPrice());
+        log.info("Tam iade yapıldı. paymentId={} refundId={} type={} status={} amount={}",
+                paymentId, response.getId(), response.getRefundType(), response.getStatus(),
+                money(response.getRefundPrice()));
     }
 
     @Override
     public void refundPartially(Long paymentId, BigDecimal amount, String conversationId) {
-        PaymentResponse payment = call("retrieve", () -> craftgate.payment().retrievePayment(paymentId));
+        PaymentResponse payment = call("retrieve", () -> craftgate.payment().retrievePayment(paymentId),
+                REFUND_FAILED);
         List<PaymentTransaction> transactions = payment.getPaymentTransactions();
         if (transactions == null || transactions.size() != 1) {
             log.error("Kısmi iade için tek kalem bekleniyordu. paymentId={}", paymentId);
@@ -184,17 +191,21 @@ public class CraftgateGateway implements PaymentGateway {
                         .refundPrice(amount)
                         .conversationId(conversationId)
                         .refundDestinationType(RefundDestinationType.PROVIDER)
-                        .build()));
+                        .build()), REFUND_FAILED);
         requireRefundAccepted(response.getStatus(), paymentId);
-        log.info("Kısmi iade yapıldı. paymentId={} transactionId={} amount={}",
-                paymentId, transactionId, response.getRefundPrice());
+        log.info("Kısmi iade yapıldı. paymentId={} transactionId={} refundId={} status={} amount={}",
+                paymentId, transactionId, response.getId(), response.getStatus(), money(response.getRefundPrice()));
     }
 
     private static void requireRefundAccepted(RefundStatus status, Long paymentId) {
         if (status == RefundStatus.FAILURE) {
             log.warn("Craftgate iadeyi reddetti. paymentId={}", paymentId);
-            throw new GatewayException("İade işlemi tamamlanamadı. Lütfen tekrar deneyin.", false);
+            throw new GatewayException(REFUND_FAILED, false);
         }
+    }
+
+    private static String money(BigDecimal value) {
+        return value == null ? null : value.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
     }
 
     private static GatewayPayment toGatewayPayment(PaymentResponse response) {
@@ -212,6 +223,14 @@ public class CraftgateGateway implements PaymentGateway {
     }
 
     private static <T> T call(String operation, Supplier<T> sdkCall) {
+        return call(operation, sdkCall, null);
+    }
+
+    /**
+     * {@code message} verilirse kullanıcıya o gösterilir (iade ve iade sorgusu): kart ödemesi hata metni ("farklı bir kart
+     * deneyin") iade hatasında yanıltıcıdır. Verilmezse Craftgate hata grubu kart ödemesi mesajına çevrilir.
+     */
+    private static <T> T call(String operation, Supplier<T> sdkCall, String message) {
         try {
             return sdkCall.get();
         } catch (CraftgateException e) {
@@ -219,7 +238,8 @@ public class CraftgateGateway implements PaymentGateway {
             boolean connectionProblem = SDK_GENERAL_ERROR_CODE.equals(e.getErrorCode());
             log.warn("Craftgate hatası. operation={} errorGroup={} errorCode={} description={} providerCode={}",
                     operation, e.getErrorGroup(), e.getErrorCode(), e.getErrorDescription(), e.getProviderErrorCode());
-            throw new GatewayException(PaymentErrorMessages.forGroup(e.getErrorGroup()), connectionProblem);
+            throw new GatewayException(message != null ? message : PaymentErrorMessages.forGroup(e.getErrorGroup()),
+                    connectionProblem);
         }
     }
 }

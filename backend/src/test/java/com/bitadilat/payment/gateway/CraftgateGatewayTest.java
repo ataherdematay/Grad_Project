@@ -93,4 +93,19 @@ class CraftgateGatewayTest {
         assertThat(refundState(PaymentRefundStatus.NOT_REFUNDED, RefundStatus.SUCCESS))
                 .isNotEqualTo(RefundState.NOT_REFUNDED);
     }
+
+    /** İade hatasında admin kart ödemesi metnini ("farklı bir kart deneyin") değil, iade metnini görür. */
+    @Test
+    void refundFailureShowsARefundMessageNotACardPaymentMessage() {
+        io.craftgate.exception.CraftgateException rejected = new io.craftgate.exception.CraftgateException(
+                "4010", "Ödeme önceden iptal edilmiştir", "PAYMENT_ALREADY_CANCELLED");
+        when(payment.refundPayment(org.mockito.ArgumentMatchers.any())).thenThrow(rejected);
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> gateway.refundFully(PAYMENT_ID, "c"))
+                .isInstanceOf(com.bitadilat.payment.exception.GatewayException.class)
+                .hasMessage(CraftgateGateway.REFUND_FAILED)
+                .hasMessageNotContaining("kart");
+        when(reporting.retrievePayment(PAYMENT_ID)).thenThrow(rejected);
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> gateway.refundedTotal(PAYMENT_ID))
+                .hasMessage(CraftgateGateway.REFUND_STATUS_UNKNOWN);
+    }
 }

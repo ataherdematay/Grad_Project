@@ -116,6 +116,12 @@ OPEN ─(admin açar)─▶ IN_REVIEW ─(karar)─▶ RESOLVED
 
 - Admin ek olarak ustaya uyarı kaydı düşebilir veya hesabı askıya alabilir.
 - Karar gerekçesi zorunludur ve iki tarafa bildirilir. Ekranlarda gerçek tutarlar gösterilir (P12).
+- Para hareketinden önce Craftgate'teki iade durumu sorulur (zaman aşımına uğramış ama gerçekleşmiş bir iade ikinci kez gitmesin):
+  - Tam iade (karar ve iş iptali): zaten tam iade edilmişse yalnızca defter işlenir; kısmen iade edilmişse yalnızca kalan (toplam − iade edilmiş) iade edilir, müşteri toplamı tam bir kez alır; iade edilmiş tutar toplama eşit/fazla ama durum tam iade değilse `409` (elle incelenir).
+  - %50 / %50: aynı yarı zaten iade edilmişse yeniden gönderilmez; başka tutar görünürse `409`.
+  - Ustaya aktar: Craftgate'te herhangi bir iade görünürse `409`.
+  - Sonuç bekleyen iade ya da okunamayan durum: `502`, hiçbir şey değişmez.
+  - Müşteri onayı ve 48 saatlik otomatik tamamlama Craftgate'e sormadan aktarır (bilinçli; yayın öncesi sağlamlaştırma listesinde).
 
 ## 6. Emanet (`escrow_payments.status`)
 

@@ -253,7 +253,11 @@ public class AdminComplaintService {
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("complaintCode", code);
         params.put("decision", decision);
-        params.put("amount", amount.setScale(2, RoundingMode.HALF_UP).toPlainString());
+        // Alıcıya göre tutar: sıfırsa (müşteride RELEASE_TO_PRO, ustada FULL_REFUND) hiç yazılmaz; istemci tutar
+        // cümlesini atlar ("Tutar: ₺0" görünmez).
+        if (amount != null && amount.signum() > 0) {
+            params.put("amount", amount.setScale(2, RoundingMode.HALF_UP).toPlainString());
+        }
         params.put("complaintId", complaintId.toString());
         params.put("jobId", jobId.toString());
         return params;

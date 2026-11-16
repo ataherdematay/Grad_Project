@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -214,14 +215,14 @@ class AdminComplaintTest extends AdminTestBase {
         assertThat(jdbc.queryForObject("select commission from escrow_payment where ref = ?", BigDecimal.class,
                 d.ref())).isEqualByComparingTo("0");
 
-        // Bildirimler: müşteriye iade tutarı, ustaya 0.
+        // Bildirimler: müşteriye iade tutarı; ustanın tutarı sıfır olduğu için amount hiç yazılmaz.
         Map<String, Object> toCustomer = decidedNotification(d.s().customer());
         assertThat(toCustomer.get("code")).isEqualTo(d.complaintCode());
         assertThat(toCustomer.get("decision")).isEqualTo("FULL_REFUND");
         assertThat(toCustomer.get("amount")).isEqualTo("1200.00");
         assertThat(toCustomer.get("target_route")).isEqualTo("/c/complaints/" + d.complaintId());
         Map<String, Object> toPro = decidedNotification(d.s().pro());
-        assertThat(toPro.get("amount")).isEqualTo("0.00");
+        assertThat(toPro.get("amount")).isNull();
         assertThat(toPro.get("target_route")).isEqualTo("/p/jobs/" + d.jobId());
 
         assertThat(adminActions("DECIDE_COMPLAINT", d.complaintId())).isEqualTo(1);
@@ -291,7 +292,9 @@ class AdminComplaintTest extends AdminTestBase {
         assertThat(jdbc.queryForObject("select completed_jobs from pro_profiles where user_id = ?::uuid",
                 Integer.class, d.s().pro().id())).isEqualTo(completedBefore + 1);
 
-        assertThat(decidedNotification(d.s().customer()).get("amount")).isEqualTo("0.00");
+        // Müşteriye iade yok: "Tutar: ₺0" yerine amount hiç gönderilmez.
+        assertThat(decidedNotification(d.s().customer()).get("amount")).isNull();
+        assertThat(decidedNotification(d.s().customer()).get("decision")).isEqualTo("RELEASE_TO_PRO");
         assertThat(decidedNotification(d.s().pro()).get("amount")).isEqualTo("1080.00");
         assertThat(decidedNotification(d.s().pro()).get("decision")).isEqualTo("RELEASE_TO_PRO");
         assertThat(adminActions("DECIDE_COMPLAINT", d.complaintId())).isEqualTo(1);
@@ -413,21 +416,95 @@ class AdminComplaintTest extends AdminTestBase {
         assertThat(ledger(d.ref(), "REFUND")).isEqualByComparingTo("1200.00");
     }
 
+    /**
+     * Lider kararı 1: Craftgate'te kısmen (ör. panelden elle) iade edilmiş ödemede FULL_REFUND 409 vermez; yalnızca kalan
+     * (toplam − iade edilmiş) kalem iadesiyle gönderilir. Müşteri toplamı tam bir kez alır, refundAmount = toplam, defterde
+     * tek REFUND satırı. Kalan iade gerçekleşip bizde geri alınırsa yeniden deneme ikinci iade göndermez.
+     */
     @Test
-    void fullRefundStopsWhenCraftgateShowsAPartialOrAPendingRefund() throws Exception {
+    void fullRefundOnAPartlyRefundedPaymentRefundsOnlyTheRemainderOnce() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob("900", "300");
+        long paymentId = cgPaymentId(d);
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        // Craftgate tutarları 8 ondalıkla döner.
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("500.00000000"));
+        doThrow(new GatewayException("Craftgate yanıt vermedi.", true)).when(gateway)
+                .refundPartially(anyLong(), any(), anyString());
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
+        // Kalan iade Craftgate'te gerçekleşmişti: durum artık tam iade; yeniden deneme yalnızca defteri işler.
+        org.mockito.Mockito.reset(gateway);
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("500.00000000"));
+        JsonNode c = ok(decide(admin, d, "FULL_REFUND"));
+        assertAmounts(c, d, "1200.00", "0.00");
+        verify(gateway, times(1)).refundPartially(eq(paymentId), argThat(a -> a.compareTo(new BigDecimal("700.00")) == 0
+                && a.scale() == 2), eq(conversationId(d)));
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        assertThat(escrowStatus(d.jobId())).isEqualTo("REFUNDED_TO_CUSTOMER");
+        assertThat(jdbc.queryForObject("select refunded_amount from escrow_payment where ref = ?", BigDecimal.class,
+                d.ref())).isEqualByComparingTo("1200.00");
+        assertThat(ledgerRows(d.ref())).isEqualTo(1);
+        assertThat(ledger(d.ref(), "REFUND")).isEqualByComparingTo("1200.00");
+        assertThat(decidedNotification(d.s().customer()).get("amount")).isEqualTo("1200.00");
+    }
+
+    @Test
+    void fullRefundAfterALostRemainderCommitDoesNotRefundAgain() throws Exception {
         Account admin = admin();
         Disputed d = disputedJob();
         long paymentId = cgPaymentId(d);
-        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
-        decide(admin, d, "FULL_REFUND").andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"));
-        assertNothingChanged(d);
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.FULLY_REFUNDED);
+        ok(decide(admin, d, "FULL_REFUND"));
+        verify(gateway, never()).refundPartially(anyLong(), any(), anyString());
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        verify(gateway, never()).refundedTotal(anyLong());
+        assertThat(ledgerRows(d.ref())).isEqualTo(1);
+    }
 
+    @Test
+    void fullRefundStopsWhenCraftgateShowsAPendingAnUnreadableOrAnOverRefund() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        long paymentId = cgPaymentId(d);
+
+        // Ödeme düzeyinde sonuç bekleyen iade: 502, hiçbir şey değişmez.
         org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.REFUND_PENDING);
         decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway())
                 .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
         assertNothingChanged(d);
+
+        // Kalemde sonuç bekleyen iade (refundedTotal fırlatır): 502.
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId))
+                .thenThrow(new GatewayException("Önceki iade isteği sonuç bekliyor.", true));
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
+        // Durum kısmi ama başarılı iade tutarı yok: bilinmeyen durum, 502.
+        org.mockito.Mockito.reset(gateway);
+        org.mockito.Mockito.when(gateway.refundState(paymentId)).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(BigDecimal.ZERO);
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
+        // Toplam kadar iade görünüyor ama durum tam iade değil: tutarsız, 409, para gönderilmez.
+        org.mockito.Mockito.when(gateway.refundedTotal(paymentId)).thenReturn(new BigDecimal("1200.00000000"));
+        decide(admin, d, "FULL_REFUND").andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("ILLEGAL_STATE"))
+                .andExpect(jsonPath("$.message").value(org.hamcrest.Matchers.containsString("1200.00 TL")));
+        assertNothingChanged(d);
+
+        // Craftgate'e ulaşılamıyor: 502.
+        org.mockito.Mockito.when(gateway.refundState(paymentId))
+                .thenThrow(new GatewayException("Craftgate'teki iade durumu okunamadı.", true));
+        decide(admin, d, "FULL_REFUND").andExpect(status().isBadGateway());
+        assertNothingChanged(d);
+
         verify(gateway, never()).refundFully(anyLong(), anyString());
+        verify(gateway, never()).refundPartially(anyLong(), any(), anyString());
     }
 
     /**
