@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * simülatöre ulaşabilir. Yalnızca preview/ klasörü açılır, repo kökü (.git vb.) açılmaz.
  */
 @Configuration
+@org.springframework.context.annotation.Profile("!prod")
 public class PreviewWebConfig implements WebMvcConfigurer {
 
     private final String previewLocation;
