@@ -36,7 +36,7 @@ class ProdProfileConfigTest {
             Properties p = load(file);
             assertThat(p.getProperty("bitadilat.jwt.secret")).as(file).isEqualTo("${JWT_SECRET}");
             assertThat(p.getProperty("bitadilat.crypto.address-key")).as(file).isEqualTo("${ADDRESS_KEY}");
-            assertThat(p.getProperty("bitadilat.cors.allowed-origins")).as(file).isIn("${CORS_ALLOWED_ORIGINS:}", "${BITADILAT_CORS_ORIGINS:${CORS_ALLOWED_ORIGINS:}}");
+            assertThat(p.getProperty("bitadilat.cors.allowed-origins")).as(file).isEqualTo("${BITADILAT_CORS_ORIGINS:${CORS_ALLOWED_ORIGINS:}}");
             assertThat(p.getProperty("springdoc.api-docs.enabled")).as(file).isEqualTo("false");
             assertThat(p.getProperty("springdoc.swagger-ui.enabled")).as(file).isEqualTo("false");
         }

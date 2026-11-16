@@ -15,7 +15,7 @@ What `prod` turns off: `DevSeeder`, `DevJobSeeder`, `/api/v1/dev/**`, the loggin
 | `MEDIA_SIGNING_KEY` | yes | `<random, at least 32 bytes>` | HMAC key for signed media URLs. |
 | `MEDIA_DIR` | yes | `/var/lib/bitadilat/media` | Folder for uploaded files. |
 | `APP_PUBLIC_BASE_URL` | yes | `https://api.example.com` | Public base URL; used for signed media links and the bank 3DS return. |
-| `BITADILAT_CORS_ORIGINS` | no (recommended) | `https://admin.example.com` | Comma-separated exact origins allowed by CORS. A `*` anywhere fails startup. Empty means CORS is closed. `CORS_ALLOWED_ORIGINS` is still read as a fallback. |
+| `BITADILAT_CORS_ORIGINS` | no (recommended) | `https://admin.example.com` | Comma-separated exact origins allowed by CORS. A `*` anywhere fails startup. Empty means CORS is closed. `CORS_ALLOWED_ORIGINS` is still read as a fallback. The dev profile reads the same names (default `http://localhost:*,http://127.0.0.1:*`). |
 | `BITADILAT_BIND` | no | `0.0.0.0` | Bind address (default `0.0.0.0`). |
 | `BITADILAT_PORT` | no | `8080` | HTTP port (default 8090). |
 | `CRAFTGATE_API_KEY` | yes | `<craftgate-api-key>` | Craftgate API key. |
@@ -29,6 +29,10 @@ What `prod` turns off: `DevSeeder`, `DevJobSeeder`, `/api/v1/dev/**`, the loggin
 | `BITADILAT_MAIL_FROM` | yes | `no-reply@example.com` | From address of outgoing mail (password reset codes). Missing value fails startup. |
 | `BITADILAT_ADMIN_EMAIL` | first start only | `admin@example.com` | Email of the first admin. Used only when no admin exists. |
 | `BITADILAT_ADMIN_PASSWORD` | first start only | `<strong password>` | At least 12 characters with a letter and a digit, at most 72 bytes. Stored as a BCrypt hash; never logged. Remove it after the first start. |
+
+## Docker image
+
+`backend/Dockerfile` defaults to the dev profile (used by `docker-compose.yml`). With `SPRING_PROFILES_ACTIVE=prod` the entrypoint starts no socat forward and the app binds `0.0.0.0:${BITADILAT_PORT:-8090}` itself, so publish container port 8090 and pass the variables above (for example with `--env-file`). Do not reuse `docker-compose.yml` for prod.
 
 ## Admin bootstrap
 
