@@ -1,9 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Kamera ve galeri image_picker ile sistem arayuzu (ACTION_IMAGE_CAPTURE ve
+         Android Photo Picker) uzerinden acilir; CAMERA / READ_MEDIA_IMAGES /
+         READ_EXTERNAL_STORAGE izni gerekmez ve bilerek istenmez. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <application
         android:label="BiTadilat"
         android:name="${applicationName}"
         android:allowBackup="false"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
