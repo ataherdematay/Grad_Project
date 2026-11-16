@@ -1,0 +1,43 @@
+# One command for the jury: docker compose up --build
+# Backend: http://localhost:${BACKEND_PORT:-8090}   (dev profile: demo seed + POST /api/v1/dev/reset)
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: bitadilat
+      POSTGRES_USER: bitadilat
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bitadilat}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bitadilat -d bitadilat"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      DB_URL: jdbc:postgresql://postgres:5432/bitadilat
+      DB_USER: bitadilat
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-bitadilat}
+      # Passed through from the host environment / .env; never stored in this file.
+      CRAFTGATE_API_KEY: ${CRAFTGATE_API_KEY:-}
+      CRAFTGATE_SECRET_KEY: ${CRAFTGATE_SECRET_KEY:-}
+      CRAFTGATE_CALLBACK_KEY: ${CRAFTGATE_CALLBACK_KEY:-}
+      APP_PUBLIC_BASE_URL: http://localhost:${BACKEND_PORT:-8090}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8090}:8091"
+    volumes:
+      - media:/app/data/media
+
+volumes:
+  pgdata:
+  media:

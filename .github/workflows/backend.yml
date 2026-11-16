@@ -1,0 +1,36 @@
+name: backend
+on:
+  push:
+    branches: [feature/flutter-app, develop, main]
+  pull_request:
+    branches: [feature/flutter-app, develop, main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: bitadilat
+          POSTGRES_PASSWORD: bitadilat
+          POSTGRES_DB: bitadilat_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U bitadilat" --health-interval 5s
+          --health-timeout 3s --health-retries 20
+    env:
+      # Tests use Testcontainers when Docker is available (it is on ubuntu runners);
+      # these point the fallback at the service container. Craftgate is mocked: no secrets.
+      TEST_DB_URL: jdbc:postgresql://localhost:5432/bitadilat_test
+      TEST_DB_USER: bitadilat
+      TEST_DB_PASSWORD: bitadilat
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Test
+        working-directory: backend
+        run: ./mvnw -B test
