@@ -42,3 +42,4 @@ apps/*/android/.gradle/
 apps/*/android/local.properties
 apps/*/android/**/GeneratedPluginRegistrant.java
 *.iml
+!.env.example

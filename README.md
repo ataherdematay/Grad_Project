@@ -13,6 +13,48 @@ Bu depo, projenin **Kıdemli Product Manager (PM)** ve **Baş QA Test Mühendisi
 
 ---
 
+## Quick start for the jury (Flutter app + backend)
+
+BiTadilat is a trust-first home-repair marketplace: customers post a job, verified pros send structured quotes, payment is held in escrow until the work is approved. The real app lives on `feature/flutter-app`: Spring Boot + PostgreSQL backend, Flutter mobile app (iOS first) and Flutter Web admin panel.
+
+```bash
+# 1. Backend + database (Docker; Postgres 16, dev profile with demo seed)
+docker compose up --build            # API on http://localhost:8090
+
+# 2. Mobile app on the iOS Simulator
+cd apps/mobile && flutter run --dart-define=API_BASE_URL=http://localhost:8090
+
+# 3. Admin panel (web)
+cd apps/admin && flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:8090
+```
+
+Run `flutter pub get` once at the repo root first. Ports and keys: copy `.env.example` to `.env`. Without Docker, tests, env vars and troubleshooting: see [`docs/RUNNING.md`](docs/RUNNING.md).
+
+**Demo accounts** (password for all: `Demo1234!`; full list in [`docs/spec/SEED_DATA.md`](docs/spec/SEED_DATA.md)):
+
+| Role | Email |
+| --- | --- |
+| Customer | `ali@bitadilat.test`, `zeynep@bitadilat.test` |
+| Pro (approved) | `mehmet@bitadilat.test`, `ahmet@bitadilat.test`, `emre@bitadilat.test` |
+| Pro (pending / needs documents) | `hasan@bitadilat.test`, `selim@bitadilat.test` |
+| Admin (web only) | `admin@bitadilat.test` |
+
+**SANDBOX test card (Craftgate sandbox, no real money):** `5258 6400 0000 0001`, expiry `07/44`, CVC `000`. Payments need `CRAFTGATE_API_KEY` / `CRAFTGATE_SECRET_KEY` sandbox keys in your environment; they are never stored in the repo. Without them `docker compose` still starts (placeholder keys) and only the card payment step fails. Prod settings: [`docs/spec/PROD_CONFIG.md`](docs/spec/PROD_CONFIG.md).
+
+**Repo layout**
+
+| Path | Content |
+| --- | --- |
+| `backend/` | Spring Boot 4 / Java 21 API, Flyway migrations, tests |
+| `apps/mobile/` | Flutter mobile app |
+| `apps/admin/` | Flutter Web admin panel |
+| `packages/bitadilat_ui/`, `packages/bitadilat_api/` | shared UI kit, shared API client |
+| `docs/spec/` | the specification (API, data model, state machines, seed data); source of truth |
+| `preview/` | legacy HTML prototype (visual reference) |
+| `docker-compose.yml`, `.github/workflows/` | one-command run, CI (backend tests, Flutter analyze/test) |
+
+---
+
 ## 🎨 Google Stitch Tasarım Sistemi Bilgileri (Design System Meta)
 
 Proje Google Stitch üzerinde aşağıdaki kurumsal kimlik ve tasarım varlıkları ile üretilmiştir:
