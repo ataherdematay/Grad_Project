@@ -24,7 +24,8 @@ Fiziksel cihazda bilgisayarin LAN adresini kullanin ya da `adb reverse tcp:8090 
 
 - Release: yalnizca HTTPS (`src/main/res/xml/network_security_config.xml`, cleartext kapali).
 - Debug: `src/debug/res/xml/network_security_config.xml` ayni dosyayi gecersiz kilar ve duz HTTP'yi yalnizca `10.0.2.2`, `localhost`, `127.0.0.1` icin acar.
-- Release icin `--dart-define=API_BASE_URL=https://...` verilmelidir.
+- Release icin `--dart-define=API_BASE_URL=https://...` verilmelidir. Network security config yalnizca platform agini (3-D Secure WebView, sistem tarayicisi) denetler; dio'nun kullandigi dart:io soketleri bu kurala tabi degildir. Bu yuzden `main()` release derlemesinde `https` olmayan bir `API_BASE_URL` ile acilmaz (`ensureSecureApiBaseUrl`, iOS icin de gecerli).
+- `profile` derlemesi release kuralini (yalnizca HTTPS) kullanir.
 
 ## Izinler
 
