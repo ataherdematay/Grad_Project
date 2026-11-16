@@ -36,6 +36,17 @@ void main() {
       expect(find.byKey(const Key('reactivate-u-3')), findsNothing);
     });
 
+    testWidgets('usta hesabında rol "Usta" yazar, müşteride "Müşteri"', (
+      tester,
+    ) async {
+      await pumpAdmin(tester, initial: '/accounts');
+      // Satır başına bir rol metni: usta (u-2) "Usta", sıradan hesap "Müşteri".
+      // ("Usta"/"Müşteri" süzgeç çipinde de geçer: satır metni +1.)
+      expect(find.text('Usta'), findsNWidgets(2));
+      expect(find.text('Müşteri'), findsNWidgets(3));
+      expect(find.text('Yönetici'), findsNWidgets(3));
+    });
+
     testWidgets('kendi hesabın için neden açıklayan ipucu var', (tester) async {
       await pumpAdmin(tester, initial: '/accounts');
       expect(
@@ -253,6 +264,20 @@ void main() {
       expect(find.byKey(const Key('payment-PAY-1002')), findsOneWidget);
       expect(find.text('REQUEST_ALREADY_ASSIGNED'), findsOneWidget);
       expect(find.text('Müşteriye iade edildi'), findsWidgets);
+    });
+
+    testWidgets('1024 px: tüm sütunlar görünür, yatay kaydırma gizli kalmaz', (
+      tester,
+    ) async {
+      await pumpAdmin(
+        tester,
+        initial: '/payments',
+        size: const Size(1024, 768),
+      );
+      for (final h in ['Ustaya ödeme', 'İade', 'Tarih']) {
+        expect(find.text(h), findsWidgets);
+      }
+      expect(find.text('₺1.980'), findsOneWidget);
     });
 
     testWidgets('durum süzgeci sunucuya gider', (tester) async {

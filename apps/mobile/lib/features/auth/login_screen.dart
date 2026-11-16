@@ -131,7 +131,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onPressed: () => context.push('/forgot-password'),
                 ),
               ),
-              if (_generalError != null) ...[
+              // Askıya alma/yönetici bildirimi üstte zaten gösteriliyorsa aynı
+              // hata ikinci kez yazılmaz.
+              if (_generalError != null &&
+                  ref.watch(sessionProvider.select((s) => s.notice)) ==
+                      null) ...[
                 MessageBanner(_generalError!),
                 const SizedBox(height: AppSpacing.md),
               ],

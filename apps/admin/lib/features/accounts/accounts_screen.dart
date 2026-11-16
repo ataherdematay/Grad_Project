@@ -199,7 +199,11 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        u.isAdmin ? l.roleAdmin : l.roleCustomer,
+                        u.isAdmin
+                            ? l.roleAdmin
+                            : u.pro != null
+                            ? l.rolePro
+                            : l.roleCustomer,
                         style: AppTypography.body,
                       ),
                       if (u.pro != null)

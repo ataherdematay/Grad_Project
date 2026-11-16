@@ -142,6 +142,7 @@
   "colTotal": "Total",
   "colServiceFee": "Service fee",
   "colProPayout": "Payout to pro",
+  "paymentAwaitingDecision": "Secure hold amount awaiting decision",
   "colRefunded": "Refunded",
 
   "applicationsTitle": "Pro applications",

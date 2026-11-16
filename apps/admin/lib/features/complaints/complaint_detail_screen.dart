@@ -513,6 +513,7 @@ class _PaymentCard extends StatelessWidget {
         ),
       );
     }
+    final awaiting = p.status == 'LOCKED' || p.status == 'DISPUTED';
     return SectionCard(
       title: l.paymentSummaryTitle,
       trailing: escrowChip(l, p.status),
@@ -520,22 +521,33 @@ class _PaymentCard extends StatelessWidget {
         children: [
           InfoRow(label: l.colRef, value: SelectableText(p.ref)),
           InfoRow(label: l.colProvider, value: Text(p.provider)),
-          InfoRow(
-            label: l.colTotal,
-            value: Text(formatMoney(p.totalAmount, loc)),
-          ),
-          InfoRow(
-            label: l.colServiceFee,
-            value: Text(formatMoney(p.commission, loc)),
-          ),
-          InfoRow(
-            label: l.colProPayout,
-            value: Text(formatMoney(p.proPayout, loc)),
-          ),
-          InfoRow(
-            label: l.colRefunded,
-            value: Text(formatMoney(p.refundedAmount, loc)),
-          ),
+          if (!awaiting)
+            InfoRow(
+              label: l.colTotal,
+              value: Text(formatMoney(p.totalAmount, loc)),
+            ),
+          if (awaiting)
+            InfoRow(
+              label: l.paymentAwaitingDecision,
+              value: Text(
+                formatMoney(p.totalAmount, loc),
+                key: const Key('payment-awaiting'),
+              ),
+            )
+          else ...[
+            InfoRow(
+              label: l.colServiceFee,
+              value: Text(formatMoney(p.commission, loc)),
+            ),
+            InfoRow(
+              label: l.colProPayout,
+              value: Text(formatMoney(p.proPayout, loc)),
+            ),
+            InfoRow(
+              label: l.colRefunded,
+              value: Text(formatMoney(p.refundedAmount, loc)),
+            ),
+          ],
         ],
       ),
     );

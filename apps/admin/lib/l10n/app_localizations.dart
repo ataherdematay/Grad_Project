@@ -866,6 +866,12 @@ abstract class AppLocalizations {
   /// **'Ustaya ödeme'**
   String get colProPayout;
 
+  /// No description provided for @paymentAwaitingDecision.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar bekleyen güvence havuzu tutarı'**
+  String get paymentAwaitingDecision;
+
   /// No description provided for @colRefunded.
   ///
   /// In tr, this message translates to:

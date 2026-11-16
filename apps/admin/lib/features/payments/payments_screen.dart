@@ -68,6 +68,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
               else
                 ResponsiveTable<AdminPaymentRow>(
                   minWidth: 1180,
+                  stackBelow: 1180,
                   rowKey: (r) => Key('payment-${r.ref}'),
                   columns: [
                     TableColumn(

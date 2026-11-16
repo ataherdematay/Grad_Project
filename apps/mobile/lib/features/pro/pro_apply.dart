@@ -11,6 +11,7 @@ import '../../core/forms.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
+import '../notifications/notification_bell.dart';
 import '../auth/session.dart';
 import '../common/pickers.dart';
 import '../common/ui.dart';
@@ -359,6 +360,7 @@ class ProApplicationScreen extends ConsumerWidget {
     return ListPage(
       title: l.proApplicationTitle,
       leading: const AppBackButton(fallback: '/c/profile'),
+      actions: const [NotificationBell()],
       body: AsyncView<ProApplication?>(
         value: async,
         onRetry: () => ref.invalidate(proApplicationProvider),
@@ -399,23 +401,38 @@ class ProApplicationScreen extends ConsumerWidget {
                           children: [
                             Expanded(child: Text(documentLabel(l, d.type))),
                             const SizedBox(width: AppSpacing.xs),
-                            StatusChip(
-                              label: switch (d.status) {
-                                DocumentStatus.pending => l.docStatusPending,
-                                DocumentStatus.accepted => l.docStatusAccepted,
-                                DocumentStatus.rejected => l.docStatusRejected,
-                              },
-                              icon: switch (d.status) {
-                                DocumentStatus.pending => Icons.hourglass_top,
-                                DocumentStatus.accepted => Icons.check,
-                                DocumentStatus.rejected => Icons.close,
-                              },
-                              tone: switch (d.status) {
-                                DocumentStatus.pending => StatusTone.urgent,
-                                DocumentStatus.accepted => StatusTone.success,
-                                DocumentStatus.rejected => StatusTone.error,
-                              },
-                            ),
+                            // Reddedilen başvuruda bekleyen belge hâlâ
+                            // "inceleniyor" olamaz; gerçek durum "incelenmedi".
+                            if (s == ReviewStatus.rejected &&
+                                d.status == DocumentStatus.pending)
+                              StatusChip(
+                                key: ValueKey(
+                                  'doc-${d.type.name}-not-reviewed',
+                                ),
+                                label: l.docStatusNotReviewed,
+                                icon: Icons.remove_circle_outline,
+                                tone: StatusTone.neutral,
+                              )
+                            else
+                              StatusChip(
+                                label: switch (d.status) {
+                                  DocumentStatus.pending => l.docStatusPending,
+                                  DocumentStatus.accepted =>
+                                    l.docStatusAccepted,
+                                  DocumentStatus.rejected =>
+                                    l.docStatusRejected,
+                                },
+                                icon: switch (d.status) {
+                                  DocumentStatus.pending => Icons.hourglass_top,
+                                  DocumentStatus.accepted => Icons.check,
+                                  DocumentStatus.rejected => Icons.close,
+                                },
+                                tone: switch (d.status) {
+                                  DocumentStatus.pending => StatusTone.urgent,
+                                  DocumentStatus.accepted => StatusTone.success,
+                                  DocumentStatus.rejected => StatusTone.error,
+                                },
+                              ),
                           ],
                         ),
                       ),

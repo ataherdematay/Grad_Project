@@ -26,6 +26,17 @@ String notificationText(AppLocalizations l, Notification n, DateTime now) {
     }
   }
 
+  /// Tutar yoksa, bozuksa ya da 0 ise satır hiç yazılmaz ("Tutar: ₺0" olmaz).
+  bool hasPositiveAmount(String key) {
+    final raw = n.params[key];
+    if (raw == null) return false;
+    try {
+      return Money.fromJson(raw).isPositive;
+    } catch (_) {
+      return false;
+    }
+  }
+
   String slot() {
     final from = DateTime.tryParse(n.param('slotFrom') ?? '');
     final to = DateTime.tryParse(n.param('slotTo') ?? '');
@@ -125,7 +136,7 @@ String notificationText(AppLocalizations l, Notification n, DateTime now) {
       p('complaintCode'),
     ),
     NotificationType.complaintDecided =>
-      n.params['amount'] == null
+      !hasPositiveAmount('amount')
           ? l.notifComplaintDecided(p('complaintCode'), decision())
           : l.notifComplaintDecidedAmount(
               p('complaintCode'),

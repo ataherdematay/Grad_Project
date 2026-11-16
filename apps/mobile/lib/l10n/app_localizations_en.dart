@@ -1260,6 +1260,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get docStatusAccepted => 'Accepted';
 
   @override
+  String get docStatusNotReviewed => 'Not reviewed';
+
+  @override
   String get docStatusRejected => 'Rejected';
 
   @override
@@ -1681,6 +1684,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get acceptVatNote => 'The amount includes VAT.';
+
+  @override
+  String get escrowExplainDisputed =>
+      'The payment stays in secure hold until the complaint is settled.';
+
+  @override
+  String get escrowSettledReleased =>
+      'By the complaint decision, the amount was paid out to the pro.';
+
+  @override
+  String get escrowSettledReleasedPro =>
+      'By the complaint decision, your net earning was paid out to you.';
+
+  @override
+  String get escrowSettledRefunded =>
+      'By the complaint decision, the amount was refunded to your card.';
+
+  @override
+  String get escrowSettledRefundedPro =>
+      'By the complaint decision, the amount was refunded to the customer.';
+
+  @override
+  String get escrowSettledSplit =>
+      'By the complaint decision, the amount was split between both sides.';
 
   @override
   String get escrowHowTitle => 'Your payment stays in secure hold';

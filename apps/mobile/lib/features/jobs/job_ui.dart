@@ -84,6 +84,21 @@ String escrowLabel(AppLocalizations l, EscrowStatus s, PartyRole viewer) {
   };
 }
 
+/// Ödeme kartının alt açıklaması: güvence havuzunun gerçek durumuna uyar;
+/// şikayet sonuçlandıktan sonra "havuzda tutulur" yazılmaz.
+String escrowExplanation(AppLocalizations l, EscrowStatus s, PartyRole viewer) {
+  final pro = viewer == PartyRole.pro;
+  return switch (s) {
+    EscrowStatus.disputed => l.escrowExplainDisputed,
+    EscrowStatus.releasedToPro =>
+      pro ? l.escrowSettledReleasedPro : l.escrowSettledReleased,
+    EscrowStatus.refundedToCustomer =>
+      pro ? l.escrowSettledRefundedPro : l.escrowSettledRefunded,
+    EscrowStatus.splitSettled => l.escrowSettledSplit,
+    _ => pro ? l.escrowExplainPro : l.escrowExplain,
+  };
+}
+
 String actorLabel(AppLocalizations l, ActorRole actor, PartyRole viewer) {
   if (actor == ActorRole.customer && viewer == PartyRole.customer ||
       actor == ActorRole.pro && viewer == PartyRole.pro) {
@@ -481,7 +496,7 @@ class PaymentSummaryCard extends StatelessWidget {
             InfoRow(l.netEarningLabel, m(p.netEarning!)),
           const SizedBox(height: 4),
           Text(
-            pro ? l.escrowExplainPro : l.escrowExplain,
+            escrowExplanation(l, p.status, job.viewerRole),
             style: AppTypography.bodySecondary,
           ),
         ],

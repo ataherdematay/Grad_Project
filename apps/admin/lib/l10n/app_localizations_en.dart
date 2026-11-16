@@ -410,6 +410,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colProPayout => 'Payout to pro';
 
   @override
+  String get paymentAwaitingDecision => 'Secure hold amount awaiting decision';
+
+  @override
   String get colRefunded => 'Refunded';
 
   @override

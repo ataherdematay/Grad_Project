@@ -94,8 +94,11 @@ void main() {
       expect(find.text('PAY-1001'), findsOneWidget);
       expect(find.text('CRAFTGATE'), findsOneWidget);
       expect(find.text('₺2.200'), findsOneWidget);
-      expect(find.text('₺1.980'), findsOneWidget);
-      expect(find.text('₺220'), findsOneWidget);
+      // Karar öncesi: planlanan bölüşüm sonuç gibi gösterilmez.
+      expect(find.text('Karar bekleyen güvence havuzu tutarı'), findsOneWidget);
+      expect(find.byKey(const Key('payment-awaiting')), findsOneWidget);
+      expect(find.text('₺1.980'), findsNothing);
+      expect(find.text('₺220'), findsNothing);
       // Taraflar: ustanın uyarı ve iptal sayıları
       expect(find.text('Ayşe Yılmaz'), findsOneWidget);
       expect(
@@ -106,6 +109,21 @@ void main() {
         tester.widget<Text>(find.byKey(const Key('pro-cancellations'))).data,
         '3',
       );
+    });
+
+    testWidgets('karar sonrası ödeme kartı sunucu tutarlarını gösterir', (
+      tester,
+    ) async {
+      final detail = complaintDetailJson(status: 'RESOLVED');
+      (detail['payment'] as Map<String, dynamic>)
+        ..['status'] = 'SPLIT_SETTLED'
+        ..['commission'] = 0
+        ..['proPayout'] = 1100
+        ..['refundedAmount'] = 1100;
+      final fake = FakeApi()..onJson('GET', '/admin/complaints/c1', detail);
+      await openComplaint(tester, fake);
+      expect(find.byKey(const Key('payment-awaiting')), findsNothing);
+      expect(find.text('₺1.100'), findsNWidgets(2));
     });
 
     testWidgets('incelemeye al', (tester) async {
