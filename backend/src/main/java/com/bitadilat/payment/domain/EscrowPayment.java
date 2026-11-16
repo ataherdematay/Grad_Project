@@ -31,8 +31,12 @@ public class EscrowPayment {
     public static final int MAX_REFUND_ATTEMPTS = 8;
     public static final String ERROR_THREEDS_ABANDONED = "THREEDS_ABANDONED";
     public static final String ERROR_REFUND_NEEDS_REVIEW = "REFUND_NEEDS_REVIEW";
+    /** Ustaya aktarım durduruldu (Craftgate'te iade görünüyor veya kontrol 8 denemede yapılamadı): elle incelenir. */
+    public static final String ERROR_PAYOUT_NEEDS_REVIEW = "PAYOUT_NEEDS_REVIEW";
     static final String REFUND_REVIEW_MESSAGE =
             "Ödemenizin iadesi otomatik yapılamadı. Destek ekibi inceleyip sizinle iletişime geçecek.";
+    static final String PAYOUT_REVIEW_MESSAGE =
+            "Ödeme aktarımı inceleniyor. Destek ekibi kontrol edip sizinle iletişime geçecek.";
 
     @Id
     private String ref;
@@ -102,6 +106,10 @@ public class EscrowPayment {
 
     private Instant lastRefundAttemptAt;
     private Instant nextRefundAttemptAt;
+
+    /** Kaydedilmiş ama Craftgate'te henüz yapılmamış para hareketi (outbox); yoksa null. */
+    @Enumerated(EnumType.STRING)
+    private EscrowPendingAction pendingAction;
 
     @Version
     private long version;
@@ -192,10 +200,57 @@ public class EscrowPayment {
         errorCode = "PAYMENT_DECLINED";
     }
 
-    /** Zamanlayıcı 3DS'i terk edilmiş (30 dk sonra hâlâ tamamlanmamış) ödemeyi kapatır; müşteri yeniden deneyebilir. */
+    /** Zamanlayıcı 3DS'i terk edilmiş (uzun süre tamamlanmamış) ödemeyi kapatır; müşteri yeniden deneyebilir. */
     public void abandon(String message) {
         fail(message);
         errorCode = ERROR_THREEDS_ABANDONED;
+    }
+
+    public boolean isAbandoned() {
+        return status == EscrowStatus.FAILED && ERROR_THREEDS_ABANDONED.equals(errorCode);
+    }
+
+    /**
+     * Terk edildi sayılan ödeme için banka başarısı geç geldi ve Craftgate ödemeyi başarılı görüyor: para çekilmiştir.
+     * Kayıt LOCKED olur ve normal banka dönüşü yolundan (kabul ya da yarış iadesi) geçer. Yalnızca bu geçiş FAILED'dan
+     * çıkabilir.
+     */
+    public void lockLateSuccess() {
+        if (!isAbandoned()) {
+            throw new IllegalEscrowTransitionException(status);
+        }
+        status = EscrowStatus.LOCKED;
+        errorCode = null;
+        errorMessage = null;
+        lockedAt = Instant.now();
+    }
+
+    /**
+     * İptal kesinleşti, tam iade Craftgate'e işlem kesinleştikten sonra gönderilecek (outbox). Hemen denenebilir.
+     */
+    public void queueRefund(Instant now) {
+        requireRefundable();
+        queue(EscrowPendingAction.REFUND, now);
+    }
+
+    /** İş tamamlandı ama Craftgate'teki iade kontrolü yapılamadı: aktarım zamanlayıcıyla yeniden denenir. */
+    public void queueRelease(Instant now) {
+        requireRefundable();
+        queue(EscrowPendingAction.RELEASE, now);
+    }
+
+    private void queue(EscrowPendingAction action, Instant now) {
+        pendingAction = action;
+        refundAttempts = 0;
+        lastRefundAttemptAt = null;
+        nextRefundAttemptAt = now;
+    }
+
+    /** Ustaya aktarım güvenle yapılamaz (Craftgate'te iade görünüyor): kayıt hemen elle incelemeye düşer. */
+    public void sendToPayoutReview(Instant now) {
+        lastRefundAttemptAt = now;
+        nextRefundAttemptAt = null;
+        markError(ERROR_PAYOUT_NEEDS_REVIEW, PAYOUT_REVIEW_MESSAGE);
     }
 
     /**
@@ -207,7 +262,11 @@ public class EscrowPayment {
         lastRefundAttemptAt = now;
         if (refundAttempts >= MAX_REFUND_ATTEMPTS) {
             nextRefundAttemptAt = null;
-            markError(ERROR_REFUND_NEEDS_REVIEW, REFUND_REVIEW_MESSAGE);
+            if (pendingAction == EscrowPendingAction.RELEASE) {
+                markError(ERROR_PAYOUT_NEEDS_REVIEW, PAYOUT_REVIEW_MESSAGE);
+            } else {
+                markError(ERROR_REFUND_NEEDS_REVIEW, REFUND_REVIEW_MESSAGE);
+            }
             return true;
         }
         nextRefundAttemptAt = now.plus(refundBackoff(refundAttempts));
@@ -231,6 +290,11 @@ public class EscrowPayment {
         return ERROR_REFUND_NEEDS_REVIEW.equals(errorCode);
     }
 
+    /** İade veya aktarım elle incelemede: zamanlayıcı bu kayda dokunmaz. */
+    public boolean needsReview() {
+        return needsRefundReview() || ERROR_PAYOUT_NEEDS_REVIEW.equals(errorCode);
+    }
+
     /** Craftgate yanıtı kayıtla uyuşmadı: para çekilmiş olabilir, kullanıcıya "ücret alınmadı" denmez. */
     public void failUnverified(String message) {
         fail(message);
@@ -247,11 +311,13 @@ public class EscrowPayment {
         require(Set.of(EscrowStatus.LOCKED, EscrowStatus.DISPUTED));
         status = EscrowStatus.RELEASED_TO_PRO;
         releasedAt = Instant.now();
+        clearPending();
     }
 
     public void refundFully() {
         requireRefundable();
         status = EscrowStatus.REFUNDED_TO_CUSTOMER;
+        clearPending();
         refundedAmount = totalAmount;
         commission = money(BigDecimal.ZERO);
         proPayout = money(BigDecimal.ZERO);
@@ -267,6 +333,11 @@ public class EscrowPayment {
         proPayout = totalAmount.subtract(half);
         commission = money(BigDecimal.ZERO);
         refundedAt = Instant.now();
+    }
+
+    private void clearPending() {
+        pendingAction = null;
+        nextRefundAttemptAt = null;
     }
 
     public BigDecimal splitRefundAmount() {

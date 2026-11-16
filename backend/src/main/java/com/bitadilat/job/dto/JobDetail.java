@@ -4,6 +4,7 @@ import com.bitadilat.job.ActorRole;
 import com.bitadilat.job.JobStateMachine.Action;
 import com.bitadilat.job.JobStatus;
 import com.bitadilat.offer.dto.OfferDetail;
+import com.bitadilat.payment.domain.EscrowPendingAction;
 import com.bitadilat.payment.domain.EscrowStatus;
 import com.bitadilat.pro.dto.ReviewList;
 import java.math.BigDecimal;
@@ -33,8 +34,12 @@ public record JobDetail(
     public record PendingProposal(UUID id, ActorRole proposedBy, Instant slotFrom, Instant slotTo, Instant createdAt) {
     }
 
+    /**
+     * {@code pendingAction}: Craftgate'te henüz yapılmamış kayıtlı para hareketi. {@code REFUND} (iptal edildi, iade
+     * yolda/yeniden deneniyor), {@code RELEASE} (iş tamamlandı, ustaya aktarım bekliyor) veya null.
+     */
     public record Payment(String ref, EscrowStatus status, BigDecimal totalAmount, BigDecimal refundedAmount,
-                          BigDecimal serviceFee, BigDecimal netEarning) {
+                          BigDecimal serviceFee, BigDecimal netEarning, EscrowPendingAction pendingAction) {
     }
 
     public record ComplaintRef(UUID id, String publicCode, String status) {

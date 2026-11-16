@@ -214,14 +214,77 @@ class PaymentSweeperTest extends Wave3TestBase {
     }
 
     @Test
-    void staleInitializedPaymentNeverCompletedAtCraftgateIsAbandonedAndTheCustomerCanRetry() throws Exception {
+    void staleInitializedPaymentNeverCompletedAtCraftgateIsAbandonedOnlyAfterTheLongWindow() throws Exception {
         Setup s = openRequestWithOffer();
         String ref = stale(s);
         doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+        // 31 dakika: geç banka başarısı hâlâ gelebilir, kayıt kapatılmaz.
         sweeper.run(Instant.now());
+        assertThat(st(ref)).isEqualTo("INITIALIZED/-");
+        sweeper.run(Instant.now().plus(PaymentService.ABANDON_AFTER).minus(Duration.ofMinutes(40)));
+        assertThat(st(ref)).isEqualTo("INITIALIZED/-");
+        // Uzun süre dolunca terk edilmiş sayılır ve müşteri yeniden deneyebilir.
+        sweeper.run(Instant.now().plus(PaymentService.ABANDON_AFTER));
         assertThat(st(ref)).isEqualTo("FAILED/THREEDS_ABANDONED");
         verify(gateway, never()).complete3ds(anyLong());
         initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isOk());
+    }
+
+    @Test
+    void finalFailureAtCraftgateClosesTheStalePaymentWithoutWaitingForTheLongWindow() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = stale(s);
+        doReturn(new GatewayPayment(1L, Status.FAILURE, null, "x", null)).when(gateway).retrieve(anyLong());
+        sweeper.run(Instant.now());
+        assertThat(st(ref)).isEqualTo("FAILED/PAYMENT_DECLINED");
+    }
+
+    /** Toplayıcı ödemeyi terk edilmiş saydı; müşteri yeniden ödedi ve iş açıldı. */
+    private String abandonedThenPaidAgain(Setup s) throws Exception {
+        String ref = stale(s);
+        doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+        sweeper.run(Instant.now().plus(PaymentService.ABANDON_AFTER));
+        assertThat(st(ref)).isEqualTo("FAILED/THREEDS_ABANDONED");
+        stubGateway(); // Craftgate artık her ödemeyi başarılı görür (geç banka başarısı dahil)
+        String again = pay(s);
+        assertThat(st(again)).isEqualTo("LOCKED/-");
+        assertThat(count("select count(*) from jobs where request_id = ?::uuid", s.requestId())).isEqualTo(1);
+        clearInvocations(gateway);
+        return ref;
+    }
+
+    @Test
+    void lateBankSuccessOnAnAbandonedPaymentIsRefundedThroughTheRacePath() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = abandonedThenPaidAgain(s);
+
+        callback(ref); // banka başarısı geç geldi; Craftgate ödemeyi başarılı görüyor (para çekildi)
+
+        verify(gateway, never()).complete3ds(anyLong());
+        verify(gateway, times(1)).refundFully(anyLong(), anyString());
+        assertThat(st(ref)).isEqualTo("REFUNDED_TO_CUSTOMER/REQUEST_ALREADY_ASSIGNED");
+        assertThat(count("select count(*) from payout_ledger where payment_ref = ? and kind = 'REFUND'", ref))
+                .isEqualTo(1);
+        assertThat(count("select count(*) from jobs where request_id = ?::uuid", s.requestId())).isEqualTo(1);
+        // Tekrarlanan callback ikinci iade göndermez.
+        callback(ref);
+        verify(gateway, times(1)).refundFully(anyLong(), anyString());
+    }
+
+    @Test
+    void lateBankSuccessWhoseRefundFailsIsRetriedByTheSweeper() throws Exception {
+        Setup s = openRequestWithOffer();
+        String ref = abandonedThenPaidAgain(s);
+        doThrow(new GatewayException("zaman aşımı", true)).when(gateway).refundFully(anyLong(), anyString());
+
+        callback(ref);
+        assertThat(state(ref)).isEqualTo("LOCKED/REQUEST_ALREADY_ASSIGNED/1");
+
+        org.mockito.Mockito.doNothing().when(gateway).refundFully(anyLong(), anyString());
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.NOT_REFUNDED);
+        sweeper.run(Instant.now().plus(Duration.ofMinutes(10)));
+        assertThat(state(ref)).isEqualTo("REFUNDED_TO_CUSTOMER/REQUEST_ALREADY_ASSIGNED/1");
+        verify(gateway, times(2)).refundFully(anyLong(), anyString());
     }
 
     @Test
@@ -240,7 +303,7 @@ class PaymentSweeperTest extends Wave3TestBase {
         Setup s = openRequestWithOffer();
         String ref = stale(s);
         doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
-        sweeper.run(Instant.now());
+        sweeper.run(Instant.now().plus(PaymentService.ABANDON_AFTER));
         assertThat(st(ref)).isEqualTo("FAILED/THREEDS_ABANDONED");
 
         // Kullanıcı bankadan geç döndü: complete3ds çağrılmaz (para çekilmez), iş açılmaz.

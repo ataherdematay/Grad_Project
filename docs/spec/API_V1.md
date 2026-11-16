@@ -390,7 +390,7 @@ Binding for both backend and Flutter. Wave 1 and wave 2 contracts still apply. T
 | `address` | `{districtName, neighborhood, lineFull, doorNote}`. Both participants see the full line once a job exists. |
 | `appointment` | `{scheduledFrom, scheduledTo, pendingProposal}`. `pendingProposal` is null or `{id, proposedBy ("CUSTOMER"\|"PRO"), slotFrom, slotTo, createdAt}`. |
 | `timeline` | `[JobEvent]`, oldest first |
-| `payment` | `{ref, status, totalAmount, refundedAmount, serviceFee, netEarning}`. `serviceFee` and `netEarning` are filled only for the pro. |
+| `payment` | `{ref, status, totalAmount, refundedAmount, serviceFee, netEarning, pendingAction}`. `serviceFee` and `netEarning` are filled only for the pro. `pendingAction` is null, `"REFUND"` (job cancelled, refund queued or being retried; `status` stays `LOCKED` until it is done) or `"RELEASE"` (job completed, payout to the pro waiting; `status` stays `LOCKED`). |
 | `autoCompleteAt` | Nullable |
 | `review` | `ReviewItem` or null |
 | `complaint` | null or `{id, publicCode, status}` |
@@ -418,7 +418,7 @@ Binding for both backend and Flutter. Wave 1 and wave 2 contracts still apply. T
 **`PaymentResult`** = `{ref, status, offerId, requestId, jobId, totalAmount, cardLast4, errorCode, errorMessage, resultUncertain}`.
 - `status` is the escrow status: `INITIALIZED`, `LOCKED`, `FAILED`, `REFUNDED_TO_CUSTOMER`, `RELEASED_TO_PRO`, `DISPUTED` or `SPLIT_SETTLED`.
 - `jobId` is nullable.
-- `errorCode` is nullable: `PAYMENT_DECLINED`, `REQUEST_ALREADY_ASSIGNED`, `OFFER_EXPIRED` or `RESULT_UNCERTAIN`.
+- `errorCode` is nullable: `PAYMENT_DECLINED`, `THREEDS_ABANDONED`, `REQUEST_ALREADY_ASSIGNED`, `OFFER_EXPIRED`, `RESULT_UNCERTAIN`, `REFUND_NEEDS_REVIEW` (automatic refund gave up, support reviews) or `PAYOUT_NEEDS_REVIEW` (payout to the pro stopped because Craftgate shows a refund, or the pre-payout check failed 8 times; support reviews).
 - `errorMessage` is a nullable, friendly Turkish message for display.
 
 Wave 2 changes:
@@ -448,6 +448,8 @@ Wave 2 changes:
 - The bank posts to the existing `POST /api/payments/3ds/callback`; that path does not change.
 - For `channel = APP` the result page goes to `GET /api/payments/3ds/done?ref=<ref>`. That page is minimal static HTML ("İşlem tamamlandı, uygulamaya dönülüyor…"), shows no payment data and is public.
 - The `PROTOTYPE` channel behaves exactly as before.
+- A payment whose 3DS never finished is marked FAILED + `THREEDS_ABANDONED` only 2 h after it was created (or at once if Craftgate reports a final failure). Until then a new attempt for the same request gets 409 `PAYMENT_IN_PROGRESS`.
+- If a successful bank return still arrives for an abandoned payment and Craftgate confirms the money was taken, the payment becomes LOCKED and goes through the normal acceptance below (job opens if the request is still OPEN, otherwise automatic refund with `REQUEST_ALREADY_ASSIGNED` / `OFFER_EXPIRED`). The server never completes (`complete3ds`) an abandoned payment itself.
 
 **`GET /payments/{ref}`** returns `PaymentResult`.
 - Visible to the customer who owns it, the assigned pro and admins; anyone else gets 404.
@@ -505,25 +507,28 @@ Wave 2 changes:
 All of these return `JobDetail` and notify the customer.
 
 **`POST /jobs/{id}/confirm`** (customer, WORK_FINISHED)
-- Job → COMPLETED.
-- Escrow → RELEASED_TO_PRO.
-- `payout_ledger` gets a PAYOUT row and a COMMISSION row.
-- The pro's `completed_jobs` goes up by 1.
-- Notify the pro with `PAYOUT_RELEASED`.
+- Job → COMPLETED. The pro's `completed_jobs` goes up by 1.
+- Before paying the pro, the server asks Craftgate whether this payment has any refund (not for `provider = SEED`):
+  - No refund: escrow → RELEASED_TO_PRO, `payout_ledger` gets a PAYOUT row and a COMMISSION row, notify the pro with `PAYOUT_RELEASED`.
+  - A refund exists: no payout. Escrow stays LOCKED with `pendingAction = "RELEASE"` and `errorCode = PAYOUT_NEEDS_REVIEW` (ERROR log, visible in the admin payment report). Support reviews it by hand.
+  - Craftgate does not answer: the confirm still succeeds (200, job COMPLETED). Escrow stays LOCKED with `pendingAction = "RELEASE"`; the payment sweeper retries the check and the payout (backoff 5 min doubling to 6 h, at most 8 attempts, then `PAYOUT_NEEDS_REVIEW`). `PAYOUT_RELEASED` is sent when the payout actually happens.
 
 **`POST /jobs/{id}/cancel`** with body `{reason, note?}`
 - Allowed in AWAITING_APPOINTMENT, SCHEDULED and ARRIVED.
 - Customer reasons: `PLANS_CHANGED`, `SOLVED`, `PRO_UNREACHABLE`, `OTHER_PROVIDER`, `OTHER`.
 - Pro reasons: `SCHEDULE_CONFLICT`, `CANNOT_DO_JOB`, `CUSTOMER_UNREACHABLE`, `OTHER`.
-- Every cancel issues a full refund through the gateway, then sets escrow REFUNDED_TO_CUSTOMER and job CANCELLED.
+- Every cancel sets job CANCELLED and records a full-refund intent on the escrow (`pendingAction = "REFUND"`) in one transaction. The gateway refund runs only after that transaction commits (outbox), so a refund can never go out for a cancellation that was rolled back.
+- Response (200 `JobDetail`) after the first refund attempt:
+  - Refund done: `payment.status = REFUNDED_TO_CUSTOMER`, `pendingAction = null`, `refundedAmount` = total.
+  - Refund not done yet (gateway error or crash): `payment.status = LOCKED`, `pendingAction = "REFUND"`. The payment sweeper retries with backoff (5 min doubling to 6 h, at most 8 attempts, then `errorCode = REFUND_NEEDS_REVIEW`). Every attempt first asks Craftgate how much is already refunded, so a retry never refunds twice.
 - **Customer cancel:** request → CANCELLED.
 - **Pro cancel:**
   - Request → OPEN.
   - The accepted offer → WITHDRAWN.
   - SUPERSEDED offers whose `validUntil` is still in the future → PENDING again.
   - The pro's `cancellation_count` goes up by 1.
-- If the gateway refund fails: 502 `GATEWAY_ERROR` and nothing changes.
-- Notify the other side with `JOB_CANCELLED`.
+- A gateway failure no longer returns 502 for cancel (contract change, Nov 2026): the cancellation stands and the refund is retried as above.
+- Notify the other side with `JOB_CANCELLED`; `refundAmount` is the full total that is being refunded.
 
 **`POST /jobs/{id}/review`** (customer, COMPLETED, once)
 - Body: `{rating (1-5), tags, comment (0-1000), anonymous}`.

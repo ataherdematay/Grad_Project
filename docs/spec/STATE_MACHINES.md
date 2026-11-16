@@ -89,9 +89,20 @@ DISPUTED ─(admin karar)─▶ COMPLETED | CANCELLED | RESOLVED
 
 İptal gerekçe ister (liste + isteğe bağlı not) ve onay diyaloğu gösterir (RAD:169). Karşı tarafa bildirim gider.
 
+İptal iadesi outbox ile yapılır: iptal işlemi iş/talep/teklif değişikliklerini ve emanete `pending_action = REFUND` niyetini birlikte yazar ve kesinleşir; Craftgate iadesi ancak bundan sonra, ayrı bir işlemde denenir. Böylece "para iade edildi ama iptal geri alındı" durumu oluşamaz. İade hemen yapılamazsa iptal yine geçerlidir (200): emanet `LOCKED` + `pending_action = REFUND` kalır, ödeme toplayıcısı öksüz iadeyle aynı artan aralık ve 8 deneme sınırıyla yeniden dener; her denemeden önce Craftgate'e ne kadar iade edildiği sorulur (zaten tam iade edildiyse yalnızca defter işlenir, kısmi iadede yalnızca kalan gider). 8 denemeden sonra veya Craftgate'te tutarsız iade görünürse `error_code = REFUND_NEEDS_REVIEW` (ERROR logu, elle inceleme). İade tamamlanınca emanet `REFUNDED_TO_CUSTOMER` olur ve `pending_action` temizlenir.
+
 ### Otomatik tamamlama
 
 `WORK_FINISHED` üzerinden 48 saat geçer ve açık şikayet yoksa zamanlayıcı işi `COMPLETED` yapar, emaneti `RELEASED_TO_PRO` yapar. Müşteriye 24. saatte hatırlatma bildirimi gider. Zamanlayıcı idempotenttir ve satır kilidiyle çalışır.
+
+### Ustaya aktarım öncesi iade kontrolü
+
+Müşteri onayı ve otomatik tamamlama, emaneti `RELEASED_TO_PRO` yapmadan önce Craftgate'e bu ödemede iade olup olmadığını sorar (`provider = SEED` hariç):
+
+- İade yok: aktarılır (PAYOUT + COMMISSION, `PAYOUT_RELEASED` bildirimi).
+- Herhangi bir iade görünüyor: aktarılmaz. İş yine `COMPLETED` olur; emanet `LOCKED` + `pending_action = RELEASE` + `error_code = PAYOUT_NEEDS_REVIEW` kalır, ERROR logu yazılır, kayıt admin ödeme raporunda `errorCode` ile görünür. Zamanlayıcı bu kayda dokunmaz (elle inceleme).
+- Craftgate yanıt vermiyor (veya sonuç bekleyen iade var): müşteri bekletilmez, iş `COMPLETED` olur; emanet `LOCKED` + `pending_action = RELEASE` kalır. Ödeme toplayıcısı (5 dk) kontrolü ve aktarımı artan aralıkla (5 dk'dan 6 saate) en fazla 8 kez yeniden dener; aktarım olunca `PAYOUT_RELEASED` gider. 8 denemede yapılamazsa `PAYOUT_NEEDS_REVIEW`.
+- Ustanın `completed_jobs` sayacı iş tamamlandığında artar (aktarımın beklemesinden bağımsız).
 
 ### Puan
 
@@ -121,7 +132,7 @@ OPEN ─(admin açar)─▶ IN_REVIEW ─(karar)─▶ RESOLVED
   - %50 / %50: aynı yarı zaten iade edilmişse yeniden gönderilmez; başka tutar görünürse `409`.
   - Ustaya aktar: Craftgate'te herhangi bir iade görünürse `409`.
   - Sonuç bekleyen iade ya da okunamayan durum: `502`, hiçbir şey değişmez.
-  - Müşteri onayı ve 48 saatlik otomatik tamamlama Craftgate'e sormadan aktarır (bilinçli; yayın öncesi sağlamlaştırma listesinde).
+  - Müşteri onayı ve 48 saatlik otomatik tamamlama da aktarmadan önce Craftgate'e sorar (§4 "Ustaya aktarım öncesi iade kontrolü"); farkı, Craftgate kesintisinde 502 yerine işi tamamlayıp aktarımı zamanlayıcıya bırakmalarıdır.
 
 ## 6. Emanet (`escrow_payments.status`)
 
@@ -133,7 +144,10 @@ LOCKED → DISPUTED
 LOCKED | DISPUTED → RELEASED_TO_PRO
 LOCKED | DISPUTED → REFUNDED_TO_CUSTOMER
 DISPUTED → SPLIT_SETTLED
+FAILED (yalnızca error_code = THREEDS_ABANDONED) → LOCKED   (geç banka başarısı, aşağıda)
 ```
+
+`pending_action` (`REFUND` | `RELEASE` | null): kaydedilmiş ama Craftgate'te henüz yapılmamış para hareketi (outbox; §4 iptal ve aktarım). Durum değişmeden `LOCKED` iken dolu olabilir; hareket tamamlanınca temizlenir. Yeniden denemeler `refund_attempts` / `next_refund_attempt_at` sütunlarını kullanır.
 
 Eklenenler:
 
@@ -144,7 +158,9 @@ Eklenenler:
 - Komisyon %10; `commission` ve `pro_payout` başlangıçta hesaplanır (mevcut kod).
 - Zamanlayıcı (5 dk), işe dönüşmemiş ödemeleri satır kilidi + `SKIP LOCKED` ile, gerçek callback'le yarışmadan ve tekrar çalışmaya dayanıklı işler:
   - İadesi yapılamamış öksüz `LOCKED` kayıt: yeniden iade etmeden önce Craftgate'e ödemenin iade durumu sorulur; zaten iade edilmişse yalnızca defter düzeltilir (`REFUNDED_TO_CUSTOMER`). Kısmi iade görünürse tam iade gönderilmez, kayıt hemen `REFUND_NEEDS_REVIEW` olur; sonuç bekleyen bir iade varsa yeni iade gönderilmez, deneme sayılır ve sonraki turda yeniden sorulur. Aksi halde iade, artan aralıkla (5 dk'dan başlayıp ikiye katlanır, en çok 6 saat) en fazla 8 kez denenir (`refund_attempts`, `last_refund_attempt_at`). Sınır aşılırsa `error_code = REFUND_NEEDS_REVIEW`, ERROR logu yazılır ve zamanlayıcı kaydı bırakır (elle inceleme).
-  - 30 dakikadan eski `INITIALIZED` ödeme: sonuç Craftgate'ten sorulur. Başarılıysa normal callback yolu işler (kabul ya da yarış iadesi). Başarısızsa `FAILED` + `PAYMENT_DECLINED`; 3DS tamamlanmamışsa (Craftgate `INIT_THREEDS` / `CALLBACK_THREEDS`) `FAILED` + `THREEDS_ABANDONED`; banka sonucu bekleniyorsa (`WAITING`) para çekilmiş olabileceği için kayıt değişmez; böylece talepteki tek `INITIALIZED` kısıtı kalkar ve müşteri yeniden dener. Craftgate yanıt vermezse kayıt değişmez, sonraki turda tekrar denenir.
+  - 30 dakikadan eski `INITIALIZED` ödeme: sonuç Craftgate'ten sorulur. Başarılıysa normal callback yolu işler (kabul ya da yarış iadesi). Kesin başarısızsa (`FAILURE`) hemen `FAILED` + `PAYMENT_DECLINED`. 3DS tamamlanmamışsa (Craftgate `INIT_THREEDS` / `CALLBACK_THREEDS`) kayıt ancak oluşturulmasından **2 saat** sonra `FAILED` + `THREEDS_ABANDONED` olur (geç bir banka başarısı bu sürede normal yoldan işlenir); o zamana kadar her turda yeniden sorulur ve talepteki tek `INITIALIZED` kısıtı yeni denemeyi `409 PAYMENT_IN_PROGRESS` ile bekletir. Banka sonucu bekleniyorsa (`WAITING`) para çekilmiş olabileceği için kayıt değişmez. Craftgate yanıt vermezse kayıt değişmez, sonraki turda tekrar denenir.
+  - Terk edilmiş (`FAILED` + `THREEDS_ABANDONED`) ödemeye sonradan başarılı banka dönüşü gelirse ödeme tamamlanmaz (`complete3ds` çağrılmaz), yalnızca Craftgate'e sorulur. Craftgate ödemeyi tutar ve `conversationId` uyumlu başarılı görüyorsa para çekilmiştir: kayıt `LOCKED` olur ve normal banka dönüşü yolundan geçer: talep hâlâ `OPEN` ve teklif `PENDING` ise teklif kabul edilip iş açılır, değilse yarış iadesi (`REQUEST_ALREADY_ASSIGNED` / `OFFER_EXPIRED`, iade başarısızsa öksüz iade yeniden denemesi). Craftgate başarı görmüyorsa kayıt değişmez.
+  - Bekleyen emanet hareketleri (`pending_action` dolu, `error_code` `REFUND_NEEDS_REVIEW` / `PAYOUT_NEEDS_REVIEW` değil, bekleme süresi dolmuş): §4'teki iptal iadesi ve ustaya aktarım aynı sayaç ve aralıkla yeniden denenir.
 
 ## 7. Eski adlarla eşleme
 

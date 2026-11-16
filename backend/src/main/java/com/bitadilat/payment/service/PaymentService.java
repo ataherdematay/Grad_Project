@@ -63,6 +63,12 @@ public class PaymentService {
     static final String OFFER_EXPIRED_MESSAGE = "Teklifin süresi doldu. Ödemeniz tamamen iade edilecektir.";
     static final String THREEDS_ABANDONED_MESSAGE = "Ödeme tamamlanmadı. Kartınızdan ücret alınmadı; yeniden deneyebilirsiniz.";
     static final String REFUND_PENDING_SUFFIX = " İade şu an yapılamadı; otomatik olarak yeniden denenecek.";
+    /**
+     * 3DS'i bitmemiş ödeme ancak bu süreden sonra terk edilmiş sayılır. Bu süre boyunca talep başına tek INITIALIZED
+     * kuralı yeni denemeyi 409 PAYMENT_IN_PROGRESS ile bekletir; buna karşılık geç gelen banka başarısı normal yoldan
+     * işlenir.
+     */
+    public static final java.time.Duration ABANDON_AFTER = java.time.Duration.ofHours(2);
 
     private final EscrowPaymentRepository repository;
     private final PaymentGateway gateway;
@@ -264,6 +270,12 @@ public class PaymentService {
             return new CallbackOutcome(null, false);
         }
 
+        // Terk edilmiş sayılan ödemeye geç banka başarısı: para çekilmiş olabilir.
+        if (payment.isAbandoned() && "SUCCESS".equalsIgnoreCase(params.get("status"))) {
+            handleLateSuccess(payment);
+            return outcomeOf(payment);
+        }
+
         // Tekrarlanan callback: ilk sonuç geçerlidir, ödeme yeniden tamamlanmaz.
         if (payment.getStatus() != EscrowStatus.INITIALIZED) {
             return outcomeOf(payment);
@@ -287,6 +299,16 @@ public class PaymentService {
      */
     @Transactional
     public void reconcileStale(String ref) {
+        reconcileStale(ref, Instant.now());
+    }
+
+    /**
+     * Craftgate 3DS'i hâlâ sürüyor (INIT_THREEDS / CALLBACK_THREEDS) diyorsa kayıt ancak {@link #ABANDON_AFTER} dolunca
+     * terk edilmiş sayılır: geç bir banka başarısı bu süre içinde normal yoldan işlenir. Kesin başarısızlık (FAILURE)
+     * hemen kapatılır.
+     */
+    @Transactional
+    public void reconcileStale(String ref, Instant now) {
         // SKIP LOCKED: gerçek callback satırı tutuyorsa beklemeden geçilir; sonraki tur sonucu görür.
         EscrowPayment payment = repository.findForUpdateSkipLocked(ref).orElse(null);
         if (payment == null || payment.getStatus() != EscrowStatus.INITIALIZED
@@ -299,8 +321,14 @@ public class PaymentService {
         }
         GatewayPayment actual = retrieveOrNull(payment.getCraftgatePaymentId());
         if (actual != null && actual.status() == Status.IN_PROGRESS) {
-            // 30 dakikadır 3DS bitmedi: kullanıcı bankada vazgeçti. complete3ds hiç çağrılmadığı için para çekilmez.
-            // PROCESSING (WAITING) burada kapatılmaz: banka sonucu bekleniyor, para çekilmiş olabilir.
+            if (payment.getCreatedAt().plus(ABANDON_AFTER).isAfter(now)) {
+                // Banka sonucu hâlâ gelebilir: kapatılmaz, sonraki turda yeniden sorulur.
+                log.debug("3DS hâlâ sürüyor, terk süresi dolmadı. ref={}", ref);
+                return;
+            }
+            // Uzun süredir 3DS bitmedi: kullanıcı bankada vazgeçti. complete3ds hiç çağrılmadığı için para çekilmez.
+            // PROCESSING (WAITING) burada kapatılmaz: banka sonucu bekleniyor, para çekilmiş olabilir. Yine de geç bir
+            // başarı gelirse handleCallback onu yarış iadesi yoluna sokar.
             log.info("Terk edilmiş 3DS ödemesi kapatıldı. ref={}", ref);
             payment.abandon(THREEDS_ABANDONED_MESSAGE);
             return;
@@ -423,6 +451,35 @@ public class PaymentService {
             payment.recordRefundFailure(Instant.now());
         }
         repository.saveAndFlush(payment);
+    }
+
+    /**
+     * Terk edilmiş (FAILED + THREEDS_ABANDONED) ödemeye geç banka başarısı geldi. Ödeme bizim tarafımızdan tamamlanmaz
+     * (complete3ds çağrılmaz: müşteriye "ücret alınmadı" denmişti); yalnızca Craftgate'e sorulur. Craftgate ödemeyi
+     * tutar ve conversationId uyumlu başarılı görüyorsa para çekilmiştir: kayıt LOCKED olur ve normal banka dönüşü yolundan
+     * geçer (talep hâlâ açıksa teklif kabul edilir, değilse yarış iadesi; iade başarısızsa öksüz iade yeniden denemesi).
+     * Craftgate başarı görmüyorsa (ör. hâlâ CALLBACK_THREEDS) kayıt değişmez.
+     */
+    private void handleLateSuccess(EscrowPayment payment) {
+        GatewayPayment actual = retrieveOrNull(payment.getCraftgatePaymentId());
+        if (actual == null || actual.status() != Status.SUCCESS) {
+            log.warn("Terk edilmiş ödemeye geç başarı callback'i geldi ama Craftgate başarı görmüyor; değişiklik yok. ref={}",
+                    payment.getRef());
+            return;
+        }
+        boolean amountMatches = actual.paidPrice() != null
+                && actual.paidPrice().compareTo(payment.getTotalAmount()) == 0;
+        boolean conversationMatches = Objects.equals(actual.conversationId(), payment.getConversationId());
+        if (!amountMatches || !conversationMatches) {
+            log.error("Terk edilmiş ödemenin geç başarısı kayıtla uyuşmuyor, elle incelenmeli. ref={} paymentId={}",
+                    payment.getRef(), actual.paymentId());
+            return;
+        }
+        log.warn("Terk edilmiş ödeme Craftgate'te başarılı: para çekilmiş, normal banka dönüşü yolu işleniyor. ref={}",
+                payment.getRef());
+        payment.lockLateSuccess();
+        repository.saveAndFlush(payment);
+        acceptIfLocked(payment);
     }
 
     private static String messageFor(String code) {

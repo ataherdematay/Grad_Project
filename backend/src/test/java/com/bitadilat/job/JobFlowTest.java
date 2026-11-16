@@ -318,6 +318,7 @@ class JobFlowTest extends Wave3TestBase {
         assertThat(cancelled.get("status").asString()).isEqualTo("CANCELLED");
         assertThat(cancelled.get("payment").get("status").asString()).isEqualTo("REFUNDED_TO_CUSTOMER");
         assertThat(cancelled.get("payment").get("refundedAmount").asDouble()).isEqualTo(1200.0);
+        assertThat(cancelled.get("payment").get("pendingAction").isNull()).isTrue();
         assertThat(escrowStatus(jobId)).isEqualTo("REFUNDED_TO_CUSTOMER");
         verify(gateway).refundFully(anyLong(), anyString());
         assertThat(jdbc.queryForObject("select status from service_requests where id = ?::uuid", String.class,
@@ -389,28 +390,6 @@ class JobFlowTest extends Wave3TestBase {
         assertThat(jobStatus(jobId)).isEqualTo("IN_PROGRESS");
         assertThat(escrowStatus(jobId)).isEqualTo("LOCKED");
         verify(gateway, never()).refundFully(anyLong(), anyString());
-    }
-
-    @Test
-    void refundFailureReturns502AndChangesNothing() throws Exception {
-        Setup s = openRequestWithOffer();
-        String jobId = payAndOpenJob(s);
-        schedule(s, jobId);
-        doThrow(new GatewayException("Craftgate yanıt vermedi.", true)).when(gateway).refundFully(anyLong(), anyString());
-        jobPost(s.customer(), jobId, "/cancel", Map.of("reason", "SOLVED")).andExpect(status().isBadGateway())
-                .andExpect(jsonPath("$.code").value("GATEWAY_ERROR"));
-        assertThat(jobStatus(jobId)).isEqualTo("SCHEDULED");
-        assertThat(escrowStatus(jobId)).isEqualTo("LOCKED");
-        assertThat(jdbc.queryForObject("select status from service_requests where id = ?::uuid", String.class,
-                s.requestId())).isEqualTo("ASSIGNED");
-        assertThat(count("select count(*) from payout_ledger")).isZero();
-        assertThat(notifications(s.pro(), "JOB_CANCELLED")).isZero();
-        // Pro iptalinde de aynı: talep ASSIGNED kalır, sayaç artmaz.
-        jobPost(s.pro(), jobId, "/cancel", Map.of("reason", "CANNOT_DO_JOB")).andExpect(status().isBadGateway());
-        assertThat(jdbc.queryForObject("select status from offers where id = ?::uuid", String.class, s.offerId()))
-                .isEqualTo("ACCEPTED");
-        assertThat(jdbc.queryForObject("select cancellation_count from pro_profiles where user_id = ?::uuid",
-                Integer.class, s.pro().id())).isZero();
     }
 
     // ─── Değerlendirme ──────────────────────────────────────────────────────
