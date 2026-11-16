@@ -566,18 +566,6 @@ abstract class AppLocalizations {
   /// **'İşlerim'**
   String get tabJobs;
 
-  /// No description provided for @comingSoonTitle.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu bölüm hazırlanıyor'**
-  String get comingSoonTitle;
-
-  /// No description provided for @comingSoonBody.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hazır olunca burada göreceksin.'**
-  String get comingSoonBody;
-
   /// No description provided for @profileSettings.
   ///
   /// In tr, this message translates to:
@@ -695,7 +683,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalPlaceholder.
   ///
   /// In tr, this message translates to:
-  /// **'Bu metin yayına alınmadan önce hazırlanacak.'**
+  /// **'Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.'**
   String get legalPlaceholder;
 
   /// No description provided for @splashErrorTitle.
@@ -4815,6 +4803,108 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.'**
   String suspendedMailFailed(String email);
+
+  /// No description provided for @settingsChangePassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreyi değiştir'**
+  String get settingsChangePassword;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreni değiştir'**
+  String get changePasswordTitle;
+
+  /// No description provided for @fieldCurrentPassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mevcut şifre'**
+  String get fieldCurrentPassword;
+
+  /// No description provided for @fieldConfirmPassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni şifre (tekrar)'**
+  String get fieldConfirmPassword;
+
+  /// No description provided for @errPasswordMismatch.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreler aynı değil.'**
+  String get errPasswordMismatch;
+
+  /// No description provided for @errCurrentPasswordWrong.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mevcut şifre yanlış.'**
+  String get errCurrentPasswordWrong;
+
+  /// No description provided for @changePasswordDone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifren değişti. Diğer cihazlardaki oturumların kapandı.'**
+  String get changePasswordDone;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabımı sil'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın silinsin mi?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.'**
+  String get deleteAccountBody;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabı sil'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteAccountBlocked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.'**
+  String get deleteAccountBlocked;
+
+  /// No description provided for @accountEdit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profili düzenle'**
+  String get accountEdit;
+
+  /// No description provided for @accountEditTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profili düzenle'**
+  String get accountEditTitle;
+
+  /// No description provided for @accountEditContactNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta ve telefon şimdilik değiştirilemez.'**
+  String get accountEditContactNote;
+
+  /// No description provided for @accountUpdated.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profilin güncellendi.'**
+  String get accountUpdated;
+
+  /// No description provided for @legalDraftBadge.
+  ///
+  /// In tr, this message translates to:
+  /// **'Taslak metin'**
+  String get legalDraftBadge;
 }
 
 class _AppLocalizationsDelegate

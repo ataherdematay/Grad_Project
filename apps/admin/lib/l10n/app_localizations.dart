@@ -326,6 +326,12 @@ abstract class AppLocalizations {
   /// **'Oturumunun süresi doldu. Devam etmek için tekrar giriş yap.'**
   String get noticeSessionExpired;
 
+  /// No description provided for @noticeAccessDenied.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yönetici yetkin bu işlem için geçerli değil, oturumun kapatıldı. Gerekirse yeniden giriş yap.'**
+  String get noticeAccessDenied;
+
   /// No description provided for @noticeAccountSuspended.
   ///
   /// In tr, this message translates to:

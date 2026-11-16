@@ -229,11 +229,14 @@ void main() {
           'GET',
           '/admin/users',
           (_) => fail
-              ? apiError(403, 'FORBIDDEN')
+              ? apiError(500, 'INTERNAL_ERROR')
               : json(200, {'items': usersJson()}),
         );
       await pumpAdmin(tester, fake: fake, initial: '/accounts');
-      expect(find.text('Bu işlem için yetkin yok.'), findsOneWidget);
+      expect(
+        find.text('Beklenmeyen bir sorun oluştu. Biraz sonra tekrar dene.'),
+        findsOneWidget,
+      );
       fail = false;
       await tester.tap(find.text('Tekrar dene'));
       await tester.pumpAndSettle();

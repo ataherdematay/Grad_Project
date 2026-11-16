@@ -179,6 +179,23 @@ class SessionController extends Notifier<SessionState> {
     state = const SessionState.signedOut(loggedOut: true);
   }
 
+  /// Hesap silindi (`DELETE /me`): sunucu tüm oturumları kapattı, yalnız yerel
+  /// token'lar silinir ve karşılama ekranına dönülür.
+  Future<void> accountDeleted() async {
+    await ref.read(tokenStoreProvider).clear();
+    state = const SessionState.signedOut(loggedOut: true);
+  }
+
+  /// `PATCH /me` ile adı günceller; dönen kullanıcı oturuma yazılır.
+  /// Başarısızlıkta `ApiException` fırlatır.
+  Future<void> updateFullName(String fullName) async {
+    final before = state.me;
+    final me = await _client.me.update(UpdateMeRequest(fullName: fullName));
+    final now = state.me;
+    if (before == null || now == null || now.id != me.id) return;
+    state = SessionState.signedIn(me);
+  }
+
   /// `GET /me` ile kullanıcıyı yeniler (başvuru ve müsaitlik değişince).
   Future<void> refreshMe() async {
     if (!state.isSignedIn) return;

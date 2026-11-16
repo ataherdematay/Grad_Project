@@ -251,12 +251,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tabJobs => 'İşlerim';
 
   @override
-  String get comingSoonTitle => 'Bu bölüm hazırlanıyor';
-
-  @override
-  String get comingSoonBody => 'Hazır olunca burada göreceksin.';
-
-  @override
   String get profileSettings => 'Ayarlar';
 
   @override
@@ -315,7 +309,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get legalPrivacyTitle => 'Gizlilik politikası';
 
   @override
-  String get legalPlaceholder => 'Bu metin yayına alınmadan önce hazırlanacak.';
+  String get legalPlaceholder =>
+      'Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.';
 
   @override
   String get splashErrorTitle => 'Oturumun açılamadı';
@@ -2647,4 +2642,59 @@ class AppLocalizationsTr extends AppLocalizations {
   String suspendedMailFailed(String email) {
     return 'E-posta uygulaması açılamadı. $email adresine kendin yazabilirsin.';
   }
+
+  @override
+  String get settingsChangePassword => 'Şifreyi değiştir';
+
+  @override
+  String get changePasswordTitle => 'Şifreni değiştir';
+
+  @override
+  String get fieldCurrentPassword => 'Mevcut şifre';
+
+  @override
+  String get fieldConfirmPassword => 'Yeni şifre (tekrar)';
+
+  @override
+  String get errPasswordMismatch => 'Şifreler aynı değil.';
+
+  @override
+  String get errCurrentPasswordWrong => 'Mevcut şifre yanlış.';
+
+  @override
+  String get changePasswordDone =>
+      'Şifren değişti. Diğer cihazlardaki oturumların kapandı.';
+
+  @override
+  String get settingsDeleteAccount => 'Hesabımı sil';
+
+  @override
+  String get deleteAccountTitle => 'Hesabın silinsin mi?';
+
+  @override
+  String get deleteAccountBody =>
+      'Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAccountConfirm => 'Hesabı sil';
+
+  @override
+  String get deleteAccountBlocked =>
+      'Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.';
+
+  @override
+  String get accountEdit => 'Profili düzenle';
+
+  @override
+  String get accountEditTitle => 'Profili düzenle';
+
+  @override
+  String get accountEditContactNote =>
+      'E-posta ve telefon şimdilik değiştirilemez.';
+
+  @override
+  String get accountUpdated => 'Profilin güncellendi.';
+
+  @override
+  String get legalDraftBadge => 'Taslak metin';
 }

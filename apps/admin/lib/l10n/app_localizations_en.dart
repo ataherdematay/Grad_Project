@@ -137,6 +137,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your session expired. Sign in again to continue.';
 
   @override
+  String get noticeAccessDenied =>
+      'Your admin access is no longer valid for this action, so you were signed out. Sign in again if needed.';
+
+  @override
   String get noticeAccountSuspended =>
       'Your account was suspended and you were signed out.';
 

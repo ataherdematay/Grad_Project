@@ -340,6 +340,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.home_outlined,
                 Icons.home,
                 l.tabHome,
+                root: '/c/home',
                 refresh: (ref) {
                   ref
                     ..invalidate(requestsProvider)
@@ -352,6 +353,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.assignment_outlined,
                 Icons.assignment,
                 l.tabRequests,
+                root: '/c/requests',
                 refresh: (ref) => ref
                   ..invalidate(requestsProvider)
                   ..invalidate(jobsProvider),
@@ -360,9 +362,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.chat_bubble_outline,
                 Icons.chat_bubble,
                 l.tabMessages,
+                root: '/c/messages',
                 refresh: (ref) => ref.invalidate(conversationsProvider),
               ),
-              TabSpec(Icons.person_outline, Icons.person, l.tabProfile),
+              TabSpec(
+                Icons.person_outline,
+                Icons.person,
+                l.tabProfile,
+                root: '/c/profile',
+                refresh: (ref) =>
+                    unawaited(ref.read(sessionProvider.notifier).refreshMe()),
+              ),
             ],
           );
         },
@@ -412,6 +422,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.search_outlined,
                 Icons.search,
                 l.tabFeed,
+                root: '/p/feed',
                 refresh: (ref) {
                   ref
                     ..invalidate(feedProvider)
@@ -423,18 +434,21 @@ final routerProvider = Provider<GoRouter>((ref) {
                 Icons.handyman_outlined,
                 Icons.handyman,
                 l.tabJobs,
+                root: '/p/jobs',
                 refresh: (ref) => ref.invalidate(jobsProvider),
               ),
               TabSpec(
                 Icons.chat_bubble_outline,
                 Icons.chat_bubble,
                 l.tabMessages,
+                root: '/p/messages',
                 refresh: (ref) => ref.invalidate(conversationsProvider),
               ),
               TabSpec(
                 Icons.person_outline,
                 Icons.person,
                 l.tabProfile,
+                root: '/p/profile',
                 refresh: (ref) => ref
                   ..invalidate(proProfileProvider)
                   ..invalidate(earningsProvider),

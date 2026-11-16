@@ -41,6 +41,7 @@
   "logout": "Sign out",
   "loginNotAdmin": "This isn't an admin account, so you weren't signed in. Use your admin account.",
   "noticeSessionExpired": "Your session expired. Sign in again to continue.",
+  "noticeAccessDenied": "Your admin access is no longer valid for this action, so you were signed out. Sign in again if needed.",
   "noticeAccountSuspended": "Your account was suspended and you were signed out.",
 
   "navLabel": "Admin menu",

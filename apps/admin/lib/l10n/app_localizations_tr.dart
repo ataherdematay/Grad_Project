@@ -137,6 +137,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Oturumunun süresi doldu. Devam etmek için tekrar giriş yap.';
 
   @override
+  String get noticeAccessDenied =>
+      'Yönetici yetkin bu işlem için geçerli değil, oturumun kapatıldı. Gerekirse yeniden giriş yap.';
+
+  @override
   String get noticeAccountSuspended =>
       'Hesabın askıya alındı, oturumun kapatıldı.';
 
