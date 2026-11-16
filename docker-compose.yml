@@ -24,13 +24,17 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      # Dev only: the image's socat forward (container port 8091) exists only in the dev profile.
+      # Do not reuse this file for prod; see docs/spec/PROD_CONFIG.md.
+      SPRING_PROFILES_ACTIVE: dev
       DB_URL: jdbc:postgresql://postgres:5432/bitadilat
       DB_USER: bitadilat
       DB_PASSWORD: ${POSTGRES_PASSWORD:-bitadilat}
       # Passed through from the host environment / .env; never stored in this file.
-      CRAFTGATE_API_KEY: ${CRAFTGATE_API_KEY:-}
-      CRAFTGATE_SECRET_KEY: ${CRAFTGATE_SECRET_KEY:-}
+      # The backend refuses to start with empty Craftgate keys (CraftgateConfig), so without real sandbox
+      # keys a non-secret placeholder is used: everything runs, only the card payment step fails.
+      CRAFTGATE_API_KEY: ${CRAFTGATE_API_KEY:-not-configured}
+      CRAFTGATE_SECRET_KEY: ${CRAFTGATE_SECRET_KEY:-not-configured}
       CRAFTGATE_CALLBACK_KEY: ${CRAFTGATE_CALLBACK_KEY:-}
       APP_PUBLIC_BASE_URL: http://localhost:${BACKEND_PORT:-8090}
     ports:

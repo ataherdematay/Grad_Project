@@ -39,7 +39,7 @@ Run `flutter pub get` once at the repo root first. Ports and keys: copy `.env.ex
 | Pro (pending / needs documents) | `hasan@bitadilat.test`, `selim@bitadilat.test` |
 | Admin (web only) | `admin@bitadilat.test` |
 
-**SANDBOX test card (Craftgate sandbox, no real money):** `5258 6400 0000 0001`, expiry `07/44`, CVC `000`. Payments need `CRAFTGATE_API_KEY` / `CRAFTGATE_SECRET_KEY` sandbox keys in your environment; they are never stored in the repo.
+**SANDBOX test card (Craftgate sandbox, no real money):** `5258 6400 0000 0001`, expiry `07/44`, CVC `000`. Payments need `CRAFTGATE_API_KEY` / `CRAFTGATE_SECRET_KEY` sandbox keys in your environment; they are never stored in the repo. Without them `docker compose` still starts (placeholder keys) and only the card payment step fails. Prod settings: [`docs/spec/PROD_CONFIG.md`](docs/spec/PROD_CONFIG.md).
 
 **Repo layout**
 

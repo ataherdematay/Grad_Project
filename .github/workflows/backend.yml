@@ -4,6 +4,8 @@ on:
     branches: [feature/flutter-app, develop, main]
   pull_request:
     branches: [feature/flutter-app, develop, main]
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
