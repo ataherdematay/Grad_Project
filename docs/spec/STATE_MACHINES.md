@@ -14,16 +14,20 @@ RAD'daki üç farklı durum seti (RAD:208, RAD:671/683, API:76) burada teke indi
 | `SUSPENDED` | Admin askıya aldı. Giriş yapılamaz, açık teklifler `WITHDRAWN` olur |
 | `DELETED` | Kullanıcı hesabını sildi. Kişisel veriler anonimleştirilir, finansal kayıtlar yasal süre boyunca kalır |
 
-Geçişler: `ACTIVE → SUSPENDED` (admin), `SUSPENDED → ACTIVE` (admin), `ACTIVE → DELETED` (kullanıcı; açık iş veya kilitli emanet varsa reddedilir).
+Geçişler: `ACTIVE → SUSPENDED` (admin), `SUSPENDED → ACTIVE` (admin), `ACTIVE → DELETED` (kullanıcı; açık iş veya kilitli emanet varsa reddedilir). Silmede isteğe bağlı gerekçe kodu kullanıcıya bağlanmadan analiz tablosuna yazılır (`account_deletion_feedback`).
+
+E-posta değişikliği durum değiştirmez ama doğrulama ister: yeni adrese giden 6 haneli kod onaylanmadan `users.email` değişmez. Telefon değişikliği yoktur (SMS sağlayıcısı yok; telefon salt okunur).
 
 ### Usta profili (`pro_profiles.review_status`)
 
 ```
 (başvuru) → PENDING_REVIEW → APPROVED
                            → NEEDS_DOCUMENTS → PENDING_REVIEW (yeniden gönderim)
-                           → REJECTED
+                           → REJECTED → PENDING_REVIEW (yeniden gönderim)
 APPROVED → SUSPENDED → APPROVED (admin)
 ```
+
+- Yeniden gönderim `POST /pro/application` ile yapılır ve `NEEDS_DOCUMENTS` ile `REJECTED` profilde izinlidir (ret kalıcı değildir; usta belgelerini düzeltip yeniden başvurabilir). `PENDING_REVIEW`, `APPROVED` ve `SUSPENDED` iken `409 ILLEGAL_STATE`.
 
 - Yalnızca `APPROVED` usta talep akışını görür ve teklif verir.
 - `availability`: `ACTIVE` veya `ON_BREAK`. `ON_BREAK` iken yeni talep eşleşmez; mevcut işler sürer.
@@ -161,6 +165,22 @@ Eklenenler:
   - 30 dakikadan eski `INITIALIZED` ödeme: sonuç Craftgate'ten sorulur. Başarılıysa normal callback yolu işler (kabul ya da yarış iadesi). Kesin başarısızsa (`FAILURE`) hemen `FAILED` + `PAYMENT_DECLINED`. 3DS tamamlanmamışsa (Craftgate `INIT_THREEDS` / `CALLBACK_THREEDS`) kayıt ancak oluşturulmasından **2 saat** sonra `FAILED` + `THREEDS_ABANDONED` olur (geç bir banka başarısı bu sürede normal yoldan işlenir); o zamana kadar her turda yeniden sorulur ve talepteki tek `INITIALIZED` kısıtı yeni denemeyi `409 PAYMENT_IN_PROGRESS` ile bekletir (10 dakikalık yeni deneme istisnası yukarıda). Banka sonucu bekleniyorsa (`WAITING`) para çekilmiş olabileceği için kayıt değişmez. Craftgate yanıt vermezse kayıt değişmez, sonraki turda tekrar denenir.
   - Terk edilmiş (`FAILED` + `THREEDS_ABANDONED`) ödemeye sonradan başarılı banka dönüşü gelirse ödeme tamamlanmaz (`complete3ds` çağrılmaz), yalnızca Craftgate'e sorulur. Craftgate ödemeyi tutar ve `conversationId` uyumlu başarılı görüyorsa para çekilmiştir: kayıt `LOCKED` olur ve normal banka dönüşü yolundan geçer: talep hâlâ `OPEN` ve teklif `PENDING` ise teklif kabul edilip iş açılır, değilse yarış iadesi (`REQUEST_ALREADY_ASSIGNED` / `OFFER_EXPIRED`, iade başarısızsa öksüz iade yeniden denemesi). Craftgate başarı görmüyorsa kayıt değişmez.
   - Bekleyen emanet hareketleri (`pending_action` dolu, `error_code` `REFUND_NEEDS_REVIEW` / `PAYOUT_NEEDS_REVIEW` değil, bekleme süresi dolmuş): §4'teki iptal iadesi ve ustaya aktarım aynı sayaç ve aralıkla yeniden denenir.
+- Gecikmeli hareket tamamlanınca (zamanlayıcı denemesi veya admin çözümü; iptal anındaki ilk başarılı deneme hariç) taraflara bildirim gider: iade için müşteriye ve ustaya `REFUND_COMPLETED` (işsiz öksüz ödemede yalnızca müşteriye), aktarım için ustaya `PAYOUT_RELEASED`, müşteriye `PAYOUT_COMPLETED`.
+
+### Elle inceleme çözümü (admin)
+
+`error_code` `REFUND_NEEDS_REVIEW` veya `PAYOUT_NEEDS_REVIEW` olan `LOCKED` (veya `DISPUTED`) kayıt zamanlayıcı tarafından bırakılır ve admin panelinde listelenir. Admin çözümü her seferinde satır kilidi altında önce Craftgate'e iade durumunu ve iade edilmiş toplamı sorar; izin verilen çözüm yalnızca bu yanıttan hesaplanır (para iki kez hareket etmez):
+
+| Craftgate | İzin verilen | Sonuç |
+|---|---|---|
+| Sonuç bekleyen iade / okunamayan durum | yok | 409 (sonra yeniden sorulur); yanıt yoksa 502 |
+| Tam iade edilmiş | `MARK_REFUNDED` | Para gönderilmez; `REFUNDED_TO_CUSTOMER`, defterde tek `REFUND` |
+| 0 < iade < toplam | `RETRY_REFUND` | Yalnızca kalan iade edilir; `REFUNDED_TO_CUSTOMER` |
+| İade ≥ toplam ama durum tam iade değil | yok | Tutarsız; Craftgate panelinde elle düzeltilir |
+| İade yok, iptal/öksüz kayıt (`REFUND`) | `RETRY_REFUND` | Tam iade |
+| İade yok, tamamlanmış işin aktarımı (`RELEASE`, `LOCKED`) | `RELEASE` | `RELEASED_TO_PRO` (PAYOUT + COMMISSION) |
+
+`LOCKED | DISPUTED → REFUNDED_TO_CUSTOMER` ve `LOCKED → RELEASED_TO_PRO` geçişleri yeni değildir; çözüm `pending_action`'ı ve inceleme kodunu temizler. Not zorunludur (10-1000), aynı işlemde `admin_actions` satırı (`RESOLVE_PAYMENT_REVIEW`, hedef `PAYMENT`) yazılır. Craftgate hatası veya tutarsızlık her şeyi geri alır. Tam iade edilmiş ama iş `COMPLETED` olan kayıtta iş durumu değişmez (para gerçeği esastır; usta ödeme almaz).
 
 ## 7. Eski adlarla eşleme
 

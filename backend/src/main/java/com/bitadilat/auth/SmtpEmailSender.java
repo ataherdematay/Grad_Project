@@ -46,4 +46,28 @@ public class SmtpEmailSender implements EmailSender {
         mailSender.send(message);
         log.info("Şifre sıfırlama e-postası gönderildi.");
     }
+
+    @Override
+    public void sendEmailChangeCode(String toEmail, String code) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(toEmail);
+        message.setSubject("BiTadilat e-posta doğrulama kodun");
+        message.setText("E-posta adresini değiştirmek için doğrulama kodun: " + code + "\n\n"
+                + "Kod kısa süre geçerlidir. Bu isteği sen yapmadıysan bu e-postayı yok sayabilirsin.");
+        mailSender.send(message);
+        log.info("E-posta değişikliği kodu gönderildi.");
+    }
+
+    @Override
+    public void sendEmailChangedNotice(String oldEmail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(oldEmail);
+        message.setSubject("BiTadilat hesabının e-posta adresi değişti");
+        message.setText("BiTadilat hesabının e-posta adresi değiştirildi. Bu değişikliği sen yapmadıysan hemen "
+                + "destekle iletişime geç.");
+        mailSender.send(message);
+        log.info("E-posta değişikliği bilgi e-postası gönderildi.");
+    }
 }

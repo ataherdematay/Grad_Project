@@ -7,4 +7,10 @@ package com.bitadilat.auth;
 public interface EmailSender {
 
     void sendPasswordResetCode(String toEmail, String code);
+
+    /** E-posta değişikliği: doğrulama kodu yeni adrese gider. */
+    void sendEmailChangeCode(String toEmail, String code);
+
+    /** E-posta değişti: eski adrese bilgi (kod veya yeni adres yazılmaz). */
+    void sendEmailChangedNotice(String oldEmail);
 }

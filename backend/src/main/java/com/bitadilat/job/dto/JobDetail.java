@@ -37,9 +37,12 @@ public record JobDetail(
     /**
      * {@code pendingAction}: Craftgate'te henüz yapılmamış kayıtlı para hareketi. {@code REFUND} (iptal edildi, iade
      * yolda/yeniden deneniyor), {@code RELEASE} (iş tamamlandı, ustaya aktarım bekliyor) veya null.
+     * {@code errorCode}: yalnızca elle inceleme kodları ({@code REFUND_NEEDS_REVIEW}, {@code PAYOUT_NEEDS_REVIEW});
+     * diğer durumlarda null.
      */
     public record Payment(String ref, EscrowStatus status, BigDecimal totalAmount, BigDecimal refundedAmount,
-                          BigDecimal serviceFee, BigDecimal netEarning, EscrowPendingAction pendingAction) {
+                          BigDecimal serviceFee, BigDecimal netEarning, EscrowPendingAction pendingAction,
+                          String errorCode) {
     }
 
     public record ComplaintRef(UUID id, String publicCode, String status) {

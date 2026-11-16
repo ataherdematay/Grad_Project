@@ -1,6 +1,7 @@
 package com.bitadilat.payment.service;
 
 import com.bitadilat.common.ApiException;
+import com.bitadilat.job.EscrowNotifications;
 import com.bitadilat.job.JobOpening;
 import com.bitadilat.offer.OfferRepository;
 import com.bitadilat.offer.OfferStatus;
@@ -85,6 +86,7 @@ public class PaymentService {
     private final JobOpening jobOpening;
     private final EscrowService escrow;
     private final TransactionTemplate tx;
+    private final EscrowNotifications escrowNotifications;
 
     public PaymentService(
             EscrowPaymentRepository repository,
@@ -95,8 +97,10 @@ public class PaymentService {
             ServiceRequestRepository requestRepository,
             JobOpening jobOpening,
             EscrowService escrow,
-            TransactionTemplate tx) {
+            TransactionTemplate tx,
+            EscrowNotifications escrowNotifications) {
         this.tx = tx;
+        this.escrowNotifications = escrowNotifications;
         this.repository = repository;
         this.gateway = gateway;
         this.offers = offers;
@@ -416,6 +420,8 @@ public class PaymentService {
             payment.clearUncertain();
             payment.markError(reason, messageFor(reason));
             repository.saveAndFlush(payment);
+            // Gecikmeli iade tamamlandı: müşteri ödeme sonucunu bir daha açmadan öğrenir.
+            escrowNotifications.refundCompleted(payment);
         } catch (GatewayException e) {
             if (payment.recordRefundFailure(now)) {
                 log.error("Öksüz ödemenin iadesi {} denemede yapılamadı, elle incelenmeli. ref={} paymentId={}",

@@ -1,14 +1,11 @@
 package com.bitadilat.job;
 
-import com.bitadilat.notification.NotificationService;
 import com.bitadilat.payment.domain.EscrowPayment;
 import com.bitadilat.payment.domain.EscrowPaymentRepository;
 import com.bitadilat.payment.domain.EscrowPendingAction;
 import com.bitadilat.payment.domain.EscrowStatus;
 import com.bitadilat.payment.service.EscrowService;
-import com.bitadilat.request.ServiceRequestRepository;
 import java.time.Instant;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,23 +23,35 @@ public class PendingEscrowActions {
 
     private final EscrowPaymentRepository repository;
     private final EscrowService escrow;
-    private final NotificationService notifications;
-    private final JobRepository jobs;
-    private final ServiceRequestRepository requests;
+    private final EscrowNotifications notifications;
 
     public PendingEscrowActions(EscrowPaymentRepository repository, EscrowService escrow,
-                                NotificationService notifications, JobRepository jobs,
-                                ServiceRequestRepository requests) {
+                                EscrowNotifications notifications) {
         this.repository = repository;
         this.escrow = escrow;
         this.notifications = notifications;
-        this.jobs = jobs;
-        this.requests = requests;
     }
 
-    /** Niyeti bir kez dener. Satır kilitliyse, niyet yoksa, elle incelemedeyse veya bekleme süresi dolmadıysa dokunmaz. */
+    /**
+     * Ödeme toplayıcısının yeniden denemesi. Satır kilitliyse, niyet yoksa, elle incelemedeyse veya bekleme süresi
+     * dolmadıysa dokunmaz. Tamamlanan hareket gecikmeli sayılır: iade için {@code REFUND_COMPLETED}, aktarım için
+     * {@code PAYOUT_RELEASED} + {@code PAYOUT_COMPLETED} gider.
+     */
     @Transactional
     public void process(String ref, Instant now) {
+        run(ref, now, true);
+    }
+
+    /**
+     * İptal işlemi kesinleştikten hemen sonraki ilk iade denemesi. Başarılıysa ek bildirim gitmez: {@code JOB_CANCELLED}
+     * iade tutarını zaten bildirir.
+     */
+    @Transactional
+    public void processAfterCommit(String ref, Instant now) {
+        run(ref, now, false);
+    }
+
+    private void run(String ref, Instant now, boolean delayed) {
         EscrowPayment p = repository.findForUpdateSkipLocked(ref).orElse(null);
         if (p == null || p.getPendingAction() == null || p.needsReview()
                 || (p.getStatus() != EscrowStatus.LOCKED && p.getStatus() != EscrowStatus.DISPUTED)
@@ -53,26 +62,17 @@ public class PendingEscrowActions {
             return;
         }
         switch (p.getPendingAction()) {
-            case REFUND -> escrow.refundPending(p, now);
+            case REFUND -> {
+                if (escrow.refundPending(p, now) && delayed) {
+                    notifications.refundCompleted(p);
+                }
+            }
             case RELEASE -> {
                 if (escrow.releaseChecked(p, now) == EscrowService.ReleaseOutcome.RELEASED) {
-                    notifyPayout(p);
+                    notifications.payoutCompleted(p);
+                    log.info("Bekleyen ustaya aktarım yapıldı. ref={}", p.getRef());
                 }
             }
         }
-    }
-
-    private void notifyPayout(EscrowPayment p) {
-        if (p.getJobId() == null) {
-            return;
-        }
-        jobs.findById(p.getJobId()).ifPresent(job -> {
-            String code = requests.findById(job.getRequestId()).map(r -> r.getPublicCode()).orElse("");
-            notifications.notify(job.getProId(), NotificationService.PAYOUT_RELEASED,
-                    Map.of("jobId", job.getId().toString(), "publicCode", code,
-                            "amount", p.getProPayout().toPlainString()),
-                    "/p/earnings");
-            log.info("Bekleyen ustaya aktarım yapıldı. ref={}", p.getRef());
-        });
     }
 }

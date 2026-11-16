@@ -27,7 +27,9 @@ public class ProPublicController {
     @GetMapping("/{id}/reviews")
     public ReviewList reviews(@PathVariable UUID id,
                               @RequestParam(value = "cursor", required = false) String cursor,
-                              @RequestParam(value = "limit", required = false) Integer limit) {
-        return pros.reviews(id, cursor, limit);
+                              @RequestParam(value = "limit", required = false) Integer limit,
+                              @RequestParam(value = "rating", required = false) Integer rating,
+                              @RequestParam(value = "withComment", required = false) Boolean withComment) {
+        return pros.reviews(id, cursor, limit, rating, Boolean.TRUE.equals(withComment));
     }
 }

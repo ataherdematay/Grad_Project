@@ -5,6 +5,7 @@ import com.bitadilat.job.JobStatus;
 import com.bitadilat.job.dto.JobEventView;
 import com.bitadilat.media.dto.MediaRef;
 import com.bitadilat.offer.dto.OfferDetail;
+import com.bitadilat.payment.domain.EscrowPendingAction;
 import com.bitadilat.payment.domain.EscrowProvider;
 import com.bitadilat.payment.domain.EscrowStatus;
 import com.bitadilat.pro.DocumentStatus;
@@ -127,5 +128,27 @@ public final class AdminDtos {
     }
 
     public record PaymentLedger(List<PaymentItem> items, PaymentTotals totals) {
+    }
+
+    // ─── İncelemedeki ödemeler (follow-up) ──────────────────────────────────
+
+    public record ReviewItem(String ref, UUID jobId, String jobPublicCode, JobStatus jobStatus, EscrowStatus status,
+                             String errorCode, EscrowPendingAction pendingAction, BigDecimal totalAmount,
+                             BigDecimal refundedAmount, String customerName, String proBusinessName, int attempts,
+                             Instant lastAttemptAt, Instant createdAt) {
+    }
+
+    public record ReviewList(List<ReviewItem> items) {
+    }
+
+    /**
+     * {@code gatewayRefundState}: Craftgate'in yanıtı ({@code NOT_REFUNDED}, {@code PARTIALLY_REFUNDED},
+     * {@code REFUND_PENDING}, {@code FULLY_REFUNDED}); {@code allowedResolutions} bu yanıttan hesaplanır.
+     */
+    public record ReviewCheck(ReviewItem payment, String gatewayRefundState, BigDecimal gatewayRefundedTotal,
+                              List<String> allowedResolutions) {
+    }
+
+    public record ReviewResolveBody(String resolution, String note) {
     }
 }

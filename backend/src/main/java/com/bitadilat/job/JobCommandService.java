@@ -245,7 +245,7 @@ public class JobCommandService {
     public JobDetail cancel(UUID userId, UUID jobId, JobBodies.Cancel body) {
         Cancelled c = tx.execute(s -> cancelInTx(userId, jobId, body));
         try {
-            pendingActions.process(c.paymentRef(), Instant.now()); // işlem kesinleşti; iade şimdi denenir
+            pendingActions.processAfterCommit(c.paymentRef(), Instant.now()); // işlem kesinleşti; iade şimdi denenir
         } catch (RuntimeException e) {
             // Niyet kayıtlı: ödeme toplayıcısı yeniden dener. İptalin kendisi geçerlidir.
             log.error("İptal iadesi ilk denemede çalıştırılamadı, zamanlayıcı yeniden deneyecek. ref={}",

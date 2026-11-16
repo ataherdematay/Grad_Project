@@ -155,6 +155,81 @@ class AccountTest extends ApiTestBase {
                 .andExpect(status().isCreated());
     }
 
+    @Test
+    void deleteReasonIsStoredForAnalyticsWithoutAnyLinkToTheUser() throws Exception {
+        long before = jdbc.queryForObject("select count(*) from account_deletion_feedback where reason = 'PRIVACY'",
+                Long.class);
+        Account a = register();
+        call(HttpMethod.DELETE, ME, a.access(), Map.of("reason", "PRIVACY")).andExpect(status().isNoContent());
+        assertThat(jdbc.queryForObject("select count(*) from account_deletion_feedback where reason = 'PRIVACY'",
+                Long.class)).isEqualTo(before + 1);
+        // Tabloda kullanıcı kimliği veya serbest metin sütunu yok.
+        assertThat(jdbc.queryForList("select column_name from information_schema.columns "
+                + "where table_name = 'account_deletion_feedback'", String.class))
+                .containsExactlyInAnyOrder("id", "reason", "had_pro_profile", "created_on");
+
+        Account b = register();
+        call(HttpMethod.DELETE, ME, b.access(), Map.of("reason", "BECAUSE")).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.field").value("reason"));
+        // Geçersiz gerekçe hesabı silmez.
+        call(HttpMethod.GET, ME, b.access(), null).andExpect(status().isOk());
+        long all = jdbc.queryForObject("select count(*) from account_deletion_feedback", Long.class);
+        call(HttpMethod.DELETE, ME, b.access(), Map.of()).andExpect(status().isNoContent());
+        assertThat(jdbc.queryForObject("select count(*) from account_deletion_feedback", Long.class)).isEqualTo(all);
+    }
+
+    @Test
+    void emailChangesOnlyAfterTheCodeSentToTheNewAddressIsConfirmed() throws Exception {
+        Account a = register();
+        String newEmail = uniqueEmail();
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", "Yanlis1234"))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("password"));
+        Account other = register();
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", other.email(), "password", PASSWORD))
+                .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("EMAIL_TAKEN"));
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", "bozuk", "password", PASSWORD))
+                .andExpect(status().isBadRequest());
+
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isAccepted());
+        String code = emails.changeCodeFor(newEmail);
+        assertThat(code).matches("\\d{6}");
+        // Doğrulanmadan e-posta değişmez.
+        assertThat(body(call(HttpMethod.GET, ME, a.access(), null)).get("email").asString()).isEqualTo(a.email());
+
+        String wrong = code.equals("000000") ? "111111" : "000000";
+        call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", wrong))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("code"));
+        JsonNode me = body(call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", code))
+                .andExpect(status().isOk()));
+        assertThat(me.get("email").asString()).isEqualTo(newEmail);
+        assertThat(emails.sentTo("notice:" + a.email())).isEqualTo(1);
+        // Kod tek kullanımlık.
+        call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", code))
+                .andExpect(status().isBadRequest());
+        call(HttpMethod.POST, "/api/v1/auth/login", null, Map.of("identifier", newEmail, "password", PASSWORD))
+                .andExpect(status().isOk());
+        call(HttpMethod.POST, "/api/v1/auth/login", null, Map.of("identifier", a.email(), "password", PASSWORD))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void emailChangeCodeLocksAfterFiveWrongAttempts() throws Exception {
+        Account a = register();
+        String newEmail = uniqueEmail();
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isAccepted());
+        String code = emails.changeCodeFor(newEmail);
+        String wrong = code.equals("000000") ? "111111" : "000000";
+        for (int i = 0; i < 5; i++) {
+            call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", wrong))
+                    .andExpect(status().isBadRequest());
+        }
+        call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", code))
+                .andExpect(status().isBadRequest());
+        assertThat(body(call(HttpMethod.GET, ME, a.access(), null)).get("email").asString()).isEqualTo(a.email());
+    }
+
     // ─── Adresler ───────────────────────────────────────────────────────────
 
     private Map<String, Object> addressBody(String label, String line) {

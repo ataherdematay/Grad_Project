@@ -12,6 +12,7 @@ import com.bitadilat.user.dto.UpdateMeRequest;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +28,13 @@ public class AccountService {
     private final PasswordEncoder encoder;
     private final List<AccountDeletionGuard> deletionGuards;
     private final NotificationQueryService notifications;
+    private final JdbcTemplate jdbc;
 
     public AccountService(UserRepository users, ProProfileRepository proProfiles, AddressRepository addresses,
                           RefreshTokenRepository refreshTokens, PasswordResetCodeRepository resetCodes,
                           PasswordEncoder encoder, List<AccountDeletionGuard> deletionGuards,
-                          NotificationQueryService notifications) {
+                          NotificationQueryService notifications, JdbcTemplate jdbc) {
+        this.jdbc = jdbc;
         this.users = users;
         this.proProfiles = proProfiles;
         this.addresses = addresses;
@@ -98,8 +101,23 @@ public class AccountService {
     /** Kişisel alanları anonimleştirir, durumu DELETED yapar, tüm oturumları kapatır. */
     @Transactional
     public void delete(UUID userId) {
+        delete(userId, null);
+    }
+
+    /**
+     * {@code rawReason} isteğe bağlıdır; verilirse kullanıcıya bağlanmadan (kimlik ve serbest metin olmadan, gün
+     * çözünürlüğünde) {@code account_deletion_feedback} tablosuna yazılır. Geçersiz değer 400 {@code reason}.
+     */
+    @Transactional
+    public void delete(UUID userId, String rawReason) {
+        AccountDeletionReason reason = parseReason(rawReason);
         User user = load(userId);
         deletionGuards.forEach(g -> g.assertCanDelete(userId));
+        if (reason != null) {
+            jdbc.update("insert into account_deletion_feedback (reason, had_pro_profile) values (?, ?)",
+                    reason.name(), proProfiles.existsById(userId));
+        }
+        jdbc.update("delete from email_change_codes where user_id = ?", userId);
         Instant now = Instant.now();
         user.setFullName("Silinmiş kullanıcı");
         user.setEmail("deleted-" + userId + "@deleted.invalid");
@@ -112,6 +130,17 @@ public class AccountService {
         addresses.deleteByUserId(userId);
         resetCodes.invalidateAll(userId, now);
         refreshTokens.revokeAllForUser(userId, now);
+    }
+
+    private static AccountDeletionReason parseReason(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            return AccountDeletionReason.valueOf(raw.trim());
+        } catch (IllegalArgumentException e) {
+            throw ApiException.validation("reason", "reason geçersiz.");
+        }
     }
 
     private User load(UUID userId) {
