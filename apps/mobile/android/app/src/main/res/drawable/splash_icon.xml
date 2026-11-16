@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+ SplashScreen simgesi: 288dp tuval, gorunen daire 192dp, karo 128dp. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:width="288dp" android:height="288dp" android:viewportWidth="288" android:viewportHeight="288">
+    <group android:translateX="80" android:translateY="80" android:scaleX="0.125" android:scaleY="0.125">
+    <path android:pathData="M230,0 L794,0 A230,230 0 0 1 1024,230 L1024,794 A230,230 0 0 1 794,1024 L230,1024 A230,230 0 0 1 0,794 L0,230 A230,230 0 0 1 230,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="0" android:endX="0" android:endY="1024" android:startColor="#11596B" android:endColor="#0A3945"/>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M312,711 L312,460 L512,300 L711,460 L711,711 Z" android:strokeColor="#FFFFFF" android:strokeWidth="48" android:strokeLineJoin="round" android:strokeLineCap="round"/>
+    <path android:pathData="M423,551 L481,609 L593,481" android:strokeColor="#72D9AE" android:strokeWidth="56" android:strokeLineJoin="round" android:strokeLineCap="round"/>
+    </group>
+</vector>
