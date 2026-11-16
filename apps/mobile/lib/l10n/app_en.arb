@@ -78,8 +78,6 @@
   "tabProfile": "Profile",
   "tabFeed": "Requests",
   "tabJobs": "My jobs",
-  "comingSoonTitle": "This section is being prepared",
-  "comingSoonBody": "You will see it here when it is ready.",
   "profileSettings": "Settings",
   "switchToPro": "Switch to pro mode",
   "applyAsPro": "Apply as a pro",
@@ -99,7 +97,7 @@
   "legalKvkkTitle": "KVKK privacy notice",
   "legalTermsTitle": "Terms of use",
   "legalPrivacyTitle": "Privacy policy",
-  "legalPlaceholder": "This text will be prepared before launch.",
+  "legalPlaceholder": "This text is a draft and is not legally binding yet. The final version will appear here before launch.",
   "splashErrorTitle": "Could not open your session",
   "noticeAdmin": "Log in with an admin account from the web panel.",
   "noticeSessionExpired": "Your session has expired. Log in again.",
@@ -1374,5 +1372,24 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsChangePassword": "Change password",
+  "changePasswordTitle": "Change your password",
+  "fieldCurrentPassword": "Current password",
+  "fieldConfirmPassword": "New password (again)",
+  "errPasswordMismatch": "The passwords do not match.",
+  "errCurrentPasswordWrong": "The current password is wrong.",
+  "changePasswordDone": "Your password was changed. Your sessions on other devices were signed out.",
+  "settingsDeleteAccount": "Delete my account",
+  "deleteAccountTitle": "Delete your account?",
+  "deleteAccountBody": "Your personal details are erased, your addresses are removed and all your sessions are signed out. This cannot be undone.",
+  "deleteAccountConfirm": "Delete account",
+  "deleteAccountBlocked": "You cannot delete your account while you have an open job or a payment in the secure hold. Try again once your jobs are finished.",
+  "accountEdit": "Edit profile",
+  "accountEditTitle": "Edit profile",
+  "accountEditContactNote": "Email and phone cannot be changed for now.",
+  "accountUpdated": "Your profile was updated.",
+  "legalDraftBadge": "Draft text",
+  "deleteAccountAck": "I understand that my account and personal details will be deleted permanently.",
+  "deleteAccountDone": "Your account was deleted."
 }

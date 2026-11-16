@@ -258,12 +258,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabJobs => 'My jobs';
 
   @override
-  String get comingSoonTitle => 'This section is being prepared';
-
-  @override
-  String get comingSoonBody => 'You will see it here when it is ready.';
-
-  @override
   String get profileSettings => 'Settings';
 
   @override
@@ -322,7 +316,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legalPrivacyTitle => 'Privacy policy';
 
   @override
-  String get legalPlaceholder => 'This text will be prepared before launch.';
+  String get legalPlaceholder =>
+      'This text is a draft and is not legally binding yet. The final version will appear here before launch.';
 
   @override
   String get splashErrorTitle => 'Could not open your session';
@@ -2713,4 +2708,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String suspendedMailFailed(String email) {
     return 'Could not open the email app. You can write to $email yourself.';
   }
+
+  @override
+  String get settingsChangePassword => 'Change password';
+
+  @override
+  String get changePasswordTitle => 'Change your password';
+
+  @override
+  String get fieldCurrentPassword => 'Current password';
+
+  @override
+  String get fieldConfirmPassword => 'New password (again)';
+
+  @override
+  String get errPasswordMismatch => 'The passwords do not match.';
+
+  @override
+  String get errCurrentPasswordWrong => 'The current password is wrong.';
+
+  @override
+  String get changePasswordDone =>
+      'Your password was changed. Your sessions on other devices were signed out.';
+
+  @override
+  String get settingsDeleteAccount => 'Delete my account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountBody =>
+      'Your personal details are erased, your addresses are removed and all your sessions are signed out. This cannot be undone.';
+
+  @override
+  String get deleteAccountConfirm => 'Delete account';
+
+  @override
+  String get deleteAccountBlocked =>
+      'You cannot delete your account while you have an open job or a payment in the secure hold. Try again once your jobs are finished.';
+
+  @override
+  String get accountEdit => 'Edit profile';
+
+  @override
+  String get accountEditTitle => 'Edit profile';
+
+  @override
+  String get accountEditContactNote =>
+      'Email and phone cannot be changed for now.';
+
+  @override
+  String get accountUpdated => 'Your profile was updated.';
+
+  @override
+  String get legalDraftBadge => 'Draft text';
+
+  @override
+  String get deleteAccountAck =>
+      'I understand that my account and personal details will be deleted permanently.';
+
+  @override
+  String get deleteAccountDone => 'Your account was deleted.';
 }

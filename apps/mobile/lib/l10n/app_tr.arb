@@ -78,8 +78,6 @@
   "tabProfile": "Profil",
   "tabFeed": "Talepler",
   "tabJobs": "İşlerim",
-  "comingSoonTitle": "Bu bölüm hazırlanıyor",
-  "comingSoonBody": "Hazır olunca burada göreceksin.",
   "profileSettings": "Ayarlar",
   "switchToPro": "Usta moduna geç",
   "applyAsPro": "Usta olarak başvur",
@@ -99,7 +97,7 @@
   "legalKvkkTitle": "KVKK aydınlatma metni",
   "legalTermsTitle": "Kullanım koşulları",
   "legalPrivacyTitle": "Gizlilik politikası",
-  "legalPlaceholder": "Bu metin yayına alınmadan önce hazırlanacak.",
+  "legalPlaceholder": "Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.",
   "splashErrorTitle": "Oturumun açılamadı",
   "noticeAdmin": "Yönetici hesabıyla web panelinden giriş yap.",
   "noticeSessionExpired": "Oturumunun süresi doldu. Tekrar giriş yap.",
@@ -1388,5 +1386,24 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsChangePassword": "Şifreyi değiştir",
+  "changePasswordTitle": "Şifreni değiştir",
+  "fieldCurrentPassword": "Mevcut şifre",
+  "fieldConfirmPassword": "Yeni şifre (tekrar)",
+  "errPasswordMismatch": "Şifreler aynı değil.",
+  "errCurrentPasswordWrong": "Mevcut şifre yanlış.",
+  "changePasswordDone": "Şifren değişti. Diğer cihazlardaki oturumların kapandı.",
+  "settingsDeleteAccount": "Hesabımı sil",
+  "deleteAccountTitle": "Hesabın silinsin mi?",
+  "deleteAccountBody": "Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.",
+  "deleteAccountConfirm": "Hesabı sil",
+  "deleteAccountBlocked": "Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.",
+  "accountEdit": "Profili düzenle",
+  "accountEditTitle": "Profili düzenle",
+  "accountEditContactNote": "E-posta ve telefon şimdilik değiştirilemez.",
+  "accountUpdated": "Profilin güncellendi.",
+  "legalDraftBadge": "Taslak metin",
+  "deleteAccountAck": "Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.",
+  "deleteAccountDone": "Hesabın silindi."
 }

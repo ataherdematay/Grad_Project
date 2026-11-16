@@ -36,7 +36,7 @@ class NotFoundScreen extends StatelessWidget {
   }
 }
 
-/// KVKK, koşullar ve gizlilik için yer tutucu metin sayfası.
+/// KVKK, koşullar ve gizlilik için taslak (yer tutucu) metin sayfası; son metni sahibi hazırlar.
 class LegalScreen extends StatelessWidget {
   const LegalScreen({super.key, required this.doc});
 
@@ -54,32 +54,13 @@ class LegalScreen extends StatelessWidget {
     if (title == null) return const NotFoundScreen();
     return PageScaffold(
       title: title,
-      child: Text(l.legalPlaceholder, style: AppTypography.body),
-    );
-  }
-}
-
-/// Sonraki dalgalarda doldurulacak ortak ekranlar için yer tutucu.
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: const AppBackButton(),
-        title: Text(title),
-      ),
-      body: SafeArea(
-        child: EmptyState(
-          title: l.comingSoonTitle,
-          message: l.comingSoonBody,
-          icon: Icons.construction_outlined,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StatusChip(label: l.legalDraftBadge, icon: Icons.edit_note),
+          const SizedBox(height: AppSpacing.sm),
+          Text(l.legalPlaceholder, style: AppTypography.body),
+        ],
       ),
     );
   }

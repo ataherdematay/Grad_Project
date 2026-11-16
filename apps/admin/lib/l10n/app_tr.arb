@@ -41,6 +41,7 @@
   "logout": "Çıkış yap",
   "loginNotAdmin": "Bu hesap yönetici hesabı değil, oturum açılmadı. Yönetici hesabınla giriş yap.",
   "noticeSessionExpired": "Oturumunun süresi doldu. Devam etmek için tekrar giriş yap.",
+  "noticeAccessDenied": "Yönetici yetkin bu işlem için geçerli değil, oturumun kapatıldı. Gerekirse yeniden giriş yap.",
   "noticeAccountSuspended": "Hesabın askıya alındı, oturumun kapatıldı.",
 
   "navLabel": "Yönetim menüsü",

@@ -63,4 +63,10 @@ class MeApi {
     () =>
         _dio.post<void>('${ApiConfig.prefix}/me/password', data: body.toJson()),
   );
+
+  /// `DELETE /me`: hesabı siler (anonimleştirir) ve tüm oturumları kapatır.
+  /// Açık iş ya da kilitli güvence havuzu varsa sunucu `ILLEGAL_STATE` (409)
+  /// döner.
+  Future<void> deleteAccount() =>
+      guardApi(() => _dio.delete<void>('${ApiConfig.prefix}/me'));
 }
