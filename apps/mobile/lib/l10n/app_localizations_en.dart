@@ -2763,4 +2763,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get legalDraftBadge => 'Draft text';
+
+  @override
+  String get deleteAccountAck =>
+      'I understand that my account and personal details will be deleted permanently.';
+
+  @override
+  String get deleteAccountDone => 'Your account was deleted.';
 }

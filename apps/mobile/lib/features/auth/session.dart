@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/draft_photos.dart';
 import '../../core/providers.dart';
+import '../customer/wizard_state.dart' show draftKeyFor;
 
 enum SessionStatus { unknown, bootstrapFailed, signedOut, signedIn }
 
@@ -179,10 +181,17 @@ class SessionController extends Notifier<SessionState> {
     state = const SessionState.signedOut(loggedOut: true);
   }
 
-  /// Hesap silindi (`DELETE /me`): sunucu tüm oturumları kapattı, yalnız yerel
-  /// token'lar silinir ve karşılama ekranına dönülür.
+  /// Hesap silindi (`DELETE /me`): sunucu tüm oturumları kapattı. Yerel
+  /// token'lar, bu hesabın talep taslağı ve taslak fotoğrafları silinir,
+  /// karşılama ekranına dönülür.
   Future<void> accountDeleted() async {
+    final userId = state.me?.id;
     await ref.read(tokenStoreProvider).clear();
+    if (userId != null) {
+      await ref.read(sharedPreferencesProvider).remove(draftKeyFor(userId));
+      await ref.read(draftPhotoStoreProvider).deleteAll(userId);
+    }
+    _wantsPro = false;
     state = const SessionState.signedOut(loggedOut: true);
   }
 

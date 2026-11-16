@@ -1403,5 +1403,7 @@
   "accountEditTitle": "Profili düzenle",
   "accountEditContactNote": "E-posta ve telefon şimdilik değiştirilemez.",
   "accountUpdated": "Profilin güncellendi.",
-  "legalDraftBadge": "Taslak metin"
+  "legalDraftBadge": "Taslak metin",
+  "deleteAccountAck": "Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.",
+  "deleteAccountDone": "Hesabın silindi."
 }

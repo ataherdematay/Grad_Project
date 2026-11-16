@@ -2697,4 +2697,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get legalDraftBadge => 'Taslak metin';
+
+  @override
+  String get deleteAccountAck =>
+      'Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.';
+
+  @override
+  String get deleteAccountDone => 'Hesabın silindi.';
 }

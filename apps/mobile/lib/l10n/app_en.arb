@@ -1389,5 +1389,7 @@
   "accountEditTitle": "Edit profile",
   "accountEditContactNote": "Email and phone cannot be changed for now.",
   "accountUpdated": "Your profile was updated.",
-  "legalDraftBadge": "Draft text"
+  "legalDraftBadge": "Draft text",
+  "deleteAccountAck": "I understand that my account and personal details will be deleted permanently.",
+  "deleteAccountDone": "Your account was deleted."
 }

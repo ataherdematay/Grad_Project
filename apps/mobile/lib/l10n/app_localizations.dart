@@ -4905,6 +4905,18 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Taslak metin'**
   String get legalDraftBadge;
+
+  /// No description provided for @deleteAccountAck.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.'**
+  String get deleteAccountAck;
+
+  /// No description provided for @deleteAccountDone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın silindi.'**
+  String get deleteAccountDone;
 }
 
 class _AppLocalizationsDelegate

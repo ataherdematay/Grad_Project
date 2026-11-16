@@ -9,6 +9,7 @@ import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
 import '../common/widgets.dart';
 import 'change_password_dialog.dart';
+import 'delete_account_dialog.dart';
 
 /// Ayarlar: dil, şifre değiştirme, çıkış (onay diyaloğu) ve hesap silme.
 /// Çıkış ve silme sonrası yığını router sıfırlar (`/welcome`).
@@ -59,19 +60,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (_deleting) return;
     final l = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    final confirmed = await showConfirmDialog(
-      context,
-      title: l.deleteAccountTitle,
-      message: l.deleteAccountBody,
-      confirmLabel: l.deleteAccountConfirm,
-      cancelLabel: l.cancel,
-      destructive: true,
-    );
+    final confirmed = await showDeleteAccountDialog(context);
     if (!confirmed || !mounted) return;
     setState(() => _deleting = true);
     try {
       await ref.read(apiClientProvider).me.deleteAccount();
       await ref.read(sessionProvider.notifier).accountDeleted();
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l.deleteAccountDone)));
     } on ApiException catch (e) {
       final text = e.code == ApiErrorCode.illegalState
           ? l.deleteAccountBlocked

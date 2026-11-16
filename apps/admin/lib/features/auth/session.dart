@@ -88,8 +88,10 @@ class SessionController extends Notifier<SessionState> {
   /// dönülür.
   Future<void> accessDenied() async {
     if (state.status == SessionStatus.signedOut) return;
-    final tokens = await ref.read(tokenStoreProvider).read();
+    // Durum await'ten önce kapanır: aynı anda gelen başka 403'ler ikinci bir
+    // logout çağrısı başlatmaz.
     state = const SessionState.signedOut(notice: SessionNotice.accessDenied);
+    final tokens = await ref.read(tokenStoreProvider).read();
     try {
       if (tokens != null) await _client.auth.logout(tokens.refreshToken);
     } on ApiException {

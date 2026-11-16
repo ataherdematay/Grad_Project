@@ -1,4 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:bitadilat_api/bitadilat_api.dart';
+
+import 'package:bitadilat_mobile/core/draft_photos.dart';
+import 'package:bitadilat_mobile/core/providers.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
+import 'package:bitadilat_mobile/features/customer/wizard_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,6 +35,31 @@ Handler _handler({
     return json(200, {...meJson(), 'fullName': (o.data as Map)['fullName']});
   },
 });
+
+class _RecordingPhotoStore implements DraftPhotoStore {
+  final wiped = <String>[];
+
+  @override
+  Future<String> save(String userId, String mediaId, Uint8List bytes) async =>
+      '';
+
+  @override
+  Future<Uint8List?> read(String path) async => null;
+
+  @override
+  Future<void> delete(String path) async {}
+
+  @override
+  Future<void> deleteAll(String userId) async => wiped.add(userId);
+}
+
+/// Onay kutusunu işaretleyip "Hesabı sil"e basar.
+Future<void> _confirmDelete(WidgetTester t, String label) async {
+  await t.tap(find.byType(CheckboxListTile));
+  await t.pump();
+  await t.tap(find.text(label));
+  await t.pumpAndSettle();
+}
 
 Future<void> _openChangePassword(WidgetTester t) async {
   await t.tap(find.text('Şifreyi değiştir'));
@@ -133,20 +165,36 @@ void main() {
     testWidgets('onay verilince DELETE /me gider ve karşılamaya dönülür', (
       t,
     ) async {
+      final photos = _RecordingPhotoStore();
       final h = await pumpApp(
         t,
         session: SessionState.signedIn(testMe()),
         initial: '/settings',
         handler: _handler(),
+        tokens: const TokenPair(accessToken: 'A', refreshToken: 'R'),
+        overrides: [draftPhotoStoreProvider.overrideWithValue(photos)],
       );
+      final prefs = h.container.read(sharedPreferencesProvider);
+      final id = testMe().id;
+      await prefs.setString(draftKeyFor(id), '{}');
+      await prefs.setString(draftKeyFor('baska'), '{}');
       await t.ensureVisible(find.text('Hesabımı sil'));
       await t.tap(find.text('Hesabımı sil'));
       await t.pumpAndSettle();
       expect(find.text('Hesabın silinsin mi?'), findsOneWidget);
+      // Onay kutusu işaretlenmeden silme düğmesi kapalı.
       await t.tap(find.text('Hesabı sil'));
       await t.pumpAndSettle();
+      expect(h.adapter.count('DELETE', '/me'), 0);
+      expect(find.text('Hesabın silinsin mi?'), findsOneWidget);
+      await _confirmDelete(t, 'Hesabı sil');
       expect(h.adapter.count('DELETE', '/me'), 1);
       expect(h.location, '/welcome');
+      expect(await h.store.read(), isNull);
+      expect(prefs.containsKey(draftKeyFor(id)), isFalse);
+      expect(prefs.containsKey(draftKeyFor('baska')), isTrue);
+      expect(photos.wiped, [id]);
+      expect(find.text('Hesabın silindi.'), findsOneWidget);
     });
 
     testWidgets('vazgeçilirse istek gitmez', (t) async {
@@ -179,8 +227,7 @@ void main() {
       await t.ensureVisible(find.text('Hesabımı sil'));
       await t.tap(find.text('Hesabımı sil'));
       await t.pumpAndSettle();
-      await t.tap(find.text('Hesabı sil'));
-      await t.pumpAndSettle();
+      await _confirmDelete(t, 'Hesabı sil');
       expect(find.textContaining('hesabını silemezsin'), findsOneWidget);
       expect(h.location, '/settings');
     });
@@ -198,8 +245,7 @@ void main() {
       await t.ensureVisible(find.text('Delete my account'));
       await t.tap(find.text('Delete my account'));
       await t.pumpAndSettle();
-      await t.tap(find.text('Delete account'));
-      await t.pumpAndSettle();
+      await _confirmDelete(t, 'Delete account');
       expect(
         find.textContaining('You cannot delete your account'),
         findsOneWidget,
@@ -282,7 +328,7 @@ void main() {
       expect(h.adapter.count('GET', '/requests'), before);
       h.router.pop();
       await t.pumpAndSettle();
-      expect(h.adapter.count('GET', '/requests'), greaterThan(before));
+      expect(h.adapter.count('GET', '/requests'), before + 1);
     });
 
     testWidgets('profil sekmesine dönünce GET /me yenilenir', (t) async {
@@ -295,7 +341,13 @@ void main() {
       final before = h.adapter.count('GET', '/me');
       await t.tap(find.text('Profil'));
       await t.pumpAndSettle();
-      expect(h.adapter.count('GET', '/me'), greaterThan(before));
+      // Tek istek: sekme geçişi ve ardından gelen oturum güncellemesi ikinci
+      // bir yenileme başlatmaz.
+      expect(h.adapter.count('GET', '/me'), before + 1);
+      for (var i = 0; i < 3; i++) {
+        await t.pump(const Duration(seconds: 1));
+      }
+      expect(h.adapter.count('GET', '/me'), before + 1);
     });
   });
 
