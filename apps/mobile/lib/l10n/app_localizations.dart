@@ -2306,6 +2306,12 @@ abstract class AppLocalizations {
   /// **'Kabul edildi'**
   String get docStatusAccepted;
 
+  /// No description provided for @docStatusNotReviewed.
+  ///
+  /// In tr, this message translates to:
+  /// **'İncelenmedi'**
+  String get docStatusNotReviewed;
+
   /// No description provided for @docStatusRejected.
   ///
   /// In tr, this message translates to:
@@ -3049,6 +3055,42 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Tutar KDV dahildir.'**
   String get acceptVatNote;
+
+  /// No description provided for @escrowExplainDisputed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet sonuçlanana kadar ödeme güvence havuzunda bekler.'**
+  String get escrowExplainDisputed;
+
+  /// No description provided for @escrowSettledReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet kararıyla tutar ustaya aktarıldı.'**
+  String get escrowSettledReleased;
+
+  /// No description provided for @escrowSettledReleasedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet kararıyla net kazancın sana aktarıldı.'**
+  String get escrowSettledReleasedPro;
+
+  /// No description provided for @escrowSettledRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet kararıyla tutar kartına iade edildi.'**
+  String get escrowSettledRefunded;
+
+  /// No description provided for @escrowSettledRefundedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet kararıyla tutar müşteriye iade edildi.'**
+  String get escrowSettledRefundedPro;
+
+  /// No description provided for @escrowSettledSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet kararıyla tutar iki tarafa paylaştırıldı.'**
+  String get escrowSettledSplit;
 
   /// No description provided for @escrowHowTitle.
   ///

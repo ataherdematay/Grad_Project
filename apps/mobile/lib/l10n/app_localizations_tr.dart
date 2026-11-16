@@ -1217,6 +1217,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get docStatusAccepted => 'Kabul edildi';
 
   @override
+  String get docStatusNotReviewed => 'İncelenmedi';
+
+  @override
   String get docStatusRejected => 'Reddedildi';
 
   @override
@@ -1618,6 +1621,30 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get acceptVatNote => 'Tutar KDV dahildir.';
+
+  @override
+  String get escrowExplainDisputed =>
+      'Şikayet sonuçlanana kadar ödeme güvence havuzunda bekler.';
+
+  @override
+  String get escrowSettledReleased =>
+      'Şikayet kararıyla tutar ustaya aktarıldı.';
+
+  @override
+  String get escrowSettledReleasedPro =>
+      'Şikayet kararıyla net kazancın sana aktarıldı.';
+
+  @override
+  String get escrowSettledRefunded =>
+      'Şikayet kararıyla tutar kartına iade edildi.';
+
+  @override
+  String get escrowSettledRefundedPro =>
+      'Şikayet kararıyla tutar müşteriye iade edildi.';
+
+  @override
+  String get escrowSettledSplit =>
+      'Şikayet kararıyla tutar iki tarafa paylaştırıldı.';
 
   @override
   String get escrowHowTitle => 'Ödemen güvence havuzunda tutulur';
