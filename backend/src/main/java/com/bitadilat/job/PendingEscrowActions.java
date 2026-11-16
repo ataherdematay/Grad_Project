@@ -3,6 +3,7 @@ package com.bitadilat.job;
 import com.bitadilat.notification.NotificationService;
 import com.bitadilat.payment.domain.EscrowPayment;
 import com.bitadilat.payment.domain.EscrowPaymentRepository;
+import com.bitadilat.payment.domain.EscrowPendingAction;
 import com.bitadilat.payment.domain.EscrowStatus;
 import com.bitadilat.payment.service.EscrowService;
 import com.bitadilat.request.ServiceRequestRepository;
@@ -45,6 +46,8 @@ public class PendingEscrowActions {
         EscrowPayment p = repository.findForUpdateSkipLocked(ref).orElse(null);
         if (p == null || p.getPendingAction() == null || p.needsReview()
                 || (p.getStatus() != EscrowStatus.LOCKED && p.getStatus() != EscrowStatus.DISPUTED)
+                // Şikayetteki emanet ustaya kendiliğinden aktarılmaz; kararı admin verir.
+                || (p.getPendingAction() == EscrowPendingAction.RELEASE && p.getStatus() != EscrowStatus.LOCKED)
                 || p.getRefundAttempts() >= EscrowPayment.MAX_REFUND_ATTEMPTS
                 || (p.getNextRefundAttemptAt() != null && p.getNextRefundAttemptAt().isAfter(now))) {
             return;

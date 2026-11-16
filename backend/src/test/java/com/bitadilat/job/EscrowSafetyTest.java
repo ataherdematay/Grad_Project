@@ -166,7 +166,67 @@ class EscrowSafetyTest extends Wave3TestBase {
         verify(gateway, never()).refundState(anyLong());
     }
 
+    @Test
+    void pendingCancelRefundOnAPartlyRefundedPaymentSendsOnlyTheRemainderOnce() throws Exception {
+        Setup s = openRequestWithOffer();
+        String jobId = payAndOpenJob(s);
+        doThrow(new GatewayException("zaman aşımı", true)).when(gateway).refundFully(anyLong(), anyString());
+        jobPost(s.customer(), jobId, "/cancel", Map.of("reason", "SOLVED")).andExpect(status().isOk());
+
+        clearInvocations(gateway);
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        when(gateway.refundedTotal(anyLong())).thenReturn(new BigDecimal("200.00"));
+        sweeper.run(Instant.now().plus(Duration.ofHours(1)));
+
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        verify(gateway, times(1)).refundPartially(anyLong(),
+                org.mockito.ArgumentMatchers.eq(new BigDecimal("1000.00")), anyString());
+        assertThat(escrowRow(jobId)).isEqualTo("REFUNDED_TO_CUSTOMER/-/-/1");
+        sweeper.run(Instant.now().plus(Duration.ofDays(1)));
+        verify(gateway, times(1)).refundPartially(anyLong(), org.mockito.ArgumentMatchers.any(), anyString());
+    }
+
+    @Test
+    void pendingCancelRefundThatCraftgateShowsAsInconsistentGoesToReviewAndStaysThere() throws Exception {
+        Setup s = openRequestWithOffer();
+        String jobId = payAndOpenJob(s);
+        doThrow(new GatewayException("zaman aşımı", true)).when(gateway).refundFully(anyLong(), anyString());
+        jobPost(s.customer(), jobId, "/cancel", Map.of("reason", "SOLVED")).andExpect(status().isOk());
+
+        clearInvocations(gateway);
+        // Toplam kadar iade görünüyor ama durum "tam iade" değil: para gönderilmez, inceleme kaydı kalıcı olmalı.
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.PARTIALLY_REFUNDED);
+        when(gateway.refundedTotal(anyLong())).thenReturn(new BigDecimal("1200.00"));
+        sweeper.run(Instant.now().plus(Duration.ofHours(1)));
+
+        assertThat(escrowRow(jobId)).isEqualTo("LOCKED/REFUND/REFUND_NEEDS_REVIEW/1");
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        verify(gateway, never()).refundPartially(anyLong(), org.mockito.ArgumentMatchers.any(), anyString());
+        clearInvocations(gateway);
+        sweeper.run(Instant.now().plus(Duration.ofDays(1)));
+        verify(gateway, never()).refundState(anyLong());
+    }
+
     // ─── (g) ustaya aktarım öncesi Craftgate'te iade kontrolü ───────────────
+
+    @Test
+    void payoutCheckThatKeepsFailingGoesToPayoutReviewAfterEightAttempts() throws Exception {
+        Setup s = openRequestWithOffer();
+        String jobId = finishedJob(s);
+        when(gateway.refundedTotal(anyLong())).thenThrow(new GatewayException("Craftgate yanıt vermedi.", true));
+        jobPost(s.customer(), jobId, "/confirm", null).andExpect(status().isOk());
+        Instant t = Instant.now();
+        for (int i = 2; i <= 8; i++) {
+            t = t.plus(Duration.ofDays(1));
+            sweeper.run(t);
+        }
+        assertThat(escrowRow(jobId)).isEqualTo("LOCKED/RELEASE/PAYOUT_NEEDS_REVIEW/8");
+        assertThat(count("select count(*) from payout_ledger where payment_ref = ?", refOf(jobId))).isZero();
+        clearInvocations(gateway);
+        sweeper.run(t.plus(Duration.ofDays(30)));
+        verify(gateway, never()).refundedTotal(anyLong());
+        assertThat(notifications(s.pro(), "PAYOUT_RELEASED")).isZero();
+    }
 
     private String finishedJob(Setup s) throws Exception {
         String jobId = payAndOpenJob(s);

@@ -287,6 +287,84 @@ class PaymentSweeperTest extends Wave3TestBase {
         verify(gateway, times(2)).refundFully(anyLong(), anyString());
     }
 
+    // ─── yeni deneme: bankada bitmemiş eski denemeyi Craftgate'e sorarak kapatma ─────────
+
+    @Test
+    void newAttemptAbandonsAnOldAttemptThatNeverFinishedAtTheBank() throws Exception {
+        Setup s = openRequestWithOffer();
+        String old = initPayment(s.customer(), s.offerId());
+        jdbc.update("update escrow_payment set created_at = now() - interval '11 minutes' where ref = ?", old);
+        doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+
+        String fresh = body(initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isOk()))
+                .get("ref").asString();
+
+        assertThat(st(old)).isEqualTo("FAILED/THREEDS_ABANDONED");
+        assertThat(st(fresh)).isEqualTo("INITIALIZED/-");
+        verify(gateway, times(1)).retrieve(anyLong());
+        verify(gateway, never()).complete3ds(anyLong());
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+    }
+
+    @Test
+    void newAttemptKeepsPaymentInProgressWhileTheOldAttemptIsYoung() throws Exception {
+        Setup s = openRequestWithOffer();
+        String old = initPayment(s.customer(), s.offerId());
+        jdbc.update("update escrow_payment set created_at = now() - interval '9 minutes' where ref = ?", old);
+        doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+
+        initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isConflict())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.code")
+                        .value("PAYMENT_IN_PROGRESS"));
+
+        assertThat(st(old)).isEqualTo("INITIALIZED/-");
+        verify(gateway, never()).retrieve(anyLong());
+    }
+
+    @Test
+    void newAttemptKeepsPaymentInProgressUnlessCraftgateSaysTheBankPageWasNeverFinished() throws Exception {
+        Setup s = openRequestWithOffer();
+        String old = initPayment(s.customer(), s.offerId());
+        jdbc.update("update escrow_payment set created_at = now() - interval '20 minutes' where ref = ?", old);
+        for (Status answer : new Status[] {Status.THREEDS_CALLBACK, Status.PROCESSING, Status.SUCCESS}) {
+            doReturn(new GatewayPayment(1L, answer, null, "x", null)).when(gateway).retrieve(anyLong());
+            initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isConflict());
+            assertThat(st(old)).as(answer.name()).isEqualTo("INITIALIZED/-");
+        }
+        doThrow(new GatewayException("zaman aşımı", true)).when(gateway).retrieve(anyLong());
+        initPaymentRaw(s.customer(), s.offerId(), newKey()).andExpect(status().isConflict());
+        assertThat(st(old)).isEqualTo("INITIALIZED/-");
+        verify(gateway, never()).complete3ds(anyLong());
+        assertThat(count("select count(*) from escrow_payment where request_id = ?::uuid", s.requestId()))
+                .isEqualTo(1);
+    }
+
+    @Test
+    void lateBankSuccessOnAnAttemptAbandonedByARetryIsRefundedAndNeverKept() throws Exception {
+        Setup s = openRequestWithOffer();
+        String old = initPayment(s.customer(), s.offerId());
+        jdbc.update("update escrow_payment set created_at = now() - interval '15 minutes' where ref = ?", old);
+        doReturn(new GatewayPayment(1L, Status.IN_PROGRESS, null, "x", null)).when(gateway).retrieve(anyLong());
+        String fresh = initPayment(s.customer(), s.offerId());
+        assertThat(st(old)).isEqualTo("FAILED/THREEDS_ABANDONED");
+
+        stubGateway(); // Craftgate artık her ödemeyi başarılı görür (eski denemenin geç başarısı dahil)
+        callback(fresh);
+        assertThat(st(fresh)).isEqualTo("LOCKED/-");
+        clearInvocations(gateway);
+
+        callback(old); // eski deneme bankada sonradan tamamlandı ve para çekildi
+
+        verify(gateway, never()).complete3ds(anyLong());
+        verify(gateway, times(1)).refundFully(anyLong(), anyString());
+        assertThat(st(old)).isEqualTo("REFUNDED_TO_CUSTOMER/REQUEST_ALREADY_ASSIGNED");
+        assertThat(count("select count(*) from jobs where request_id = ?::uuid", s.requestId())).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select job_id is not null from escrow_payment where ref = ?", Boolean.class,
+                fresh)).isTrue();
+        callback(old);
+        verify(gateway, times(1)).refundFully(anyLong(), anyString());
+    }
+
     @Test
     void stalePaymentStillWaitingForTheBankResultIsNotAbandoned() throws Exception {
         // WAITING: tamamlama gönderilmiş, banka sonucu bekleniyor. "Ücret alınmadı" denip kapatılırsa para kartta kalır.

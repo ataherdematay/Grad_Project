@@ -240,6 +240,10 @@ public class EscrowPayment {
     }
 
     private void queue(EscrowPendingAction action, Instant now) {
+        // İade bekleyen kayda aktarım (veya tersi) yazılamaz: iki zıt para hareketi aynı anda beklemez.
+        if (pendingAction != null && pendingAction != action) {
+            throw new IllegalEscrowTransitionException(status);
+        }
         pendingAction = action;
         refundAttempts = 0;
         lastRefundAttemptAt = null;

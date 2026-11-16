@@ -45,10 +45,20 @@ public interface PaymentGateway {
     enum Status {
         SUCCESS,
         FAILURE,
-        /** 3DS henüz bitmedi, tamamlama yapılmadı (INIT_THREEDS, CALLBACK_THREEDS): para çekilmedi. */
+        /** 3DS başladı ama müşteri banka sayfasını bitirmedi (INIT_THREEDS): para çekilmedi. */
         IN_PROGRESS,
+        /**
+         * Banka 3DS'i bitirdi, tamamlama (complete3ds) henüz yapılmadı (CALLBACK_THREEDS): para çekilmedi ama banka
+         * dönüşü yolda olabilir.
+         */
+        THREEDS_CALLBACK,
         /** Banka sonucu bekleniyor (WAITING) veya durum bilinmiyor: para çekilmiş olabilir, kayıt kapatılmaz. */
-        PROCESSING
+        PROCESSING;
+
+        /** 3DS bitmedi ve tamamlama yapılmadı (INIT_THREEDS veya CALLBACK_THREEDS): para çekilmedi. */
+        public boolean threeDsUnfinished() {
+            return this == IN_PROGRESS || this == THREEDS_CALLBACK;
+        }
     }
 
     ThreeDsSession init3ds(ThreeDsRequest request);

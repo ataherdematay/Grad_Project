@@ -437,7 +437,7 @@ Wave 2 changes:
   - The offer is PENDING and its `validUntil` is in the future. Otherwise 409 `OFFER_EXPIRED` / `ILLEGAL_STATE`.
 - The amount always comes from the offer on the server.
 - Errors:
-  - An INITIALIZED payment already exists for this request → 409 `PAYMENT_IN_PROGRESS`.
+  - An INITIALIZED payment already exists for this request → 409 `PAYMENT_IN_PROGRESS`, with one exception: if that attempt is older than 10 minutes, the server asks Craftgate about it synchronously. When Craftgate says 3DS was never finished at the bank (`INIT_THREEDS`), the old attempt becomes FAILED + `THREEDS_ABANDONED` (no money was taken; the server never called `complete3ds`) and the new attempt proceeds. If Craftgate says `CALLBACK_THREEDS`, `WAITING` or success, does not answer, or the old row is being processed right now, the answer stays 409 `PAYMENT_IN_PROGRESS`.
   - Same `attemptKey` reused → 409 `DUPLICATE_ATTEMPT`.
   - 400 `INVALID_CARD` with `field` = `holderName` | `number` | `expiry` | `cvc`.
   - 402 `PAYMENT_DECLINED` with `ref`.
@@ -448,7 +448,7 @@ Wave 2 changes:
 - The bank posts to the existing `POST /api/payments/3ds/callback`; that path does not change.
 - For `channel = APP` the result page goes to `GET /api/payments/3ds/done?ref=<ref>`. That page is minimal static HTML ("İşlem tamamlandı, uygulamaya dönülüyor…"), shows no payment data and is public.
 - The `PROTOTYPE` channel behaves exactly as before.
-- A payment whose 3DS never finished is marked FAILED + `THREEDS_ABANDONED` only 2 h after it was created (or at once if Craftgate reports a final failure). Until then a new attempt for the same request gets 409 `PAYMENT_IN_PROGRESS`.
+- Without a new attempt, the sweeper marks a payment whose 3DS never finished FAILED + `THREEDS_ABANDONED` only 2 h after it was created (or at once if Craftgate reports a final failure). A new attempt from the customer can close it earlier (10 minutes, `INIT_THREEDS` only, see the 409 rule above).
 - If a successful bank return still arrives for an abandoned payment and Craftgate confirms the money was taken, the payment becomes LOCKED and goes through the normal acceptance below (job opens if the request is still OPEN, otherwise automatic refund with `REQUEST_ALREADY_ASSIGNED` / `OFFER_EXPIRED`). The server never completes (`complete3ds`) an abandoned payment itself.
 
 **`GET /payments/{ref}`** returns `PaymentResult`.

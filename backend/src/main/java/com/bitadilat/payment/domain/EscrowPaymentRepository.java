@@ -32,6 +32,11 @@ public interface EscrowPaymentRepository extends JpaRepository<EscrowPayment, St
 
     boolean existsByRequestIdAndStatus(java.util.UUID requestId, EscrowStatus status);
 
+    /** Yalnızca ref'ler (varlık yüklenmez): ardından satır kilitle yeniden okunur, eski anlık görüntüye güvenilmez. */
+    @Query("select p.ref from EscrowPayment p where p.requestId = :requestId and p.status = :status")
+    java.util.List<String> findRefsByRequestIdAndStatus(@Param("requestId") java.util.UUID requestId,
+                                                        @Param("status") EscrowStatus status);
+
     /** İşin emaneti (iş kilidinden sonra alınır: kilit sırası iş, emanet, talep). */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from EscrowPayment p where p.jobId = :jobId")
