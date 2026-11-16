@@ -48,7 +48,7 @@ class CraftgateGatewayTest {
     @Test
     void threeDsNotCompletedIsInProgressButWaitingIsStillProcessingAtTheBank() {
         assertThat(retrieved(PaymentStatus.INIT_THREEDS)).isEqualTo(Status.IN_PROGRESS);
-        assertThat(retrieved(PaymentStatus.CALLBACK_THREEDS)).isEqualTo(Status.IN_PROGRESS);
+        assertThat(retrieved(PaymentStatus.CALLBACK_THREEDS)).isEqualTo(Status.THREEDS_CALLBACK);
         // WAITING: tamamlama gönderilmiş, banka sonucu bekleniyor. Para çekilebilir; "3DS terk edildi" sayılmamalı.
         assertThat(retrieved(PaymentStatus.WAITING)).isNotEqualTo(Status.IN_PROGRESS);
         assertThat(retrieved(PaymentStatus.SUCCESS)).isEqualTo(Status.SUCCESS);

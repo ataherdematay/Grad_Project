@@ -189,7 +189,7 @@ public class JobQueryService {
 
     private static JobDetail.Payment toPayment(EscrowPayment p, boolean pro) {
         return new JobDetail.Payment(p.getRef(), p.getStatus(), p.getTotalAmount(), p.getRefundedAmount(),
-                pro ? p.getCommission() : null, pro ? p.getProPayout() : null);
+                pro ? p.getCommission() : null, pro ? p.getProPayout() : null, p.getPendingAction());
     }
 
     ReviewList.Item review(UUID jobId) {

@@ -214,7 +214,8 @@ public class CraftgateGateway implements PaymentGateway {
         Status status = raw == null ? Status.PROCESSING : switch (raw) {
             case SUCCESS -> Status.SUCCESS;
             case FAILURE -> Status.FAILURE;
-            case INIT_THREEDS, CALLBACK_THREEDS -> Status.IN_PROGRESS;
+            case INIT_THREEDS -> Status.IN_PROGRESS;
+            case CALLBACK_THREEDS -> Status.THREEDS_CALLBACK;
             default -> Status.PROCESSING;
         };
         String errorGroup = response.getPaymentError() == null ? null : response.getPaymentError().getErrorGroup();

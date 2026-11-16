@@ -21,15 +21,18 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * İş komutları: randevu önerileri, usta aşamaları, teslim onayı ve iptal. Her komut işi {@code FOR UPDATE} ile
  * kilitler (kilit sırası: iş, emanet, talep), geçişi {@link JobFlow} üzerinden yapar ve {@code job_events}'e yazar.
  * Katılımcı olmayan 404; yanlış rolün çağırdığı usta/müşteri uç noktası 403 FORBIDDEN; yanlış durum 409 ILLEGAL_STATE.
  */
+@Slf4j
 @Service
 public class JobCommandService {
 
@@ -54,12 +57,17 @@ public class JobCommandService {
     private final NotificationService notifications;
     private final MediaService media;
     private final org.springframework.jdbc.core.JdbcTemplate jdbc;
+    private final TransactionTemplate tx;
+    private final PendingEscrowActions pendingActions;
 
     public JobCommandService(JobRepository jobs, AppointmentProposalRepository proposals, JobFlow flow,
                              JobEvents events, JobQueryService views, JobSettlement settlement, EscrowService escrow,
                              ServiceRequestRepository requests, OfferRepository offers,
                              NotificationService notifications, MediaService media,
-                             org.springframework.jdbc.core.JdbcTemplate jdbc) {
+                             org.springframework.jdbc.core.JdbcTemplate jdbc, TransactionTemplate tx,
+                             PendingEscrowActions pendingActions) {
+        this.tx = tx;
+        this.pendingActions = pendingActions;
         this.jobs = jobs;
         this.proposals = proposals;
         this.flow = flow;
@@ -226,12 +234,30 @@ public class JobCommandService {
     // ─── İptal ──────────────────────────────────────────────────────────────
 
     /**
-     * İptal: tam iade + iş CANCELLED. Müşteri iptalinde talep CANCELLED; usta iptalinde talep yeniden OPEN, kabul edilen
-     * teklif WITHDRAWN, süresi dolmamış SUPERSEDED teklifler PENDING ve ustanın iptal sayacı artar. İade (Craftgate)
-     * en sonda yapılır; başarısız olursa 502 döner ve işlem tümüyle geri alınır.
+     * İptal: iş CANCELLED + tam iade. Müşteri iptalinde talep CANCELLED; usta iptalinde talep yeniden OPEN, kabul edilen
+     * teklif WITHDRAWN, süresi dolmamış SUPERSEDED teklifler PENDING ve ustanın iptal sayacı artar.
+     *
+     * <p>İade outbox ile yapılır: iptal işlemi emanete {@code pending_action = REFUND} niyetini yazar ve kesinleşir;
+     * Craftgate iadesi ancak bundan sonra, ayrı bir işlemde denenir. Böylece "iade gitti ama iptal geri alındı" durumu
+     * oluşamaz. İade hemen yapılamazsa yanıt 200'dür, {@code payment.pendingAction = REFUND} ve emanet LOCKED görünür;
+     * ödeme toplayıcısı artan aralıkla yeniden dener ve her denemeden önce Craftgate'e ne kadar iade edildiğini sorar.
      */
-    @Transactional
     public JobDetail cancel(UUID userId, UUID jobId, JobBodies.Cancel body) {
+        Cancelled c = tx.execute(s -> cancelInTx(userId, jobId, body));
+        try {
+            pendingActions.process(c.paymentRef(), Instant.now()); // işlem kesinleşti; iade şimdi denenir
+        } catch (RuntimeException e) {
+            // Niyet kayıtlı: ödeme toplayıcısı yeniden dener. İptalin kendisi geçerlidir.
+            log.error("İptal iadesi ilk denemede çalıştırılamadı, zamanlayıcı yeniden deneyecek. ref={}",
+                    c.paymentRef(), e);
+        }
+        return tx.execute(s -> views.detail(jobs.findById(jobId).orElseThrow(), c.role(), userId));
+    }
+
+    private record Cancelled(String paymentRef, ActorRole role) {
+    }
+
+    private Cancelled cancelInTx(UUID userId, UUID jobId, JobBodies.Cancel body) {
         Locked l = lock(userId, jobId);
         Job job = l.job();
         Instant now = Instant.now();
@@ -263,13 +289,13 @@ public class JobCommandService {
         }
         requests.saveAndFlush(request);
 
-        escrow.refundFully(payment); // Craftgate hatası burada GatewayException: her şey geri alınır (502)
+        escrow.queueRefund(payment, now); // Craftgate'e bu işlemde gidilmez (outbox)
 
         notifyOther(job, l.role(), NotificationService.JOB_CANCELLED,
                 Map.of("jobId", jobId.toString(), "publicCode", request.getPublicCode(),
                         "byRole", l.role().name(), "reason", body.reason().name(),
-                        "refundAmount", payment.getRefundedAmount().toPlainString()));
-        return views.detail(job, l.role(), userId);
+                        "refundAmount", payment.getTotalAmount().toPlainString()));
+        return new Cancelled(payment.getRef(), l.role());
     }
 
     private void reopenRequest(ServiceRequest request, Job job, Instant now) {
