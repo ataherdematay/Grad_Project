@@ -3062,6 +3062,30 @@ abstract class AppLocalizations {
   /// **'Şikayet sonuçlanana kadar ödeme güvence havuzunda bekler.'**
   String get escrowExplainDisputed;
 
+  /// No description provided for @escrowDoneReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar ustaya aktarıldı.'**
+  String get escrowDoneReleased;
+
+  /// No description provided for @escrowDoneReleasedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Net kazancın sana aktarıldı.'**
+  String get escrowDoneReleasedPro;
+
+  /// No description provided for @escrowDoneRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar kartına iade edildi.'**
+  String get escrowDoneRefunded;
+
+  /// No description provided for @escrowDoneRefundedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar müşteriye iade edildi.'**
+  String get escrowDoneRefundedPro;
+
   /// No description provided for @escrowSettledReleased.
   ///
   /// In tr, this message translates to:

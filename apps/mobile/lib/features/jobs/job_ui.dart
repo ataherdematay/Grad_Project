@@ -85,15 +85,26 @@ String escrowLabel(AppLocalizations l, EscrowStatus s, PartyRole viewer) {
 }
 
 /// Ödeme kartının alt açıklaması: güvence havuzunun gerçek durumuna uyar;
-/// şikayet sonuçlandıktan sonra "havuzda tutulur" yazılmaz.
-String escrowExplanation(AppLocalizations l, EscrowStatus s, PartyRole viewer) {
+/// para havuzdan çıktıktan sonra "havuzda tutulur" yazılmaz. Aktarım ve iade
+/// şikayet olmadan da olur (onay, 48 saat, iptal); "şikayet kararıyla" yalnız
+/// işin şikayeti sonuçlandıysa yazılır.
+String escrowExplanation(
+  AppLocalizations l,
+  EscrowStatus s,
+  PartyRole viewer, {
+  bool byComplaint = false,
+}) {
   final pro = viewer == PartyRole.pro;
   return switch (s) {
     EscrowStatus.disputed => l.escrowExplainDisputed,
-    EscrowStatus.releasedToPro =>
+    EscrowStatus.releasedToPro when byComplaint =>
       pro ? l.escrowSettledReleasedPro : l.escrowSettledReleased,
-    EscrowStatus.refundedToCustomer =>
+    EscrowStatus.releasedToPro =>
+      pro ? l.escrowDoneReleasedPro : l.escrowDoneReleased,
+    EscrowStatus.refundedToCustomer when byComplaint =>
       pro ? l.escrowSettledRefundedPro : l.escrowSettledRefunded,
+    EscrowStatus.refundedToCustomer =>
+      pro ? l.escrowDoneRefundedPro : l.escrowDoneRefunded,
     EscrowStatus.splitSettled => l.escrowSettledSplit,
     _ => pro ? l.escrowExplainPro : l.escrowExplain,
   };
@@ -496,7 +507,14 @@ class PaymentSummaryCard extends StatelessWidget {
             InfoRow(l.netEarningLabel, m(p.netEarning!)),
           const SizedBox(height: 4),
           Text(
-            escrowExplanation(l, p.status, job.viewerRole),
+            escrowExplanation(
+              l,
+              p.status,
+              job.viewerRole,
+              byComplaint:
+                  job.complaint?.status == ComplaintStatus.resolved ||
+                  job.complaint?.status == ComplaintStatus.dismissed,
+            ),
             style: AppTypography.bodySecondary,
           ),
         ],

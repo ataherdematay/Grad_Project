@@ -131,11 +131,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onPressed: () => context.push('/forgot-password'),
                 ),
               ),
-              // Askıya alma/yönetici bildirimi üstte zaten gösteriliyorsa aynı
-              // hata ikinci kez yazılmaz.
+              // Üstteki oturum bildirimi aynı metni zaten gösteriyorsa
+              // (örn. askıya alınmış hesap yeniden girmeye çalışır) hata
+              // ikinci kez yazılmaz; farklı bir hata her zaman görünür.
               if (_generalError != null &&
-                  ref.watch(sessionProvider.select((s) => s.notice)) ==
-                      null) ...[
+                  _generalError !=
+                      sessionNoticeText(
+                        l,
+                        ref.watch(sessionProvider.select((s) => s.notice)),
+                      )) ...[
                 MessageBanner(_generalError!),
                 const SizedBox(height: AppSpacing.md),
               ],

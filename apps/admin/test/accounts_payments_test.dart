@@ -278,6 +278,19 @@ void main() {
         expect(find.text(h), findsWidgets);
       }
       expect(find.text('₺1.980'), findsOneWidget);
+      // Tablo yatay kaydırılmaz: satırlar kart olarak alt alta dizilir.
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is SingleChildScrollView &&
+              w.scrollDirection == Axis.horizontal,
+        ),
+        findsNothing,
+      );
+      expect(
+        tester.getRect(find.text('₺1.980')).right,
+        lessThanOrEqualTo(1024),
+      );
     });
 
     testWidgets('durum süzgeci sunucuya gider', (tester) async {

@@ -1627,6 +1627,18 @@ class AppLocalizationsTr extends AppLocalizations {
       'Şikayet sonuçlanana kadar ödeme güvence havuzunda bekler.';
 
   @override
+  String get escrowDoneReleased => 'Tutar ustaya aktarıldı.';
+
+  @override
+  String get escrowDoneReleasedPro => 'Net kazancın sana aktarıldı.';
+
+  @override
+  String get escrowDoneRefunded => 'Tutar kartına iade edildi.';
+
+  @override
+  String get escrowDoneRefundedPro => 'Tutar müşteriye iade edildi.';
+
+  @override
   String get escrowSettledReleased =>
       'Şikayet kararıyla tutar ustaya aktarıldı.';
 

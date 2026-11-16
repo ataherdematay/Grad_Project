@@ -265,18 +265,23 @@ class SessionNoticeBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notice = ref.watch(sessionProvider.select((s) => s.notice));
-    if (notice == null) return const SizedBox.shrink();
-    final l = AppLocalizations.of(context);
+    final text = sessionNoticeText(AppLocalizations.of(context), notice);
+    if (text == null) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: MessageBanner(switch (notice) {
-        SessionNotice.adminBlocked => l.noticeAdmin,
-        SessionNotice.sessionExpired => l.noticeSessionExpired,
-        SessionNotice.accountSuspended => l.apiErrorAccountSuspended,
-      }),
+      child: MessageBanner(text),
     );
   }
 }
+
+/// Oturum bildiriminin metni; bildirim yoksa `null`.
+String? sessionNoticeText(AppLocalizations l, SessionNotice? notice) =>
+    switch (notice) {
+      null => null,
+      SessionNotice.adminBlocked => l.noticeAdmin,
+      SessionNotice.sessionExpired => l.noticeSessionExpired,
+      SessionNotice.accountSuspended => l.apiErrorAccountSuspended,
+    };
 
 /// `path?next=...`
 String withNext(String path, String? next) => next == null

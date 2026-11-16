@@ -117,22 +117,48 @@ void main() {
   });
 
   group('Giriş: askıya alınmış hesap', () {
-    testWidgets('hata mesajı yalnız bir kez görünür', (t) async {
+    const suspended = 'Hesabın askıya alındı. Destek ekibiyle iletişime geç.';
+
+    Future<void> login(WidgetTester t, SessionNotice? notice, Handler h) async {
       await pumpApp(
         t,
+        session: SessionState.signedOut(notice: notice),
         initial: '/login',
-        handler: (o) => o.path.endsWith('/auth/login')
-            ? apiError(401, 'ACCOUNT_SUSPENDED')
-            : apiError(404, 'NOT_FOUND'),
+        handler: h,
       );
       await t.enterText(_input('E-posta veya telefon'), 'a@b.co');
       await t.enterText(_input('Şifre'), 'abcd1234');
       await t.tap(find.widgetWithText(AppButton, 'Giriş yap'));
       await t.pumpAndSettle();
-      expect(
-        find.text('Hesabın askıya alındı. Destek ekibiyle iletişime geç.'),
-        findsOneWidget,
+    }
+
+    Handler loginFails(int status, String code) =>
+        (o) => o.path.endsWith('/auth/login')
+        ? apiError(status, code)
+        : apiError(404, 'NOT_FOUND');
+
+    testWidgets('bildirim varken aynı hata yalnız bir kez görünür', (t) async {
+      await login(
+        t,
+        SessionNotice.accountSuspended,
+        loginFails(401, 'ACCOUNT_SUSPENDED'),
       );
+      expect(find.text(suspended), findsOneWidget);
+    });
+
+    testWidgets('bildirim yokken hata formda görünür', (t) async {
+      await login(t, null, loginFails(401, 'ACCOUNT_SUSPENDED'));
+      expect(find.text(suspended), findsOneWidget);
+    });
+
+    testWidgets('farklı bir bildirim varken giriş hatası gizlenmez', (t) async {
+      await login(
+        t,
+        SessionNotice.sessionExpired,
+        loginFails(401, 'ACCOUNT_SUSPENDED'),
+      );
+      expect(find.text(suspended), findsOneWidget);
+      expect(find.text(_lang('tr').noticeSessionExpired), findsOneWidget);
     });
   });
 
@@ -177,30 +203,56 @@ void main() {
   });
 
   group('Ödeme kartı açıklaması', () {
-    test('şikayet sonuçlanınca havuzda tutulur denmez', () {
+    test('para havuzdan çıkınca havuzda tutulur denmez', () {
       final l = _lang('tr');
       const stale = 'güvence havuzunda tutulur';
       for (final role in PartyRole.values) {
-        for (final s in [
-          EscrowStatus.releasedToPro,
-          EscrowStatus.refundedToCustomer,
-          EscrowStatus.splitSettled,
-          EscrowStatus.disputed,
-        ]) {
-          expect(escrowExplanation(l, s, role), isNot(contains(stale)));
+        for (final byComplaint in [true, false]) {
+          for (final s in [
+            EscrowStatus.releasedToPro,
+            EscrowStatus.refundedToCustomer,
+            EscrowStatus.splitSettled,
+            EscrowStatus.disputed,
+          ]) {
+            expect(
+              escrowExplanation(l, s, role, byComplaint: byComplaint),
+              isNot(contains(stale)),
+            );
+          }
         }
       }
       expect(
         escrowExplanation(l, EscrowStatus.splitSettled, PartyRole.pro),
         contains('paylaştırıldı'),
       );
+    });
+
+    test('"şikayet kararıyla" yalnız sonuçlanan şikayette yazılır', () {
+      final l = _lang('tr');
+      for (final role in PartyRole.values) {
+        for (final s in [
+          EscrowStatus.releasedToPro,
+          EscrowStatus.refundedToCustomer,
+        ]) {
+          // Onay, 48 saat ya da iptal: şikayet yok.
+          expect(escrowExplanation(l, s, role), isNot(contains('Şikayet')));
+          expect(
+            escrowExplanation(l, s, role, byComplaint: true),
+            startsWith('Şikayet kararıyla'),
+          );
+        }
+      }
       expect(
         escrowExplanation(l, EscrowStatus.releasedToPro, PartyRole.pro),
-        contains('aktarıldı'),
+        l.escrowDoneReleasedPro,
       );
       expect(
-        escrowExplanation(l, EscrowStatus.refundedToCustomer, PartyRole.pro),
-        contains('iade'),
+        escrowExplanation(
+          l,
+          EscrowStatus.refundedToCustomer,
+          PartyRole.customer,
+        ),
+        l.escrowDoneRefunded,
       );
     });
 

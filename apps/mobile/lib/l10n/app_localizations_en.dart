@@ -1690,6 +1690,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'The payment stays in secure hold until the complaint is settled.';
 
   @override
+  String get escrowDoneReleased => 'The amount was paid out to the pro.';
+
+  @override
+  String get escrowDoneReleasedPro => 'Your net earning was paid out to you.';
+
+  @override
+  String get escrowDoneRefunded => 'The amount was refunded to your card.';
+
+  @override
+  String get escrowDoneRefundedPro =>
+      'The amount was refunded to the customer.';
+
+  @override
   String get escrowSettledReleased =>
       'By the complaint decision, the amount was paid out to the pro.';
 
