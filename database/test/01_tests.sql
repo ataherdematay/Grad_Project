@@ -42,6 +42,11 @@ UPDATE users SET role = 'ADMIN' WHERE id = :AD;
 SELECT t.check('A1 profile created on sign-up', (SELECT count(*) FROM users) = 7);
 SELECT t.check('A2 role in sign-up data is ignored (stays CUSTOMER)', (SELECT role FROM users WHERE id = :C1) = 'CUSTOMER');
 SELECT t.check('A3 Google name split into first/last', (SELECT first_name || '|' || last_name FROM users WHERE id = :G1) = 'Zeynep|Kaya Öztürk');
+INSERT INTO auth.users (id, phone) VALUES ('00000000-0000-0000-0000-0000000000a9', '905321234567');
+INSERT INTO auth.users (id, phone) VALUES ('00000000-0000-0000-0000-0000000000aa', '4915112345678');
+SELECT t.check('A5 phone sign-up: number stored with +90, empty name, CUSTOMER', (SELECT phone_number || '|' || first_name || '|' || role FROM users WHERE id = '00000000-0000-0000-0000-0000000000a9') = '+905321234567||CUSTOMER');
+SELECT t.check('A6 non-Turkish phone does not break sign-up', (SELECT phone_number IS NULL FROM users WHERE id = '00000000-0000-0000-0000-0000000000aa'));
+DELETE FROM auth.users WHERE id IN ('00000000-0000-0000-0000-0000000000a9','00000000-0000-0000-0000-0000000000aa');
 SELECT t.check('A4 language preference saved (en)', (SELECT preferred_lang FROM users WHERE id = :C1) = 'en');
 
 -- ===== B. professional registration and admin approval =====

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/user_model.dart';
+import '../supabase/auth_service.dart';
 
 // EVENTS
 abstract class AuthEvent extends Equatable {
@@ -92,14 +93,28 @@ class AuthState extends Equatable {
 
 // BLOC IMPLEMENTATION
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(const AuthState()) {
+  final AuthService? _auth;
+
+  /// [authService] is given only when Supabase is configured; without it the old mock login is used.
+  AuthBloc({AuthService? authService})
+      : _auth = authService,
+        super(const AuthState()) {
     on<SelectRoleEvent>((event, emit) {
       emit(state.copyWith(selectedRole: event.role));
     });
 
     on<SendOtpEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true, errorMessage: null));
-      await Future.delayed(const Duration(milliseconds: 400));
+      if (_auth != null) {
+        try {
+          await _auth!.sendOtp(event.phoneNumber);
+        } catch (e) {
+          emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+          return;
+        }
+      } else {
+        await Future.delayed(const Duration(milliseconds: 400));
+      }
       emit(state.copyWith(
         isLoading: false,
         status: AuthStatus.otpSent,
@@ -109,6 +124,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<VerifyOtpEvent>((event, emit) async {
       emit(state.copyWith(isLoading: true, errorMessage: null));
+      if (_auth != null) {
+        try {
+          await _auth!.verifyOtp(state.phoneNumber ?? '', event.otpCode);
+          final profile = await _auth!.currentProfile();
+          emit(state.copyWith(isLoading: false, status: AuthStatus.authenticated, user: profile));
+        } catch (e) {
+          emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+        }
+        return;
+      }
       await Future.delayed(const Duration(milliseconds: 500));
 
       final isCustomer = state.selectedRole == UserRole.customer;
@@ -132,6 +157,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SwitchRoleEvent>((event, emit) {
+      if (_auth != null) {
+        // real account: only change which side of the app is shown (a professional account is created in onboarding)
+        final r = state.selectedRole == UserRole.customer ? UserRole.pro : UserRole.customer;
+        emit(state.copyWith(selectedRole: r));
+        return;
+      }
       final newRole = state.selectedRole == UserRole.customer
           ? UserRole.pro
           : UserRole.customer;
@@ -148,7 +179,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ));
     });
 
-    on<LogoutEvent>((event, emit) {
+    on<LogoutEvent>((event, emit) async {
+      if (_auth != null) {
+        try {
+          await _auth!.signOut();
+        } catch (_) {}
+      }
       emit(const AuthState());
     });
   }

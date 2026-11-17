@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 import 'core/repositories/job_repository.dart';
 import 'core/repositories/mock_job_repository.dart';
 import 'core/supabase/app_config.dart';
+import 'core/supabase/auth_service.dart';
 import 'core/supabase/supabase_job_repository.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -33,7 +34,11 @@ class BiTadilatApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => AuthBloc()),
+          BlocProvider(
+            create: (_) => AuthBloc(
+              authService: AppConfig.useSupabase ? AuthService(Supabase.instance.client) : null,
+            ),
+          ),
           BlocProvider(
             create: (_) => JobBloc(repository: jobRepository)
               ..add(const LoadCustomerJobsEvent())

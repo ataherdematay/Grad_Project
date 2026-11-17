@@ -2,8 +2,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/user_model.dart';
 
-/// Login with email + password or Google (Supabase Auth). Not connected to the screens yet:
-/// the current welcome/phone/SMS screens still follow the phone-number design (see docs/BACKEND_STATUS.md).
+/// Login with phone number + SMS code (the chosen login), through Supabase Auth.
+/// Email/password and Google are kept as optional extras (not used by the current screens).
 class AuthService {
   AuthService(this._client);
 
@@ -11,6 +11,24 @@ class AuthService {
 
   User? get currentAuthUser => _client.auth.currentUser;
   Stream<AuthState> get authChanges => _client.auth.onAuthStateChange;
+
+  /// Turns "0532 123 45 67", "+90 532 123 45 67" or "5321234567" into "+905321234567".
+  static String normalizePhone(String input) {
+    var d = input.replaceAll(RegExp(r'[^0-9]'), '');
+    if (d.startsWith('90') && d.length == 12) return '+$d';
+    if (d.startsWith('0') && d.length == 11) d = d.substring(1);
+    return '+90$d';
+  }
+
+  /// Step 1: sends the 6-digit SMS code. The same call creates the account on first login.
+  Future<void> sendOtp(String phone) async {
+    await _client.auth.signInWithOtp(phone: normalizePhone(phone));
+  }
+
+  /// Step 2: checks the code and logs the user in. The database trigger has already created the profile row.
+  Future<void> verifyOtp(String phone, String code) async {
+    await _client.auth.verifyOTP(phone: normalizePhone(phone), token: code, type: OtpType.sms);
+  }
 
   Future<void> signUpWithEmail({
     required String email,

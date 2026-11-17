@@ -1,6 +1,6 @@
 # BiTadilat on Supabase: setup guide
 
-PostgreSQL on the Supabase **free plan**. Login with **Google or email + password**. Everything works in **Turkish and English**.
+PostgreSQL on the Supabase **free plan**. Login with **phone number + SMS code** (the chosen login). Everything works in **Turkish and English**.
 
 ## 1. Create the project (one person, e.g. you)
 1. Go to supabase.com, sign in, **New project**. Name `bitadilat`, pick a strong database password (save it in a password manager, do not share it in chat), region **Frankfurt (eu-central-1)**, the closest to Istanbul.
@@ -17,12 +17,15 @@ Open **SQL Editor**, paste each file and press **Run**, in this order:
 Each should say "Success". If one fails, send me the error text.
 
 ## 3. Turn on login
-- Authentication → Providers → **Email**: on. For the demo, turn **Confirm email** off so test accounts work immediately.
-- Authentication → Providers → **Google**: on. You need a Google Cloud OAuth client (Client ID and Secret). Supabase shows the exact "Callback URL" to paste in Google Cloud. Add `http://localhost:3000` (or the app's URL) under Authentication → URL Configuration.
+- Authentication → Providers → **Phone**: on. Pick ONE way to get codes:
+  - **Course / testing (free, no SMS provider):** same page → **Test Phone Numbers & OTPs**: add e.g. `905551110001=123456` and `905551110002=123456` (numbers without `+`). These numbers log in with the fixed code; no real SMS is sent.
+  - **Real SMS:** choose Twilio / Vonage / MessageBird / TextLocal and paste its keys (a paid service; the Supabase free plan does not include SMS). Needed only for real phones.
+  Admin login: create the admin as a test number, then make it admin (below).
+- (Optional, later) Providers → **Google** or **Email**: not used by the current screens.
 
 ## 4. Make the first admin
-1. Sign up once in the app/site with the admin's email (this creates the profile).
-2. SQL Editor: `UPDATE public.users SET role = 'ADMIN' WHERE email = 'admin@yourmail.com';`
+1. Log in once with the admin's phone number (this creates the profile).
+2. SQL Editor: `UPDATE public.users SET role = 'ADMIN' WHERE phone_number = '+905551110001';`
    (Nobody can make themselves admin from the app. This is the only way.)
 
 ## 5. Connect the apps

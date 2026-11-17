@@ -50,15 +50,18 @@ LANGUAGE sql AS $$ INSERT INTO notifications (user_id, type, job_id, data) VALUE
 -- Works for Google (name comes from Google) and for email + password (app sends first_name / last_name in sign-up data).
 -- The role can only be CUSTOMER here. Becoming a professional goes through fn_register_pro; ADMIN is set by hand.
 CREATE OR REPLACE FUNCTION handle_new_user() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-DECLARE v_full TEXT; v_first TEXT; v_last TEXT; v_lang TEXT;
+DECLARE v_full TEXT; v_first TEXT; v_last TEXT; v_lang TEXT; v_phone TEXT;
 BEGIN
     v_full  := COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', '');
-    v_first := COALESCE(NULLIF(NEW.raw_user_meta_data->>'first_name', ''), NULLIF(split_part(v_full, ' ', 1), ''), 'User');
+    v_first := COALESCE(NULLIF(NEW.raw_user_meta_data->>'first_name', ''), NULLIF(split_part(v_full, ' ', 1), ''), '');
     v_last  := COALESCE(NULLIF(NEW.raw_user_meta_data->>'last_name', ''),
-                        NULLIF(btrim(substr(v_full, length(split_part(v_full, ' ', 1)) + 1)), ''), '-');
+                        NULLIF(btrim(substr(v_full, length(split_part(v_full, ' ', 1)) + 1)), ''), '');
     v_lang  := CASE WHEN NEW.raw_user_meta_data->>'preferred_lang' IN ('tr', 'en') THEN NEW.raw_user_meta_data->>'preferred_lang' ELSE 'tr' END;
-    INSERT INTO users (id, email, first_name, last_name, preferred_lang, avatar_url, kvkk_accepted_at)
-    VALUES (NEW.id, NEW.email, v_first, v_last, v_lang, NEW.raw_user_meta_data->>'avatar_url',
+    -- phone login: Supabase stores the number without '+' (e.g. 905321234567); keep it only if it is a valid Turkish mobile number
+    v_phone := CASE WHEN NULLIF(NEW.phone, '') IS NULL THEN NULL ELSE '+' || ltrim(NEW.phone, '+') END;
+    IF v_phone IS NOT NULL AND v_phone !~ '^\+90[0-9]{10}$' THEN v_phone := NULL; END IF;
+    INSERT INTO users (id, phone_number, email, first_name, last_name, preferred_lang, avatar_url, kvkk_accepted_at)
+    VALUES (NEW.id, v_phone, NULLIF(NEW.email, ''), v_first, v_last, v_lang, NEW.raw_user_meta_data->>'avatar_url',
             CASE WHEN NEW.raw_user_meta_data->>'kvkk_accepted' = 'true' THEN NOW() END);
     RETURN NEW;
 END $$;
