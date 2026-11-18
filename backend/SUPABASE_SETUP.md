@@ -39,3 +39,9 @@ ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;
 - Free plan: 500 MB database; the project **pauses after about 7 days without activity** (resume it in the dashboard before a demo).
 - Uploaded files go to `MEDIA_DIR` (local disk), not to Supabase Storage. On a free host with a temporary disk they disappear on redeploy; use a persistent disk or move media to Supabase Storage later.
 - Phone + SMS login is not implemented in the backend (it uses email + password). Needs a team decision.
+
+## 5. Tested on Supabase (2026-11-19)
+Flyway V1-V7 ran on a fresh Supabase project (PostgreSQL 17) and the API started (Hibernate `validate` passed).
+Notes from that run:
+- A new project created with "Enable automatic RLS" has a helper function `public.rls_auto_enable()`; Flyway refuses a non-empty schema, so run `DROP FUNCTION public.rls_auto_enable() CASCADE;` once (or leave that option unticked).
+- `prod` mode needs an `EmailSender` bean (only `LoggingEmailSender` exists, and it is `@Profile("!prod")`), and real Craftgate sandbox keys. For a local test against Supabase use `SPRING_PROFILES_ACTIVE=staging` with `SPRING_DATASOURCE_URL/USERNAME/PASSWORD`, and placeholder Craftgate keys.
