@@ -368,7 +368,7 @@
               "raw": "{{baseUrl}}/api/v1/requests?scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "requests"],
-              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
+              "query": [{ "key": "as", "value": "CUSTOMER" }, { "key": "scope", "value": "active" }]
             }
           }
         },
@@ -692,7 +692,7 @@
               "raw": "{{baseUrl}}/api/v1/requests?scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "requests"],
-              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
+              "query": [{ "key": "as", "value": "CUSTOMER" }, { "key": "scope", "value": "active" }]
             }
           }
         },
@@ -758,10 +758,10 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/jobs?as=customer&scope=active",
+              "raw": "{{baseUrl}}/api/v1/jobs?as=CUSTOMER&scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "jobs"],
-              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
+              "query": [{ "key": "as", "value": "CUSTOMER" }, { "key": "scope", "value": "active" }]
             }
           }
         }
