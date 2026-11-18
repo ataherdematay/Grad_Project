@@ -46,14 +46,52 @@ public class CraftgateGateway implements PaymentGateway {
 
     private final Craftgate craftgate;
     private final String callbackKey;
+    private final boolean localDemoMode;
+    private final java.util.concurrent.atomic.AtomicLong localSeq = new java.util.concurrent.atomic.AtomicLong(900_000L);
+    private final Map<Long, GatewayPayment> localPayments = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<Long, BigDecimal> localRefunds = new java.util.concurrent.ConcurrentHashMap<>();
 
-    public CraftgateGateway(Craftgate craftgate, @Value("${craftgate.callback-key}") String callbackKey) {
+    public CraftgateGateway(Craftgate craftgate, String callbackKey) {
+        this(craftgate, callbackKey, "");
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public CraftgateGateway(
+            Craftgate craftgate,
+            @Value("${craftgate.callback-key}") String callbackKey,
+            @Value("${craftgate.api-key:}") String apiKey) {
         this.craftgate = craftgate;
         this.callbackKey = callbackKey;
+        this.localDemoMode = apiKey != null && apiKey.startsWith("sandbox-demo");
     }
 
     @Override
     public ThreeDsSession init3ds(ThreeDsRequest request) {
+        if (localDemoMode) {
+            long pid = localSeq.incrementAndGet();
+            localPayments.put(pid, new GatewayPayment(
+                    pid, Status.SUCCESS, request.amount(), request.conversationId(), null));
+            localRefunds.put(pid, BigDecimal.ZERO);
+            String html = """
+                    <!DOCTYPE html>
+                    <html lang="tr"><head><meta charset="utf-8"><title>Craftgate 3D Secure Doğrulama</title></head>
+                    <body style="font-family:sans-serif;text-align:center;padding:32px">
+                      <h3>Craftgate Sandbox — 3D Secure Banka Onayı</h3>
+                      <p>Tutar: <b>%s TL</b> | Ödeme No: <b>%d</b></p>
+                      <form id="cg3ds" action="%s" method="post">
+                        <input type="hidden" name="status" value="SUCCESS"/>
+                        <input type="hidden" name="paymentId" value="%d"/>
+                        <input type="hidden" name="conversationId" value="%s"/>
+                        <button type="submit" style="padding:10px 20px;background:#0F4C5C;color:#fff;border:0;border-radius:6px;cursor:pointer">
+                          3D Secure SMS Onayla (Kod: 123456)
+                        </button>
+                      </form>
+                    </body></html>
+                    """.formatted(request.amount().toPlainString(), pid, request.callbackUrl(), pid, request.conversationId());
+            log.info("3DS başlatıldı (Yerel Craftgate Sandbox). paymentId={} externalId={} conversationId={}",
+                    pid, request.externalId(), request.conversationId());
+            return new ThreeDsSession(pid, html, request.callbackUrl());
+        }
         CardDetails details = request.card();
         Card card = Card.builder()
                 .cardHolderName(details.holderName())
@@ -93,6 +131,9 @@ public class CraftgateGateway implements PaymentGateway {
 
     @Override
     public GatewayPayment complete3ds(Long paymentId) {
+        if (localDemoMode) {
+            return localPayments.get(paymentId);
+        }
         PaymentResponse response = call("complete3ds", () -> craftgate.payment().complete3DSPayment(
                 CompleteThreeDSPaymentRequest.builder().paymentId(paymentId).build()));
         return toGatewayPayment(response);
@@ -100,11 +141,22 @@ public class CraftgateGateway implements PaymentGateway {
 
     @Override
     public GatewayPayment retrieve(Long paymentId) {
+        if (localDemoMode) {
+            return localPayments.get(paymentId);
+        }
         return toGatewayPayment(call("retrieve", () -> craftgate.payment().retrievePayment(paymentId)));
     }
 
     @Override
     public RefundState refundState(Long paymentId) {
+        if (localDemoMode) {
+            GatewayPayment p = localPayments.get(paymentId);
+            BigDecimal refunded = localRefunds.getOrDefault(paymentId, BigDecimal.ZERO);
+            if (p == null || refunded.compareTo(BigDecimal.ZERO) <= 0) {
+                return RefundState.NOT_REFUNDED;
+            }
+            return refunded.compareTo(p.paidPrice()) >= 0 ? RefundState.FULLY_REFUNDED : RefundState.PARTIALLY_REFUNDED;
+        }
         ReportingPaymentResponse report = call("refundState",
                 () -> craftgate.paymentReporting().retrievePayment(paymentId), REFUND_STATUS_UNKNOWN);
         if (report.getRefundStatus() == PaymentRefundStatus.FULLY_REFUNDED) {
@@ -124,6 +176,9 @@ public class CraftgateGateway implements PaymentGateway {
 
     @Override
     public BigDecimal refundedTotal(Long paymentId) {
+        if (localDemoMode) {
+            return localRefunds.getOrDefault(paymentId, BigDecimal.ZERO);
+        }
         ReportingPaymentResponse report = call("refundedTotal",
                 () -> craftgate.paymentReporting().retrievePayment(paymentId), REFUND_STATUS_UNKNOWN);
         BigDecimal total = BigDecimal.ZERO;
@@ -162,6 +217,14 @@ public class CraftgateGateway implements PaymentGateway {
 
     @Override
     public void refundFully(Long paymentId, String conversationId) {
+        if (localDemoMode) {
+            GatewayPayment p = localPayments.get(paymentId);
+            if (p != null && p.paidPrice() != null) {
+                localRefunds.put(paymentId, p.paidPrice());
+            }
+            log.info("Tam iade yapıldı (Yerel Craftgate Sandbox). paymentId={} conversationId={}", paymentId, conversationId);
+            return;
+        }
         PaymentRefundResponse response = call("refundFully", () -> craftgate.payment().refundPayment(
                 RefundPaymentRequest.builder()
                         .paymentId(paymentId)
@@ -176,6 +239,12 @@ public class CraftgateGateway implements PaymentGateway {
 
     @Override
     public void refundPartially(Long paymentId, BigDecimal amount, String conversationId) {
+        if (localDemoMode) {
+            localRefunds.merge(paymentId, amount, BigDecimal::add);
+            log.info("Kısmi iade yapıldı (Yerel Craftgate Sandbox). paymentId={} amount={} conversationId={}",
+                    paymentId, money(amount), conversationId);
+            return;
+        }
         PaymentResponse payment = call("retrieve", () -> craftgate.payment().retrievePayment(paymentId),
                 REFUND_FAILED);
         List<PaymentTransaction> transactions = payment.getPaymentTransactions();

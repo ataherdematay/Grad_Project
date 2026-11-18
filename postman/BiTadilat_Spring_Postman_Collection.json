@@ -1,0 +1,809 @@
+{
+  "info": {
+    "_postman_id": "b17ad11a-2026-4902-8090-spring000003",
+    "name": "BiTadilat API v1 + Craftgate 3D Secure Ödeme Koleksiyonu",
+    "description": "Işık Üniversitesi Bitirme Projesi — BiTadilat Spring Boot + PostgreSQL + Craftgate 3D Secure Escrow API Koleksiyonu.\n\nCraftgate Ödeme Akışı:\n- Klasör 0A: Doğrudan Craftgate 3D Secure & Güvence Havuzu Akışı (/api/offers ve /api/payments)\n- Klasör 0B: JWT Korumalı Uygulama Ödeme Akışı (/api/v1/payments)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8090",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "proToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "paymentRef",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "appPaymentRef",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "craftgatePaymentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "conversationId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "offerId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0A. Craftgate 3D Secure & Güvence Havuzu (Doğrudan Ödeme Akışı)",
+      "item": [
+        {
+          "name": "Adım 1: Teklif Özeti Getir (GET /api/offers/OFFER-BD-88412)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/offers/OFFER-BD-88412",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "offers", "OFFER-BD-88412"]
+            }
+          }
+        },
+        {
+          "name": "Adım 2: Craftgate 3D Secure Ödeme Başlat (POST /api/payments/3ds/init)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('paymentRef', res.ref);",
+                  "    const html = res.htmlContent || '';",
+                  "    const pidMatch = html.match(/name=\"paymentId\"\\s+value=\"([^\"]+)\"/);",
+                  "    const cidMatch = html.match(/name=\"conversationId\"\\s+value=\"([^\"]+)\"/);",
+                  "    if (pidMatch) pm.collectionVariables.set('craftgatePaymentId', pidMatch[1]);",
+                  "    if (cidMatch) pm.collectionVariables.set('conversationId', cidMatch[1]);",
+                  "    pm.visualizer.set(html);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offerId\": \"OFFER-BD-88412\",\n  \"attemptKey\": \"{{$guid}}\",\n  \"cardHolderName\": \"Hakan Kuvan\",\n  \"cardNumber\": \"5258640000000001\",\n  \"expireMonth\": \"07\",\n  \"expireYear\": \"2044\",\n  \"cvc\": \"000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/3ds/init",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "3ds", "init"]
+            }
+          }
+        },
+        {
+          "name": "Adım 2B: 3D Secure Banka SMS Onayı Tamamla (POST /api/payments/3ds/callback)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "status",
+                  "value": "SUCCESS",
+                  "type": "text"
+                },
+                {
+                  "key": "paymentId",
+                  "value": "{{craftgatePaymentId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "conversationId",
+                  "value": "{{conversationId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/3ds/callback",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "3ds", "callback"]
+            }
+          }
+        },
+        {
+          "name": "Adım 3: Havuzdaki Ödeme Durumunu Sorgula (GET /api/payments/{{paymentRef}})",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentRef}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentRef}}"]
+            }
+          }
+        },
+        {
+          "name": "Adım 4A: İşi Onayla -> Ustaya Serbest Bırak %90 / %10 Komisyon (POST /release)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentRef}}/release",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentRef}}", "release"]
+            }
+          }
+        },
+        {
+          "name": "Adım 4B: Şikayet Aç -> Havuzu Dondur (POST /dispute)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentRef}}/dispute",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentRef}}", "dispute"]
+            }
+          }
+        },
+        {
+          "name": "Adım 4C: Craftgate İade Yap — Tam İade FULL (POST /refund)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"FULL\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentRef}}/refund",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentRef}}", "refund"]
+            }
+          }
+        },
+        {
+          "name": "Adım 4D: Craftgate İade Yap — Yarı Yarıya SPLIT_50_50 (POST /refund)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"SPLIT_50_50\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentRef}}/refund",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "{{paymentRef}}", "refund"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "0B. Craftgate v1 Uygulama Ödeme Akışı (JWT + Teklif Kabulü)",
+      "item": [
+        {
+          "name": "1. Müşteri Girişi (ali@bitadilat.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"ali@bitadilat.test\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "2. Açık Talebi ve Teklif ID'sini Otomatik Al (GET /api/v1/requests)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    const items = res.items || [];",
+                  "    const openReq = items.find(r => r.status === 'OPEN') || items[0];",
+                  "    if (openReq) {",
+                  "        pm.sendRequest({",
+                  "            url: pm.collectionVariables.get('baseUrl') + '/api/v1/requests/' + openReq.id + '/offers',",
+                  "            method: 'GET',",
+                  "            header: { 'Authorization': 'Bearer ' + pm.collectionVariables.get('accessToken') }",
+                  "        }, function (err, offerRes) {",
+                  "            if (!err && offerRes.code === 200) {",
+                  "                const offers = offerRes.json().items || [];",
+                  "                const pending = offers.find(o => o.status === 'PENDING') || offers[0];",
+                  "                if (pending) pm.collectionVariables.set('offerId', pending.id);",
+                  "            }",
+                  "        });",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests?scope=active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "requests"],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. v1 Craftgate 3DS Ödeme Başlat (POST /api/v1/payments/3ds/init)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('appPaymentRef', res.ref);",
+                  "    const html = res.htmlContent || '';",
+                  "    const pidMatch = html.match(/name=\"paymentId\"\\s+value=\"([^\"]+)\"/);",
+                  "    const cidMatch = html.match(/name=\"conversationId\"\\s+value=\"([^\"]+)\"/);",
+                  "    if (pidMatch) pm.collectionVariables.set('craftgatePaymentId', pidMatch[1]);",
+                  "    if (cidMatch) pm.collectionVariables.set('conversationId', cidMatch[1]);",
+                  "    pm.visualizer.set(html);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offerId\": \"{{offerId}}\",\n  \"attemptKey\": \"{{$guid}}\",\n  \"cardHolderName\": \"Ali Yılmaz\",\n  \"cardNumber\": \"5258640000000001\",\n  \"expireMonth\": \"07\",\n  \"expireYear\": \"2044\",\n  \"cvc\": \"000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/3ds/init",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "payments", "3ds", "init"]
+            }
+          }
+        },
+        {
+          "name": "3B. v1 3D Secure Banka SMS Onayı Tamamla (POST /api/payments/3ds/callback)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "status",
+                  "value": "SUCCESS",
+                  "type": "text"
+                },
+                {
+                  "key": "paymentId",
+                  "value": "{{craftgatePaymentId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "conversationId",
+                  "value": "{{conversationId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/3ds/callback",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payments", "3ds", "callback"]
+            }
+          }
+        },
+        {
+          "name": "4. v1 Ödeme ve Açılan İş Durumunu Sorgula (GET /api/v1/payments/{{appPaymentRef}})",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/payments/{{appPaymentRef}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "payments", "{{appPaymentRef}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Kimlik Doğrulama (Auth - JWT)",
+      "item": [
+        {
+          "name": "Admin Girişi (admin@bitadilat.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "    pm.collectionVariables.set('adminToken', res.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"admin@bitadilat.test\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Müşteri Girişi (ali@bitadilat.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"ali@bitadilat.test\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Usta Girişi (mehmet@bitadilat.test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const res = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "    pm.collectionVariables.set('proToken', res.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"mehmet@bitadilat.test\",\n  \"password\": \"Demo1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Profilim (GET /api/v1/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Katalog & İlçeler (Public)",
+      "item": [
+        {
+          "name": "Kategorileri Listele (GET /api/v1/categories)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Kategori Soru Şablonu (GET /api/v1/categories/plumbing)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/plumbing",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categories", "plumbing"]
+            }
+          }
+        },
+        {
+          "name": "İstanbul İlçeleri (GET /api/v1/districts)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/districts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "districts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Talepler, Teklifler & İşler (Wave 2 & 3)",
+      "item": [
+        {
+          "name": "Müşteri Taleplerim (GET /api/v1/requests)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests?scope=active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "requests"],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Usta İş Havuzu (GET /api/v1/pro/feed)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{proToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/pro/feed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "pro", "feed"]
+            }
+          }
+        },
+        {
+          "name": "Aktif İşler (GET /api/v1/jobs)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs?scope=active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs"],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Yönetici Paneli & Şikayet Tahkimi (Wave 4 - Admin)",
+      "item": [
+        {
+          "name": "Usta Başvurularını Listele (GET /api/v1/admin/applications)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/applications?status=PENDING_REVIEW",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "applications"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING_REVIEW"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Açık Şikayetleri Listele (GET /api/v1/admin/complaints)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/complaints",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "complaints"]
+            }
+          }
+        },
+        {
+          "name": "Kullanıcı & Usta Hesapları (GET /api/v1/admin/users)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Güvence Havuzu & Muhasebe Defteri (GET /api/v1/admin/payments)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "payments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Bildirimler & Push Cihaz Kaydı (Wave 4)",
+      "item": [
+        {
+          "name": "Bildirimlerimi Listele (GET /api/v1/notifications)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "notifications"]
+            }
+          }
+        },
+        {
+          "name": "Tüm Bildirimleri Okundu İşaretle (POST /api/v1/notifications/read)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/notifications/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "notifications", "read"]
+            }
+          }
+        },
+        {
+          "name": "Push Cihaz Token Kaydet (PUT /api/v1/devices)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"platform\": \"ANDROID\",\n  \"token\": \"fcm-demo-device-token-2026\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "devices"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
