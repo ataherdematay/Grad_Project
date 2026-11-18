@@ -82,12 +82,12 @@
     },
     {
       "key": "requestId",
-      "value": "0f7f73e8-a799-4ec1-be01-92a36906db04",
+      "value": "6f96608b-adac-458f-a6ac-ba3a57a5f068",
       "type": "string"
     },
     {
       "key": "offerId",
-      "value": "fa5c4cac-b925-43a5-9237-987dd70169b7",
+      "value": "2a5ce468-1c7f-4a9e-b4e4-b92229c57af5",
       "type": "string"
     },
     {
@@ -368,12 +368,7 @@
               "raw": "{{baseUrl}}/api/v1/requests?scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "requests"],
-              "query": [
-                {
-                  "key": "scope",
-                  "value": "active"
-                }
-              ]
+              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
             }
           }
         },
@@ -697,12 +692,7 @@
               "raw": "{{baseUrl}}/api/v1/requests?scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "requests"],
-              "query": [
-                {
-                  "key": "scope",
-                  "value": "active"
-                }
-              ]
+              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
             }
           }
         },
@@ -768,15 +758,10 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/jobs?scope=active",
+              "raw": "{{baseUrl}}/api/v1/jobs?as=customer&scope=active",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "jobs"],
-              "query": [
-                {
-                  "key": "scope",
-                  "value": "active"
-                }
-              ]
+              "query": [{ "key": "as", "value": "customer" }, { "key": "scope", "value": "active" }]
             }
           }
         }
