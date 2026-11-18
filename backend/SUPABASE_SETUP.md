@@ -30,6 +30,11 @@ The API runs Flyway: 31 tables, 8 categories, 39 Istanbul districts. `V7__supaba
 for every table and removes the rights of Supabase's public REST API roles, so the public anon key cannot read any data.
 The backend connects as the table owner (`postgres.<ref>`), which is not affected by RLS.
 
+After the first successful start, run this once in the Supabase SQL Editor (Flyway's own table cannot be locked from inside a migration):
+```sql
+ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;
+```
+
 ## 4. Limits to know
 - Free plan: 500 MB database; the project **pauses after about 7 days without activity** (resume it in the dashboard before a demo).
 - Uploaded files go to `MEDIA_DIR` (local disk), not to Supabase Storage. On a free host with a temporary disk they disappear on redeploy; use a persistent disk or move media to Supabase Storage later.

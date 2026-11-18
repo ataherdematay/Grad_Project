@@ -5,7 +5,8 @@
 DO $$
 DECLARE t RECORD; r TEXT;
 BEGIN
-    FOR t IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' LOOP
+    -- flyway_schema_history is skipped: Flyway keeps a second connection open on it, so locking it from inside a migration waits forever.
+    FOR t IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename <> 'flyway_schema_history' LOOP
         EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', t.tablename);
     END LOOP;
     FOREACH r IN ARRAY ARRAY['anon', 'authenticated'] LOOP
