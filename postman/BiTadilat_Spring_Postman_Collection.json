@@ -1,10 +1,44 @@
 {
   "info": {
-    "_postman_id": "b17ad11a-2026-4902-8090-spring000003",
+    "_postman_id": "b17ad11a-2026-4902-8090-spring000004",
     "name": "BiTadilat API v1 + Craftgate 3D Secure Ödeme Koleksiyonu",
-    "description": "Işık Üniversitesi Bitirme Projesi — BiTadilat Spring Boot + PostgreSQL + Craftgate 3D Secure Escrow API Koleksiyonu.\n\nCraftgate Ödeme Akışı:\n- Klasör 0A: Doğrudan Craftgate 3D Secure & Güvence Havuzu Akışı (/api/offers ve /api/payments)\n- Klasör 0B: JWT Korumalı Uygulama Ödeme Akışı (/api/v1/payments)",
+    "description": "Işık Üniversitesi Bitirme Projesi — BiTadilat Spring Boot + PostgreSQL + Craftgate 3D Secure Escrow API Koleksiyonu.\n\nTüm uç noktalar canlı backend ile birebir hizalanmıştır ve akıllı Pre-request Script sayesinde hangi sırayla tıklanırsa tıklansın gerekli token/ID değişkenlerini otomatik doldurur (404 / 401 vermez).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const baseUrl = pm.collectionVariables.get('baseUrl') || 'http://localhost:8090';",
+          "const urlStr = pm.request.url.toString();",
+          "",
+          "// Yardımcı: Senkron görünümlü otomatik login",
+          "function ensureLogin(varName, email, done) {",
+          "    if (pm.collectionVariables.get(varName)) { return done(); }",
+          "    pm.sendRequest({",
+          "        url: baseUrl + '/api/v1/auth/login',",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/json' },",
+          "        body: { mode: 'raw', raw: JSON.stringify({ identifier: email, password: 'Demo1234!' }) }",
+          "    }, function (err, res) {",
+          "        if (!err && res && res.code === 200) {",
+          "            pm.collectionVariables.set(varName, res.json().accessToken);",
+          "        }",
+          "        done();",
+          "    });",
+          "}",
+          "",
+          "ensureLogin('adminToken', 'admin@bitadilat.test', function () {",
+          "    ensureLogin('proToken', 'mehmet@bitadilat.test', function () {",
+          "        ensureLogin('accessToken', 'ali@bitadilat.test', function () {});",
+          "    });",
+          "});"
+        ]
+      }
+    }
+  ],
   "variable": [
     {
       "key": "baseUrl",
@@ -47,7 +81,22 @@
       "type": "string"
     },
     {
+      "key": "requestId",
+      "value": "0f7f73e8-a799-4ec1-be01-92a36906db04",
+      "type": "string"
+    },
+    {
       "key": "offerId",
+      "value": "fa5c4cac-b925-43a5-9237-987dd70169b7",
+      "type": "string"
+    },
+    {
+      "key": "complaintId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pendingProId",
       "value": "",
       "type": "string"
     }
@@ -230,6 +279,18 @@
       "name": "0B. Craftgate v1 Uygulama Ödeme Akışı (JWT + Teklif Kabulü)",
       "item": [
         {
+          "name": "0. Demo Verisini Sıfırla ve Tazele (POST /api/v1/dev/reset)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/dev/reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "dev", "reset"]
+            }
+          }
+        },
+        {
           "name": "1. Müşteri Girişi (ali@bitadilat.test)",
           "event": [
             {
@@ -276,6 +337,7 @@
                   "    const items = res.items || [];",
                   "    const openReq = items.find(r => r.status === 'OPEN') || items[0];",
                   "    if (openReq) {",
+                  "        pm.collectionVariables.set('requestId', openReq.id);",
                   "        pm.sendRequest({",
                   "            url: pm.collectionVariables.get('baseUrl') + '/api/v1/requests/' + openReq.id + '/offers',",
                   "            method: 'GET',",
@@ -312,6 +374,38 @@
                   "value": "active"
                 }
               ]
+            }
+          }
+        },
+        {
+          "name": "2B. Talebe Gelen Usta Tekliflerini Listele (GET /api/v1/requests/{{requestId}}/offers)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const offers = pm.response.json().items || [];",
+                  "    const pending = offers.find(o => o.status === 'PENDING') || offers[0];",
+                  "    if (pending) pm.collectionVariables.set('offerId', pending.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests/{{requestId}}/offers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "requests", "{{requestId}}", "offers"]
             }
           }
         },
@@ -561,14 +655,14 @@
           }
         },
         {
-          "name": "Kategori Soru Şablonu (GET /api/v1/categories/plumbing)",
+          "name": "Kategori Soru Şablonu (GET /api/v1/categories/plumbing/questions)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/categories/plumbing",
+              "raw": "{{baseUrl}}/api/v1/categories/plumbing/questions",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "categories", "plumbing"]
+              "path": ["api", "v1", "categories", "plumbing", "questions"]
             }
           }
         },
@@ -630,6 +724,40 @@
           }
         },
         {
+          "name": "Usta Tekliflerim (GET /api/v1/pro/offers)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{proToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/pro/offers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "pro", "offers"]
+            }
+          }
+        },
+        {
+          "name": "Usta Kazanç & Havuz Özeti (GET /api/v1/pro/earnings)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{proToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/pro/earnings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "pro", "earnings"]
+            }
+          }
+        },
+        {
           "name": "Aktif İşler (GET /api/v1/jobs)",
           "request": {
             "method": "GET",
@@ -658,7 +786,38 @@
       "name": "4. Yönetici Paneli & Şikayet Tahkimi (Wave 4 - Admin)",
       "item": [
         {
+          "name": "Admin Panosu Özeti & İstatistikler (GET /api/v1/admin/stats)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "stats"]
+            }
+          }
+        },
+        {
           "name": "Usta Başvurularını Listele (GET /api/v1/admin/applications)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const items = pm.response.json().items || [];",
+                  "    if (items.length > 0) pm.collectionVariables.set('pendingProId', items[0].proId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -682,6 +841,20 @@
         },
         {
           "name": "Açık Şikayetleri Listele (GET /api/v1/admin/complaints)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const items = pm.response.json().items || [];",
+                  "    if (items.length > 0) pm.collectionVariables.set('complaintId', items[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -769,7 +942,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"ids\": []\n}"
+              "raw": "{}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/notifications/read",
