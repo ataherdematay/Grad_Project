@@ -22,6 +22,8 @@ MEDIA_DIR=<a folder that survives restarts>
 APP_PUBLIC_BASE_URL=<public https address of the API>
 CORS_ALLOWED_ORIGINS=<admin web address>
 CRAFTGATE_API_KEY / CRAFTGATE_SECRET_KEY / CRAFTGATE_CALLBACK_KEY
+RESEND_API_KEY=<optional Resend API key for password reset emails in prod>
+MAIL_FROM=<optional sender, defaults to BiTadilat <onboarding@resend.dev>>
 ```
 The `service_role` key and the anon key are **not** needed anywhere.
 
@@ -44,4 +46,4 @@ ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;
 Flyway V1-V7 ran on a fresh Supabase project (PostgreSQL 17) and the API started (Hibernate `validate` passed).
 Notes from that run:
 - A new project created with "Enable automatic RLS" has a helper function `public.rls_auto_enable()`; Flyway refuses a non-empty schema, so run `DROP FUNCTION public.rls_auto_enable() CASCADE;` once (or leave that option unticked).
-- `prod` mode needs an `EmailSender` bean (only `LoggingEmailSender` exists, and it is `@Profile("!prod")`), and real Craftgate sandbox keys. For a local test against Supabase use `SPRING_PROFILES_ACTIVE=staging` with `SPRING_DATASOURCE_URL/USERNAME/PASSWORD`, and placeholder Craftgate keys.
+- `prod` mode uses `ProdEmailSender` (Resend HTTPS API via `RESEND_API_KEY`; starts cleanly with a warning if `RESEND_API_KEY` is not yet set), and real Craftgate sandbox keys. For a local test against Supabase you can also use `SPRING_PROFILES_ACTIVE=staging` with `SPRING_DATASOURCE_URL/USERNAME/PASSWORD`, and placeholder Craftgate keys.
