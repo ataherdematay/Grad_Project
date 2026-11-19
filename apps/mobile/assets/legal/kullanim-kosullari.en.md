@@ -13,7 +13,7 @@ BiTadilat is a home-repair marketplace. A customer creates a request, approved p
 - An account requires your full name, e-mail, phone number and a password. You are responsible for keeping this information accurate and current.
 - Do not share your credentials (password, verification codes). You are responsible for actions taken through your account.
 - One account can be used in both customer and pro mode; pro mode requires admin approval.
-- You can delete your account in the app. Records that must be retained by law (for example payment records) are kept for the period the law requires.
+- You can delete your account in the app; this is not possible while you have an open job or a payment held in the secure hold. Records that must be retained by law (for example payment records) are kept for the period the law requires.
 
 ## 3. As a customer
 

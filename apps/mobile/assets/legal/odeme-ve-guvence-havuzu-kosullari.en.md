@@ -8,7 +8,7 @@ When you accept an offer and pay by card, the money does not go to the pro right
 
 ## 2. Payment
 
-- Payment is by card with 3D Secure verification. The payment provider Craftgate collects it; the card number and CVC never reach BiTadilat and are not stored.
+- Payment is by card with 3D Secure verification. The payment provider Craftgate collects it; your card details go from the form in the app through our server to Craftgate in the payment request, and BiTadilat does not store or log them (only the last 4 digits of the card are kept).
 - The amount is the offer total (VAT included: labour + materials).
 - When payment succeeds the job is opened, the offer acceptance becomes final and other offers on the request lapse. If the bank declines or 3D Secure is not completed, the payment counts as failed, no money is taken and you can retry. If the request was meanwhile awarded through another offer, your payment is refunded automatically.
 
@@ -21,13 +21,15 @@ After the appointment is confirmed, the pro arrives, starts the work and taps "f
 
 If you think the work is faulty, open a complaint before the 48 hours end; while a complaint is open the automatic payout does not run.
 
+Before a payout the payment provider is asked whether this payment has any refund. If the provider cannot be reached the job still completes, the payout is postponed and retried automatically; if the payment shows a refund the payout is not made and the record is reviewed by hand.
+
 ## 4. Cancellation and refunds
 
 - Customer cancellation: the job can be cancelled while awaiting pro confirmation, after the appointment is confirmed, and when the pro is on site; the amount paid is refunded in full and the request is cancelled.
 - Pro cancellation: in the same stages the pro can cancel; the amount paid is refunded to you in full, the pro's offer is treated as withdrawn and your request reopens for offers. A pro cancellation is recorded on the pro's record.
 - Once work has started ("in progress" and later) there is no direct cancellation; you open a complaint for any problem.
 - While a complaint is under review cancellation and refund are closed; the decision rests with the admin.
-- Every cancellation asks for a reason and shows a confirmation screen. Refunds go back to the card used, through the payment provider; how fast it appears on your card depends on your bank.
+- Every cancellation asks for a reason and shows a confirmation screen. Refunds go back to the card used, through the payment provider; how fast it appears on your card depends on your bank. If the payment provider cannot be reached at that moment the cancellation still stands; the refund is retried automatically and may arrive late. You get a notification when it completes; if it cannot be completed the record is reviewed by hand.
 
 ## 5. Complaints and admin decision
 

@@ -13,7 +13,7 @@ You are informed under Article 10 of Turkish Law No. 6698 on the Protection of P
 - Transaction data: requests, offers, jobs, appointments, messages, reviews, complaints.
 - Images and documents: request and evidence photos, message images; for pros, ID, trade and tax documents and criminal record.
 - Financial: payment reference, amount, status, last 4 digits of the card, payout/commission/refund records. Card number and CVC are not stored by BiTadilat.
-- Security: IP address, sign-in attempts, session and device notification tokens, user agent, consent timestamps.
+- Security: IP address, sign-in attempts, session tokens, device notification token (no push notifications are sent), user agent, consent timestamps.
 
 A pro's ID document and criminal record can be sensitive; they are processed only for pro verification and only as far as necessary. [SENSITIVE DATA ASSESSMENT — lawyer to confirm]
 
@@ -26,7 +26,7 @@ A pro's ID document and criminal record can be sensitive; they are processed onl
 
 ## 4. Transfers
 
-Data may be shared, limited to the purpose, with: the pro/customer party to the job; the payment provider Craftgate; hosting and notification service providers; competent public authorities and courts. [LIST OF TRANSFERS ABROAD AND PROCESSORS]
+Data may be shared, limited to the purpose, with: the pro/customer party to the job; the payment provider Craftgate; hosting and email delivery service providers; competent public authorities and courts. [LIST OF TRANSFERS ABROAD AND PROCESSORS]
 
 ## 5. Method of collection
 

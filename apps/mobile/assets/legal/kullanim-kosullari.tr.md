@@ -13,7 +13,7 @@ BiTadilat bir ev onarım pazaryeridir. Müşteri bir talep oluşturur, onaylı u
 - Hesap için ad soyad, e-posta, telefon ve parola gerekir. Bilgilerinin doğru ve güncel olması senin sorumluluğundur.
 - Hesap bilgilerini (parola, doğrulama kodları) başkasıyla paylaşma. Hesabından yapılan işlemlerden sen sorumlusun.
 - Aynı hesap hem müşteri hem usta modunda kullanılabilir; usta modu yönetici onayına bağlıdır.
-- Hesabını uygulamadan silebilirsin. Yasal saklama yükümlülüğü olan kayıtlar (ör. ödeme kayıtları) mevzuatın gerektirdiği süre boyunca saklanır.
+- Hesabını uygulamadan silebilirsin; açık bir işin veya güvence havuzunda tutulan bir ödemen varken silinemez. Yasal saklama yükümlülüğü olan kayıtlar (ör. ödeme kayıtları) mevzuatın gerektirdiği süre boyunca saklanır.
 
 ## 3. Müşteri olarak
 

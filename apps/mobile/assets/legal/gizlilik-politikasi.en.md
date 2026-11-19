@@ -16,8 +16,8 @@ The data the app actually stores:
 - Job and communication: job status and stages (arrived, started, finished), appointment proposals, in-job messages and images attached to them, notifications.
 - Reviews and complaints: rating, tags, comment; complaint reason, description, evidence photos and the admin decision.
 - Pro application: business name, bio, experience, categories and districts served, working hours; uploaded documents such as ID, trade certificate, tax document and criminal record (JPEG, PNG or PDF, up to 5 MB) and review results.
-- Payment: BiTadilat does not store card data; the card number and CVC are entered on the 3D Secure page of the payment provider Craftgate. BiTadilat keeps only the payment reference, amount, status, last 4 digits of the card and pro payout/commission/refund records.
-- Device and security: a device push-notification token; hashes of session tokens and the user agent of the signed-in device; sign-in attempts (hash of the identifier, IP address, success, time) and a hash of the password-reset code.
+- Payment: BiTadilat does not store or log card data; the card number, expiry date and CVC are entered in the payment form in the app and pass through our server to the payment provider Craftgate in a single payment request. Bank verification (3D Secure) takes place on the bank's page. BiTadilat keeps only the payment reference, amount, status, last 4 digits of the card and pro payout/commission/refund records.
+- Device and security: a device notification token (stored; no push notifications are sent at present, notifications are shown inside the app); hashes of session tokens and the user agent of the signed-in device; sign-in attempts (hash of the identifier, IP address, success, time) and hashes of password-reset and email-change codes. If you pick an optional reason when deleting your account, it is kept for statistics without any link to you (no identity, no free text, day precision only).
 
 ## 3. Why we use it
 
@@ -31,7 +31,7 @@ We do not sell data for advertising and we do not use third-party advertising or
 
 - Customer and pro: the information needed to carry out the job. Your full address is opened only to the pro whose offer you accepted.
 - Payment provider Craftgate: to collect the payment and for refunds/payouts.
-- Infrastructure providers (hosting, notification service): to provide the service. [LIST OF INFRASTRUCTURE AND NOTIFICATION PROVIDERS]
+- Infrastructure providers (hosting, email delivery service): to provide the service. [LIST OF INFRASTRUCTURE AND EMAIL PROVIDERS]
 - Competent public authorities and courts: on lawful request.
 
 Any transfer abroad is made in line with KVKK Article 9. [STATUS OF TRANSFERS ABROAD]

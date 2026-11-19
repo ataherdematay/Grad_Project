@@ -16,8 +16,8 @@ Uygulamanın gerçekten sakladığı veriler:
 - İş ve iletişim: iş durumu ve aşamaları (adrese ulaşma, başlama, bitirme), randevu önerileri, iş içi mesajlar ve mesajlara eklenen görseller, bildirimler.
 - Değerlendirme ve şikayet: puan, etiketler, yorum; şikayet nedeni, açıklaması, kanıt fotoğrafları ve yönetici kararı.
 - Usta başvurusu: işletme adı, tanıtım metni, deneyim, çalıştığı kategoriler ve ilçeler, çalışma saatleri; kimlik, meslek belgesi, vergi belgesi ve sabıka kaydı gibi yüklenen belgeler (JPEG, PNG veya PDF, en fazla 5 MB) ve inceleme sonuçları.
-- Ödeme: kart bilgilerini BiTadilat saklamaz; kart numarası ve CVC ödeme kuruluşu Craftgate'in 3D Secure ekranına girilir. BiTadilat'ta yalnızca ödeme referansı, tutar, durum, kartın son 4 hanesi ve usta ödeme/komisyon/iade kayıtları tutulur.
-- Cihaz ve güvenlik: bildirim göndermek için cihaz bildirim jetonu; oturum jetonlarının özeti ve oturum açılan cihazın kullanıcı aracısı bilgisi; giriş denemeleri (tanımlayıcının özeti, IP adresi, başarı durumu, zaman) ve parola sıfırlama kodunun özeti.
+- Ödeme: kart bilgilerini BiTadilat saklamaz ve kaydetmez; kart numarası, son kullanma tarihi ve CVC uygulamadaki ödeme formuna girilir ve tek bir ödeme isteğiyle sunucumuz üzerinden ödeme kuruluşu Craftgate'e iletilir. Banka doğrulaması (3D Secure) bankanın sayfasında yapılır. BiTadilat'ta yalnızca ödeme referansı, tutar, durum, kartın son 4 hanesi ve usta ödeme/komisyon/iade kayıtları tutulur.
+- Cihaz ve güvenlik: cihaz bildirim jetonu (kaydedilir; şu an anlık/push bildirim gönderilmez, bildirimler uygulama içinde gösterilir); oturum jetonlarının özeti ve oturum açılan cihazın kullanıcı aracısı bilgisi; giriş denemeleri (tanımlayıcının özeti, IP adresi, başarı durumu, zaman) ve parola sıfırlama ile e-posta değiştirme kodlarının özeti. Hesabı silerken isteğe bağlı bir gerekçe seçersen, bu gerekçe sana bağlanmadan (kimlik ve serbest metin olmadan, yalnızca gün bilgisiyle) istatistik için saklanır.
 
 ## 3. Neden kullanıyoruz
 
@@ -31,7 +31,7 @@ Verileri reklam amacıyla satmıyoruz ve üçüncü taraf reklam/izleme araçlar
 
 - Müşteri ve usta: işin yürütülmesi için gereken bilgi. Açık adresin yalnızca teklifi kabul edilen ustaya açılır.
 - Ödeme kuruluşu Craftgate: ödemeyi almak ve iade/aktarım için.
-- Altyapı sağlayıcıları (barındırma, bildirim hizmeti): hizmeti sunmak için. [ALTYAPI VE BİLDİRİM SAĞLAYICILARI LİSTESİ]
+- Altyapı sağlayıcıları (barındırma, e-posta gönderim hizmeti): hizmeti sunmak için. [ALTYAPI VE E-POSTA SAĞLAYICILARI LİSTESİ]
 - Yetkili kamu kurum ve mahkemeler: yasal talep halinde.
 
 Yurt dışına aktarım söz konusuysa KVKK madde 9'a uygun şekilde yapılır. [YURT DIŞI AKTARIM DURUMU]
