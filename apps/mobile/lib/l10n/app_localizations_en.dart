@@ -2778,7 +2778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get escrowRefundPendingPro => 'Refund to the customer in progress';
 
   @override
-  String get escrowPayoutPending => 'Payout to the pro in progress';
+  String get escrowPayoutPending => 'Payout to pro in progress';
 
   @override
   String get escrowReview => 'Support is reviewing';

@@ -800,7 +800,7 @@ Binding for backend, the mobile app and the admin web app. Earlier contracts sti
 | Job | `payment` | Customer | Pro |
 |---|---|---|---|
 | `CANCELLED` | `LOCKED` + `pendingAction = REFUND`, no `errorCode` | "İade işleniyor" / "Refund in progress" | "Müşteriye iade işleniyor" / "Refund to the customer in progress" |
-| `COMPLETED` | `LOCKED` + `pendingAction = RELEASE`, no `errorCode` | "Ustaya aktarım işleniyor" / "Payout to the pro in progress" | same label; explanation says the payout is being checked |
+| `COMPLETED` | `LOCKED` + `pendingAction = RELEASE`, no `errorCode` | "Ustaya aktarım işleniyor" / "Payout to pro in progress" | same label; explanation says the payout is being checked |
 | any | `errorCode` set | "Destek inceliyor" + support text | same |
 
 - The support text names an e-mail address only when the app is built with `--dart-define=SUPPORT_EMAIL=...`; otherwise it says support will get in touch.

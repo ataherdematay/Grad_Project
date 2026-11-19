@@ -19,6 +19,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,9 +68,12 @@ public class AdminPaymentReviewService {
     private final EscrowService escrow;
     private final EscrowNotifications notifications;
     private final AdminAudit audit;
+    private final Environment environment;
 
     public AdminPaymentReviewService(JdbcTemplate jdbc, EscrowPaymentRepository repository, PaymentGateway gateway,
-                                     EscrowService escrow, EscrowNotifications notifications, AdminAudit audit) {
+                                     EscrowService escrow, EscrowNotifications notifications, AdminAudit audit,
+                                     Environment environment) {
+        this.environment = environment;
         this.jdbc = jdbc;
         this.repository = repository;
         this.gateway = gateway;
@@ -90,7 +95,7 @@ public class AdminPaymentReviewService {
         ReviewItem item = fetch(ref);
         EscrowPayment p = repository.findById(ref).orElseThrow(() -> ApiException.notFound("Ödeme bulunamadı."));
         Gateway g = ask(p);
-        return new ReviewCheck(item, g.state().name(), g.refunded(), allowed(p, g));
+        return new ReviewCheck(item, g.state().name(), g.refunded(), seedBlocked(p) ? List.of() : allowed(p, g));
     }
 
     /**
@@ -107,6 +112,10 @@ public class AdminPaymentReviewService {
         EscrowPayment p = repository.findForUpdate(ref).orElseThrow(() -> ApiException.notFound("Ödeme bulunamadı."));
         if (!p.needsReview() || (p.getStatus() != EscrowStatus.LOCKED && p.getStatus() != EscrowStatus.DISPUTED)) {
             throw ApiException.illegalState("Bu ödeme elle incelemede değil.");
+        }
+        if (seedBlocked(p)) {
+            // SEED kaydında Craftgate'e sorulamaz; defter yalnızca dev profilinde işlenir (EscrowService ile aynı kural).
+            throw ApiException.illegalState("SEED emaneti yalnızca dev profilinde işlenebilir.");
         }
         Gateway g = ask(p);
         if (!allowed(p, g).contains(resolution.name())) {
@@ -167,6 +176,10 @@ public class AdminPaymentReviewService {
                         : List.of(Resolution.RETRY_REFUND.name());
             }
         };
+    }
+
+    private boolean seedBlocked(EscrowPayment p) {
+        return p.isSeed() && !environment.acceptsProfiles(Profiles.of("dev"));
     }
 
     record Gateway(RefundState state, BigDecimal refunded) {

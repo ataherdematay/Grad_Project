@@ -214,6 +214,24 @@ class AccountTest extends ApiTestBase {
     }
 
     @Test
+    void emailChangeRevokesOtherSessionsButKeepsCurrentFamily() throws Exception {
+        Account first = register();
+        JsonNode second = body(call(HttpMethod.POST, "/api/v1/auth/login", null,
+                Map.of("identifier", first.email(), "password", PASSWORD)).andExpect(status().isOk()));
+        String access = second.get("accessToken").asString();
+        String newEmail = uniqueEmail();
+        call(HttpMethod.POST, ME + "/email", access, Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isAccepted());
+        call(HttpMethod.POST, ME + "/email/confirm", access, Map.of("code", emails.changeCodeFor(newEmail)))
+                .andExpect(status().isOk());
+
+        call(HttpMethod.POST, "/api/v1/auth/refresh", null, Map.of("refreshToken", first.refresh()))
+                .andExpect(status().isUnauthorized());
+        call(HttpMethod.POST, "/api/v1/auth/refresh", null,
+                Map.of("refreshToken", second.get("refreshToken").asString())).andExpect(status().isOk());
+    }
+
+    @Test
     void emailChangeCodeLocksAfterFiveWrongAttempts() throws Exception {
         Account a = register();
         String newEmail = uniqueEmail();

@@ -67,6 +67,6 @@ public class MeController {
     @PostMapping("/email/confirm")
     public Me confirmEmailChange(@AuthenticationPrincipal AuthPrincipal principal,
                                  @Valid @RequestBody EmailConfirmRequest request) {
-        return emailChange.confirm(principal.userId(), request.code());
+        return emailChange.confirm(principal.userId(), principal.familyId(), request.code());
     }
 }

@@ -1394,7 +1394,7 @@
   "deleteAccountDone": "Your account was deleted.",
   "escrowRefundPending": "Refund in progress",
   "escrowRefundPendingPro": "Refund to the customer in progress",
-  "escrowPayoutPending": "Payout to the pro in progress",
+  "escrowPayoutPending": "Payout to pro in progress",
   "escrowReview": "Support is reviewing",
   "escrowExplainRefundPending": "The job was cancelled. The refund to your card is being processed; you will get a notification when it is done.",
   "escrowExplainRefundPendingPro": "The job was cancelled. The amount is being refunded to the customer.",

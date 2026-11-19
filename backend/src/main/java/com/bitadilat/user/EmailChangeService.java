@@ -1,6 +1,7 @@
 package com.bitadilat.user;
 
 import com.bitadilat.auth.EmailSender;
+import com.bitadilat.auth.RefreshTokenRepository;
 import com.bitadilat.common.ApiException;
 import com.bitadilat.common.Hashing;
 import com.bitadilat.user.dto.Me;
@@ -40,10 +41,12 @@ public class EmailChangeService {
     private final EmailSender emailSender;
     private final JdbcTemplate jdbc;
     private final AccountService accounts;
+    private final RefreshTokenRepository refreshTokens;
     private final SecureRandom random = new SecureRandom();
 
     public EmailChangeService(UserRepository users, PasswordEncoder encoder, EmailSender emailSender,
-                              JdbcTemplate jdbc, AccountService accounts) {
+                              JdbcTemplate jdbc, AccountService accounts, RefreshTokenRepository refreshTokens) {
+        this.refreshTokens = refreshTokens;
         this.users = users;
         this.encoder = encoder;
         this.emailSender = emailSender;
@@ -87,6 +90,15 @@ public class EmailChangeService {
 
     @Transactional(noRollbackFor = ApiException.class)
     public Me confirm(UUID userId, String code) {
+        return confirm(userId, null, code);
+    }
+
+    /**
+     * Kod doğrulanınca e-posta değişir ve diğer cihazlardaki oturumlar kapanır (şifre değişikliğindeki kural); isteği
+     * yapan oturumun ailesi ({@code currentFamilyId}, biliniyorsa) açık kalır.
+     */
+    @Transactional(noRollbackFor = ApiException.class)
+    public Me confirm(UUID userId, UUID currentFamilyId, String code) {
         User user = users.findById(userId).orElseThrow(() -> ApiException.unauthenticated("Kullanıcı bulunamadı."));
         Instant now = Instant.now();
         List<Pending> rows = jdbc.query("""
@@ -115,6 +127,11 @@ public class EmailChangeService {
             users.saveAndFlush(user);
         } catch (DataIntegrityViolationException e) {
             throw emailTaken();
+        }
+        if (currentFamilyId == null) {
+            refreshTokens.revokeAllForUser(userId, now);
+        } else {
+            refreshTokens.revokeOtherFamilies(userId, currentFamilyId, now);
         }
         try {
             emailSender.sendEmailChangedNotice(old);

@@ -248,6 +248,21 @@ class AdminPaymentReviewTest extends AdminTestBase {
     }
 
     @Test
+    void seedPaymentIsNotResolvedOutsideTheDevProfile() throws Exception {
+        Account admin = admin();
+        Stuck q = payoutReview("0");
+        jdbc.update("update escrow_payment set provider = 'SEED' where ref = ?", q.ref());
+
+        JsonNode check = ok(get(admin, "/admin/payments/" + q.ref() + "/review"));
+        assertThat(check.get("allowedResolutions")).isEmpty();
+        resolve(admin, q.ref(), "RELEASE").andExpect(status().isConflict());
+        resolve(admin, q.ref(), "RETRY_REFUND").andExpect(status().isConflict());
+        assertThat(escrowRow(q.ref())).isEqualTo("LOCKED/RELEASE/PAYOUT_NEEDS_REVIEW");
+        assertThat(ledgerRows(q.ref(), "PAYOUT")).isZero();
+        assertThat(count("select count(*) from admin_actions")).isZero();
+    }
+
+    @Test
     void craftgateOutageOrPendingRefundChangesNothing() throws Exception {
         Account admin = admin();
         Stuck r = refundReview();
