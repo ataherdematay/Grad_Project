@@ -29,7 +29,7 @@ Müşteri teklifini kabul edip ödeme yaptıktan sonra açık adres sana görün
 ## 5. Hizmet bedeli ve ödeme
 
 - Platform hizmet bedeli %10'dur ve sana aktarılan tutardan kesilir.
-- Para güvence havuzunda tutulur; müşteri onayında veya işi bitirdim işaretinden 48 saat sonra (açık şikayet yoksa) sana aktarılır.
+- Para güvence havuzunda tutulur; müşteri onayında veya işi bitirdim işaretinden 48 saat sonra (açık şikayet yoksa) sana aktarılır. Aktarımdan önce ödeme kuruluşunda iade olup olmadığı kontrol edilir; kuruluşa ulaşılamazsa aktarım ertelenip otomatik tekrar denenir, ödemede iade görünüyorsa aktarım yapılmaz ve kayıt elle incelenir.
 - Şikayette yönetici kararı geçerlidir: tam iadede sana aktarım olmaz; %50 / %50'de tutarın yarısı sana aktarılır; her ikisinde de hizmet bedeli alınmaz. Şikayet reddedilirse tutar sana aktarılır ve %10 hizmet bedeli uygulanır.
 
 ## 6. Davranış kuralları ve yaptırımlar

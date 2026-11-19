@@ -4,8 +4,8 @@
 |---|---|
 | Proje | BiTadilat (COMP/SOFT4902 Bitirme Projesi, Güz 2026) |
 | Belge | Yazılım Tasarım Belgesi (System Design Document) |
-| Durum | Taslak. Kod `feature/flutter-app` dalındaki 565bfb4 işlemine göre yazıldı |
-| Kaynaklar | `BiTadilat_Requirements_Analysis_Document.md` (RAD v1.1), `docs/spec/*`, `backend/`, `apps/*`, `packages/*` |
+| Durum | Taslak. Kod `feature/flutter-app` dalındaki c335a10 işlemine göre güncellendi (ilk yazım: 565bfb4) |
+| Kaynaklar | `BiTadilat_Requirements_Analysis_Document.md` (RAD v1.1), `docs/spec/*` (özellikle `STATE_MACHINES.md`, `PROD_CONFIG.md`), `docs/RUNNING.md`, `backend/`, `apps/*`, `packages/*`, `website/` |
 | Dil | Türkçe. Kod, tablo ve alan adları İngilizce kalır |
 
 Bu belge **gerçekleştirilmiş sistemi** anlatır. RAD'daki bir şey yapılmadıysa "gerçekleştirilmedi" yazılıdır. RAD'dan bilinçli ayrılmalar 11. bölümde toplanmıştır.
@@ -27,15 +27,20 @@ BiTadilat, İstanbul'da ev tadilat ve onarım işi isteyen müşterileri uygun u
 | Sunucu | Spring Boot 4.1.2, Java 21, Spring Security (JWT), Flyway | `backend` |
 | Veritabanı | PostgreSQL 16 | `backend/src/main/resources/db/migration` |
 | Ödeme sağlayıcısı | Craftgate **sandbox** (3D Secure) | dış hizmet |
+| Tanıtım sitesi (RAD UC14) | Statik HTML/CSS/JS, derleme yok, TR/EN, açık/koyu tema | `website/` |
+| Yasal taslaklar | Kullanım koşulları, gizlilik, KVKK, ödeme ve güvence havuzu, usta sözleşmesi özeti (TR/EN, hepsi TASLAK) | `docs/legal/`, `website/legal/`, uygulamada `apps/mobile/assets/legal/` |
+| Paketleme ve CI | `backend/Dockerfile`, `docker-compose.yml`, GitHub Actions (`backend.yml`, `flutter.yml`) | depo kökü, `.github/workflows` |
 
 **Kapsam dışı / gerçekleştirilmedi**
 
-- Tanıtım web sitesi (RAD UC14): yapılmadı.
-- Push bildirimi (FCM/APNs): yapılmadı. `device_tokens` tablosu ve `PUT /api/v1/devices` var, gönderen servis yok. Uygulama içi bildirim merkezi var.
-- Gerçek e-posta/SMS: şifre sıfırlama kodu `LoggingEmailSender` ile yalnızca log'a yazılır.
-- Docker ile paketleme: repoda Dockerfile yok.
-- Android: proje iskeleti var, derlenip sınanmadı.
+- Push bildirimi (FCM/APNs): **bilinçli olarak yapılmadı**. Bildirimler yalnızca uygulama içi bildirim merkezindedir (21 tür). `device_tokens` tablosu ve `PUT /api/v1/devices` vardır (belirteç kaydı), gönderen servis yoktur. Gerekçe: Apple geliştirici hesabı ve Firebase projesi gerekir.
+- Telefon numarası değişikliği: **yok**. SMS sağlayıcısı olmadığı için telefon doğrulanamaz; arayüzde telefon salt okunurdur. E-posta değişikliği vardır (yeni adrese giden 6 haneli kodla, bkz. 6.8).
+- "Ustaya soru sor" (teklif ayrıntısı): **yapılmadı**. `ROLE_SCREEN_MAP.md` yalnızca eylemin adını verir; uç nokta, veri modeli, durum ve bildirim tanımlı değildir (`API_V1.md` açık nokta). Teklif ekranında bu düğme yoktur (`customer_wave2_test` "soru sor yok").
+- Gerçek SMS: yok. E-posta: `dev` profilinde `LoggingEmailSender` (kodlar yalnızca log'a), `prod` profilinde `SmtpEmailSender` (SMTP; `SPRING_MAIL_HOST` ve `BITADILAT_MAIL_FROM` yoksa uygulama açılmaz). SMTP gönderimi bu projede gerçek bir sağlayıcıyla denenmedi, birim ve bağlam testleri vardır.
+- Docker: `backend/Dockerfile` ve `docker-compose.yml` repoda **vardır**; geliştirme makinesinde Docker kurulu olmadığından yerelde **çalıştırılmadı**. GitHub Actions iş akışları yazıldı, bu belgenin yazıldığı sırada uzak depoda koşturulmadı.
+- Android: uygulama kimliği, simge, açılış ekranı ve ağ güvenliği yapılandırması hazır (`platform_config_test`); **APK derlenmedi** ve cihazda sınanmadı. Yayın imzası depoda yok.
 - Gerçek para: Craftgate yalnızca sandbox. Usta ödemesi (payout) bankaya gönderilmez, `payout_ledger` ve `escrow_payment` satırlarında **kaydedilir**.
+- Mağaza yayını: tanıtım sitesindeki App Store rozeti yer tutucudur; yasal metinler hukukçu incelemesinden geçmedi.
 
 ---
 
@@ -62,19 +67,20 @@ flowchart LR
         REQ["request + catalog<br/>talep, eşleştirme"]
         PRO["pro<br/>başvuru, akış, kazanç"]
         OFR["offer<br/>teklif"]
-        PAY["payment<br/>3DS başlatma, callback,<br/>emanet defteri, süpürücü"]
+        PAY["payment<br/>3DS başlatma, callback,<br/>emanet defteri, iade/aktarım<br/>outbox, süpürücü"]
         JOB["job<br/>iş durum makinesi,<br/>randevu, şikayet, puan"]
         CHT["chat<br/>mesajlar (yoklama)"]
         MED["media<br/>yükleme, imzalı URL"]
         NTF["notification<br/>uygulama içi merkez"]
-        ADMS["admin<br/>başvuru, şikayet,<br/>hesap, ödeme listesi"]
-        SCH["Zamanlayıcılar (5 dk):<br/>ExpiryJob, JobScheduler,<br/>PaymentSweeper"]
+        ADMS["admin<br/>başvuru, şikayet, hesap,<br/>ödeme listesi ve inceleme çözümü,<br/>ilk yönetici (bootstrap)"]
+        SCH["Zamanlayıcılar (5 dk):<br/>ExpiryJob, JobScheduler,<br/>PaymentSweeper →<br/>PendingEscrowActions"]
     end
 
-    DB[("PostgreSQL 16<br/>Flyway V1..V6")]
+    DB[("PostgreSQL 16<br/>Flyway V1..V8")]
     DISK[("Yerel disk<br/>medya dosyaları")]
     CG["Craftgate sandbox<br/>3D Secure, iade"]
-    MAIL["EmailSender<br/>(yalnızca log)"]
+    MAIL["EmailSender<br/>dev: log, prod: SMTP<br/>(şifre sıfırlama ve<br/>e-posta değişikliği kodu)"]
+    WEB["Tanıtım sitesi website/<br/>statik HTML, TR/EN<br/>(API'ye bağlanmaz)"]
 
     APIPKG -- "HTTPS/JSON, Bearer JWT" --> SEC
     SEC --> AUTH
@@ -111,11 +117,13 @@ Katmanlama kuralları (kodda uygulanan):
 - İstemci sunucuyla yalnızca REST/JSON ile konuşur (RAD: ayrık mimari). Sözleşme `docs/spec/API_V1.md`. Hata gövdesi `{ "error": { "code", "message", ... } }` biçimindedir.
 - İş kuralları sunucudadır. İstemci "hangi düğme görünür" bilgisini sunucunun döndüğü `actions` listesinden alır (`JobStateMachine.allowedActions`). Kural ve ekran ayrışamaz.
 - `PaymentGateway` arayüzü Craftgate SDK'yı arkasına saklar. Servis katmanı SDK tiplerini görmez; testler sahte ağ geçidiyle çalışır.
-- Şema Flyway ile yönetilir, `ddl-auto=validate`. Testler her bağlamda şemayı baştan kurar.
+- Şema Flyway ile yönetilir (V1–V8), `ddl-auto=validate`. Testler her bağlamda şemayı baştan kurar.
+- Para hareketleri **outbox** ile yürür: iş/talep/teklif değişikliği ve "şu para hareketi yapılacak" niyeti (`escrow_payment.pending_action`) tek işlemde kesinleşir; Craftgate çağrısı ancak ondan sonra, ayrı işlemde yapılır ve başarısızsa zamanlayıcı yeniden dener (bkz. 6.5). Ödeme kuruluşu çağrısı hiçbir iş işleminin içinde tutulmaz.
+- Tanıtım sitesi (`website/`) API ile konuşmaz; bağımsız statik dosyalardır ve yasal metin taslaklarının HTML kopyalarını içerir.
 
 ### 2.2 Dağıtım diyagramı
 
-Gerçekleştirilen dağıtım **geliştirme ve sandbox** düzenidir. Üretim ortamı ve Docker yoktur.
+Üç çalışma biçimi vardır: (1) yerel geliştirme (JVM + yerel PostgreSQL), (2) Docker Compose (jüri için tek komut: `docker compose up --build`), (3) `prod` profili (aynı imaj, ortam değişkenleriyle). Gerçek üretim ortamına dağıtım **yapılmadı**; `prod` profili yalnızca testlerle ve yapılandırma denetimiyle doğrulandı.
 
 ```mermaid
 flowchart TB
@@ -138,12 +146,57 @@ flowchart TB
     CGS -. "callback: POST /api/payments/3ds/callback" .-> APP
 ```
 
+Docker Compose düzeni (`docker-compose.yml`, yazıldı ama bu makinede çalıştırılmadı):
+
+```mermaid
+flowchart LR
+    HOST["Ana makine<br/>127.0.0.1:8090"]
+    subgraph Compose["docker compose"]
+        subgraph BE["backend (backend/Dockerfile)"]
+            SOCAT["socat :8091<br/>(yalnız dev profili)"]
+            JAR["app.jar<br/>profil: dev<br/>127.0.0.1:8090"]
+            SOCAT --> JAR
+        end
+        PGC[("postgres:16<br/>healthcheck, birim: pgdata")]
+        MEDIAV[("birim: media<br/>/app/data/media")]
+    end
+    CGS["Craftgate sandbox<br/>(CRAFTGATE_* anahtarları<br/>ana makine ortamından)"]
+    HOST -- "yayınlanan bağlantı noktası → 8091" --> SOCAT
+    JAR -- "JDBC (postgres hazır olunca)" --> PGC
+    JAR --> MEDIAV
+    JAR -- "HTTPS" --> CGS
+```
+
 Çalışma ortamı notları:
 
-- `dev` profili yalnızca loopback adresine bağlanır (`BITADILAT_BIND`, varsayılan 127.0.0.1) ve tohum veri ile `POST /api/v1/dev/reset` uç noktasını açar. `prod` profilinde bu bean'ler yoktur, OpenAPI/Swagger kapalıdır, gizli anahtarlar için varsayılan değer yoktur (`ProdProfileConfigTest`).
-- Gerekli ortam değişkenleri: `DB_URL`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET` (en az 32 bayt), `ADDRESS_KEY` (base64, 32 bayt), `MEDIA_SIGNING_KEY` (en az 32 bayt), `MEDIA_DIR`, `CRAFTGATE_*` anahtarları, `APP_PUBLIC_BASE_URL` (3DS callback adresi için), `CORS_ALLOWED_ORIGINS`.
-- 3DS callback adresi bankanın tarayıcısından erişilebilir olmalıdır (`APP_PUBLIC_BASE_URL`). Yerelde bu, Simulator için `localhost` ile çalışır; gerçek cihaz için dışarıdan erişilebilir bir adres gerekir (gerçekleştirilmedi).
-- Yönetim paneli statik Flutter Web çıktısıdır (`apps/admin/web`). Ayrı bir barındırma yapılandırması yoktur; geliştirmede `flutter run -d chrome`.
+- `dev` profili yalnızca loopback adresine bağlanır (`BITADILAT_BIND`, varsayılan 127.0.0.1; `DevProfileGuard` başka adreste açılışı reddeder) ve tohum veri ile `POST /api/v1/dev/reset` uç noktasını açar. Konteynerde bu yüzden uygulama loopback'e bağlanır, `socat` 8091'i ona yönlendirir; socat üzerinden gelen her bağlantı uygulamaya loopback'ten geliyormuş gibi ulaştığı için `POST /api/v1/dev/reset` bu bağlantı noktasına erişen herkese açıktır; bu yüzden Compose bağlantı noktasını yalnızca ana makinenin loopback'inde yayınlar (herkese açık arayüzde yayınlanmamalıdır).
+- `prod` profili (`docs/spec/PROD_CONFIG.md`): `DevSeeder`, `/api/v1/dev/**`, `LoggingEmailSender`, HTML prototip ve eski prototip API (3DS banka yolları hariç) ile OpenAPI/Swagger **yoktur**; hata gövdeleri ileti ve iz içermez. Gizli anahtarlar için varsayılan değer yoktur; zorunlu değişken eksik ya da güvensizse uygulama açılmaz (`ProdConfigValidator`, `ProdProfileContextTest`, `ProdReadinessUnitTest`). Aynı imaj `prod` ile çalışır: `socat` başlamaz, uygulama `0.0.0.0:${BITADILAT_PORT:-8090}` adresine kendisi bağlanır.
+- `prod` için zorunlu değişkenler: `DB_URL`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET` (≥ 32 bayt), `ADDRESS_KEY` (base64, 32 bayt), `MEDIA_SIGNING_KEY` (≥ 32 bayt), `MEDIA_DIR`, `APP_PUBLIC_BASE_URL`, `CRAFTGATE_API_KEY`, `CRAFTGATE_SECRET_KEY`, **`CRAFTGATE_CALLBACK_KEY`**, `SPRING_MAIL_HOST`, `BITADILAT_MAIL_FROM`. Önerilen: `BITADILAT_CORS_ORIGINS` (`*` açılışı durdurur; boşsa CORS kapalı). İlk açılışta: `BITADILAT_ADMIN_EMAIL` ve `BITADILAT_ADMIN_PASSWORD`.
+- **İlk yönetici (bootstrap, `AdminBootstrap`):** hiç yönetici yoksa ve iki değişken de geçerliyse (parola ≥ 12 karakter, harf ve rakam, ≤ 72 bayt) yönetici BCrypt özetiyle oluşturulur; değilse ERROR logu yazılır, kimse yetkilendirilmez, uygulama çalışır. E-postası sıradan bir kullanıcıya aitse o kullanıcı **terfi ettirilmez**. Yönetici varsa hiçbir şey yapılmaz (yeniden başlatma güvenli). Testler: `AdminBootstrapTest`, `ProdProfileContextTest#adminIsBootstrappedFromEnv`.
+- 3DS callback adresi bankanın tarayıcısından erişilebilir olmalıdır (`APP_PUBLIC_BASE_URL`). Yerelde bu Simulator için `localhost` ile çalışır; gerçek cihaz ve gerçek dağıtım için dışarıdan erişilebilir bir adres gerekir (gerçekleştirilmedi).
+- Yönetim paneli statik Flutter Web çıktısıdır (`flutter build web --dart-define=API_BASE_URL=...`). Ayrı bir barındırma yapılandırması yoktur; geliştirmede `flutter run -d chrome`. Tanıtım sitesi `website/` bağımsız statik klasördür (`python3 -m http.server`).
+- Medya diskte tutulur (`MEDIA_DIR`); nesne depolama kullanılmaz. Tek örnekli çalışma varsayılır; zamanlayıcılar satır kilidiyle (`SKIP LOCKED`) çalışır, ancak çok örnekli yapılandırma denenmedi.
+
+### 2.2.1 Sürekli tümleştirme (CI)
+
+`.github/workflows` altında iki iş akışı vardır; `feature/flutter-app`, `develop`, `main` dallarına gönderimde ve çekme isteğinde çalışır. Sırlar gerekmez (Craftgate sahtelenir).
+
+```mermaid
+flowchart LR
+    PUSH["push / pull_request<br/>feature/flutter-app, develop, main"]
+    PUSH --> BJ
+    PUSH --> FJ
+    subgraph BWF["backend.yml"]
+        BJ["test<br/>Java 21 + postgres:16 servisi<br/>./mvnw -B test<br/>(TEST_DB_URL ile)"]
+    end
+    subgraph FWF["flutter.yml"]
+        FJ["check<br/>Flutter 3.47.3<br/>analyze (4 paket)<br/>flutter test: mobile, admin, ui<br/>dart test: bitadilat_api"]
+        AW["admin-web<br/>flutter build web"]
+        FJ --> AW
+    end
+```
+
+Not: iş akışları depoya eklendi ancak uzak depoda koşturulup yeşil sonucu bu belgeyle kayda geçirilmedi; yerelde eşdeğer komutlar `TEST_REPORT_TEMPLATE.md` içinde kayıtlıdır.
 
 ### 2.3 Paket yapısı
 
@@ -403,7 +456,7 @@ Notlar:
 
 ## 5. Veri tabanı (ER diyagramları)
 
-Aşağıdaki diyagramlar **Flyway V1–V6 betiklerinin boş bir PostgreSQL veritabanına uygulanması** ve `information_schema` sorgulanması ile üretilmiştir (31 tablo). Anahtar işaretleri: `PK` birincil, `FK` yabancı, `UK` benzersiz sütun. Kısmi benzersiz indeksler ve CHECK kısıtları diyagramda görünmez, 5.6'da özetlenmiştir. Diyagramlar okunabilirlik için 5 gruba bölünmüştür; bazı tablolar (ör. `users`) birden fazla grupta tekrar eder.
+Aşağıdaki diyagramlar **Flyway V1–V8 betiklerinin boş bir PostgreSQL veritabanına uygulanması** ve `information_schema` sorgulanması ile üretilmiştir (33 tablo; V6 öksüz iade sayaçlarını, V7 `pending_action` outbox sütununu, V8 `account_deletion_feedback` ve `email_change_codes` tablolarını ekledi, V7 ve V8 değişiklikleri betiklerle karşılaştırılarak diyagramlara elle işlendi). Anahtar işaretleri: `PK` birincil, `FK` yabancı, `UK` benzersiz sütun. Kısmi benzersiz indeksler ve CHECK kısıtları diyagramda görünmez, 5.6'da özetlenmiştir. `account_deletion_feedback` bilerek **hiçbir tabloya bağlı değildir** (kullanıcı kimliği, serbest metin ve saat yoktur; yalnızca gerekçe kodu, usta profili olup olmadığı ve gün). Diyagramlar okunabilirlik için 5 gruba bölünmüştür; bazı tablolar (ör. `users`) birden fazla grupta tekrar eder.
 
 ### 5.1 Kimlik, adres, medya, yönetim
 
@@ -499,7 +552,24 @@ erDiagram
         varchar sha256
         timestamptz created_at
     }
+    email_change_codes {
+        uuid id PK
+        uuid user_id FK
+        varchar new_email
+        varchar code_hash
+        int attempts
+        timestamptz expires_at
+        timestamptz used_at
+        timestamptz created_at
+    }
+    account_deletion_feedback {
+        bigint id PK
+        varchar reason
+        boolean had_pro_profile
+        date created_on
+    }
     users ||--o{ refresh_tokens : "user_id"
+    users ||--o{ email_change_codes : "user_id"
     refresh_tokens ||--o{ refresh_tokens : "replaced_by"
     users ||--o{ password_reset_codes : "user_id"
     users ||--o{ addresses : "user_id"
@@ -1018,6 +1088,7 @@ erDiagram
         int refund_attempts
         timestamptz last_refund_attempt_at
         timestamptz next_refund_attempt_at
+        varchar pending_action
     }
     payout_ledger {
         uuid id PK
@@ -1173,6 +1244,10 @@ Bu kurallar iş kuralını **veritabanı düzeyinde** de zorunlu kılar.
 | Bir iş için tek puan | `reviews.job_id UNIQUE` |
 | Bir medya dosyası en çok bir kayda bağlanır | `ux_request_photos_media`, `ux_pro_documents_media`, `ux_job_events_media`, `ux_messages_media`, `ux_complaint_evidence_media` |
 | Kullanıcı başına tek varsayılan adres | `ux_addresses_one_default` |
+| Bekleyen para hareketi yalnızca `REFUND` veya `RELEASE` | `escrow_payment.pending_action` CHECK (V7) |
+| Bekleyen hareketler süpürücüde hızlı bulunur | `ix_escrow_pending_action (next_refund_attempt_at) WHERE pending_action IS NOT NULL` (V7); öksüz iade için `ix_escrow_orphan_refund` (V6) |
+| Hesap silme gerekçesi sabit kod kümesi | `account_deletion_feedback.reason` CHECK (`NO_LONGER_NEEDED`, `FOUND_ALTERNATIVE`, `PRIVACY`, `BAD_EXPERIENCE`, `OTHER`) (V8) |
+| E-posta değişikliği kodu kullanıcı silinince gider | `email_change_codes.user_id ON DELETE CASCADE`; kod yalnızca özet olarak (`code_hash`) saklanır (V8) |
 | E-posta büyük/küçük harf duyarsız benzersiz | `ux_users_email_lower (lower(email))` |
 | Talep en çok 5 fotoğraf | `request_photos.sort_order BETWEEN 0 AND 4` |
 | Fotoğraf ≤ 1,5 MB, belge ≤ 5 MB | `media.size_bytes` CHECK |
@@ -1269,7 +1344,7 @@ sequenceDiagram
     APP->>BANK: WebView htmlContent yükle
     BANK->>CG: Müşteri 3DS doğrulamasını tamamlar
     CG->>API: POST /api/payments/3ds/callback (form)
-    API->>API: İmza doğrula (callback anahtarı varsa)
+    API->>API: İmza doğrula (prod'da callback anahtarı zorunlu)
     API->>DB: ödeme satırını kilitle (FOR UPDATE)
     API->>CG: complete3ds / retrieve (gerçek durumu Craftgate'ten oku)
     alt SUCCESS ve tutar eşleşir
@@ -1281,6 +1356,9 @@ sequenceDiagram
         API->>DB: escrow LOCKED sonra REFUNDED_TO_CUSTOMER (REQUEST_ALREADY_ASSIGNED)
     else banka reddi
         API->>DB: escrow FAILED, talep serbest
+    else 3DS bankada hiç bitmedi ve yeni deneme istendi (eski deneme ≥ 10 dk)
+        API->>CG: eski denemenin durumunu sor (SKIP LOCKED)
+        API->>DB: Craftgate INIT_THREEDS diyorsa eski deneme FAILED + THREEDS_ABANDONED, yeni deneme başlar
     end
     API-->>BANK: 302 /api/payments/3ds/done (sayfa veri göstermez)
     APP->>APP: Bitiş adresi yakalanır, WebView kapanır
@@ -1291,7 +1369,7 @@ sequenceDiagram
     APP-->>M: Sonuç ekranı, iş ekranına geçiş
 ```
 
-Notlar: ödeme kaydı banka çağrısı sürerken işlemsiz kaydedilir; talepte ikinci `INITIALIZED` kayıt `409 PAYMENT_IN_PROGRESS` verir. Callback gelmezse `PaymentSweeper` 30 dakikadan eski kayıtları Craftgate'e sorarak kapatır (`PaymentSweeperTest`).
+Notlar: ödeme kaydı banka çağrısı sürerken işlemsiz kaydedilir; talepte ikinci `INITIALIZED` kayıt `409 PAYMENT_IN_PROGRESS` verir. **İstisna (10 dakika kuralı):** banka sayfasını kapatan müşteri 2 saat beklemesin diye eski deneme 10 dakikadan eskiyse yeni deneme isteği onu Craftgate'e sorar; 3DS bankada hiç bitmemişse (`INIT_THREEDS`) eski deneme `FAILED` + `THREEDS_ABANDONED` olur ve yeni deneme başlar. `CALLBACK_THREEDS`, `WAITING`, başarı, yanıt yok veya satır o an işleniyorsa `409` kalır (`PaymentSweeperTest#newAttemptAbandonsAnOldAttemptThatNeverFinishedAtTheBank`, `#newAttemptKeepsPaymentInProgressWhileTheOldAttemptIsYoung`, `#newAttemptKeepsPaymentInProgressUnlessCraftgateSaysTheBankPageWasNeverFinished`). Callback hiç gelmezse `PaymentSweeper` 30 dakikadan eski kayıtları Craftgate'e sorarak kapatır; 3DS tamamlanmamışsa kayıt ancak 2 saat sonra `THREEDS_ABANDONED` olur. Terk edilmiş denemeye sonradan banka başarısı gelirse ödeme tamamlanmaz, yalnızca Craftgate'e sorulur; para çekilmişse kayıt `LOCKED` olur ve normal yoldan teklif kabul edilir ya da yarış iadesi yapılır, tutulan çift ödeme olmaz (`lateBankSuccessOnAnAbandonedPaymentIsRefundedThroughTheRacePath`, `lateBankSuccessOnAnAttemptAbandonedByARetryIsRefundedAndNeverKept`).
 
 ### 6.3 İş durum akışı ve 48 saat otomatik tamamlama
 
@@ -1321,17 +1399,17 @@ sequenceDiagram
     alt Müşteri onaylar
         M->>API: POST /jobs/{id}/confirm
         API->>DB: işi kilitle, geçişi doğrula (CONFIRM)
-        API->>ESC: release(emanet)
-        ESC->>DB: RELEASED_TO_PRO, payout_ledger PAYOUT + COMMISSION (%10)
         API->>DB: iş COMPLETED, usta completed_jobs + 1
-        API->>DB: bildirim: ustaya "ödeme serbest"
+        API->>ESC: releaseChecked(emanet)
+        ESC->>CG: bu ödemede iade var mı? (ayrıntı 6.6)
+        ESC->>DB: iade yoksa RELEASED_TO_PRO, payout_ledger PAYOUT + COMMISSION (%10), ustaya PAYOUT_RELEASED
     else Müşteri sessiz kalır
         SCH->>DB: 24. saatte hatırlatma (bir kez)
         SCH->>DB: auto_complete_at geçmiş, açık şikayet yok, WORK_FINISHED işleri seç (SKIP LOCKED)
         SCH->>API: aynı JobSettlement.complete (rol SYSTEM)
-        API->>ESC: release(emanet)
-        ESC->>DB: RELEASED_TO_PRO, defter
         API->>DB: iş COMPLETED
+        API->>ESC: releaseChecked(emanet), 6.6'daki gibi
+        ESC->>DB: RELEASED_TO_PRO, defter (ya da bekleyen aktarım)
     else Müşteri şikayet açar
         M->>API: POST /jobs/{id}/complaint
         API->>DB: iş DISPUTED, emanet DISPUTED, şikayet OPEN
@@ -1341,7 +1419,7 @@ sequenceDiagram
     API->>DB: reviews ekle, usta puan ortalaması güncelle
 ```
 
-Not: otomatik tamamlama ve müşteri onayı aynı geçiştir (`Trigger.CONFIRM`) ve yarışırsa emanet iki kez serbest bırakılmaz (`confirmOrComplaintRacingTheSchedulerNeverReleasesTwice`). Bu iki yolda Craftgate'e danışılmaz; çünkü para zaten emanette tutulmuştur ve serbest bırakma yalnızca defter kaydıdır (usta ödemesi bankaya gönderilmez).
+Not: otomatik tamamlama ve müşteri onayı aynı geçiştir (`Trigger.CONFIRM`) ve yarışırsa emanet iki kez serbest bırakılmaz (`confirmOrComplaintRacingTheSchedulerNeverReleasesTwice`). Önceki sürümde bu iki yolda Craftgate'e danışılmıyordu; artık aktarımdan önce Craftgate'e iade sorulur (`provider = SEED` hariç). Serbest bırakma yine yalnızca defter kaydıdır (usta ödemesi bankaya gönderilmez), ama Craftgate'te iade edilmiş bir ödeme ustaya yazılmaz. Ayrıntı ve hata yolları 6.6'da.
 
 ### 6.4 Şikayet → yönetici kararı
 
@@ -1399,11 +1477,200 @@ sequenceDiagram
 
 Para hareketi işlemin **en sonunda** yapılır; ağ geçidi hatasında emanet, iş ve şikayet değişmez, karar yeniden denenebilir (`gatewayFailureReturns502AndChangesNothingThenRetrySucceeds`). Craftgate'te zaman aşımına uğramış ama gerçekleşmiş bir iade ikinci kez gönderilmez (STATE_MACHINES.md bölüm 5).
 
+
+### 6.5 İş iptali → iade (after-commit, `pending_action`, süpürücü yeniden denemesi)
+
+İptal kararı ile para hareketi artık aynı işlemde yapılmaz. Önceki tasarımda Craftgate iadesi başarısız olursa iptal geri alınıyordu (502); şimdi **iptal kesinleşir**, iade niyeti kalıcı yazılır ve iade sonradan, yeniden denenerek tamamlanır. Böylece "para iade edildi ama iptal geri alındı" durumu oluşamaz.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor M as Müşteri (veya usta)
+    participant API as JobCommandService
+    participant DB as PostgreSQL
+    participant PEA as PendingEscrowActions
+    participant ESC as EscrowService
+    participant CG as Craftgate
+    participant SWP as PaymentSweeper (5 dk)
+
+    M->>API: POST /jobs/{id}/cancel (gerekçe)
+    API->>DB: işi ve emaneti kilitle, iptal kurallarını doğrula
+    API->>DB: iş CANCELLED, talep CANCELLED (usta iptalinde talep OPEN, teklif WITHDRAWN)
+    API->>DB: emanet LOCKED kalır, pending_action = REFUND
+    API->>DB: bildirim JOB_CANCELLED (iade tutarıyla)
+    Note over API,DB: İşlem kesinleşir (COMMIT)
+    API->>PEA: processAfterCommit(ref) (ayrı işlem)
+    PEA->>DB: satırı SKIP LOCKED ile al
+    PEA->>ESC: refundPending
+    ESC->>CG: bu ödemede ne kadar iade edildi?
+    alt hiç iade yok
+        ESC->>CG: tam iade
+    else kısmen iade edilmiş
+        ESC->>CG: yalnızca kalan tutarı iade et
+    else zaten tam iade edilmiş
+        Note over ESC: para gönderilmez, yalnızca defter işlenir
+    end
+    alt başarılı
+        ESC->>DB: REFUNDED_TO_CUSTOMER, defter REFUND, pending_action temizlenir
+    else Craftgate hatası, zaman aşımı, çökme
+        ESC->>DB: emanet LOCKED + pending_action = REFUND kalır, refund_attempts + 1, next_refund_attempt_at
+    end
+    API-->>M: 200 (iptal geçerli, iade sonradan olabilir, pendingAction metni gösterilir)
+
+    loop her 5 dakikada (yalnızca bekleme süresi dolmuş kayıtlar)
+        SWP->>PEA: process(ref)
+        PEA->>ESC: refundPending (önce iade durumu sorulur)
+        alt tamamlandı
+            ESC->>DB: REFUNDED_TO_CUSTOMER
+            PEA->>DB: bildirim REFUND_COMPLETED (müşteri ve usta)
+        else 8. deneme de başarısız ya da Craftgate tutarsız iade gösteriyor
+            ESC->>DB: error_code = REFUND_NEEDS_REVIEW (ERROR logu, süpürücü bırakır, 6.7)
+        end
+    end
+```
+
+Aralık 5 dakikadan başlayıp ikiye katlanır, en çok 6 saat; en çok 8 deneme (`EscrowPayment.refundBackoff`, `MAX_REFUND_ATTEMPTS`). Kısmi iade görünürse tam iade gönderilmez; sonuç bekleyen bir iade varsa yeni iade gönderilmez ve deneme sayılır. Testler: `EscrowSafetyTest#cancelRefundIsSentOnlyAfterTheCancellationIsCommitted`, `#refundFailureStillCancelsTheJobAndTheSweeperRefundsLaterExactlyOnce`, `#refundThatReachedCraftgateButTimedOutIsNeverSentTwice`, `#cancelRefundThatKeepsFailingGoesToReviewAfterEightAttempts`, `#pendingCancelRefundOnAPartlyRefundedPaymentSendsOnlyTheRemainderOnce`, `#pendingCancelRefundThatCraftgateShowsAsInconsistentGoesToReviewAndStaysThere`.
+
+### 6.6 Müşteri onayı / otomatik tamamlama → ustaya aktarım (Craftgate iade kontrolü)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant API as JobSettlement (onay veya zamanlayıcı)
+    participant DB as PostgreSQL
+    participant ESC as EscrowService
+    participant CG as Craftgate
+    participant SWP as PaymentSweeper (5 dk)
+    participant PEA as PendingEscrowActions
+
+    API->>DB: işi kilitle, iş COMPLETED, usta completed_jobs + 1
+    API->>ESC: releaseChecked(emanet)
+    ESC->>CG: bu ödemede iade var mı? (provider = SEED ise sorulmaz)
+    alt iade yok
+        ESC->>DB: RELEASED_TO_PRO, payout_ledger PAYOUT + COMMISSION
+        ESC->>DB: bildirim PAYOUT_RELEASED (usta)
+    else herhangi bir iade görünüyor
+        ESC->>DB: emanet LOCKED, pending_action = RELEASE, error_code = PAYOUT_NEEDS_REVIEW
+        Note over ESC,DB: Aktarılmaz, ERROR logu, admin ödeme raporunda görünür, zamanlayıcı dokunmaz (6.7)
+    else Craftgate yanıt vermiyor ya da sonuç bekleyen iade var
+        ESC->>DB: emanet LOCKED, pending_action = RELEASE (müşteri bekletilmez, iş yine COMPLETED)
+    end
+
+    loop her 5 dakikada, 5 dk'dan 6 saate artan aralıkla, en çok 8 deneme
+        SWP->>PEA: process(ref)
+        PEA->>ESC: releaseChecked
+        ESC->>CG: iade var mı?
+        alt iade yok
+            ESC->>DB: RELEASED_TO_PRO, defter
+            PEA->>DB: PAYOUT_RELEASED (usta), PAYOUT_COMPLETED (müşteri)
+        else iade görünüyor veya 8. deneme
+            ESC->>DB: error_code = PAYOUT_NEEDS_REVIEW
+        end
+    end
+```
+
+`DISPUTED` emanet kendiliğinden aktarılmaz: aktarım yalnızca `LOCKED` iken denenir, şikayetteki para yalnızca şikayet kararıyla hareket eder. Testler: `EscrowSafetyTest#confirmDoesNotReleaseAPaymentThatCraftgateShowsAsRefunded`, `#autoCompleteDoesNotReleaseAPaymentThatCraftgateShowsAsRefunded`, `#craftgateOutageDoesNotBlockConfirmAndTheSweeperReleasesLater`, `#releaseRetryThatFindsARefundGoesToReviewInsteadOfPayingThePro`, `#payoutCheckThatKeepsFailingGoesToPayoutReviewAfterEightAttempts`.
+
+### 6.7 Yönetici: elle inceleme çözümü (REFUND_NEEDS_REVIEW / PAYOUT_NEEDS_REVIEW)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor A as Yönetici
+    participant APP as Admin Web (Ödemeler > İnceleme)
+    participant API as AdminPaymentReviewService
+    participant DB as PostgreSQL
+    participant CG as Craftgate
+
+    A->>APP: İnceleme listesi
+    APP->>API: GET /api/v1/admin/payments/review
+    API-->>APP: error_code dolu LOCKED ve DISPUTED kayıtlar (iş, taraflar, deneme sayısı)
+    A->>APP: Bir kaydı aç
+    APP->>API: GET /api/v1/admin/payments/{ref}/review
+    API->>DB: satırı kilitle
+    API->>CG: iade durumu ve iade edilmiş toplam
+    API-->>APP: izin verilen çözümler (yalnızca bu yanıttan hesaplanır)
+    A->>APP: Çözüm seç + not (10-1000 karakter)
+    APP->>API: POST /api/v1/admin/payments/{ref}/resolve (resolution, note)
+    API->>DB: satırı kilitle
+    API->>CG: iade durumunu yeniden sor
+    alt emanet DISPUTED
+        API-->>APP: 409 ESCROW_DISPUTED (para yalnızca şikayet kararıyla hareket eder)
+    else sonuç bekleyen iade veya okunamayan durum
+        API-->>APP: 409 (okunamıyorsa 502), hiçbir şey değişmez
+    else MARK_REFUNDED (Craftgate'te tam iade görünüyor)
+        API->>DB: REFUNDED_TO_CUSTOMER, defterde tek REFUND, para gönderilmez
+    else RETRY_REFUND (iade yok ya da kısmi)
+        API->>CG: yalnızca kalan tutarı iade et
+        API->>DB: REFUNDED_TO_CUSTOMER
+    else RELEASE (iade yok, tamamlanmış işin aktarımı)
+        API->>DB: RELEASED_TO_PRO, PAYOUT + COMMISSION
+    end
+    API->>DB: pending_action ve error_code temizle, admin_actions (RESOLVE_PAYMENT_REVIEW, hedef PAYMENT)
+    API->>DB: bildirimler (REFUND_COMPLETED veya PAYOUT_RELEASED / PAYOUT_COMPLETED)
+    API-->>APP: 200 güncel kontrol sonucu
+    Note over API,CG: Craftgate hatası ya da tutarsızlık işlemin tamamını geri alır
+```
+
+Çözüm tablosu (STATE_MACHINES.md bölüm 6): Craftgate'te tam iade → yalnız `MARK_REFUNDED`; 0 < iade < toplam → yalnız `RETRY_REFUND`; iade ≥ toplam ama durum tam iade değil → çözüm yok (Craftgate panelinde elle düzeltilir); iade yok → iptal/öksüz kayıtta `RETRY_REFUND`, tamamlanmış işin aktarımında `RELEASE`. Panelde `DISPUTED` kayıt listelenir ama çözüm düğmesi yoktur. `provider = SEED` kayıt `dev` dışında çözülmez. Testler: `AdminPaymentReviewTest` (10 test), ADM `payment_review_test` (6 test).
+
+### 6.8 E-posta değişikliği (kodla doğrulama)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor K as Kullanıcı
+    participant APP as Mobil (Ayarlar > Profil)
+    participant API as EmailChangeService
+    participant DB as PostgreSQL
+    participant MAIL as EmailSender
+
+    K->>APP: Yeni e-posta + mevcut şifre
+    APP->>API: POST /api/v1/me/email
+    API->>DB: PasswordCheckLimiter: son 15 dk yanlış şifre sayısı
+    alt 5 veya daha fazla
+        API-->>APP: 429 TOO_MANY_ATTEMPTS (şifreye bakılmaz)
+    else şifre yanlış
+        API->>DB: başarısız deneme yaz
+        API-->>APP: 400 alan hatası (password)
+    else adres mevcutla aynı ya da başka hesapta
+        API-->>APP: 400 (newEmail) ya da 409 EMAIL_TAKEN
+    else saatte 5'ten fazla kod istendi
+        API-->>APP: 429 TOO_MANY_ATTEMPTS
+    else geçerli
+        API->>DB: eski kodları kullanılmış say, yeni 6 haneli kodun özetini yaz (15 dk, users.email değişmez)
+        API->>MAIL: sendEmailChangeCode(yeni adres, kod)
+        API-->>APP: 202
+    end
+
+    K->>APP: Yeni adrese gelen kod
+    APP->>API: POST /api/v1/me/email/confirm
+    API->>DB: son kullanılmamış kodu kilitle
+    alt kod yok, süresi dolmuş ya da 5 yanlış deneme yapılmış
+        API-->>APP: 400 alan hatası (code)
+    else kod yanlış
+        API->>DB: attempts + 1
+        API-->>APP: 400 alan hatası (code)
+    else doğru
+        API->>DB: adres hâlâ boş mu? (yarışta 409 EMAIL_TAKEN, işlem geri alınır)
+        API->>DB: users.email güncelle, kodu kullanılmış say
+        API->>DB: diğer cihazlardaki oturum aileleri iptal (geçerli oturum kalır)
+        API->>MAIL: sendEmailChangedNotice(eski adres)
+        API-->>APP: 200 me
+    end
+```
+
+Telefon numarası değişikliği yoktur; arayüzde telefon salt okunurdur (SMS sağlayıcısı olmadığından doğrulanamaz). Şifre değiştirme de aynı hatalı şifre sınırını kullanır (sayaçlar birbirinden bağımsızdır). Testler: `AccountTest#emailChangesOnlyAfterTheCodeSentToTheNewAddressIsConfirmed`, `#emailChangeRevokesOtherSessionsButKeepsCurrentFamily`, `#emailChangeCodeLocksAfterFiveWrongAttempts`, `#emailChangeLocksForFifteenMinutesAfterFiveWrongPasswords`, `#correctPasswordResetsTheWrongPasswordCounter`, `#passwordChangeLocksForFifteenMinutesAfterFiveWrongPasswords`, `#emailTakenBetweenRecheckAndSaveIsConflictNotServerError`.
+
+### 6.9 Hesap silme (gerekçeli)
+
+`DELETE /api/v1/me` isteğe bağlı `reason` kodu alır (`NO_LONGER_NEEDED`, `FOUND_ALTERNATIVE`, `PRIVACY`, `BAD_EXPERIENCE`, `OTHER`; geçersiz değer 400). Açık iş ya da kilitli emanet varsa silme reddedilir (`AccountDeletionGuard`). Başarılıysa hesap anonimleştirilir (ad "Silinmiş kullanıcı", e-posta `deleted-<id>@deleted.invalid`, telefon boş, adresler silinir, oturumlar ve kodlar iptal edilir) ve gerekçe, kullanıcıya bağlanmadan `account_deletion_feedback` tablosuna yazılır. Test: `AccountTest#deleteReasonIsStoredForAnalyticsWithoutAnyLinkToTheUser`.
+
 ---
 
 ## 7. Durum makineleri
 
-Kaynak: `docs/spec/STATE_MACHINES.md` ve kod (`JobStateMachine`, `EscrowPayment`, `*Status` enum'ları). Geçersiz geçiş `409 ILLEGAL_STATE` döner.
+Kaynak: `docs/spec/STATE_MACHINES.md` (bu bölümdeki diyagramlar spec ile birebir karşılaştırıldı) ve kod (`JobStateMachine`, `EscrowPayment`, `*Status` enum'ları). Geçersiz geçiş `409 ILLEGAL_STATE` döner.
 
 ### 7.1 Hesap
 
@@ -1412,9 +1679,11 @@ stateDiagram-v2
     [*] --> ACTIVE : kayıt
     ACTIVE --> SUSPENDED : yönetici askıya alır
     SUSPENDED --> ACTIVE : yönetici açar
-    ACTIVE --> DELETED : kullanıcı siler (açık iş veya kilitli emanet yoksa)
+    ACTIVE --> DELETED : kullanıcı siler (açık iş veya kilitli emanet yoksa; isteğe bağlı gerekçe kodu)
     DELETED --> [*]
 ```
+
+E-posta değişikliği hesap durumunu değiştirmez; yeni adrese giden kod onaylanmadan `users.email` değişmez (6.8). Telefon değişikliği yoktur.
 
 ### 7.2 Usta profili (`review_status`)
 
@@ -1424,13 +1693,13 @@ stateDiagram-v2
     PENDING_REVIEW --> APPROVED : yönetici onaylar
     PENDING_REVIEW --> NEEDS_DOCUMENTS : belge istenir
     PENDING_REVIEW --> REJECTED : reddedilir
-    NEEDS_DOCUMENTS --> PENDING_REVIEW : yeniden gönderim
-    REJECTED --> PENDING_REVIEW : yeniden başvuru
+    NEEDS_DOCUMENTS --> PENDING_REVIEW : yeniden gönderim (POST /pro/application)
+    REJECTED --> PENDING_REVIEW : yeniden başvuru (aynı uç nokta)
     APPROVED --> SUSPENDED : askı (yönetici veya şikayet kararı)
     SUSPENDED --> APPROVED : yönetici açar
 ```
 
-`REJECTED → PENDING_REVIEW` geçişi `STATE_MACHINES.md` içinde yazılı değildir, ancak kod buna izin verir (`ProService.submit`: yalnızca `NEEDS_DOCUMENTS` ve `REJECTED` yeniden başvurabilir) ve `ProFlowTest` içinde sınanır. Spec'e eklenmesi gerekir.
+`REJECTED → PENDING_REVIEW` geçişi artık `STATE_MACHINES.md` içinde de yazılıdır (ret kalıcı değildir) ve kodla uyumludur (`ProService.submit`: yalnızca `NEEDS_DOCUMENTS` ve `REJECTED` yeniden başvurabilir; `PENDING_REVIEW`, `APPROVED`, `SUSPENDED` iken `409 ILLEGAL_STATE`; `ProFlowTest#applicationLifecyclePendingBlocksResubmitNeedsDocumentsAllowsIt`).
 
 ### 7.3 Talep
 
@@ -1503,10 +1772,11 @@ Kodda `decide` hem `OPEN` hem `IN_REVIEW` durumundan karar kabul eder; `RELEASE_
 stateDiagram-v2
     [*] --> INITIALIZED : 3DS başlatıldı
     INITIALIZED --> LOCKED : banka onayı, doğrulanmış tutar
-    INITIALIZED --> FAILED : red, 3DS terk, süpürücü
+    INITIALIZED --> FAILED : red (PAYMENT_DECLINED), 3DS terk (THREEDS_ABANDONED), süpürücü
+    FAILED --> LOCKED : geç banka başarısı (yalnız THREEDS_ABANDONED, Craftgate başarıyı doğrularsa)
     LOCKED --> DISPUTED : şikayet
-    LOCKED --> RELEASED_TO_PRO : onay veya 48 saat
-    LOCKED --> REFUNDED_TO_CUSTOMER : iptal, yarış iadesi
+    LOCKED --> RELEASED_TO_PRO : onay veya 48 saat (Craftgate'te iade yoksa), admin çözümü
+    LOCKED --> REFUNDED_TO_CUSTOMER : iptal iadesi, yarış iadesi, admin çözümü
     DISPUTED --> RELEASED_TO_PRO : ustaya aktar (%10 komisyon)
     DISPUTED --> REFUNDED_TO_CUSTOMER : tam iade
     DISPUTED --> SPLIT_SETTLED : %50 / %50
@@ -1515,6 +1785,23 @@ stateDiagram-v2
     SPLIT_SETTLED --> [*]
     FAILED --> [*]
 ```
+
+`pending_action` (V7) durumu değiştirmez; `LOCKED` (ya da şikayetteki iade için `DISPUTED`) iken kaydedilmiş ama Craftgate'te henüz yapılmamış para hareketini taşır (outbox, 6.5 ve 6.6). `error_code` ise nedeni belirtir:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Bos : emanet LOCKED
+    Bos --> REFUND : iş iptali (aynı işlemde yazılır)
+    Bos --> RELEASE : onay veya 48 saat, Craftgate'e sorulamadı
+    REFUND --> Bos : iade tamamlandı (REFUNDED_TO_CUSTOMER)
+    RELEASE --> Bos : aktarım tamamlandı (RELEASED_TO_PRO)
+    REFUND --> REFUND_NEEDS_REVIEW : 8 deneme veya tutarsız iade
+    RELEASE --> PAYOUT_NEEDS_REVIEW : Craftgate'te iade görünüyor (onayda ya da sonra) veya 8 deneme
+    REFUND_NEEDS_REVIEW --> Bos : admin çözümü
+    PAYOUT_NEEDS_REVIEW --> Bos : admin çözümü
+```
+
+Çizimdeki `Bos` = `pending_action` boş. `NEEDS_REVIEW` kayıtları zamanlayıcı bırakır, yalnızca admin çözer (6.7). İşe dönüşmemiş (öksüz) ödemenin yarış/süre iadesi ayrı kolondan, aynı sayaçlarla (`refund_attempts`, `next_refund_attempt_at`) denenir ve 8 denemeden sonra yine `REFUND_NEEDS_REVIEW` olur.
 
 Randevu önerisi (`appointment_proposals.status`): `PENDING → ACCEPTED | SUPERSEDED | REJECTED`; bir işte tek `PENDING` olabilir.
 
@@ -1537,6 +1824,8 @@ Randevu önerisi (`appointment_proposals.status`): `PENDING → ACCEPTED | SUPER
 | Şikayet aç | — | Kendi işi | — | — |
 | Usta başvurusu | — | Başvurabilir | Kendi başvurusu | Karar verir |
 | Şikayet kararı, hesap askı, ödeme listesi | — | — | — | Evet (`ROLE_ADMIN`) |
+| Ödeme inceleme listesi ve çözümü (`/admin/payments/review`, `/resolve`) | — | — | — | Evet; `DISPUTED` emanet çözülmez (`409 ESCROW_DISPUTED`) |
+| E-posta ve şifre değiştirme, hesap silme | — | Kendi hesabı (mevcut şifre gerekli) | Kendi hesabı | — |
 
 Zorlama: `SecurityConfig` (`/api/v1/admin/**` için `hasRole("ADMIN")`, diğer `/api/v1/**` için kimlik), servis katmanında sahiplik denetimi (başkasının kaydı `404`). Testler: `AdminApplicationTest.everyAdminEndpointRejectsNonAdminsWith403AndAnonymousWith401`, `RequestFlowTest.otherUsersGet404ForRequestAndNeverSeeFullAddress`, `ChatTest.nonParticipantGets404EverywhereAndBodyIsValidated`, `ProFlowTest.proRequestDetailIsMaskedAndLimitedToMatchingPros`.
 
@@ -1547,9 +1836,14 @@ Zorlama: `SecurityConfig` (`/api/v1/admin/**` için `hasRole("ADMIN")`, diğer `
 | Sunucu ödeme sırasında kapanır | Kayıt `INITIALIZED` kalır; `PaymentSweeper` 30 dk sonra Craftgate'e sorup kapatır |
 | Callback hiç gelmez (WebView kapandı) | Aynı süpürücü; müşteri `FAILED` sonrası yeniden dener |
 | Aynı talebe iki müşteri ödemesi yarışır | Biri işi açar, diğeri otomatik iade edilir (`REQUEST_ALREADY_ASSIGNED`) |
-| İade başarısız | Emanet `LOCKED` kalır, süpürücü artan aralıkla en çok 8 kez dener, sonra `REFUND_NEEDS_REVIEW` (elle inceleme) |
-| Craftgate erişilemez | Başlatmada `502 GATEWAY_ERROR`; karar/iptalde işlem geri alınır |
-| Aynı kullanıcı çok kez yanlış şifre girer | 15 dk içinde 5 başarısızdan sonra `429` |
+| Yarış ya da süre iadesi başarısız | Emanet `LOCKED` kalır, süpürücü artan aralıkla en çok 8 kez dener, sonra `REFUND_NEEDS_REVIEW` (elle inceleme) |
+| İş iptalinde iade başarısız veya Craftgate yanıtsız | İptal **geçerli** (200); emanet `LOCKED` + `pending_action = REFUND`; süpürücü yeniden dener, her denemeden önce iade edilmiş tutarı sorar (çifte iade yok) |
+| İade çıktıktan sonra iş onayı gelir | Aktarım yapılmaz; iş `COMPLETED`, emanet `LOCKED` + `PAYOUT_NEEDS_REVIEW`; admin çözer |
+| Onay anında Craftgate yanıt vermez | İş `COMPLETED` olur, emanet `pending_action = RELEASE` ile kalır; süpürücü aktarımı sonra yapar |
+| Banka sayfası kapatılıp yeni deneme | Eski deneme ≥ 10 dk ve Craftgate "3DS bitmedi" derse `THREEDS_ABANDONED` ile kapanır, yeni deneme başlar; değilse `409 PAYMENT_IN_PROGRESS` |
+| Craftgate erişilemez | Ödeme başlatmada `502 GATEWAY_ERROR`; şikayet kararında işlem geri alınır (`502`) ve yeniden denenir; iptal ve onayda işlem **geri alınmaz**, para hareketi bekler (yukarıdaki satırlar) |
+| Aynı kullanıcı çok kez yanlış şifre girer | 15 dk içinde 5 başarısızdan sonra `429 TOO_MANY_ATTEMPTS` (giriş, `/me/password`, `/me/email`; sayaçlar bağımsız) |
+| E-posta değişikliği kodu | 15 dk geçerli; 5 yanlış denemede kilitlenir; saatte en çok 5 kod; yeni adres başkasındaysa `409 EMAIL_TAKEN` (yarışta işlem geri alınır) |
 | Eşzamanlı güncelleme | Sürüm sütunu (`version`) ile iyimser kilit; çakışma `409 ILLEGAL_STATE` |
 | Yükleme kotası | 24 saatte 60 yükleme sonrası `429` |
 
@@ -1562,7 +1856,18 @@ Zorlama: `SecurityConfig` (`/api/v1/admin/**` için `hasRole("ADMIN")`, diğer `
 - Erişim token'ı: JWT, HS256, 15 dakika, issuer doğrulanır, sır en az 32 bayt (`JWT_SECRET`). `alg=none` ve başka sırla imzalı token reddedilir (`AuthHardeningTest`).
 - Yenileme token'ı: opak rastgele değer, 30 gün. Veritabanında yalnızca SHA-256 özeti saklanır. **Döndürme (rotation):** her yenilemede eski satır iptal edilir, yenisi yazılır. **Yeniden kullanım tespiti:** iptal edilmiş token tekrar gelirse tüm aile (aynı oturum zinciri) iptal edilir. Aynı token ile eşzamanlı yenileme en çok bir oturum üretir (`parallelRefreshWithSameTokenYieldsAtMostOneSession`). Access token içindeki `family` claim'i, şifre değişince diğer oturumların kapanmasını sağlar.
 - Şifre: BCrypt (Spring `BCryptPasswordEncoder`), en az 8 karakter, harf ve rakam, en çok 72 bayt.
-- Kaba kuvvet koruması: hesap başına (e-posta ve telefon aynı sayaç) 15 dakikada 5 başarısız deneme. Hesap yoksa da sahte hash karşılaştırılır; yanıt hesap varlığını sızdırmaz. Şifre sıfırlama kodu: özet olarak saklanır, 15 dk geçerli, 5 yanlış denemede geçersiz, saatte en çok 5 kod.
+- **Deneme sınırları (kaba kuvvet koruması):**
+
+| Yer | Sınır | Aşılınca |
+|---|---|---|
+| Giriş | Hesap başına (e-posta ve telefon aynı sayaç) 15 dakikada 5 başarısız | `429 TOO_MANY_ATTEMPTS`; hesap yoksa da sahte hash karşılaştırılır, yanıt hesap varlığını sızdırmaz |
+| `POST /me/password` ve `POST /me/email` (oturum açıkken mevcut şifre sorulur) | 15 dakikada 5 yanlış şifre; iki uç noktanın sayacı ayrı; doğru şifre sayacı sıfırlar (`PasswordCheckLimiter`) | `429 TOO_MANY_ATTEMPTS`, şifreye bakılmaz |
+| Şifre sıfırlama kodu | Özet olarak saklanır, 15 dk geçerli, 5 yanlış denemede geçersiz, saatte en çok 5 kod | Kod geçersiz / 429 |
+| E-posta değişikliği kodu | 6 haneli, özet olarak saklanır, 15 dk geçerli, 5 yanlış denemede kilitlenir, saatte en çok 5 kod | 400 (code) / 429 |
+| Medya yükleme | 24 saatte 60 yükleme | `429 TOO_MANY_ATTEMPTS` |
+
+- **E-posta doğrulaması:** kayıtta e-posta adresi **doğrulanmaz** (kayıt tek adımdır; RAD'daki telefon doğrulaması SMS olmadığı için yok). E-posta yalnızca iki yerde sahiplik kanıtı ister: şifre sıfırlama (kod, kayıtlı adrese gider) ve e-posta değişikliği (kod, **yeni** adrese gider; onaylanmadan `users.email` değişmez, onaylanınca diğer cihazlardaki oturumlar kapanır ve eski adrese bilgi e-postası gider). Kodlar `dev` profilinde yalnızca log'a, `prod` profilinde SMTP ile gider (`SmtpEmailSender`).
+- **Yönetici hesabı:** yönetici yalnızca ilk açılışta ortam değişkenleriyle oluşturulur (`AdminBootstrap`, parola ≥ 12 karakter, BCrypt özeti, hiçbir yerde loglanmaz; sıradan kullanıcı terfi ettirilmez). Başka bir yönetici oluşturma uç noktası yoktur (`dev` tohumu hariç).
 - İstemci: mobilde token'lar iOS Keychain'de (`first_unlock_this_device`, iCloud eşitlemesi kapalı, `secure_token_store_test.dart`). Yönetim panelinde token yalnızca **bellekte** tutulur (`MemoryTokenStore`); sayfa yenilenince oturum biter.
 
 **Yetkilendirme**
@@ -1575,21 +1880,22 @@ Zorlama: `SecurityConfig` (`/api/v1/admin/**` için `hasRole("ADMIN")`, diğer `
 
 - **Adres şifreleme:** `addresses.line_full_encrypted` ve `door_note_encrypted` AES-256-GCM ile şifrelenir. Çıktı `base64(iv[12] | şifreli metin | etiket[16])`; her şifrelemede rastgele IV, aynı metin farklı çıktı verir. **AAD** olarak kullanıcı kimliği bağlanır; başka satıra kopyalanan değer çözülmez. Anahtar `ADDRESS_KEY` ortam değişkenidir (veritabanında yok). Mahalle ve ilçe şifrelenmez (eşleştirme için gerekli). Tam adres yalnızca kabul sonrası, işin tarafları için döner. Testler: `AccountTest.addressIsEncryptedAtRestAndReadableThroughApi`, `sameTextEncryptsDifferentlyEachTime`, `CommonRulesTest.aesGcmRoundTripBindsToAad`.
 - **İmzalı medya URL'leri:** medya içeriği `GET /api/v1/media/{id}/content?exp=...&sig=...` ile sunulur; imza `HMAC-SHA256(MEDIA_SIGNING_KEY, "id.exp")`, geçerlilik 10 dakika. İmza yalnızca erişim denetiminden geçen çağırana üretilir (`signaturesAreOnlyIssuedAfterAccessChecks`). Dosya türü uzantıya göre değil **sihirli baytlarla** doğrulanır (`typeIsCheckedByMagicBytesNotByNameOrPurpose`); PDF `attachment` olarak sunulur.
-- **Kart verisi:** kart numarası ve CVC saklanmaz, loglanmaz, yanıtta dönmez; yalnızca son 4 hane kaydedilir (`cardDataIsNeverLoggedOrReturned`). `CardDetails.toString()` gizlidir. Ödeme tutarı her zaman sunucudaki tekliften alınır; istemcinin gönderdiği tutar yok sayılır. Callback sonucu istemci parametrelerine değil Craftgate sorgusuna göre karara bağlanır (`forgedSuccessIsDecidedByCraftgateNotByParams`). **Not:** callback imza doğrulaması yalnızca `craftgate.callback-key` doluysa yapılır; boşsa doğrulama atlanır ve güvenlik Craftgate sorgusuna dayanır.
-- **Hesap silme:** kişisel veriler anonimleştirilir; finansal kayıtlar yasal süre boyunca kalır. Açık işi ya da kilitli emaneti olan hesap silinemez.
+- **Kart verisi:** kart numarası ve CVC saklanmaz, loglanmaz, yanıtta dönmez; yalnızca son 4 hane kaydedilir (`cardDataIsNeverLoggedOrReturned`). `CardDetails.toString()` gizlidir. Ödeme tutarı her zaman sunucudaki tekliften alınır; istemcinin gönderdiği tutar yok sayılır. Callback sonucu istemci parametrelerine değil Craftgate sorgusuna göre karara bağlanır (`forgedSuccessIsDecidedByCraftgateNotByParams`). **Callback anahtarı:** `prod` profilinde `CRAFTGATE_CALLBACK_KEY` **zorunludur** (boşsa uygulama açılmaz, `ProdConfigValidator`); imza doğrulaması her callback'te yapılır. `dev` profilinde anahtar boş olabilir (uyarı loglanır) ve doğrulama atlanır; bu durumda güvenlik yalnızca Craftgate sorgusuna dayanır (bu zaten her durumda asıl karardır).
+- **Para hareketi güvenliği:** iade ve aktarım outbox ile işlem dışına alınmıştır (6.5, 6.6); her iade öncesi Craftgate'ten iade edilmiş tutar sorulur, böylece zaman aşımına uğramış ama gerçekleşmiş iade ikinci kez gönderilmez. Ustaya aktarım öncesi iade kontrolü vardır. `DISPUTED` emanet yalnızca şikayet kararıyla hareket eder; admin inceleme çözümü bu emanette `409 ESCROW_DISPUTED` verir. `provider = SEED` kaydı `dev` dışında çözülmez. Çözüm kararı Craftgate yanıtından hesaplanır (6.7).
+- **Hesap silme:** kişisel veriler anonimleştirilir; finansal kayıtlar yasal süre boyunca kalır. Açık işi ya da kilitli emaneti olan hesap silinemez. İsteğe bağlı silme gerekçesi (5 sabit kod) kullanıcıya bağlanmadan, kimlik ve serbest metin olmadan, gün çözünürlüğünde ayrı tabloya yazılır (6.9).
 - **Denetim izi:** yönetici eylemleri `admin_actions` tablosuna yazılır.
 
 **KVKK notları (6698)**
 
 | Konu | Durum |
 |---|---|
-| Açık rıza ve aydınlatma | Kayıtta KVKK ve koşul onay kutusu zorunlu; `kvkk_accepted_at`, `terms_accepted_at` saklanır. Hukuki metinler yer tutucudur, hukuk incelemesi yapılmadı |
+| Açık rıza ve aydınlatma | Kayıtta KVKK ve koşul onay kutusu zorunlu; `kvkk_accepted_at`, `terms_accepted_at` saklanır. Beş hukuki metin **taslağı** (kullanım koşulları, gizlilik, KVKK aydınlatma, ödeme ve güvence havuzu, usta sözleşmesi özeti; TR/EN) `docs/legal/` içinde yazıldı, sitede (`website/legal`) ve uygulamada (Ayarlar) gösterilir; hepsi TASLAK şeritlidir, şirket bilgileri köşeli yer tutucudur, hukuk incelemesi yapılmadı. Uygulamadaki kopya `docs/legal` ile birebir aynıdır (`followup_test` "uygulamadaki kopyalar docs/legal ile aynı") |
 | Silme hakkı | Hesap silme (anonimleştirme) var |
 | Veri minimizasyonu | Adres şifreli, usta telefon/e-posta herkese açık profilde yok, müşteri telefonu ustaya gösterilmez |
 | Saklama süresi politikası | **Yok** (tanımlı değil) |
 | Veri taşınabilirliği / dışa aktarım | **Yok** |
-| Aktarım güvenliği | HTTPS dağıtımda gereklidir; yerel geliştirmede HTTP (yalnız Debug, ATS istisnası `platform_config_test.dart`) |
-| Üçüncü taraf | Craftgate yalnızca ödeme için; kart verisi BiTadilat'ta tutulmaz |
+| Aktarım güvenliği | HTTPS dağıtımda gereklidir; yerel geliştirmede HTTP yalnız Debug yapılandırmasında (iOS ATS istisnası; Android ağ güvenliği yapılandırması; `platform_config_test.dart`: release yalnız https kabul eder) |
+| Üçüncü taraf | Craftgate yalnızca ödeme için; kart verisi uygulamadaki formdan tek bir ödeme isteğiyle sunucu üzerinden Craftgate'e geçer, BiTadilat'ta saklanmaz ve loglanmaz (yalnız son 4 hane). Prod'da SMTP sağlayıcısı yalnızca kod e-postaları için |
 
 ---
 
@@ -1597,7 +1903,9 @@ Zorlama: `SecurityConfig` (`/api/v1/admin/**` için `hasRole("ADMIN")`, diğer `
 
 - Dokunma hedefi en az **48 dp** (`AppSizes.minTouch`, `components_test.dart`); metin kontrastı WCAG 2.1 AA (≥ 4.5:1, `contrast_test.dart`). Tasarım belgelerinde geçen "44 pt" eskidir.
 - TR/EN canlı geçiş: `gen-l10n`; hem mobil hem admin. Tüm hata kodları için iki dilde mesaj vardır (`auth_screens_test.dart: her ApiErrorCode için TR ve EN mesaj var`).
-- Geri döndürülemez eylemlerde onay: teklif kabulü (ayrı onay ekranı, ardından ödeme), iptal, tamamlama onayı, şikayet, hesap silme, yönetici kararı (onay diyaloğu).
+- Geri döndürülemez eylemlerde onay: teklif kabulü (ayrı onay ekranı, ardından ödeme), iptal, tamamlama onayı, şikayet, hesap silme (isteğe bağlı gerekçe seçimiyle), yönetici kararı ve ödeme inceleme çözümü (onay diyaloğu).
+- Para hareketi gecikirse arayüz bunu söyler: iptal edilmiş iş ekranı "iade işleniyor", tamamlanmış iş "ustaya aktarım işleniyor", elle incelemede destek metni gösterir (sunucudaki `pendingAction` ve `errorCode` alanlarından; `followup_test`). Destek e-posta adresi yalnızca derlemede tanımlıysa gösterilir.
+- Yasal metin taslakları Ayarlar'dan açılır; her sayfada "Taslak metin" etiketi vardır.
 - 320 px genişlik ve 2x yazı ölçeğinde taşma testleri bileşen ve ekran düzeyinde vardır.
 
 ---
@@ -1612,18 +1920,23 @@ Aşağıdaki değişiklikler proje sahibinin kararıdır. RAD metni **güncellen
 | 2 | Telefon + SMS kodu ile giriş (SCR-01) | **E-posta veya telefon + şifre**; kayıtta KVKK onayı, e-posta kodu ile şifre sıfırlama, hesap silme, tek hesapta müşteri/usta modu | SMS sağlayıcısı yok; telefon yalnızca tanımlayıcı |
 | 3 | Backend sorumlusu takım üyesi | Backend **Spring Boot 4.1 / Java 21 / PostgreSQL 16 / Flyway** olarak yazıldı | Takım dalındaki NestJS iskeleti kullanılmıyor |
 | 4 | "Web tabanlı yönetim paneli", çatı belirtilmemiş | **Flutter Web** (`apps/admin`), aynı depoda, ortak paketlerle | Tek dil ve ortak API istemcisi |
-| 5 | Android APK ve iOS | **iOS öncelikli**; Android sonraya bırakıldı (iskelet var, sınanmadı) | Simulator ile uçtan uca sınanıyor |
+| 5 | Android APK ve iOS | **iOS öncelikli**; Android için yapılandırma hazır (kimlik, simge, açılış, ağ güvenliği), **APK derlenmedi ve sınanmadı** | Simulator ile uçtan uca sınanıyor; Android cihaz/emülatör ve imza anahtarı yok |
 | 6 | Karşılıklı tamamlama onayı; iş durumları `AGREED`…`COMPLETED` | Müşteri onayı **veya 48 saat sonra otomatik aktarım**; durum kümeleri tekleştirildi (`AWAITING_APPOINTMENT`…`RESOLVED`) | `STATE_MACHINES.md` bölüm 7 eşleme tablosu |
 | 7 | Randevu: karşılıklı kabul | Usta onaylar ya da yeni aralık önerir | `JobFlowTest.appointmentProposalAcceptanceRescheduleAndCounterProposal` |
 | 8 | İlerleme: genel durum | Adrese ulaştım → başladım → bitirdim | `JobStateMachine` |
 | 9 | İptal: genel | Yalnızca iş başlamadan; sonrası şikayet; şikayet açıkken iptal/iade kapalı | `cancelIsRefusedFromInProgressOnward` |
 | 10 | Şikayet hakemliği: genel | Tam iade, %50/%50 (komisyonsuz), ustaya aktar (%10 komisyon); uyarı ve askıya alma | `AdminComplaintTest` |
-| 11 | Push bildirim (FCM/APNs) | **Uygulama içi bildirim merkezi** (19 tür); push yok | Apple geliştirici hesabı ve Firebase gerekir |
+| 11 | Push bildirim (FCM/APNs) | **Bilinçli olarak yalnızca uygulama içi bildirim merkezi** (21 tür); push gönderimi yok, cihaz belirteci kaydı var | Apple geliştirici hesabı ve Firebase gerekir; gizlilik metni de bunu yazar (gönderen servis yok) |
 | 12 | Sohbet | Yoklama (3 sn), websocket yok; iş kapandıktan 30 gün sonra salt okunur | `chat_wave3_test.dart` |
 | 13 | Dokunma hedefi 48 dp | 48 dp korundu (tasarım belgeleri 44 pt diyor) | `tokens.dart` |
-| 14 | Docker ile paketli backend | **Yok** | Açık iş |
-| 15 | Tanıtım sitesi (UC14) | **Yok** | Açık karar |
+| 14 | Docker ile paketli backend | **Var** (`backend/Dockerfile`, `docker-compose.yml`, `docs/RUNNING.md`); bu makinede Docker kurulu olmadığından **çalıştırılmadı** | Compose yalnız `dev` profili içindir; `prod` aynı imajla ortam değişkenleriyle |
+| 15 | Tanıtım sitesi (UC14) | **Yapıldı**: `website/` (tek sayfa, TR/EN, açık/koyu, yasal taslaklar). App Store bağlantısı yok (rozet yer tutucu), şirket alanları köşeli yer tutucu | Dosya incelemesi ve tarayıcıda görsel kontrol; otomatik test yok |
 | 16 | RAD ekranları | Eklenenler: kazançlar, tekliflerim, bildirim merkezi, kayıtlı adresler, ödeme sonucu | `docs/spec/ROLE_SCREEN_MAP.md` |
+| 17 | Hesap bilgileri: ad, e-posta, telefon değişimi | Ad ve e-posta değişir (e-posta yeni adrese giden kodla); **telefon salt okunur** | SMS sağlayıcısı yok, telefon doğrulanamaz; `AccountTest`, `account_features_test` |
+| 18 | Teklif ekranında "ustaya soru sor" | **Yapılmadı** | Spec yalnızca eylemin adını verir; uç nokta, veri, durum ve bildirim tanımlı değil (`API_V1.md` açık nokta) |
+| 19 | Yönetici ödeme izleme | Ödeme listesine ek olarak **elle inceleme çözümü** (`REFUND_NEEDS_REVIEW`, `PAYOUT_NEEDS_REVIEW`) | Gecikmeli para hareketleri için; `AdminPaymentReviewTest` |
+| 20 | Hesap silme: gerekçe yok | İsteğe bağlı gerekçe kodu, kullanıcıya bağlanmadan analiz için saklanır | KVKK veri minimizasyonu; `AccountTest#deleteReasonIsStoredForAnalyticsWithoutAnyLinkToTheUser` |
+| 21 | Yönetim paneli: kullanıcı listesi | İlçe süzgeci; usta yorumlarında yıldız ve "yalnız yorumlu" süzgeci | `AdminAccountPaymentTest`, `ProFlowTest`, `followup_test` |
 
 Prototipe özgü ifadeler ("komisyonsuz", "%100 Garantili", garanti süreleri) uygulama metinlerinden çıkarılmalıdır; bu belge onları gerçekleştirilmiş davranış olarak saymaz.
 
@@ -1631,6 +1944,8 @@ Prototipe özgü ifadeler ("komisyonsuz", "%100 Garantili", garanti süreleri) u
 
 ## 12. Açık noktalar
 
-- Tanıtım sitesi, push bildirim, Docker, Android derlemesi, gerçek e-posta/SMS ve KVKK saklama/dışa aktarım politikası gerçekleştirilmedi (bkz. 1 ve 9).
+- Push bildirim bilinçli olarak yapılmadı; gerçek SMS (ve dolayısıyla telefon doğrulaması/değişikliği), kayıtta e-posta doğrulaması, Android APK derlemesi, Docker'ın yerelde çalıştırılması, CI'nin uzak depoda koşturulması, gerçek ortama dağıtım ve KVKK saklama/dışa aktarım politikası gerçekleştirilmedi (bkz. 1 ve 9).
+- Yasal metinler ve tanıtım sitesi taslaktır: şirket bilgileri, App Store bağlantısı ve hukukçu incelemesi bekliyor (`website/README.md`).
 - Kullanılabilirlik (%80, 5 kullanıcı), süre hedefleri (3 dk / 90 sn), erişilebilirlik süresi (%99,5) ve gecikme (500 ms) ölçülmedi. Plan: `USABILITY_STUDY.md`, `TEST_PLAN.md`.
-- `REJECTED → PENDING_REVIEW` (yeniden başvuru) geçişi kodda var, `STATE_MACHINES.md`'de yok; spec güncellenmelidir (7.2).
+- "Ustaya soru sor" için akış tanımı gerekir (spec'te yok).
+- `prod` profili gerçek bir SMTP sağlayıcısıyla ve gerçek Craftgate üretim anahtarlarıyla denenmedi (istemci yalnızca sandbox adreslerini kabul eder).

@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Belge | Test Planı (D5.2 girdisi) |
-| Sürüm | 0.1, 16 Kasım 2026 |
-| Kod tabanı | `feature/flutter-app`, işlem 565bfb4 |
+| Sürüm | 0.2, 19 Kasım 2026 (0.1: 16 Kasım) |
+| Kod tabanı | `feature/flutter-app`, işlem c335a10 (0.1: 565bfb4) |
 | İlgili belgeler | `TEST_CASES.md` (senaryolar ve izlenebilirlik), `TEST_REPORT_TEMPLATE.md` (sonuç raporu), `USABILITY_STUDY.md` (kullanılabilirlik), `SDD.md` |
 | Teslim | Testlerin teslimi: **25 Aralık 2026** (RAD 4.2) |
 
@@ -23,10 +23,11 @@ Amaç, RAD'daki 14 kullanım durumunun (UC01–UC14), 7 hedefin başarı ölçü
 
 **Kapsam dışında**
 
-- Tanıtım sitesi (UC14): gerçekleştirilmedi, test edilemez.
-- Push bildirimi: gerçekleştirilmedi.
-- Android derlemesi: sınanmayacak (iOS öncelikli); platform dosyaları için yalnızca yapılandırma testi var.
-- Gerçek para, canlı Craftgate hesabı, canlı e-posta/SMS.
+- Tanıtım sitesi (UC14, `website/`): yapıldı ama **otomatik test yok**; içerik koddaki kurallarla elle karşılaştırılır, tarayıcıda görsel kontrol elle yapılır (`TEST_CASES.md` TC-PROMO-01). Yasal metin taslaklarının uygulama kopyası otomatik karşılaştırılır (TC-PROMO-02).
+- Push bildirimi: bilinçli olarak yapılmadı (yalnızca uygulama içi bildirim).
+- Android derlemesi: sınanmayacak (iOS öncelikli); platform dosyaları için yalnızca yapılandırma testi var, APK derlenmedi.
+- Docker imajı ve `docker compose`: dosyalar var, bu makinede Docker olmadığından çalıştırılmadı (elle bekliyor, TC-NFR-EXT-05). GitHub Actions iş akışları uzak depoda koşturulmadı (TC-NFR-EXT-06).
+- Gerçek para, canlı Craftgate hesabı, canlı e-posta (SMTP)/SMS; telefon değişikliği ve "ustaya soru sor" yapılmadığından sınanmaz.
 - Yük ve dayanıklılık testi (bkz. 8, risk R4).
 
 ## 2. Test seviyeleri
@@ -34,10 +35,11 @@ Amaç, RAD'daki 14 kullanım durumunun (UC01–UC14), 7 hedefin başarı ölçü
 | Seviye | Ne sınanır | Araç | Nerede | Otomatik mi |
 |---|---|---|---|---|
 | Birim | Saf mantık: kart doğrulama (Luhn), telefon E.164, şifre kuralı, AES-GCM, para yuvarlama, token değerleri, kontrast hesabı | JUnit 5, `flutter_test` | `CardValidatorTest`, `CommonRulesTest`, `components_test.dart`, `contrast_test.dart` | Evet |
-| Entegrasyon (API + gerçek PostgreSQL) | HTTP uç noktaları, kısıtlar, işlemler, kilitler, zamanlayıcılar, durum makineleri | Spring Boot Test + MockMvc, gerçek PostgreSQL 16 (Docker varsa Testcontainers, yoksa yerel `bitadilat_test`), Mockito ile sahte `PaymentGateway` | `backend/src/test/java/com/bitadilat/**` (308 test) | Evet |
-| Eşzamanlılık | Yarışlar: aynı talebe iki ödeme, eşzamanlı yenileme, eşzamanlı karar, eşzamanlı mesaj | Çok iş parçacıklı JUnit testleri, kısmi benzersiz indeksler, satır kilidi | `PaymentAppTest`, `AuthHardeningTest`, `AdminComplaintTest`, `ChatTest`, `RequestFlowTest`, `PaymentSweeperTest`, `JobFlowTest` | Evet |
-| İstemci paketi (sözleşme) | JSON ↔ model, uç nokta yolları, hata kodları, token yenileme interceptor'u | `flutter_test`, sahte `HttpClientAdapter` | `packages/bitadilat_api/test` (101 test) | Evet |
-| Widget / ekran | Ekran akışları, doğrulama, hata durumları, rota korumaları, TR/EN, 320 px ve 2x yazı taşma | `flutter_test` widget testleri, sahte HTTP bağdaştırıcısı (`FakeAdapter`) | `apps/mobile/test` (525), `apps/admin/test` (87), `packages/bitadilat_ui/test` (27) | Evet |
+| Entegrasyon (API + gerçek PostgreSQL) | HTTP uç noktaları, kısıtlar, işlemler, kilitler, zamanlayıcılar, durum makineleri | Spring Boot Test + MockMvc, gerçek PostgreSQL 16 (Docker varsa Testcontainers, yoksa yerel `bitadilat_test`), Mockito ile sahte `PaymentGateway` | `backend/src/test/java/com/bitadilat/**` (354 test) | Evet |
+| Eşzamanlılık | Yarışlar: aynı talebe iki ödeme, eşzamanlı yenileme, eşzamanlı karar, eşzamanlı mesaj | Çok iş parçacıklı JUnit testleri, kısmi benzersiz indeksler, satır kilidi | `PaymentAppTest`, `AuthHardeningTest`, `AdminComplaintTest`, `ChatTest`, `RequestFlowTest`, `PaymentSweeperTest`, `JobFlowTest`, `EscrowSafetyTest`, `AdminPaymentReviewTest` | Evet |
+| İstemci paketi (sözleşme) | JSON ↔ model, uç nokta yolları, hata kodları, token yenileme interceptor'u | `flutter_test`, sahte `HttpClientAdapter` | `packages/bitadilat_api/test` (112 test) | Evet |
+| Widget / ekran | Ekran akışları, doğrulama, hata durumları, rota korumaları, TR/EN, 320 px ve 2x yazı taşma | `flutter_test` widget testleri, sahte HTTP bağdaştırıcısı (`FakeAdapter`) | `apps/mobile/test` (567), `apps/admin/test` (95), `packages/bitadilat_ui/test` (27) | Evet |
+| Üretim hazırlığı | `prod` profili: varsayılan sır yok, dev bean'leri yok, callback anahtarı ve SMTP zorunlu, ilk yönetici (bootstrap) | JUnit, tam uygulama bağlamı | `prod/ProdProfileContextTest`, `ProdReadinessUnitTest`, `AdminBootstrapTest`, `common/ProdProfileConfigTest` | Evet |
 | Platform yapılandırması | iOS/Android paket kimliği, ATS istisnası yalnız Debug, ikon, izin dizeleri, depolama güvenliği | `flutter_test` dosya okuma | `platform_config_test.dart`, `secure_token_store_test.dart` | Evet |
 | Uçtan uca (Simulator ve tarayıcı) | Gerçek sunucu + gerçek uygulama: kayıt → talep → teklif → ödeme → iş → onay; admin kararı | iOS Simulator, Chrome (Flutter Web), gerçek backend + PostgreSQL | Elle ve sürücü betikleriyle | **Kısmen / elle**; depoda otomatik uçtan uca test **yok** (`integration_test` dizini yok). Önceki E2E raporları kayboldu; 25 Aralık'a kadar yeniden koşulup kayda geçirilecek |
 | Sandbox ödeme | Gerçek Craftgate sandbox: 3DS başlatma, callback, iade, kısmi iade | Craftgate sandbox test kartları, çalışan backend | Elle (aşağıda 6) | Hayır. Otomatik testlerde ağ geçidi sahtedir; `CraftgateGatewayTest` yalnızca eşleme mantığını sınar |
@@ -111,15 +113,17 @@ cd packages/bitadilat_api && flutter test
 |---|---|---|
 | S1 | Craftgate'in yayımladığı başarılı test kartı ile teklif kabulü | 3DS sayfası açılır, doğrulama sonrası ödeme `LOCKED`, teklif `ACCEPTED`, iş açılır |
 | S2 | Reddedilen test kartı | Ödeme `FAILED`, mesaj gösterilir, talep serbest, yeniden denenebilir |
-| S3 | 3DS penceresi doğrulama yapılmadan kapatılır | Süpürücü (en geç 30 dk sonra) kaydı `FAILED / THREEDS_ABANDONED` yapar |
+| S3 | 3DS penceresi doğrulama yapılmadan kapatılır | 3DS tamamlanmamışsa süpürücü kaydı oluşturmadan **2 saat** sonra `FAILED / THREEDS_ABANDONED` yapar; hemen yeni deneme istenirse eski deneme ≥ 10 dk ve Craftgate "3DS bitmedi" diyorsa o anda kapanır, değilse `409` |
 | S4 | Müşteri onaylar | Emanet `RELEASED_TO_PRO`, defterde `PAYOUT` ve `COMMISSION` (%10) |
 | S5 | İptal (iş başlamadan) | Craftgate'te tam iade görünür, emanet `REFUNDED_TO_CUSTOMER` |
 | S6 | Şikayet + tam iade | Tam iade bir kez gider |
 | S7 | Şikayet + %50/%50 | Yarı tutar iade, `SPLIT_SETTLED`, komisyon yok |
 | S8 | Şikayet + ustaya aktar | İade yok, `RELEASED_TO_PRO`, %10 komisyon |
 | S9 | Aynı kartla iki kez hızlı deneme | `409 PAYMENT_IN_PROGRESS` ya da `DUPLICATE_ATTEMPT` |
+| S10 | Şikayet + kısmi iade durumu: Craftgate'te kısmi iade varken tam iade kararı | Yalnızca kalan tutar iade edilir, müşteri toplamı tam bir kez alır |
+| S11 | İade edilmiş ödemede müşteri onayı (aktarım) | Aktarılmaz, `PAYOUT_NEEDS_REVIEW`; admin çözümü yalnızca izinli seçenekleri sunar |
 
-Sandbox kart numaraları Craftgate belgelerinden alınır; bu belgeye ve depoya yazılmaz. 16 Kasım 2026'da gerçek Craftgate sandbox ile uçtan uca bir koşu yapılmıştır (proje sahibinin kaydı); ayrıntılı çıktısı depoda **yoktur**, S1–S9 yeniden koşulup `TEST_REPORT` içine işlenecektir.
+Sandbox kart numaraları Craftgate belgelerinden alınır; bu belgeye ve depoya yazılmaz. Kasım 2026'da iade ve aktarım senaryoları gerçek sandbox'ta elle koşuldu (bölüşüm, tam iade, kısmi iade + kalan, iadeden sonra aktarımın reddi; ödeme no 3275432, 3275434, 3275436, 3281697; kayıt: `TEST_REPORT_TEMPLATE.md` C.5). Ret, terk ve çift deneme (S2, S3, S9) koşulmadı. 16 Kasım 2026'da gerçek Craftgate sandbox ile uçtan uca bir koşu yapılmıştır (proje sahibinin kaydı); ayrıntılı çıktısı depoda **yoktur**, S1–S9 yeniden koşulup `TEST_REPORT` içine işlenecektir.
 
 ## 7. Veri yönetimi
 
@@ -136,10 +140,10 @@ Sandbox kart numaraları Craftgate belgelerinden alınır; bu belgeye ve depoya 
 | R3 | Testler paylaşılan PostgreSQL'i siler | Başka bir koşu bozulur | Koşu başına ayrı `TEST_DB_URL` |
 | R4 | Erişilebilirlik süresi (%99,5) ve gecikme (500 ms) ölçülemiyor: sağlık uç noktası ve izleme yok | NFR kanıtsız | Hafif bir `/health` ve gecikme betiği ekle ya da hedef olarak yeniden ifade et (proje sahibi kararı) |
 | R5 | Kullanılabilirlik için 5 katılımcı bulunamaz | Hedef 6 kanıtsız | Katılımcıları Aralık başında planla (`USABILITY_STUDY.md`) |
-| R6 | Android hiç derlenmedi | RAD "APK" vaadi | Kapsam dışı ilan et ya da Aralık'ta derleme duman testi |
+| R6 | Android hiç derlenmedi; Docker imajı ve CI uzakta koşturulmadı | RAD "APK" ve paketleme vaadi | Kapsam dışı ilan et ya da Aralık'ta derleme duman testi; Docker olan bir makinede `docker compose up --build` |
 | R7 | Apple geliştirici hesabı yok | Gerçek cihazda test yok | Yalnızca Simulator; bunu raporda belirt |
-| R8 | KVKK metinleri yer tutucu | Hukuki risk | Hukuk incelemesi kapsam dışı, raporda belirt |
-| R9 | Gerçek e-posta yok, şifre sıfırlama kodu log'da | E2E'de kod elle alınır | Test sırasında log'dan oku; testlerde `CapturingEmailSender` |
+| R8 | Yasal metinler taslak (hukukçu incelemesi yok), site ve uygulama kopyaları elle eşitleniyor | Hukuki risk, kopya sapması | Hukuk incelemesi kapsam dışı, raporda belirt; uygulama kopyası testle korunur, site kopyası elle |
+| R9 | `dev` profilinde e-posta yok: şifre sıfırlama ve e-posta değişikliği kodları log'da; `prod` SMTP'si gerçek sağlayıcıyla denenmedi | E2E'de kod elle alınır | Test sırasında log'dan oku; testlerde `CapturingEmailSender`; SMTP için birim testi var |
 
 ## 9. Takvim
 

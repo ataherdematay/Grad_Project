@@ -29,7 +29,7 @@ After the customer accepts the offer and pays, the full address is visible to yo
 ## 5. Service fee and payment
 
 - The platform service fee is 10% and is deducted from the amount paid out to you.
-- The money is held in the secure hold; it is paid out on customer confirmation, or 48 hours after you mark the job finished if there is no open complaint.
+- The money is held in the secure hold; it is paid out on customer confirmation, or 48 hours after you mark the job finished if there is no open complaint. Before a payout the payment provider is asked whether the payment has any refund; if it cannot be reached the payout is postponed and retried automatically, and if a refund shows the payout is not made and the record is reviewed by hand.
 - In a complaint the admin decision applies: in a full refund nothing is paid to you; in 50/50 half the amount is paid to you; no service fee in either. If the complaint is dismissed the amount is paid to you and the 10% service fee applies.
 
 ## 6. Conduct and sanctions

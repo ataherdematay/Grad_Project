@@ -8,7 +8,7 @@ Teklifi kabul edip kartla ödediğinde para ustaya hemen geçmez; güvence havuz
 
 ## 2. Ödeme
 
-- Ödeme kartla ve 3D Secure doğrulamasıyla yapılır. Ödemeyi ödeme kuruluşu Craftgate alır; kart numarası ve CVC BiTadilat'a ulaşmaz ve saklanmaz.
+- Ödeme kartla ve 3D Secure doğrulamasıyla yapılır. Ödemeyi ödeme kuruluşu Craftgate alır; kart bilgilerin uygulamadaki formdan ödeme isteğiyle sunucumuz üzerinden Craftgate'e iletilir, BiTadilat bunları saklamaz ve kaydetmez (yalnızca kartın son 4 hanesi tutulur).
 - Tutar, teklifteki toplam tutardır (KDV dahil: işçilik + malzeme).
 - Ödeme başarılı olduğunda iş açılır, teklifin kabulü kesinleşir ve talebe verilen diğer teklifler geçersiz olur. Banka ödemeyi reddederse veya 3D Secure tamamlanmazsa ödeme başarısız sayılır, para çekilmez ve yeniden deneyebilirsin. Talep bu arada başka bir teklifle sonuçlanmışsa ödeme sana otomatik iade edilir.
 
@@ -21,13 +21,15 @@ Randevu onaylandıktan sonra usta adrese ulaşır, işe başlar ve "işi bitirdi
 
 İşin sorunlu olduğunu düşünüyorsan 48 saat dolmadan şikayet aç; şikayet açıkken otomatik aktarım çalışmaz.
 
+Aktarımdan önce ödeme kuruluşunda bu ödemeye ait bir iade olup olmadığı kontrol edilir. Ödeme kuruluşuna o anda ulaşılamazsa iş yine tamamlanır, aktarım ertelenir ve otomatik olarak tekrar denenir; ödemede iade görünüyorsa aktarım yapılmaz ve kayıt elle incelenir.
+
 ## 4. İptal ve iade
 
 - Müşteri iptali: usta onayı beklenirken, randevu onaylandıktan sonra ve usta adrese ulaştı aşamasında iş iptal edilebilir; ödenen tutar tam iade edilir ve talep iptal olur.
 - Usta iptali: aynı aşamalarda usta işi iptal edebilir; ödenen tutar sana tam iade edilir, ustanın teklifi geri çekilmiş sayılır ve talebin yeniden teklife açılır. Usta iptali ustanın kaydına işlenir.
 - İş başladıktan sonra ("iş sürüyor" ve sonrası) doğrudan iptal yoktur; sorun için şikayet açarsın.
 - Şikayet incelenirken iptal ve iade kapalıdır; karar yöneticidedir.
-- Her iptal gerekçe ister ve onay ekranı gösterir. İade, ödemenin yapıldığı karta ödeme kuruluşu üzerinden yapılır; kartına yansıma süresi bankana bağlıdır.
+- Her iptal gerekçe ister ve onay ekranı gösterir. İade, ödemenin yapıldığı karta ödeme kuruluşu üzerinden yapılır; kartına yansıma süresi bankana bağlıdır. Ödeme kuruluşuna o anda ulaşılamazsa iptal yine geçerlidir; iade otomatik olarak tekrar denenir ve geç yansıyabilir. Tamamlandığında bildirim alırsın; tamamlanamazsa kayıt elle incelenir.
 
 ## 5. Şikayet ve yönetici kararı
 

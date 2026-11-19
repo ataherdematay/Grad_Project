@@ -4,7 +4,7 @@
 |---|---|
 | Durum | **Plan.** Çalışma henüz yapılmadı; sonuç tabloları boştur |
 | İlgili gereksinim | RAD hedef 6; RAD 3.3.1 "Unassisted Task Completion" ve "Learnability" |
-| Sürüm | 0.1, 16 Kasım 2026 |
+| Sürüm | 0.2, 19 Kasım 2026 (0.1: 16 Kasım). Son kodla (c335a10) uyumlu; plan ve görevler değişmedi |
 | Takvim | Plan ve pilot: 1–8 Aralık. Oturumlar: 9–15 Aralık. Bulgular ve yeniden test: 16–20 Aralık. Rapor: 22 Aralık. Testlerin teslimi: 25 Aralık 2026 (`TEST_PLAN.md`) |
 
 ## 1. Amaç ve ölçütler
@@ -44,7 +44,7 @@ Katılımcı kayıt tablosu (kimlik yerine **K1…K6** kodu kullanılır):
 ## 3. Ortam ve donanım
 
 - Uygulama **iOS Simulator** içinde çalışır (Apple geliştirici hesabı yok, gerçek cihaza kurulum yok). Katılımcı, büyük ekranlı bir Mac üzerinde Simulator'ü fare ile kullanır; dokunma hedefleri ve kaydırma gerçek parmakla birebir aynı değildir. Bu **bir sınırlamadır** ve raporda belirtilir. Mümkünse dokunmatik ekranlı iPad Simulator'ü ya da geliştirici bir cihaz kullanılır.
-- Backend yerelde (`dev` profili), PostgreSQL ve tohum veri ile çalışır. Her oturum öncesi `POST /api/v1/dev/reset` ile veri sıfırlanır (`docs/spec/SEED_DATA.md`).
+- Backend yerelde (`dev` profili), PostgreSQL ve tohum veri ile çalışır (JVM ile ya da `docker compose up --build`; Docker yolu bu makinede denenmedi, bkz. `docs/RUNNING.md`). Katılımcı e-posta kodu gerektiren akışlara (şifre sıfırlama, e-posta değişikliği) sokulmaz: `dev` profilinde kodlar e-posta yerine sunucu log'una yazılır. Her oturum öncesi `POST /api/v1/dev/reset` ile veri sıfırlanır (`docs/spec/SEED_DATA.md`).
 - Ödeme (G3): Craftgate **sandbox** ve moderatörün verdiği **test kartı**. Sandbox erişilemezse G3 "ödeme ekranına kadar" ölçülür ve notlanır.
 - Yönetici panelinde işlem gerektiren adımlar (usta onayı) moderatör tarafından yapılır; katılımcı yönetici görevi yapmaz.
 - Ekran kaydı: yalnızca açık rıza ile (bölüm 8). Ses kaydı yapılmaz; moderatör notları yazılı alınır.
@@ -56,7 +56,7 @@ Her görev bir **senaryo metni** olarak okunur; uygulamadaki düğme adları sö
 
 | ID | Rol | Görev (katılımcıya söylenen) | Başarı ölçütü | Süre hedefi | Bağlı gereksinim |
 |---|---|---|---|---|---|
-| G1 | Müşteri | "Uygulamaya yeni müşteri olarak kayıt ol." | Kayıt tamamlanır, ana ekran görünür (KVKK/koşul onayı işaretlenir) | ≤ 2 dk | UC01 |
+| G1 | Müşteri | "Uygulamaya yeni müşteri olarak kayıt ol." | Kayıt tamamlanır, ana ekran görünür (KVKK/koşul onayı işaretlenir; "KVKK metnini oku" artık TASLAK işaretli gerçek metni açar, hukukçu incelemesinden geçmemiştir) | ≤ 2 dk | UC01 |
 | G2 | Müşteri | "Mutfağındaki musluk damlatıyor. Bunun için bir usta bulmak üzere acil bir talep oluştur." (kategori, adres, açıklama, en az 1 fotoğraf) | Talep yayımlanır ve talep listesinde görünür | **≤ 3 dk** | UC02, U2 |
 | G3 | Müşteri | "Sana gelen teklifleri incele, birini seç ve ödemeyi yap." | Bir teklif kabul edilir ve ödeme sonucu `LOCKED` olur (sandbox) | ≤ 4 dk | UC05 |
 | G4 | Müşteri | "Ustaya adresi bulabilmesi için bir mesaj yaz." | Mesaj gönderilir ve sohbette görünür | ≤ 1 dk | UC07 |

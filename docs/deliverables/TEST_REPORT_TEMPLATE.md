@@ -1,6 +1,6 @@
 # BiTadilat — Test Raporu (şablon ve ilk koşu)
 
-Bu dosya iki bölümdür: **Bölüm A** bir test turunun nasıl kaydedileceğini gösteren boş şablon, **Bölüm B** şablonun 16 Kasım 2026 tarihli ilk koşu ile doldurulmuş hali. Sonraki her tur için Bölüm A kopyalanıp doldurulur (`TEST_REPORT_2026-12-xx.md`). Plan: `TEST_PLAN.md`, senaryolar: `TEST_CASES.md`.
+Bu dosya üç bölümdür: **Bölüm A** bir test turunun nasıl kaydedileceğini gösteren boş şablon, **Bölüm B** şablonun 16 Kasım 2026 tarihli ilk koşu (565bfb4) ile doldurulmuş hali, **Bölüm C** 19 Kasım 2026'da son koda (c335a10) karşı yapılan yeniden koşu ve elle uçtan uca doğrulamaların kaydı. Sonraki her tur için Bölüm A kopyalanıp doldurulur (`TEST_REPORT_2026-12-xx.md`). Plan: `TEST_PLAN.md`, senaryolar: `TEST_CASES.md`.
 
 ---
 
@@ -211,3 +211,116 @@ Bu koşuda otomatik testlerde **kusur çıkmadı**. Aşağıdakiler test başar�
 | Kullanılabilirlik çalışması | Hayır | Çalışma yapılmadı |
 
 Bilinen sınırlamalar: otomatik testlerde ağ geçidi sahtedir; depoda otomatik uçtan uca test yoktur; Android ve Docker doğrulanmadı; gerçek cihaz yok, yalnızca Simulator.
+
+---
+
+## Bölüm C — Yeniden koşu: 19 Kasım 2026 (son kod)
+
+Bölüm B'deki G-001, G-002, G-003 ve G-004 gözlemleri bu arada kapatıldı (aşağıda C.6).
+
+### C.1 Koşu bilgisi
+
+| Alan | Değer |
+|---|---|
+| Rapor tarihi | 19.11.2026 |
+| Dal ve işlem | `feature/flutter-app` @ `c335a10` ("Merge worktree-agent-addbc2258b5721551: follow-up features and audit fixes") |
+| Çalışma ağacı temiz mi | Evet; yalnızca izlenmeyen `.claude/` dizini var (`git status --short`) |
+| Koşuyu yapan | Belge güncelleme çalışması sırasında otomatik koşu |
+| İşletim sistemi | macOS 27.2.1 (Darwin 27.2.0) |
+| Sürümler | OpenJDK 21.0.12.1, Spring Boot 4.1.2, PostgreSQL 16.13, Flutter 3.47.3 (Dart 3.13.3) |
+| Test veritabanı | Bu koşu için açılan boş yerel veritabanı (`createdb`, `TEST_DB_URL` ile verildi), koşudan sonra silindi; Docker kurulu değil, Testcontainers kullanılmadı. Çalışan geliştirme veritabanına ve 8090 numaralı sunucuya dokunulmadı |
+| Craftgate | **Sahte ağ geçidi**; gerçek sandbox bu otomatik koşuda çağrılmadı |
+
+### C.2 Otomatik paketler
+
+| Paket | Komut | Toplam | Geçti | Kaldı | Atlandı | Süre | Not |
+|---|---|---|---|---|---|---|---|
+| backend | `cd backend && TEST_DB_URL=... ./mvnw -q -B test` | 354 | 354 | 0 | 0 | Surefire toplamı 76 sn | çıkış kodu 0; 32 test sınıfı |
+| apps/mobile | `cd apps/mobile && flutter test` | 567 | 567 | 0 | 0 | ölçülmedi | |
+| apps/admin | `cd apps/admin && flutter test` | 95 | 95 | 0 | 0 | ölçülmedi | |
+| packages/bitadilat_ui | `cd packages/bitadilat_ui && flutter test` | 27 | 27 | 0 | 0 | ölçülmedi | |
+| packages/bitadilat_api | `cd packages/bitadilat_api && dart test` | 112 | 112 | 0 | 0 | ölçülmedi | |
+| **Toplam** | | **1155** | **1155** | **0** | **0** | | Bölüm B'ye göre +107 test |
+
+Backend sayıları `target/surefire-reports/TEST-*.xml` dosyalarından, Flutter ve Dart sayıları `--reporter json` çıktısındaki gizli olmayan `testDone` olaylarından alındı. `flutter analyze` bu koşuda yeniden çalıştırılmadı (CI iş akışında var).
+
+### C.3 Sınıf / dosya bazında dağılım
+
+**backend (354)**
+
+| Sınıf | Test | Sınıf | Test |
+|---|---|---|---|
+| `admin.AdminAccountPaymentTest` | 8 | `payment.PaymentAppTest` | 21 |
+| `admin.AdminApplicationTest` | 9 | `payment.PaymentFlowTest` | 37 |
+| `admin.AdminComplaintTest` | 22 | `payment.PaymentSweeperTest` | 23 |
+| `admin.AdminDevSeedTest` | 3 | `payment.PrototypeApiDisabledTest` | 4 |
+| `admin.AdminPaymentReviewTest` | 10 | `payment.gateway.CraftgateGatewayTest` | 4 |
+| `admin.NotificationCenterTest` | 11 | `payment.service.CardValidatorTest` | 6 |
+| `auth.AuthFlowTest` | 27 | `pro.ProFlowTest` | 8 |
+| `auth.AuthHardeningTest` | 10 | `prod.AdminBootstrapTest` | 3 |
+| `catalog.CatalogTest` | 4 | `prod.ProdProfileContextTest` | 4 |
+| `chat.ChatTest` | 9 | `prod.ProdReadinessUnitTest` | 4 |
+| `common.CommonRulesTest` | 5 | `request.RequestFlowTest` | 13 |
+| `common.ProdProfileConfigTest` | 5 | `user.AccountTest` | 22 |
+| `common.Wave3CarryOverTest` | 6 | `job.JobFlowTest` | 20 |
+| `dev.DevJobSeedTest` | 9 | `job.EscrowSafetyTest` | 11 |
+| `dev.DevProfileGuardTest` | 4 | `media.MediaTest` | 6 |
+| `dev.DevSeedTest` | 9 | `offer.OfferFlowTest` | 17 |
+
+**apps/mobile (567)**: `account_features_test` 16, `audit_wave2_test` 21, `auth_screens_test` 43, `chat_wave3_test` 24, `customer_wave2_test` 45, `followup_test` 18, `jobs_wave3_test` 113, `notifications_wave4_test` 120, `payment_wave3_test` 43, `platform_config_test` 14, `pro_wave2_test` 35, `router_guards_test` 26, `secure_token_store_test` 6, `session_audit_test` 9, `typography_guard_test` 1, `ui_fixes_wave5_test` 14, `wave3_extras_test` 19.
+
+**apps/admin (95)**: `accounts_payments_test` 16, `applications_test` 18, `auth_test` 12, `complaints_test` 20, `labels_test` 2, `layout_l10n_test` 21, `payment_review_test` 6.
+
+**packages/bitadilat_ui (27)**: `components_test` 14, `contrast_test` 3, `prefix_field_test` 3, `typography_theme_test` 7.
+
+**packages/bitadilat_api (112)**: `admin_test` 15, `api_test` 17, `auth_interceptor_audit_test` 14, `followup_test` 8, `notifications_test` 10, `wave2_test` 30, `wave3_test` 18.
+
+### C.4 Senaryo bazında durum (TEST_CASES.md, 19.11.2026 itibarıyla)
+
+| Durum | Adet |
+|---|---|
+| Otomatik, geçti | 139 |
+| Kısmi | 8 |
+| Boşluk | 4 |
+| Elle, yapıldı (kanıt: bu bölüm) | 5 |
+| Elle, bekliyor | 11 |
+| Gerçekleştirilmedi | 3 |
+| Gerçekleştirildi, otomatik test yok (tanıtım sitesi) | 1 |
+| **Toplam senaryo** | **171** |
+
+(Sayılar `TEST_CASES.md` satırlarından sayılmıştır; satır durumları değiştikçe güncellenmelidir.)
+
+### C.5 Uçtan uca doğrulamalar (elle)
+
+Bu doğrulamalar otomatik değildir; yalnızca yapıldıklarının ve sonucun kaydıdır. Ekran görüntüsü ve ayrıntılı işlem kaydı **depoda yoktur**; 25 Aralık'a kadar kanıtla tekrarlanacaktır.
+
+| No | Doğrulama | Ortam | Tarih | Sonuç |
+|---|---|---|---|---|
+| E1 | Yönetim paneli (Flutter Web) başsız Chromium'da, yerel backend ile | başsız Chromium, backend `dev` profili | Kasım 2026 | Yapıldı |
+| E2 | Mobil bildirimler (bildirim merkezi) iOS Simulator'da | iOS Simulator | Kasım 2026 | Yapıldı |
+| E3 | Gerçek Craftgate sandbox iade senaryoları: bölüşüm (%50/%50), tam iade, kısmi iade + kalanın iadesi, iadeden sonra ustaya aktarımın reddi | Craftgate sandbox; ödeme numaraları 3275432, 3275434, 3275436, 3281697 | Kasım 2026 | Yapıldı; beklenen davranış gözlendi (iade edilmiş ödeme ustaya aktarılmadı, kalan tutar bir kez iade edildi) |
+
+Kapsam sınırı: sandbox'ta ret, 3DS terk ve çift deneme (`TEST_PLAN.md` S2, S3, S9) bu doğrulamalarda **koşulmadı**. Docker imajı derlenmedi ve çalıştırılmadı (Docker bu makinede kurulu değil), Android APK derlenmedi, GitHub Actions uzak depoda koşturulmadı, `prod` profili gerçek SMTP ile denenmedi.
+
+### C.6 Kusur günlüğü
+
+Bu koşuda otomatik testlerde **kusur çıkmadı**. Bölüm B gözlemlerinin durumu:
+
+| No | Gözlem | Durum |
+|---|---|---|
+| G-001 | Callback imza doğrulaması anahtar boşsa atlanıyordu | **Düzeltildi** (prod'da `CRAFTGATE_CALLBACK_KEY` zorunlu, boşsa açılış reddedilir; `ProdReadinessUnitTest#validatorRequiresCallbackKeyAndRejectsWildcardCors`). `dev` profilinde hâlâ isteğe bağlı |
+| G-002 | `REJECTED → PENDING_REVIEW` spec'te yoktu | **Kapandı** (`STATE_MACHINES.md` güncellendi) |
+| G-003 | Mobil hesap silme testi yoktu | **Kapandı** (`account_features_test` "Ayarlar: hesap silme") |
+| G-004 | Onay ve otomatik tamamlama Craftgate'e danışmıyordu | **Kapandı** (aktarım öncesi iade kontrolü; `EscrowSafetyTest`) |
+
+Yeni gözlemler: yasal metin kopyaları (`docs/legal`, `website/legal`, uygulama varlıkları) elle eşitleniyor; uygulama kopyası testle korunuyor (`followup_test`), site kopyası için denetim yok (Düşük). **Açık:** bu güncellemede `docs/legal/*.md` düzeltildi ama `apps/mobile/assets/legal/*.md` kopyaları kod alanı olduğu için eşitlenmedi; eşitlenene kadar mobilde `followup_test` "uygulamadaki kopyalar docs/legal ile aynı" testi **kırmızı** olur (C.2'deki sayılar bu eşitlemeden önceki koşuya aittir). Eşitleme: `cp docs/legal/*.md apps/mobile/assets/legal/`. İnceleme sırasında yasal metin ve tanıtım sitesinde şu olgusal hatalar bulunup düzeltildi: kart bilgilerinin Craftgate'in sayfasında girildiği (kart uygulamadaki formdan sunucu üzerinden Craftgate'e iletilir, saklanmaz), cihaz belirtecinin bildirim göndermek için kullanıldığı (push yok), "bildirim hizmeti sağlayıcısı" ifadesi (yok; e-posta sağlayıcısı var) ve iptalin "usta adrese ulaşana kadar" olduğu (iş başlayana kadar).
+
+### C.7 Sonuç
+
+| Çıkış kriteri | Karşılandı mı | Not |
+|---|---|---|
+| Tüm otomatik paketler yeşil | Evet | 1155/1155 |
+| Yüksek öncelikli UC'ler için test | Evet | UC01–UC13 otomatik testli; UC14 (site) otomatik testsiz, elle gözden geçirildi |
+| Açık Kritik/Yüksek kusur yok | Evet | Bilinen kusur yok |
+| Sandbox senaryoları koşuldu | Kısmen | İade ve aktarım senaryoları koşuldu; ret, terk, çift deneme koşulmadı |
+| Kullanılabilirlik çalışması | Hayır | Çalışma yapılmadı |

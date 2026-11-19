@@ -13,7 +13,7 @@
 - İşlem verisi: talepler, teklifler, işler, randevular, mesajlar, değerlendirmeler, şikayetler.
 - Görsel ve belge: talep ve kanıt fotoğrafları, mesaj görselleri; ustalar için kimlik, meslek, vergi belgeleri ve sabıka kaydı.
 - Finansal işlem: ödeme referansı, tutar, durum, kartın son 4 hanesi, aktarım/komisyon/iade kayıtları. Kart numarası ve CVC BiTadilat tarafından saklanmaz.
-- İşlem güvenliği: IP adresi, giriş denemeleri, oturum ve cihaz bildirim jetonları, kullanıcı aracısı bilgisi, onay zamanları.
+- İşlem güvenliği: IP adresi, giriş denemeleri, oturum jetonları, cihaz bildirim jetonu (anlık bildirim gönderilmez), kullanıcı aracısı bilgisi, onay zamanları.
 
 Ustaların kimlik belgesi ve sabıka kaydı hassas nitelikte olabilir; bunlar yalnızca usta doğrulaması için ve gerekli olduğu ölçüde işlenir. [ÖZEL NİTELİKLİ VERİ DEĞERLENDİRMESİ — hukukçu onayı]
 
@@ -26,7 +26,7 @@ Ustaların kimlik belgesi ve sabıka kaydı hassas nitelikte olabilir; bunlar ya
 
 ## 4. Aktarım
 
-Veriler, amaçla sınırlı olarak şu alıcı gruplarına aktarılabilir: işin tarafı olan usta/müşteri; ödeme kuruluşu Craftgate; barındırma ve bildirim hizmeti sağlayıcıları; yetkili kamu kurumları ve mahkemeler. [YURT DIŞI AKTARIM VE VERİ İŞLEYEN LİSTESİ]
+Veriler, amaçla sınırlı olarak şu alıcı gruplarına aktarılabilir: işin tarafı olan usta/müşteri; ödeme kuruluşu Craftgate; barındırma ve e-posta gönderim hizmeti sağlayıcıları; yetkili kamu kurumları ve mahkemeler. [YURT DIŞI AKTARIM VE VERİ İŞLEYEN LİSTESİ]
 
 ## 5. Toplama yöntemi
 
