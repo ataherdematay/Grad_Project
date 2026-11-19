@@ -99,12 +99,12 @@ void main() {
       expect(Notification.fromJson(_n(params: 'x')).params, isEmpty);
     });
 
-    test('sözleşmedeki 19 türün hepsi tanınır', () {
+    test('sözleşmedeki 21 türün hepsi tanınır', () {
       final known = NotificationType.values
           .where((t) => t != NotificationType.unknown)
           .map((t) => t.wire)
           .toList();
-      expect(known.length, 19);
+      expect(known.length, 21);
       for (final w in known) {
         expect(NotificationType.fromWire(w).wire, w);
       }

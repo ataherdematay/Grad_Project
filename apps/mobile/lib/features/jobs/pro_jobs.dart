@@ -10,6 +10,7 @@ import '../../core/data.dart';
 import '../../core/formatters.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
+import '../../core/support.dart';
 import '../../l10n/app_localizations.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
@@ -697,15 +698,17 @@ class ProFinishedScreen extends ConsumerWidget {
   }
 }
 
-/// `/p/jobs/:id/cancelled` (42)
-class ProCancelledScreen extends StatelessWidget {
+/// `/p/jobs/:id/cancelled` (42). İadenin durumu sunucudaki ödeme kaydından
+/// yazılır: iade bekliyorsa "iade ediliyor", yapıldıysa "iade edildi".
+class ProCancelledScreen extends ConsumerWidget {
   const ProCancelledScreen({super.key, required this.jobId});
 
   final String jobId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
+    final payment = ref.watch(jobProvider(jobId)).value?.payment;
     return StackFallback(
       fallback: '/p/feed',
       child: Scaffold(
@@ -734,8 +737,21 @@ class ProCancelledScreen extends StatelessWidget {
                     style: AppTypography.section,
                   ),
                   const SizedBox(height: AppSpacing.xs),
+                  if (payment != null) ...[
+                    Text(
+                      paymentExplanation(
+                        l,
+                        payment,
+                        PartyRole.pro,
+                        supportEmail: ref.watch(supportEmailProvider),
+                      ),
+                      textAlign: TextAlign.center,
+                      style: AppTypography.body,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                  ],
                   Text(
-                    l.proCancelledBody,
+                    l.proCancelledRequestReopened,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodySecondary,
                   ),

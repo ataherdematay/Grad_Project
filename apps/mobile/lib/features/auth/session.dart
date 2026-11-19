@@ -205,6 +205,16 @@ class SessionController extends Notifier<SessionState> {
     state = SessionState.signedIn(me);
   }
 
+  /// `POST /me/email/confirm`: kod doğrulanınca yeni e-postalı kullanıcı
+  /// oturuma yazılır. Başarısızlıkta `ApiException` fırlatır.
+  Future<void> confirmEmailChange(String code) async {
+    final before = state.me;
+    final me = await _client.me.confirmEmailChange(code);
+    final now = state.me;
+    if (before == null || now == null || now.id != me.id) return;
+    state = SessionState.signedIn(me);
+  }
+
   /// `GET /me` ile kullanıcıyı yeniler (başvuru ve müsaitlik değişince).
   Future<void> refreshMe() async {
     if (!state.isSignedIn) return;

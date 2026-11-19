@@ -122,6 +122,20 @@ final proReviewsProvider = FutureProvider.autoDispose
       retry: noRetry,
     );
 
+/// Değerlendirme süzgeci (`GET /pros/{id}/reviews?rating=&withComment=`).
+typedef ReviewFilter = ({String id, int? rating, bool withComment});
+
+final proReviewsFilteredProvider = FutureProvider.autoDispose
+    .family<Paged<ReviewItem>, ReviewFilter>(
+      (ref, f) => _api(ref).pros.reviews(
+        f.id,
+        limit: kListLimit,
+        rating: f.rating,
+        withComment: f.withComment,
+      ),
+      retry: noRetry,
+    );
+
 /// Başvuru yoksa `null` (404).
 final proApplicationProvider = FutureProvider.autoDispose<ProApplication?>((
   ref,

@@ -10,6 +10,7 @@ import '../../core/error_messages.dart';
 import '../../core/forms.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
+import '../../core/support.dart';
 import '../../l10n/app_localizations.dart';
 import '../notifications/notification_bell.dart';
 import '../auth/session.dart';
@@ -18,6 +19,8 @@ import '../common/ui.dart';
 import '../common/widgets.dart';
 import '../customer/pro_profile_screens.dart' show documentLabel;
 import '../jobs/pro_jobs.dart' show urlOpenerProvider;
+
+export '../../core/support.dart' show kSupportEmail, supportEmailProvider;
 
 /// Başvuruda zorunlu belgeler.
 const Set<ProDocumentType> kRequiredDocs = {
@@ -305,13 +308,6 @@ class _ProApplyState extends ConsumerState<ProApplyScreen> {
     );
   }
 }
-
-/// Destek adresi yalnız `--dart-define=SUPPORT_EMAIL=...` ile verilir.
-/// Tanımsızsa e-posta bağlantısı gösterilmez (uydurma adres yok).
-const String kSupportEmail = String.fromEnvironment('SUPPORT_EMAIL');
-
-/// Ekranlarda kullanılan destek adresi; boşsa genel destek metni gösterilir.
-final supportEmailProvider = Provider<String>((_) => kSupportEmail.trim());
 
 /// `/p/application`: başvuru durumu, yönetici notu ve kararın sonuçları.
 class ProApplicationScreen extends ConsumerWidget {

@@ -5477,4 +5477,596 @@ as Money,
 
 }
 
+
+/// @nodoc
+mixin _$AdminPaymentReviewItem {
+
+ String get ref; String? get jobId; String? get jobPublicCode;@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) JobStatus? get jobStatus; String get status; String? get errorCode;@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? get pendingAction;@MoneyConverter() Money get totalAmount;@MoneyConverter() Money get refundedAmount; String? get customerName; String? get proBusinessName; int get attempts; DateTime? get lastAttemptAt; DateTime get createdAt;
+/// Create a copy of AdminPaymentReviewItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AdminPaymentReviewItemCopyWith<AdminPaymentReviewItem> get copyWith => _$AdminPaymentReviewItemCopyWithImpl<AdminPaymentReviewItem>(this as AdminPaymentReviewItem, _$identity);
+
+  /// Serializes this AdminPaymentReviewItem to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminPaymentReviewItem&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobPublicCode, jobPublicCode) || other.jobPublicCode == jobPublicCode)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.pendingAction, pendingAction) || other.pendingAction == pendingAction)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.proBusinessName, proBusinessName) || other.proBusinessName == proBusinessName)&&(identical(other.attempts, attempts) || other.attempts == attempts)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,ref,jobId,jobPublicCode,jobStatus,status,errorCode,pendingAction,totalAmount,refundedAmount,customerName,proBusinessName,attempts,lastAttemptAt,createdAt);
+
+@override
+String toString() {
+  return 'AdminPaymentReviewItem(ref: $ref, jobId: $jobId, jobPublicCode: $jobPublicCode, jobStatus: $jobStatus, status: $status, errorCode: $errorCode, pendingAction: $pendingAction, totalAmount: $totalAmount, refundedAmount: $refundedAmount, customerName: $customerName, proBusinessName: $proBusinessName, attempts: $attempts, lastAttemptAt: $lastAttemptAt, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AdminPaymentReviewItemCopyWith<$Res>  {
+  factory $AdminPaymentReviewItemCopyWith(AdminPaymentReviewItem value, $Res Function(AdminPaymentReviewItem) _then) = _$AdminPaymentReviewItemCopyWithImpl;
+@useResult
+$Res call({
+ String ref, String? jobId, String? jobPublicCode,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) JobStatus? jobStatus, String status, String? errorCode,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? pendingAction,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount, String? customerName, String? proBusinessName, int attempts, DateTime? lastAttemptAt, DateTime createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$AdminPaymentReviewItemCopyWithImpl<$Res>
+    implements $AdminPaymentReviewItemCopyWith<$Res> {
+  _$AdminPaymentReviewItemCopyWithImpl(this._self, this._then);
+
+  final AdminPaymentReviewItem _self;
+  final $Res Function(AdminPaymentReviewItem) _then;
+
+/// Create a copy of AdminPaymentReviewItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? ref = null,Object? jobId = freezed,Object? jobPublicCode = freezed,Object? jobStatus = freezed,Object? status = null,Object? errorCode = freezed,Object? pendingAction = freezed,Object? totalAmount = null,Object? refundedAmount = null,Object? customerName = freezed,Object? proBusinessName = freezed,Object? attempts = null,Object? lastAttemptAt = freezed,Object? createdAt = null,}) {
+  return _then(_self.copyWith(
+ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
+as String,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,jobPublicCode: freezed == jobPublicCode ? _self.jobPublicCode : jobPublicCode // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as JobStatus?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as String?,pendingAction: freezed == pendingAction ? _self.pendingAction : pendingAction // ignore: cast_nullable_to_non_nullable
+as EscrowPendingAction?,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as Money,refundedAmount: null == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
+as Money,customerName: freezed == customerName ? _self.customerName : customerName // ignore: cast_nullable_to_non_nullable
+as String?,proBusinessName: freezed == proBusinessName ? _self.proBusinessName : proBusinessName // ignore: cast_nullable_to_non_nullable
+as String?,attempts: null == attempts ? _self.attempts : attempts // ignore: cast_nullable_to_non_nullable
+as int,lastAttemptAt: freezed == lastAttemptAt ? _self.lastAttemptAt : lastAttemptAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [AdminPaymentReviewItem].
+extension AdminPaymentReviewItemPatterns on AdminPaymentReviewItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AdminPaymentReviewItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AdminPaymentReviewItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AdminPaymentReviewItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String ref,  String? jobId,  String? jobPublicCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  JobStatus? jobStatus,  String status,  String? errorCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount,  String? customerName,  String? proBusinessName,  int attempts,  DateTime? lastAttemptAt,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem() when $default != null:
+return $default(_that.ref,_that.jobId,_that.jobPublicCode,_that.jobStatus,_that.status,_that.errorCode,_that.pendingAction,_that.totalAmount,_that.refundedAmount,_that.customerName,_that.proBusinessName,_that.attempts,_that.lastAttemptAt,_that.createdAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String ref,  String? jobId,  String? jobPublicCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  JobStatus? jobStatus,  String status,  String? errorCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount,  String? customerName,  String? proBusinessName,  int attempts,  DateTime? lastAttemptAt,  DateTime createdAt)  $default,) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem():
+return $default(_that.ref,_that.jobId,_that.jobPublicCode,_that.jobStatus,_that.status,_that.errorCode,_that.pendingAction,_that.totalAmount,_that.refundedAmount,_that.customerName,_that.proBusinessName,_that.attempts,_that.lastAttemptAt,_that.createdAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String ref,  String? jobId,  String? jobPublicCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  JobStatus? jobStatus,  String status,  String? errorCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount,  String? customerName,  String? proBusinessName,  int attempts,  DateTime? lastAttemptAt,  DateTime createdAt)?  $default,) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewItem() when $default != null:
+return $default(_that.ref,_that.jobId,_that.jobPublicCode,_that.jobStatus,_that.status,_that.errorCode,_that.pendingAction,_that.totalAmount,_that.refundedAmount,_that.customerName,_that.proBusinessName,_that.attempts,_that.lastAttemptAt,_that.createdAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AdminPaymentReviewItem implements AdminPaymentReviewItem {
+  const _AdminPaymentReviewItem({required this.ref, this.jobId, this.jobPublicCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.jobStatus, required this.status, this.errorCode, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.pendingAction, @MoneyConverter() required this.totalAmount, @MoneyConverter() this.refundedAmount = Money.zero, this.customerName, this.proBusinessName, this.attempts = 0, this.lastAttemptAt, required this.createdAt});
+  factory _AdminPaymentReviewItem.fromJson(Map<String, dynamic> json) => _$AdminPaymentReviewItemFromJson(json);
+
+@override final  String ref;
+@override final  String? jobId;
+@override final  String? jobPublicCode;
+@override@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  JobStatus? jobStatus;
+@override final  String status;
+@override final  String? errorCode;
+@override@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  EscrowPendingAction? pendingAction;
+@override@MoneyConverter() final  Money totalAmount;
+@override@JsonKey()@MoneyConverter() final  Money refundedAmount;
+@override final  String? customerName;
+@override final  String? proBusinessName;
+@override@JsonKey() final  int attempts;
+@override final  DateTime? lastAttemptAt;
+@override final  DateTime createdAt;
+
+/// Create a copy of AdminPaymentReviewItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdminPaymentReviewItemCopyWith<_AdminPaymentReviewItem> get copyWith => __$AdminPaymentReviewItemCopyWithImpl<_AdminPaymentReviewItem>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AdminPaymentReviewItemToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminPaymentReviewItem&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobPublicCode, jobPublicCode) || other.jobPublicCode == jobPublicCode)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode)&&(identical(other.pendingAction, pendingAction) || other.pendingAction == pendingAction)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.customerName, customerName) || other.customerName == customerName)&&(identical(other.proBusinessName, proBusinessName) || other.proBusinessName == proBusinessName)&&(identical(other.attempts, attempts) || other.attempts == attempts)&&(identical(other.lastAttemptAt, lastAttemptAt) || other.lastAttemptAt == lastAttemptAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,ref,jobId,jobPublicCode,jobStatus,status,errorCode,pendingAction,totalAmount,refundedAmount,customerName,proBusinessName,attempts,lastAttemptAt,createdAt);
+
+@override
+String toString() {
+  return 'AdminPaymentReviewItem(ref: $ref, jobId: $jobId, jobPublicCode: $jobPublicCode, jobStatus: $jobStatus, status: $status, errorCode: $errorCode, pendingAction: $pendingAction, totalAmount: $totalAmount, refundedAmount: $refundedAmount, customerName: $customerName, proBusinessName: $proBusinessName, attempts: $attempts, lastAttemptAt: $lastAttemptAt, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AdminPaymentReviewItemCopyWith<$Res> implements $AdminPaymentReviewItemCopyWith<$Res> {
+  factory _$AdminPaymentReviewItemCopyWith(_AdminPaymentReviewItem value, $Res Function(_AdminPaymentReviewItem) _then) = __$AdminPaymentReviewItemCopyWithImpl;
+@override @useResult
+$Res call({
+ String ref, String? jobId, String? jobPublicCode,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) JobStatus? jobStatus, String status, String? errorCode,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? pendingAction,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount, String? customerName, String? proBusinessName, int attempts, DateTime? lastAttemptAt, DateTime createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$AdminPaymentReviewItemCopyWithImpl<$Res>
+    implements _$AdminPaymentReviewItemCopyWith<$Res> {
+  __$AdminPaymentReviewItemCopyWithImpl(this._self, this._then);
+
+  final _AdminPaymentReviewItem _self;
+  final $Res Function(_AdminPaymentReviewItem) _then;
+
+/// Create a copy of AdminPaymentReviewItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? ref = null,Object? jobId = freezed,Object? jobPublicCode = freezed,Object? jobStatus = freezed,Object? status = null,Object? errorCode = freezed,Object? pendingAction = freezed,Object? totalAmount = null,Object? refundedAmount = null,Object? customerName = freezed,Object? proBusinessName = freezed,Object? attempts = null,Object? lastAttemptAt = freezed,Object? createdAt = null,}) {
+  return _then(_AdminPaymentReviewItem(
+ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
+as String,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String?,jobPublicCode: freezed == jobPublicCode ? _self.jobPublicCode : jobPublicCode // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as JobStatus?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as String?,pendingAction: freezed == pendingAction ? _self.pendingAction : pendingAction // ignore: cast_nullable_to_non_nullable
+as EscrowPendingAction?,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as Money,refundedAmount: null == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
+as Money,customerName: freezed == customerName ? _self.customerName : customerName // ignore: cast_nullable_to_non_nullable
+as String?,proBusinessName: freezed == proBusinessName ? _self.proBusinessName : proBusinessName // ignore: cast_nullable_to_non_nullable
+as String?,attempts: null == attempts ? _self.attempts : attempts // ignore: cast_nullable_to_non_nullable
+as int,lastAttemptAt: freezed == lastAttemptAt ? _self.lastAttemptAt : lastAttemptAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$AdminPaymentReviewCheck {
+
+ AdminPaymentReviewItem get payment; String get gatewayRefundState;@MoneyConverter() Money get gatewayRefundedTotal; List<String> get allowedResolutions;
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AdminPaymentReviewCheckCopyWith<AdminPaymentReviewCheck> get copyWith => _$AdminPaymentReviewCheckCopyWithImpl<AdminPaymentReviewCheck>(this as AdminPaymentReviewCheck, _$identity);
+
+  /// Serializes this AdminPaymentReviewCheck to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AdminPaymentReviewCheck&&(identical(other.payment, payment) || other.payment == payment)&&(identical(other.gatewayRefundState, gatewayRefundState) || other.gatewayRefundState == gatewayRefundState)&&(identical(other.gatewayRefundedTotal, gatewayRefundedTotal) || other.gatewayRefundedTotal == gatewayRefundedTotal)&&const DeepCollectionEquality().equals(other.allowedResolutions, allowedResolutions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,payment,gatewayRefundState,gatewayRefundedTotal,const DeepCollectionEquality().hash(allowedResolutions));
+
+@override
+String toString() {
+  return 'AdminPaymentReviewCheck(payment: $payment, gatewayRefundState: $gatewayRefundState, gatewayRefundedTotal: $gatewayRefundedTotal, allowedResolutions: $allowedResolutions)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AdminPaymentReviewCheckCopyWith<$Res>  {
+  factory $AdminPaymentReviewCheckCopyWith(AdminPaymentReviewCheck value, $Res Function(AdminPaymentReviewCheck) _then) = _$AdminPaymentReviewCheckCopyWithImpl;
+@useResult
+$Res call({
+ AdminPaymentReviewItem payment, String gatewayRefundState,@MoneyConverter() Money gatewayRefundedTotal, List<String> allowedResolutions
+});
+
+
+$AdminPaymentReviewItemCopyWith<$Res> get payment;
+
+}
+/// @nodoc
+class _$AdminPaymentReviewCheckCopyWithImpl<$Res>
+    implements $AdminPaymentReviewCheckCopyWith<$Res> {
+  _$AdminPaymentReviewCheckCopyWithImpl(this._self, this._then);
+
+  final AdminPaymentReviewCheck _self;
+  final $Res Function(AdminPaymentReviewCheck) _then;
+
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? payment = null,Object? gatewayRefundState = null,Object? gatewayRefundedTotal = null,Object? allowedResolutions = null,}) {
+  return _then(_self.copyWith(
+payment: null == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as AdminPaymentReviewItem,gatewayRefundState: null == gatewayRefundState ? _self.gatewayRefundState : gatewayRefundState // ignore: cast_nullable_to_non_nullable
+as String,gatewayRefundedTotal: null == gatewayRefundedTotal ? _self.gatewayRefundedTotal : gatewayRefundedTotal // ignore: cast_nullable_to_non_nullable
+as Money,allowedResolutions: null == allowedResolutions ? _self.allowedResolutions : allowedResolutions // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AdminPaymentReviewItemCopyWith<$Res> get payment {
+  
+  return $AdminPaymentReviewItemCopyWith<$Res>(_self.payment, (value) {
+    return _then(_self.copyWith(payment: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [AdminPaymentReviewCheck].
+extension AdminPaymentReviewCheckPatterns on AdminPaymentReviewCheck {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AdminPaymentReviewCheck value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AdminPaymentReviewCheck value)  $default,){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AdminPaymentReviewCheck value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AdminPaymentReviewItem payment,  String gatewayRefundState, @MoneyConverter()  Money gatewayRefundedTotal,  List<String> allowedResolutions)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck() when $default != null:
+return $default(_that.payment,_that.gatewayRefundState,_that.gatewayRefundedTotal,_that.allowedResolutions);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AdminPaymentReviewItem payment,  String gatewayRefundState, @MoneyConverter()  Money gatewayRefundedTotal,  List<String> allowedResolutions)  $default,) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck():
+return $default(_that.payment,_that.gatewayRefundState,_that.gatewayRefundedTotal,_that.allowedResolutions);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AdminPaymentReviewItem payment,  String gatewayRefundState, @MoneyConverter()  Money gatewayRefundedTotal,  List<String> allowedResolutions)?  $default,) {final _that = this;
+switch (_that) {
+case _AdminPaymentReviewCheck() when $default != null:
+return $default(_that.payment,_that.gatewayRefundState,_that.gatewayRefundedTotal,_that.allowedResolutions);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AdminPaymentReviewCheck extends AdminPaymentReviewCheck {
+  const _AdminPaymentReviewCheck({required this.payment, required this.gatewayRefundState, @MoneyConverter() this.gatewayRefundedTotal = Money.zero, this.allowedResolutions = const <String>[]}): super._();
+  factory _AdminPaymentReviewCheck.fromJson(Map<String, dynamic> json) => _$AdminPaymentReviewCheckFromJson(json);
+
+@override final  AdminPaymentReviewItem payment;
+@override final  String gatewayRefundState;
+@override@JsonKey()@MoneyConverter() final  Money gatewayRefundedTotal;
+@override@JsonKey() final  List<String> allowedResolutions;
+
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AdminPaymentReviewCheckCopyWith<_AdminPaymentReviewCheck> get copyWith => __$AdminPaymentReviewCheckCopyWithImpl<_AdminPaymentReviewCheck>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AdminPaymentReviewCheckToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AdminPaymentReviewCheck&&(identical(other.payment, payment) || other.payment == payment)&&(identical(other.gatewayRefundState, gatewayRefundState) || other.gatewayRefundState == gatewayRefundState)&&(identical(other.gatewayRefundedTotal, gatewayRefundedTotal) || other.gatewayRefundedTotal == gatewayRefundedTotal)&&const DeepCollectionEquality().equals(other.allowedResolutions, allowedResolutions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,payment,gatewayRefundState,gatewayRefundedTotal,const DeepCollectionEquality().hash(allowedResolutions));
+
+@override
+String toString() {
+  return 'AdminPaymentReviewCheck(payment: $payment, gatewayRefundState: $gatewayRefundState, gatewayRefundedTotal: $gatewayRefundedTotal, allowedResolutions: $allowedResolutions)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AdminPaymentReviewCheckCopyWith<$Res> implements $AdminPaymentReviewCheckCopyWith<$Res> {
+  factory _$AdminPaymentReviewCheckCopyWith(_AdminPaymentReviewCheck value, $Res Function(_AdminPaymentReviewCheck) _then) = __$AdminPaymentReviewCheckCopyWithImpl;
+@override @useResult
+$Res call({
+ AdminPaymentReviewItem payment, String gatewayRefundState,@MoneyConverter() Money gatewayRefundedTotal, List<String> allowedResolutions
+});
+
+
+@override $AdminPaymentReviewItemCopyWith<$Res> get payment;
+
+}
+/// @nodoc
+class __$AdminPaymentReviewCheckCopyWithImpl<$Res>
+    implements _$AdminPaymentReviewCheckCopyWith<$Res> {
+  __$AdminPaymentReviewCheckCopyWithImpl(this._self, this._then);
+
+  final _AdminPaymentReviewCheck _self;
+  final $Res Function(_AdminPaymentReviewCheck) _then;
+
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? payment = null,Object? gatewayRefundState = null,Object? gatewayRefundedTotal = null,Object? allowedResolutions = null,}) {
+  return _then(_AdminPaymentReviewCheck(
+payment: null == payment ? _self.payment : payment // ignore: cast_nullable_to_non_nullable
+as AdminPaymentReviewItem,gatewayRefundState: null == gatewayRefundState ? _self.gatewayRefundState : gatewayRefundState // ignore: cast_nullable_to_non_nullable
+as String,gatewayRefundedTotal: null == gatewayRefundedTotal ? _self.gatewayRefundedTotal : gatewayRefundedTotal // ignore: cast_nullable_to_non_nullable
+as Money,allowedResolutions: null == allowedResolutions ? _self.allowedResolutions : allowedResolutions // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+/// Create a copy of AdminPaymentReviewCheck
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AdminPaymentReviewItemCopyWith<$Res> get payment {
+  
+  return $AdminPaymentReviewItemCopyWith<$Res>(_self.payment, (value) {
+    return _then(_self.copyWith(payment: value));
+  });
+}
+}
+
 // dart format on

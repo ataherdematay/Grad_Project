@@ -146,6 +146,13 @@ String notificationText(AppLocalizations l, Notification n, DateTime now) {
     NotificationType.proApproved => l.notifProApproved,
     NotificationType.proRejected => l.notifProRejected(p('note')),
     NotificationType.proNeedsDocuments => l.notifProNeedsDocuments(p('note')),
+    NotificationType.refundCompleted => l.notifRefundCompleted(
+      p('publicCode'),
+      money('amount'),
+    ),
+    NotificationType.payoutCompleted => l.notifPayoutCompleted(
+      p('publicCode'),
+    ),
     NotificationType.unknown => l.notifUnknown,
   };
 }
@@ -162,7 +169,9 @@ IconData notificationIcon(NotificationType t) => switch (t) {
   NotificationType.jobStageChanged => Icons.handyman_outlined,
   NotificationType.workFinished ||
   NotificationType.autoCompleteReminder => Icons.fact_check_outlined,
-  NotificationType.payoutReleased => Icons.payments_outlined,
+  NotificationType.payoutReleased ||
+  NotificationType.payoutCompleted => Icons.payments_outlined,
+  NotificationType.refundCompleted => Icons.undo,
   NotificationType.jobCancelled => Icons.cancel_outlined,
   NotificationType.newMessage => Icons.chat_bubble_outline,
   NotificationType.complaintOpened ||

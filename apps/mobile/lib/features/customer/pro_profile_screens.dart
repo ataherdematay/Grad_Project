@@ -2,6 +2,7 @@ import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 import 'package:go_router/go_router.dart';
 
 import '../../core/data.dart';
@@ -112,97 +113,184 @@ class ProPublicProfileScreen extends ConsumerWidget {
   }
 }
 
-/// `/c/pros/:id/reviews`.
-class ProReviewsScreen extends ConsumerWidget {
+/// `/c/pros/:id/reviews`. Süzgeç: yıldız sayısı ve yalnızca yorumlu
+/// (sunucuda uygulanır).
+class ProReviewsScreen extends ConsumerStatefulWidget {
   const ProReviewsScreen({super.key, required this.id});
 
   final String id;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProReviewsScreen> createState() => _ProReviewsScreenState();
+}
+
+class _ProReviewsScreenState extends ConsumerState<ProReviewsScreen> {
+  int? _rating;
+  bool _withComment = false;
+
+  bool get _filtered => _rating != null || _withComment;
+
+  ProviderListenable<AsyncValue<Paged<ReviewItem>>> get _provider => _filtered
+      ? proReviewsFilteredProvider((
+          id: widget.id,
+          rating: _rating,
+          withComment: _withComment,
+        ))
+      : proReviewsProvider(widget.id);
+
+  void _invalidate() {
+    if (_filtered) {
+      ref.invalidate(
+        proReviewsFilteredProvider((
+          id: widget.id,
+          rating: _rating,
+          withComment: _withComment,
+        )),
+      );
+    } else {
+      ref.invalidate(proReviewsProvider(widget.id));
+    }
+  }
+
+  Widget _filters(AppLocalizations l) => SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    padding: const EdgeInsets.fromLTRB(
+      AppSpacing.md,
+      AppSpacing.sm,
+      AppSpacing.md,
+      0,
+    ),
+    child: Row(
+      children: [
+        ChoiceChip(
+          label: Text(l.reviewsFilterAll),
+          selected: _rating == null,
+          onSelected: (_) => setState(() => _rating = null),
+        ),
+        for (var n = 5; n >= 1; n--) ...[
+          const SizedBox(width: AppSpacing.xs),
+          ChoiceChip(
+            label: Text(l.reviewsFilterStars(n)),
+            selected: _rating == n,
+            onSelected: (on) => setState(() => _rating = on ? n : null),
+          ),
+        ],
+        const SizedBox(width: AppSpacing.sm),
+        FilterChip(
+          label: Text(l.reviewsFilterWithComment),
+          selected: _withComment,
+          onSelected: (on) => setState(() => _withComment = on),
+        ),
+      ],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final async = ref.watch(proReviewsProvider(id));
+    final id = widget.id;
+    final async = ref.watch(_provider);
     final now = ref.read(nowProvider)();
     return ListPage(
       title: l.proReviews,
       leading: AppBackButton(fallback: '/c/pros/$id'),
-      body: AsyncView<Paged<ReviewItem>>(
-        value: async,
-        onRetry: () => ref.invalidate(proReviewsProvider(id)),
-        builder: (context, page) {
-          if (page.items.isEmpty) {
-            return EmptyState(
-              icon: Icons.rate_review_outlined,
-              title: l.reviewsEmptyTitle,
-              message: l.reviewsEmptyBody,
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () async => ref.refresh(proReviewsProvider(id).future),
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(AppSpacing.md),
-              itemCount: page.items.length,
-              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-              itemBuilder: (_, i) {
-                final r = page.items[i];
-                return AppCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Semantics(
-                            label: l.starsOutOf5(r.rating),
-                            excludeSemantics: true,
-                            child: Row(
-                              children: [
-                                for (var s = 1; s <= 5; s++)
-                                  Icon(
-                                    s <= r.rating
-                                        ? Icons.star
-                                        : Icons.star_border,
-                                    size: 18,
-                                    color: AppColors.urgency,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        formatDay(l, r.createdAt, now),
-                        style: AppTypography.label,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        r.authorDisplay == 'Anonim'
-                            ? l.anonymous
-                            : r.authorDisplay,
-                        style: AppTypography.label,
-                      ),
-                      if (r.tags.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Wrap(
-                            spacing: 6,
-                            children: [
-                              for (final t in r.tags)
-                                StatusChip(label: t, icon: Icons.sell_outlined),
-                            ],
-                          ),
-                        ),
-                      if ((r.comment ?? '').isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(r.comment!, style: AppTypography.body),
-                      ],
-                    ],
+      body: Column(
+        children: [
+          _filters(l),
+          Expanded(
+            child: AsyncView<Paged<ReviewItem>>(
+              value: async,
+              onRetry: _invalidate,
+              builder: (context, page) {
+                if (page.items.isEmpty) {
+                  return _filtered
+                      ? EmptyState(
+                          icon: Icons.filter_alt_off_outlined,
+                          title: l.reviewsFilterEmpty,
+                        )
+                      : EmptyState(
+                          icon: Icons.rate_review_outlined,
+                          title: l.reviewsEmptyTitle,
+                          message: l.reviewsEmptyBody,
+                        );
+                }
+                return RefreshIndicator(
+                  onRefresh: () async => _invalidate(),
+                  child: ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    itemCount: page.items.length,
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: AppSpacing.sm),
+                    itemBuilder: (_, i) => _ReviewCard(
+                      review: page.items[i],
+                      now: now,
+                    ),
                   ),
                 );
               },
             ),
-          );
-        },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  const _ReviewCard({required this.review, required this.now});
+
+  final ReviewItem review;
+  final DateTime now;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final r = review;
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Semantics(
+                label: l.starsOutOf5(r.rating),
+                excludeSemantics: true,
+                child: Row(
+                  children: [
+                    for (var s = 1; s <= 5; s++)
+                      Icon(
+                        s <= r.rating ? Icons.star : Icons.star_border,
+                        size: 18,
+                        color: AppColors.urgency,
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Text(formatDay(l, r.createdAt, now), style: AppTypography.label),
+          const SizedBox(height: 4),
+          Text(
+            r.authorDisplay == 'Anonim' ? l.anonymous : r.authorDisplay,
+            style: AppTypography.label,
+          ),
+          if (r.tags.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Wrap(
+                spacing: 6,
+                children: [
+                  for (final t in r.tags)
+                    StatusChip(label: t, icon: Icons.sell_outlined),
+                ],
+              ),
+            ),
+          if ((r.comment ?? '').isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(r.comment!, style: AppTypography.body),
+          ],
+        ],
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/formatters.dart';
 import '../../core/photos.dart';
 import '../../core/providers.dart';
+import '../../core/support.dart';
 import '../../l10n/app_localizations.dart';
 import '../common/ui.dart';
 import '../customer/offers_screens.dart' show warrantyText;
@@ -108,6 +109,57 @@ String escrowExplanation(
     EscrowStatus.splitSettled => l.escrowSettledSplit,
     _ => pro ? l.escrowExplainPro : l.escrowExplain,
   };
+}
+
+/// Ödeme kartının durum etiketi: kayıtlı ama henüz yapılmamış hareketi
+/// (`pendingAction`) ve destek incelemesini (`errorCode`) gösterir; aksi halde
+/// [escrowLabel]. Durum yine `LOCKED` olsa da "güvence havuzunda" yazılmaz.
+String paymentLabel(AppLocalizations l, JobPayment p, PartyRole viewer) {
+  final pro = viewer == PartyRole.pro;
+  if (p.needsReview) return l.escrowReview;
+  if (p.status == EscrowStatus.locked) {
+    switch (p.pendingAction) {
+      case EscrowPendingAction.refund:
+        return pro ? l.escrowRefundPendingPro : l.escrowRefundPending;
+      case EscrowPendingAction.release:
+        return l.escrowPayoutPending;
+      case null:
+        break;
+    }
+  }
+  return escrowLabel(l, p.status, viewer);
+}
+
+/// Ödeme kartının açıklaması; [paymentLabel] ile aynı öncelik. Destek
+/// incelemesinde adres yalnız [supportEmail] doluysa yazılır.
+String paymentExplanation(
+  AppLocalizations l,
+  JobPayment p,
+  PartyRole viewer, {
+  bool byComplaint = false,
+  String supportEmail = '',
+}) {
+  final pro = viewer == PartyRole.pro;
+  if (p.needsReview) {
+    return supportEmail.isEmpty
+        ? l.escrowExplainReview
+        : l.escrowExplainReviewEmail(supportEmail);
+  }
+  if (p.status == EscrowStatus.locked) {
+    switch (p.pendingAction) {
+      case EscrowPendingAction.refund:
+        return pro
+            ? l.escrowExplainRefundPendingPro
+            : l.escrowExplainRefundPending;
+      case EscrowPendingAction.release:
+        return pro
+            ? l.escrowExplainPayoutPendingPro
+            : l.escrowExplainPayoutPending;
+      case null:
+        break;
+    }
+  }
+  return escrowExplanation(l, p.status, viewer, byComplaint: byComplaint);
 }
 
 String actorLabel(AppLocalizations l, ActorRole actor, PartyRole viewer) {
@@ -476,14 +528,15 @@ class OfferSummaryCard extends StatelessWidget {
   }
 }
 
-/// Ödeme özeti: güvence havuzunun durumu ve tutarlar.
-class PaymentSummaryCard extends StatelessWidget {
+/// Ödeme özeti: güvence havuzunun durumu ve tutarlar. Bekleyen iade/aktarım
+/// ve destek incelemesi ayrı metinle gösterilir (tutarlar sunucudan).
+class PaymentSummaryCard extends ConsumerWidget {
   const PaymentSummaryCard({super.key, required this.job});
 
   final JobDetail job;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final p = job.payment;
     String m(Money v) => formatMoney(v, l.localeName);
@@ -494,10 +547,7 @@ class PaymentSummaryCard extends StatelessWidget {
         children: [
           Text(l.paymentSummaryTitle, style: AppTypography.cardTitle),
           const SizedBox(height: 4),
-          InfoRow(
-            l.paymentStatusLabel,
-            escrowLabel(l, p.status, job.viewerRole),
-          ),
+          InfoRow(l.paymentStatusLabel, paymentLabel(l, p, job.viewerRole)),
           InfoRow(l.totalVatIncluded, m(p.totalAmount), bold: true),
           if (p.refundedAmount.isPositive)
             InfoRow(l.refundedLabel, m(p.refundedAmount)),
@@ -507,13 +557,14 @@ class PaymentSummaryCard extends StatelessWidget {
             InfoRow(l.netEarningLabel, m(p.netEarning!)),
           const SizedBox(height: 4),
           Text(
-            escrowExplanation(
+            paymentExplanation(
               l,
-              p.status,
+              p,
               job.viewerRole,
               byComplaint:
                   job.complaint?.status == ComplaintStatus.resolved ||
                   job.complaint?.status == ComplaintStatus.dismissed,
+              supportEmail: ref.watch(supportEmailProvider),
             ),
             style: AppTypography.bodySecondary,
           ),

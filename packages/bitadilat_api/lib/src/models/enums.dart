@@ -128,13 +128,32 @@ enum EscrowStatus {
   splitSettled,
 }
 
-/// `PaymentResult.errorCode`. Bilinmeyen kod `unknown` olur.
+/// Güvence havuzunda kayıtlı ama henüz yapılmamış para hareketi
+/// (`JobDetail.payment.pendingAction`).
+@JsonEnum(fieldRename: FieldRename.screamingSnake)
+enum EscrowPendingAction { refund, release }
+
+/// `DELETE /me` isteğe bağlı gerekçesi (yalnızca analiz).
+enum AccountDeletionReason {
+  noLongerNeeded,
+  foundAlternative,
+  privacy,
+  badExperience,
+  other,
+}
+
+/// `PaymentResult.errorCode` ve `JobDetail.payment.errorCode`. Bilinmeyen kod
+/// `unknown` olur.
 @JsonEnum(fieldRename: FieldRename.screamingSnake)
 enum PaymentErrorCode {
   paymentDeclined,
   requestAlreadyAssigned,
   offerExpired,
   resultUncertain,
+  @JsonValue('THREEDS_ABANDONED')
+  threedsAbandoned,
+  refundNeedsReview,
+  payoutNeedsReview,
   @JsonValue('UNKNOWN')
   unknown,
 }

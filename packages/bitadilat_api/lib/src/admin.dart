@@ -387,6 +387,60 @@ class AdminPayments {
   final AdminPaymentTotals totals;
 }
 
+// --- İncelemedeki ödemeler (follow-up) -------------------------------------------
+
+/// Admin inceleme çözümü (`POST /admin/payments/{ref}/resolve`).
+@JsonEnum(fieldRename: FieldRename.screamingSnake)
+enum PaymentResolution { markRefunded, retryRefund, release }
+
+@freezed
+abstract class AdminPaymentReviewItem with _$AdminPaymentReviewItem {
+  const factory AdminPaymentReviewItem({
+    required String ref,
+    String? jobId,
+    String? jobPublicCode,
+    @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    JobStatus? jobStatus,
+    required String status,
+    String? errorCode,
+    @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    EscrowPendingAction? pendingAction,
+    @MoneyConverter() required Money totalAmount,
+    @MoneyConverter() @Default(Money.zero) Money refundedAmount,
+    String? customerName,
+    String? proBusinessName,
+    @Default(0) int attempts,
+    DateTime? lastAttemptAt,
+    required DateTime createdAt,
+  }) = _AdminPaymentReviewItem;
+
+  factory AdminPaymentReviewItem.fromJson(Map<String, dynamic> json) =>
+      _$AdminPaymentReviewItemFromJson(json);
+}
+
+/// `GET /admin/payments/{ref}/review` ve çözüm yanıtı: Craftgate'in gerçek
+/// iade durumu ve bu duruma göre izin verilen çözümler.
+@freezed
+abstract class AdminPaymentReviewCheck with _$AdminPaymentReviewCheck {
+  const AdminPaymentReviewCheck._();
+
+  const factory AdminPaymentReviewCheck({
+    required AdminPaymentReviewItem payment,
+    required String gatewayRefundState,
+    @MoneyConverter() @Default(Money.zero) Money gatewayRefundedTotal,
+    @Default(<String>[]) List<String> allowedResolutions,
+  }) = _AdminPaymentReviewCheck;
+
+  factory AdminPaymentReviewCheck.fromJson(Map<String, dynamic> json) =>
+      _$AdminPaymentReviewCheckFromJson(json);
+
+  /// Bilinen çözümler (bilinmeyen değerler yok sayılır).
+  List<PaymentResolution> get resolutions => [
+    for (final r in PaymentResolution.values)
+      if (allowedResolutions.contains(r.wire)) r,
+  ];
+}
+
 // --- API ---------------------------------------------------------------------------
 
 /// `/admin/**` uç noktaları (yalnız `isAdmin = true`).
@@ -520,6 +574,7 @@ class AdminApi {
     String? q,
     AccountRole? role,
     AccountStatus? status,
+    int? districtId,
   }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
@@ -528,6 +583,7 @@ class AdminApi {
           'q': q,
           'role': role?.wire,
           'status': status?.wire,
+          'district': districtId?.toString(),
         }),
       ),
     );
@@ -560,5 +616,37 @@ class AdminApi {
       ),
     );
     return decodeApi(() => AdminPayments.fromJson(res.data!));
+  }
+
+  /// İncelemedeki (`REFUND_NEEDS_REVIEW` / `PAYOUT_NEEDS_REVIEW`) ödemeler.
+  Future<List<AdminPaymentReviewItem>> paymentReviews() async {
+    final res = await guardApi(
+      () => _dio.get<Map<String, dynamic>>('$_p/payments/review'),
+    );
+    return decodeApi(() => _items(res.data!, AdminPaymentReviewItem.fromJson));
+  }
+
+  /// Craftgate'e sorar (para hareketi yok); izin verilen çözümleri döner.
+  Future<AdminPaymentReviewCheck> checkPaymentReview(String ref) async {
+    final res = await guardApi(
+      () => _dio.get<Map<String, dynamic>>('$_p/payments/$ref/review'),
+    );
+    return decodeApi(() => AdminPaymentReviewCheck.fromJson(res.data!));
+  }
+
+  /// `note`: 10-1000 karakter. Sunucu Craftgate'e yeniden sorar; durum
+  /// değiştiyse 409.
+  Future<AdminPaymentReviewCheck> resolvePaymentReview(
+    String ref, {
+    required PaymentResolution resolution,
+    required String note,
+  }) async {
+    final res = await guardApi(
+      () => _dio.post<Map<String, dynamic>>(
+        '$_p/payments/$ref/resolve',
+        data: {'resolution': resolution.wire, 'note': note},
+      ),
+    );
+    return decodeApi(() => AdminPaymentReviewCheck.fromJson(res.data!));
   }
 }

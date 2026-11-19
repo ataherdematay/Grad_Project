@@ -175,6 +175,16 @@ _JobPayment _$JobPaymentFromJson(Map<String, dynamic> json) => _JobPayment(
       : const MoneyConverter().fromJson(json['refundedAmount']),
   serviceFee: const NullableMoneyConverter().fromJson(json['serviceFee']),
   netEarning: const NullableMoneyConverter().fromJson(json['netEarning']),
+  pendingAction: $enumDecodeNullable(
+    _$EscrowPendingActionEnumMap,
+    json['pendingAction'],
+    unknownValue: JsonKey.nullForUndefinedEnumValue,
+  ),
+  errorCode: $enumDecodeNullable(
+    _$PaymentErrorCodeEnumMap,
+    json['errorCode'],
+    unknownValue: PaymentErrorCode.unknown,
+  ),
 );
 
 Map<String, dynamic> _$JobPaymentToJson(_JobPayment instance) =>
@@ -185,6 +195,8 @@ Map<String, dynamic> _$JobPaymentToJson(_JobPayment instance) =>
       'refundedAmount': const MoneyConverter().toJson(instance.refundedAmount),
       'serviceFee': const NullableMoneyConverter().toJson(instance.serviceFee),
       'netEarning': const NullableMoneyConverter().toJson(instance.netEarning),
+      'pendingAction': _$EscrowPendingActionEnumMap[instance.pendingAction],
+      'errorCode': _$PaymentErrorCodeEnumMap[instance.errorCode],
     };
 
 const _$EscrowStatusEnumMap = {
@@ -195,6 +207,22 @@ const _$EscrowStatusEnumMap = {
   EscrowStatus.releasedToPro: 'RELEASED_TO_PRO',
   EscrowStatus.disputed: 'DISPUTED',
   EscrowStatus.splitSettled: 'SPLIT_SETTLED',
+};
+
+const _$EscrowPendingActionEnumMap = {
+  EscrowPendingAction.refund: 'REFUND',
+  EscrowPendingAction.release: 'RELEASE',
+};
+
+const _$PaymentErrorCodeEnumMap = {
+  PaymentErrorCode.paymentDeclined: 'PAYMENT_DECLINED',
+  PaymentErrorCode.requestAlreadyAssigned: 'REQUEST_ALREADY_ASSIGNED',
+  PaymentErrorCode.offerExpired: 'OFFER_EXPIRED',
+  PaymentErrorCode.resultUncertain: 'RESULT_UNCERTAIN',
+  PaymentErrorCode.threedsAbandoned: 'THREEDS_ABANDONED',
+  PaymentErrorCode.refundNeedsReview: 'REFUND_NEEDS_REVIEW',
+  PaymentErrorCode.payoutNeedsReview: 'PAYOUT_NEEDS_REVIEW',
+  PaymentErrorCode.unknown: 'UNKNOWN',
 };
 
 _ComplaintRef _$ComplaintRefFromJson(Map<String, dynamic> json) =>
