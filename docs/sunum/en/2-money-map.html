@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BiTadilat Money Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: visual-first. Hero map (SVG, scenario player) → money timeline (grid) → where ₺2,200 ends up (scaled bars) → shields along the flow → alternative models as mini maps. */
+:root {
+  --bg: #F3F6F5;
+  --surface: #FFFFFF;
+  --ink: #10272E;
+  --muted: #5A6D72;
+  --line: #D3DEDA;
+  --track: #B9C8C4;
+  --lane: #E9EFED;
+  --primary: #0F4C5C;
+  --primary-soft: #E0EDF0;
+  --trust: #107A5B;
+  --trust-soft: #E2F2EC;
+  --warn: #C2601B;
+  --warn-soft: #FBEDE2;
+  --info: #1F6F94;
+  --info-soft: #E3EFF6;
+  --danger: #A3352B;
+  --danger-soft: #F8E6E4;
+  --coin: #E0A526;
+  --coin-ink: #3D2A00;
+  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B171B; --surface: #12232A; --ink: #E2ECE9; --muted: #9DB2B5; --line: #26414A; --track: #3A5A63; --lane: #0F1F26;
+    --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229; --warn: #F0A06A; --warn-soft: #36251A;
+    --info: #7DB9DB; --info-soft: #142D3A; --danger: #EE8E84; --danger-soft: #3A1E1B; --coin: #F2C14E; --coin-ink: #2A1D00; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B171B; --surface: #12232A; --ink: #E2ECE9; --muted: #9DB2B5; --line: #26414A; --track: #3A5A63; --lane: #0F1F26;
+  --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229; --warn: #F0A06A; --warn-soft: #36251A;
+  --info: #7DB9DB; --info-soft: #142D3A; --danger: #EE8E84; --danger-soft: #3A1E1B; --coin: #F2C14E; --coin-ink: #2A1D00; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15.5px; line-height: 1.55; }
+.wrap { max-width: 1140px; margin: 0 auto; padding-block: 36px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 60px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(30px, 4.4vw, 44px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+h2 { font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 16px; font-weight: 800; }
+p { margin: 0; }
+.eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.muted { color: var(--muted); }
+.mono { font-family: var(--font-mono); font-size: 0.85em; }
+section { display: grid; gap: 18px; }
+.head { display: grid; gap: 6px; max-width: 74ch; }
+.head p { color: var(--muted); }
+header { display: grid; gap: 10px; max-width: 80ch; }
+header p { color: var(--muted); font-size: 17px; }
+
+/* Legend */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.sw { width: 22px; height: 4px; border-radius: 2px; display: inline-block; }
+.sw.main { background: var(--primary); } .sw.pro { background: var(--trust); } .sw.ref { background: var(--warn); } .sw.adm { background: var(--danger); }
+.coin-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--coin); display: inline-block; box-shadow: inset 0 0 0 2px var(--coin-ink); }
+
+/* Map */
+.map-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; gap: 16px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { display: inline-flex; flex-wrap: wrap; gap: 6px; background: var(--lane); padding: 4px; border-radius: 12px; }
+.tabs button { font: inherit; font-size: 14px; font-weight: 700; border: 0; background: transparent; color: var(--muted); padding: 8px 14px; border-radius: 9px; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+.stepper { display: inline-flex; gap: 6px; align-items: center; }
+.btn { font: inherit; font-size: 14px; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 10px; cursor: pointer; }
+.btn.primary { background: var(--primary); color: var(--surface); border-color: var(--primary); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.map-scroll { overflow-x: auto; }
+svg.map { width: 100%; min-width: 760px; height: auto; display: block; }
+.node rect { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; transition: stroke 0.25s, fill 0.25s; }
+.node .ibg { fill: var(--lane); transition: fill 0.25s; }
+.node use { color: var(--muted); }
+.node .n1 { font: 800 15px var(--font-display); fill: var(--ink); }
+.node .n2 { font: 600 12px var(--font-body); fill: var(--muted); }
+.node.hl rect { stroke: var(--primary); stroke-width: 3; }
+.node.hl .ibg { fill: var(--primary-soft); }
+.node.hl use { color: var(--primary); }
+.node.vault rect { fill: var(--info-soft); stroke: var(--info); stroke-width: 2; }
+.node.vault .ibg { fill: var(--surface); }
+.node.vault use { color: var(--info); }
+.node.vault.hl rect { stroke: var(--primary); stroke-width: 3.5; }
+.node.pro.hl rect { stroke: var(--trust); } .node.pro.hl use { color: var(--trust); } .node.pro.hl .ibg { fill: var(--trust-soft); }
+.node.adm.hl rect { stroke: var(--danger); } .node.adm.hl use { color: var(--danger); } .node.adm.hl .ibg { fill: var(--danger-soft); }
+.node.ref.hl rect { stroke: var(--warn); }
+.seg { fill: none; stroke: var(--track); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.3s; }
+.seg.main.on { stroke: var(--primary); }
+.seg.pro.on { stroke: var(--trust); }
+.seg.ref { stroke-dasharray: 8 7; }
+.seg.ref.on { stroke: var(--warn); }
+.seg.adm { stroke-dasharray: 4 6; }
+.seg.adm.on { stroke: var(--danger); }
+.head-m { fill: var(--track); }
+.badge circle { fill: var(--surface); stroke: var(--track); stroke-width: 2; }
+.badge text { font: 800 12px var(--font-display); fill: var(--muted); text-anchor: middle; dominant-baseline: central; }
+.badge.on circle { stroke: var(--primary); fill: var(--primary); }
+.badge.on text { fill: var(--surface); }
+.flow-label { font: 700 13px var(--font-body); fill: var(--muted); }
+.flow-label.ref { fill: var(--warn); }
+.coin circle { fill: var(--coin); stroke: var(--coin-ink); stroke-width: 2; }
+.coin text { font: 800 13px var(--font-display); fill: var(--coin-ink); text-anchor: middle; dominant-baseline: central; }
+.caption { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: start; background: var(--lane); border-radius: 12px; padding: 14px 16px; }
+.caption .step-no { font: 800 13px var(--font-mono); color: var(--primary); background: var(--surface); border-radius: 8px; padding: 6px 9px; white-space: nowrap; }
+.caption .ct { font-weight: 800; font-size: 16.5px; }
+.caption .cd { color: var(--muted); grid-column: 2; }
+.where { grid-column: 2; display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 700; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+.steps li button { width: 100%; text-align: left; font: inherit; font-size: 13.5px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 10px; padding: 9px 11px; cursor: pointer; display: grid; gap: 2px; }
+.steps li button b { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.steps li button[aria-current="step"] { border-color: var(--primary); color: var(--ink); box-shadow: inset 0 0 0 1px var(--primary); }
+.steps li button[aria-current="step"] b { color: var(--primary); }
+
+/* Timeline */
+.tl-scroll { overflow-x: auto; }
+.tl { display: grid; grid-template-columns: 150px repeat(8, minmax(84px, 1fr)); gap: 6px; min-width: 860px; }
+.tl .rowlabel { font-size: 12.5px; font-weight: 800; color: var(--muted); align-self: center; text-transform: uppercase; letter-spacing: 0.05em; }
+.stage { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 8px; text-align: center; display: grid; gap: 4px; justify-items: center; }
+.stage svg { width: 26px; height: 26px; color: var(--primary); }
+.stage span { font-size: 12.5px; font-weight: 700; line-height: 1.25; }
+.band { border-radius: 10px; padding: 10px 12px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.band.card-b { background: var(--lane); color: var(--muted); }
+.band.vault-b { background: var(--info-soft); color: var(--info); border: 2px solid var(--info); }
+.band.pro-b { background: var(--trust-soft); color: var(--trust); }
+.band.cancel-b { background: var(--warn-soft); color: var(--warn); }
+.band.dispute-b { background: var(--danger-soft); color: var(--danger); }
+.band.timer-b { background: var(--primary-soft); color: var(--primary); }
+.band svg { width: 16px; height: 16px; flex: none; }
+
+/* Outcome bars */
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 8px 16px; align-items: center; }
+.bar-row .bl { display: grid; gap: 2px; }
+.bar-row .bl b { font-size: 15px; }
+.bar-row .bl span { font-size: 13px; color: var(--muted); }
+.bar { display: flex; height: 46px; border-radius: 10px; overflow: hidden; background: var(--lane); }
+.bar div { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; padding: 0 6px; }
+.bar .p { background: var(--trust); color: var(--surface); }
+.bar .k { background: var(--primary); color: var(--surface); }
+.bar .r { background: var(--warn); color: var(--surface); }
+.scale { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; }
+.scale .ticks { display: flex; justify-content: space-between; font: 600 12px var(--font-mono); color: var(--muted); }
+
+/* Shields */
+.shields { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; position: relative; }
+.shield { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 10px; display: grid; gap: 8px; justify-items: center; text-align: center; position: relative; }
+.shield .ic { width: 44px; height: 44px; border-radius: 50%; background: var(--trust-soft); color: var(--trust); display: grid; place-items: center; }
+.shield .ic svg { width: 24px; height: 24px; }
+.shield b { font-size: 13.5px; line-height: 1.25; }
+.shield span { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+.shield .where-tag { font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--primary); }
+.shield.gap { border-style: dashed; border-color: var(--warn); }
+.shield.gap .ic { background: var(--warn-soft); color: var(--warn); }
+.gaps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.gaps-title { font-size: 13px; font-weight: 800; color: var(--warn); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Alternatives */
+.alts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.alt { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 18px; display: grid; gap: 12px; align-content: start; }
+.alt.top { border: 2px solid var(--primary); }
+.alt .tl1 { display: flex; gap: 12px; align-items: center; }
+.alt .rk { font: 800 26px var(--font-display); color: var(--muted); width: 40px; height: 40px; border-radius: 12px; background: var(--lane); display: grid; place-items: center; flex: none; }
+.alt.top .rk { background: var(--primary); color: var(--surface); }
+.alt .tl1 div { display: grid; gap: 1px; }
+.alt .tl1 small { color: var(--muted); font-size: 13px; }
+.mm { display: grid; grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1.2fr) 26px minmax(0, 1fr); align-items: center; gap: 4px; }
+.mm .mn { display: grid; justify-items: center; gap: 6px; text-align: center; padding: 10px 6px; border-radius: 12px; }
+.mm .mn .c { width: 44px; height: 44px; border-radius: 50%; background: var(--lane); display: grid; place-items: center; color: var(--muted); }
+.mm .mn .c svg { width: 24px; height: 24px; }
+.mm .mn span { font-size: 12.5px; font-weight: 700; line-height: 1.25; }
+.mm .mn.wait { background: var(--info-soft); outline: 2px solid var(--info); }
+.mm .mn.wait .c { background: var(--surface); color: var(--info); }
+.mm .mn.wait em { font-style: normal; font-size: 10.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--info); }
+.mm .mn.none { opacity: 0.55; }
+.mm .ar { color: var(--track); display: grid; place-items: center; }
+.mm .ar svg { width: 24px; height: 24px; }
+.meters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
+.meter { display: grid; gap: 3px; font-size: 12.5px; color: var(--muted); }
+.meter .mt { height: 7px; border-radius: 4px; background: var(--lane); overflow: hidden; }
+.meter .mt i { display: block; height: 100%; background: var(--primary); border-radius: 4px; }
+.alt .one { font-size: 14px; }
+.alt .one b { color: var(--primary); }
+footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 4px; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+@media (max-width: 900px) {
+  .shields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .alts { grid-template-columns: 1fr; }
+  .gaps { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .bar-row, .scale { grid-template-columns: 1fr; }
+  .scale > div:first-child { display: none; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .stepper { justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-person" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></g></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 20.5h18"/></g></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 14.5h4"/></g></symbol>
+    <symbol id="i-vault" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="18" height="15.5" rx="2.5"/><circle cx="12" cy="11.2" r="3.8"/><path d="M12 7.4v1.4M12 13.6V15M8.2 11.2h1.4M14.4 11.2h1.4"/><path d="M6.5 19v2M17.5 19v2"/></g></symbol>
+    <symbol id="i-helmet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"/><path d="M2.5 15.5h19v3h-19z"/><path d="M12 8v-2.5M9 9l-.8-2.6M15 9l.8-2.6"/></g></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M7.5 20.5h9"/><path d="M5 7h14"/><path d="M5 7l-2.8 6h5.6z"/><path d="M19 7l-2.8 6h5.6z"/></g></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="7" rx="6" ry="2.6"/><path d="M3 7v4c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6V7"/><path d="M9 16.2c-3.3 0-6-1.2-6-2.6"/><ellipse cx="15.5" cy="15" rx="5.5" ry="2.4"/><path d="M10 15v3.2c0 1.3 2.5 2.4 5.5 2.4s5.5-1.1 5.5-2.4V15"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/><path d="M4 4l16 16"/></g></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></g></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></g></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.5 2.5l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.4 2.4-2.3-.6-.6-2.3z"/></g></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></g></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h5v-5h5V9h5V4h3"/></g></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9h16v2.5a2.7 2.7 0 0 1-5.3 0 2.7 2.7 0 0 1-5.4 0 2.7 2.7 0 0 1-5.3 0z"/><path d="M5.5 13v7.5h13V13"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Visual walkthrough · Payment flow</span>
+  <h1>The journey of ₺2,200</h1>
+  <p>Follow a customer who accepts Kaya Tesisat's ₺2,200 offer. The map shows where the money is at every step. Pick a scenario and move step by step with "Next", or press "Play".</p>
+</header>
+
+<section aria-labelledby="map-title">
+  <div class="head">
+    <span class="eyebrow">1 · Money map</span>
+    <h2 id="map-title">Who pays whom, and where does the money pass?</h2>
+  </div>
+  <div class="map-card">
+    <div class="controls">
+      <div class="tabs" role="group" aria-label="Scenario">
+        <button type="button" id="sc-normal" data-sc="normal" aria-pressed="true">Job finishes smoothly</button>
+        <button type="button" id="sc-cancel" data-sc="cancel" aria-pressed="false">Customer cancels</button>
+        <button type="button" id="sc-dispute" data-sc="dispute" aria-pressed="false">Complaint: 50% / 50%</button>
+      </div>
+      <div class="stepper">
+        <button type="button" class="btn" id="prev">Previous</button>
+        <button type="button" class="btn primary" id="play">Play</button>
+        <button type="button" class="btn" id="next">Next</button>
+      </div>
+    </div>
+
+    <div class="map-scroll">
+      <svg class="map" id="map" viewBox="0 0 1040 500" role="img" aria-labelledby="map-desc">
+        <desc id="map-desc">Money going from the customer's card through the bank and Craftgate into the BiTadilat escrow vault; from the vault to the pro and the commission, or back to the customer as a refund.</desc>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head-m" d="M0 0L10 5L0 10z"/></marker>
+        </defs>
+
+        <!-- segments -->
+        <path id="s1" class="seg main" d="M160 250H208" marker-end="url(#ah)"/>
+        <path id="s2" class="seg main" d="M355 250H403" marker-end="url(#ah)"/>
+        <path id="s3" class="seg main" d="M550 250H603" marker-end="url(#ah)"/>
+        <path id="s4" class="seg pro" d="M790 222L864 140" marker-end="url(#ah)"/>
+        <path id="s5" class="seg main" d="M790 278L864 362" marker-end="url(#ah)"/>
+        <path id="sr" class="seg ref" d="M700 300V462H90V292" marker-end="url(#ah)"/>
+        <path id="sa" class="seg adm" d="M700 102V196" marker-end="url(#ah)"/>
+
+        <text class="flow-label ref" id="rLabel" x="395" y="488" text-anchor="middle">Refund path: vault to card via Craftgate</text>
+
+        <!-- nodes -->
+        <g class="node" id="nM" transform="translate(20 215)"><rect width="140" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-person" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">Customer</text><text class="n2" x="60" y="49">card</text></g>
+        <g class="node" id="nB" transform="translate(215 215)"><rect width="140" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-bank" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">Bank</text><text class="n2" x="60" y="49">3D Secure</text></g>
+        <g class="node" id="nC" transform="translate(410 215)"><rect width="140" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-card" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">Craftgate</text><text class="n2" x="60" y="49">payments</text></g>
+        <g class="node vault" id="nK" transform="translate(610 198)"><rect width="180" height="104" rx="16"/><circle class="ibg" cx="38" cy="52" r="24"/><use href="#i-vault" x="22" y="36" width="32" height="32"/><text class="n1" x="72" y="38">Escrow</text><text class="n1" x="72" y="56">vault</text><text class="n2" x="72" y="76" id="kSub">₺2,200 locked</text></g>
+        <g class="node adm" id="nA" transform="translate(610 32)"><rect width="180" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-scale" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">Admin</text><text class="n2" x="60" y="49">rules on complaints</text></g>
+        <g class="node pro" id="nU" transform="translate(870 88)"><rect width="150" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-helmet" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">Pro</text><text class="n2" x="60" y="49" id="uAmt">₺1,980</text></g>
+        <g class="node" id="nF" transform="translate(870 342)"><rect width="150" height="70" rx="14"/><circle class="ibg" cx="32" cy="35" r="20"/><use href="#i-coins" x="20" y="23" width="24" height="24"/><text class="n1" x="60" y="31">BiTadilat</text><text class="n2" x="60" y="49" id="fAmt">fee ₺220</text></g>
+
+        <!-- badges -->
+        <g class="badge" id="b1" transform="translate(184 226)"><circle r="11"/><text>1</text></g>
+        <g class="badge" id="b2" transform="translate(379 226)"><circle r="11"/><text>2</text></g>
+        <g class="badge" id="b3" transform="translate(576 226)"><circle r="11"/><text>3</text></g>
+        <g class="badge" id="b4" transform="translate(790 198)"><circle r="11"/><text>4</text></g>
+        <g class="badge" id="b5" transform="translate(818 168)"><circle r="11"/><text>5</text></g>
+
+        <g id="coins"></g>
+      </svg>
+    </div>
+
+    <div class="caption" aria-live="polite">
+      <span class="step-no" id="stepNo">1 / 6</span>
+      <span class="ct" id="capT"></span>
+      <span class="cd" id="capD"></span>
+      <span class="where" id="capW"></span>
+    </div>
+    <ol class="steps" id="stepList"></ol>
+    <div class="legend">
+      <span><i class="coin-dot"></i>Money</span>
+      <span><i class="sw main"></i>Charge path</span>
+      <span><i class="sw pro"></i>Payout to pro</span>
+      <span><i class="sw ref"></i>Refund path</span>
+      <span><i class="sw adm"></i>Complaint decision</span>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="tl-title">
+  <div class="head">
+    <span class="eyebrow">2 · Timeline</span>
+    <h2 id="tl-title">Where is the money at each point of the job?</h2>
+    <p>The job stages on top; below them, where the money sits in that stretch and which doors are open.</p>
+  </div>
+  <div class="tl-scroll">
+    <div class="tl">
+      <span class="rowlabel">Job stage</span>
+      <div class="stage"><svg><use href="#i-doc"/></svg><span>Request opened</span></div>
+      <div class="stage"><svg><use href="#i-helmet"/></svg><span>Offers received</span></div>
+      <div class="stage"><svg><use href="#i-card"/></svg><span>Payment (3D Secure)</span></div>
+      <div class="stage"><svg><use href="#i-clock"/></svg><span>Appointment</span></div>
+      <div class="stage"><svg><use href="#i-pin"/></svg><span>Pro arrived</span></div>
+      <div class="stage"><svg><use href="#i-wrench"/></svg><span>Work in progress</span></div>
+      <div class="stage"><svg><use href="#i-flag"/></svg><span>Job finished</span></div>
+      <div class="stage"><svg><use href="#i-check"/></svg><span>Approval or 48 h</span></div>
+
+      <span class="rowlabel">Where is the money?</span>
+      <div class="band card-b" style="grid-column: span 2"><svg><use href="#i-card"/></svg>On the customer's card</div>
+      <div class="band vault-b" style="grid-column: span 5"><svg><use href="#i-lock"/></svg>In the escrow vault, locked · ₺2,200</div>
+      <div class="band pro-b"><svg><use href="#i-coins"/></svg>Pro gets ₺1,980</div>
+
+      <span class="rowlabel">If cancelled</span>
+      <div style="grid-column: span 2"></div>
+      <div class="band cancel-b" style="grid-column: span 3"><svg><use href="#i-undo"/></svg>Full refund ₺2,200</div>
+      <div style="grid-column: span 3"></div>
+
+      <span class="rowlabel">If a complaint is opened</span>
+      <div style="grid-column: span 3"></div>
+      <div class="band dispute-b" style="grid-column: span 4"><svg><use href="#i-scale"/></svg>Money freezes, admin decides</div>
+      <div></div>
+
+      <span class="rowlabel">Automatic approval</span>
+      <div style="grid-column: span 6"></div>
+      <div class="band timer-b" style="grid-column: span 2"><svg><use href="#i-clock"/></svg>48 h timer → payout</div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="bars-title">
+  <div class="head">
+    <span class="eyebrow">3 · Outcomes</span>
+    <h2 id="bars-title">Who ends up with the ₺2,200?</h2>
+    <p>The bars are to scale; full width is ₺2,200.</p>
+  </div>
+  <div class="bars">
+    <div class="scale"><div></div><div class="ticks"><span>₺0</span><span>₺550</span><span>₺1,100</span><span>₺1,650</span><span>₺2,200</span></div></div>
+    <div class="bar-row"><div class="bl"><b>Job finishes smoothly</b><span>Customer approval or 48 hours</span></div><div class="bar"><div class="p" style="width:90%">Pro ₺1,980</div><div class="k" style="width:10%">₺220</div></div></div>
+    <div class="bar-row"><div class="bl"><b>Cancelled before work starts</b><span>Customer or pro cancels</span></div><div class="bar"><div class="r" style="width:100%">Refund to customer ₺2,200</div></div></div>
+    <div class="bar-row"><div class="bl"><b>Complaint: 50% / 50%</b><span>Admin decision, no commission</span></div><div class="bar"><div class="r" style="width:50%">Customer ₺1,100</div><div class="p" style="width:50%">Pro ₺1,100</div></div></div>
+    <div class="bar-row"><div class="bl"><b>Complaint: full refund</b><span>Admin decision</span></div><div class="bar"><div class="r" style="width:100%">Refund to customer ₺2,200</div></div></div>
+    <div class="bar-row"><div class="bl"><b>Complaint rejected</b><span>Admin says "pay out to pro"</span></div><div class="bar"><div class="p" style="width:90%">Pro ₺1,980</div><div class="k" style="width:10%">₺220</div></div></div>
+  </div>
+  <div class="legend">
+    <span><i class="sw pro" style="height:12px;width:16px"></i>Pro</span>
+    <span><i class="sw main" style="height:12px;width:16px"></i>BiTadilat commission (10%)</span>
+    <span><i class="sw ref" style="height:12px;width:16px"></i>Refund to customer</span>
+  </div>
+</section>
+
+<section aria-labelledby="sh-title">
+  <div class="head">
+    <span class="eyebrow">4 · Against fraud</span>
+    <h2 id="sh-title">7 shields along the way</h2>
+    <p>From left to right, which check kicks in at which point on the money's path.</p>
+  </div>
+  <div class="shields">
+    <div class="shield"><span class="where-tag">Before offers</span><div class="ic"><svg><use href="#i-doc"/></svg></div><b>Documented pro</b><span>ID and trade documents, admin approval</span></div>
+    <div class="shield"><span class="where-tag">Offer</span><div class="ic"><svg><use href="#i-pin"/></svg></div><b>Address hidden</b><span>Only the district is visible until payment</span></div>
+    <div class="shield"><span class="where-tag">Payment</span><div class="ic"><svg><use href="#i-calc"/></svg></div><b>Amount set on the server</b><span>The app cannot send an amount</span></div>
+    <div class="shield"><span class="where-tag">Bank</span><div class="ic"><svg><use href="#i-shield"/></svg></div><b>3D Secure</b><span>The bank verifies the cardholder</span></div>
+    <div class="shield"><span class="where-tag">Result</span><div class="ic"><svg><use href="#i-check"/></svg></div><b>Double check</b><span>The result is asked from Craftgate separately; one open payment only</span></div>
+    <div class="shield"><span class="where-tag">Vault</span><div class="ic"><svg><use href="#i-lock"/></svg></div><b>Locked vault</b><span>Nothing reaches the pro without approval or 48 hours</span></div>
+    <div class="shield"><span class="where-tag">Exit</span><div class="ic"><svg><use href="#i-undo"/></svg></div><b>Refund check</b><span>Craftgate is asked before every refund and payout; no double refunds</span></div>
+  </div>
+  <span class="gaps-title">To complete before launch</span>
+  <div class="gaps">
+    <div class="shield gap"><div class="ic"><svg><use href="#i-shield"/></svg></div><b>Bank return signature</b><span>Switches on once the Craftgate key is set</span></div>
+    <div class="shield gap"><div class="ic"><svg><use href="#i-card"/></svg></div><b>Card form</b><span>Card data should never reach our server (Craftgate form)</span></div>
+    <div class="shield gap"><div class="ic"><svg><use href="#i-clock"/></svg></div><b>Suspicious attempt limit</b><span>Rule for many attempts with one card or unusual amounts</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="alt-title">
+  <div class="head">
+    <span class="eyebrow">5 · Alternatives</span>
+    <h2 id="alt-title">6 models that do the same job, at a glance</h2>
+    <p>The blue box is where the money waits in that model. The ranking reflects fit for BiTadilat.</p>
+  </div>
+  <div class="alts" id="alts"></div>
+</section>
+
+<footer>
+  <span>Source: BiTadilat code and <span class="mono">docs/spec/STATE_MACHINES.md</span>; amounts come from the Kaya Tesisat offer in the demo data. Commission 10%.</span>
+  <span>In the current version, charges and refunds really run in the Craftgate sandbox; sending money to the pro's bank account is still only a ledger entry (to be done with Option 1 in production).</span>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var base = [
+    { t: "Request and offers", d: "The customer describes the job and documented pros send offers. Nothing has been charged yet.", w: "Money: on the customer's card", segs: [], hl: ["nM"], badges: [] },
+    { t: "Offer accepted, card entered", d: "The customer picks the ₺2,200 offer. The server, not the app, works out the amount from the offer.", w: "Money: on the customer's card", segs: ["s1"], hl: ["nB"], badges: ["b1"] },
+    { t: "Bank verifies", d: "3D Secure: the bank verifies the cardholder with a code sent to their phone and approves the charge.", w: "Money: leaving the card", segs: ["s2"], hl: ["nC"], badges: ["b2"] },
+    { t: "Money enters the vault", d: "Craftgate charges the amount; ₺2,200 goes into BiTadilat's account, the escrow vault. The server asks Craftgate for the result separately, then opens the job.", w: "Money: in the escrow vault, locked", segs: ["s3"], hl: ["nK"], badges: ["b3"] }
+  ];
+  var scenarios = {
+    normal: { amounts: { u: "₺1,980", f: "fee ₺220", k: "₺2,200 locked" }, steps: base.concat([
+      { t: "Pro does the job", d: "The address is revealed to the pro only now. The pro arrives, does the job and says \"finished\". Meanwhile the money waits in the vault.", w: "Money: in the escrow vault, locked", segs: [], hl: ["nK", "nU"], badges: ["b4"] },
+      { t: "Approval or 48 hours", d: "The customer approves or 48 hours pass with no complaint. Craftgate is first asked whether a refund exists, then ₺1,980 goes to the pro and ₺220 is commission.", w: "Money: pro ₺1,980 · BiTadilat ₺220", segs: ["s4", "s5"], hl: ["nU", "nF"], badges: ["b5"] }
+    ]) },
+    cancel: { amounts: { u: "₺0", f: "fee ₺0", k: "₺2,200 locked" }, steps: base.concat([
+      { t: "Customer cancels", d: "Can be cancelled before the pro starts (appointment pending, scheduled, or pro at the door). A reason and confirmation are required.", w: "Money: in the escrow vault, locked", segs: [], hl: ["nK", "nM"], badges: ["b4"] },
+      { t: "Full refund", d: "₺2,200 goes from the vault back to the customer's card via Craftgate. Nothing goes to the pro or as commission.", w: "Money: on the customer's card, ₺2,200 refunded", segs: ["sr"], hl: ["nM"], badges: [] }
+    ]) },
+    dispute: { amounts: { u: "₺1,100", f: "fee ₺0", k: "₺2,200 frozen" }, steps: base.concat([
+      { t: "Complaint opened", d: "There is no cancelling once the job has started; the customer files a complaint with evidence. The money freezes in the vault and the 48-hour timer stops.", w: "Money: frozen in the vault", segs: ["sa"], hl: ["nA", "nK"], badges: ["b4"] },
+      { t: "Admin: 50% / 50%", d: "The admin reviews both sides and the messages. ₺1,100 is refunded to the customer and ₺1,100 goes to the pro; no commission is taken in this decision.", w: "Money: customer ₺1,100 · pro ₺1,100", segs: ["sr", "s4"], hl: ["nM", "nU"], badges: ["b5"] }
+    ]) }
+  };
+  var allSegs = ["s1", "s2", "s3", "s4", "s5", "sr", "sa"];
+  var allNodes = ["nM", "nB", "nC", "nK", "nA", "nU", "nF"];
+  var allBadges = ["b1", "b2", "b3", "b4", "b5"];
+  var sc = "normal", idx = 0, timer = null, anims = [];
+  var $ = function (id) { return document.getElementById(id); };
+  var coins = $("coins");
+
+  function makeCoin() {
+    var g = document.createElementNS(NS, "g"); g.setAttribute("class", "coin");
+    var c = document.createElementNS(NS, "circle"); c.setAttribute("r", "13");
+    var t = document.createElementNS(NS, "text"); t.textContent = "₺";
+    g.appendChild(c); g.appendChild(t); coins.appendChild(g); return g;
+  }
+  function place(g, p) { g.setAttribute("transform", "translate(" + p.x + " " + p.y + ")"); }
+  function animate(id) {
+    var path = $(id), len = path.getTotalLength(), g = makeCoin();
+    if (reduce) { place(g, path.getPointAtLength(len)); return; }
+    var dur = Math.max(700, len * 4.2), start = null;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var k = Math.min(1, (ts - start) / dur);
+      var e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      place(g, path.getPointAtLength(len * e));
+      if (k < 1) anims.push(requestAnimationFrame(frame));
+    }
+    anims.push(requestAnimationFrame(frame));
+  }
+  function restingCoin(steps) {
+    var last = steps.slice(0, idx + 1).filter(function (s) { return s.segs.length; }).pop();
+    if (!last || steps[idx].segs.length) return;
+    last.segs.forEach(function (id) { var p = $(id); var g = makeCoin(); place(g, p.getPointAtLength(p.getTotalLength())); });
+  }
+  function render(animateNow) {
+    anims.forEach(cancelAnimationFrame); anims = [];
+    while (coins.firstChild) coins.removeChild(coins.firstChild);
+    var S = scenarios[sc], steps = S.steps, step = steps[idx];
+    var used = {};
+    steps.slice(0, idx + 1).forEach(function (s) { s.segs.forEach(function (x) { used[x] = true; }); });
+    allSegs.forEach(function (id) { $(id).classList.toggle("on", !!used[id]); });
+    var usedB = {};
+    steps.slice(0, idx + 1).forEach(function (s) { s.badges.forEach(function (x) { usedB[x] = true; }); });
+    allBadges.forEach(function (id) { $(id).classList.toggle("on", !!usedB[id]); });
+    allNodes.forEach(function (id) { $(id).classList.toggle("hl", step.hl.indexOf(id) >= 0); });
+    $("uAmt").textContent = S.amounts.u; $("fAmt").textContent = S.amounts.f; $("kSub").textContent = S.amounts.k;
+    $("stepNo").textContent = (idx + 1) + " / " + steps.length;
+    $("capT").textContent = step.t; $("capD").textContent = step.d;
+    $("capW").innerHTML = '<i class="coin-dot"></i>' + step.w;
+    if (step.segs.length && animateNow) step.segs.forEach(animate);
+    else if (step.segs.length) step.segs.forEach(function (id) { var p = $(id); var g = makeCoin(); place(g, p.getPointAtLength(p.getTotalLength())); });
+    else restingCoin(steps);
+    var list = $("stepList"); list.innerHTML = "";
+    steps.forEach(function (s, i) {
+      var li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.innerHTML = "<b>" + (i + 1) + "</b>" + s.t;
+      if (i === idx) b.setAttribute("aria-current", "step");
+      b.addEventListener("click", function () { stop(); idx = i; render(true); });
+      li.appendChild(b); list.appendChild(li);
+    });
+    $("prev").disabled = idx === 0; $("next").disabled = idx === steps.length - 1;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } $("play").textContent = "Play"; }
+  $("next").addEventListener("click", function () { stop(); if (idx < scenarios[sc].steps.length - 1) { idx++; render(true); } });
+  $("prev").addEventListener("click", function () { stop(); if (idx > 0) { idx--; render(true); } });
+  $("play").addEventListener("click", function () {
+    if (timer) { stop(); return; }
+    idx = 0; render(true); $("play").textContent = "Stop";
+    timer = setInterval(function () {
+      if (idx >= scenarios[sc].steps.length - 1) { stop(); return; }
+      idx++; render(true);
+    }, reduce ? 1600 : 2300);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function (b) {
+    b.addEventListener("click", function () {
+      stop(); sc = b.getAttribute("data-sc"); idx = 0;
+      Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      render(true);
+    });
+  });
+  render(false);
+
+  // Alternatives
+  var alts = [
+    { r: 1, top: true, n: "Escrow at a payment institution", s: "Marketplace model · e.g. n11, Trendyol, Hepsiburada", mid: ["i-bank", "Waits at Craftgate", "sub-merchant"], left: ["i-person", "Customer"], right: ["i-helmet", "Pro's IBAN"], m: [5, 5, 5, 3], one: "<b>Recommended target.</b> The flow stays the same, the money does not sit on the platform, and the payout to the pro is automatic." },
+    { r: 2, top: true, n: "Escrow in the platform ledger", s: "Today's BiTadilat model", mid: ["i-vault", "BiTadilat account", "locked in ledger"], left: ["i-person", "Customer"], right: ["i-helmet", "EFT to pro"], m: [5, 4, 2, 5], one: "<b>Ready for the demo and submission.</b> Move to 1 before real users." },
+    { r: 3, top: true, n: "Staged (milestone) escrow", s: "e.g. Upwork fixed-price jobs", mid: ["i-steps", "Each stage held", "separately"], left: ["i-person", "Customer"], right: ["i-helmet", "Pro, stage by stage"], m: [5, 5, 4, 2], one: "<b>Add-on for big renovations.</b> Built on top of 1 or 2." },
+    { r: 4, n: "Pre-authorization (hold)", s: "e.g. Uber, hotels, car rental", left: ["i-card", "Held on card", "waits"], mid: ["i-wrench", "Job is done", ""], right: ["i-helmet", "Then charge → pro"], waitLeft: true, m: [4, 2, 4, 3], one: "<b>For same-day jobs.</b> The hold period is limited; the pro may be left unprotected." },
+    { r: 5, n: "Direct charge", s: "e.g. Amazon", mid: ["i-store", "Briefly on platform", "no approval wait"], left: ["i-person", "Customer"], right: ["i-helmet", "Periodic payout"], m: [2, 4, 3, 4], one: "<b>Fine for selling products.</b> In services there is no customer \"job done\" approval." },
+    { r: 6, n: "Money never touches the platform", s: "e.g. service classifieds sites", mid: ["i-coins", "Platform only charges a listing fee", ""], left: ["i-person", "Customer"], right: ["i-helmet", "Cash / EFT to pro"], none: true, m: [1, 2, 5, 5], one: "<b>No protection.</b> Removes BiTadilat's main differentiator." }
+  ];
+  var labels = ["Customer protection", "Pro protection", "Legal comfort", "Ease of setup"];
+  function node(a, cls) {
+    return '<div class="mn ' + (cls || "") + '"><div class="c"><svg><use href="#' + a[0] + '"/></svg></div><span>' + a[1] + '</span>' + (a[2] ? '<em>' + a[2] + '</em>' : '') + (cls === "wait" ? '<em>Money waits here</em>' : '') + '</div>';
+  }
+  var arrow = '<div class="ar"><svg><use href="#i-arrow"/></svg></div>';
+  var html = alts.map(function (a) {
+    var left = node(a.left, a.waitLeft ? "wait" : "");
+    var mid = node(a.mid, a.none ? "none" : (a.waitLeft ? "" : "wait"));
+    var right = node(a.right, "");
+    var meters = a.m.map(function (v, i) { return '<div class="meter"><span>' + labels[i] + ' · ' + v + '/5</span><div class="mt"><i style="width:' + (v * 20) + '%"></i></div></div>'; }).join("");
+    return '<article class="alt' + (a.top ? ' top' : '') + '"><div class="tl1"><span class="rk">' + a.r + '</span><div><h3>' + a.n + '</h3><small>' + a.s + '</small></div></div>' +
+      '<div class="mm">' + left + arrow + mid + arrow + right + '</div><div class="meters">' + meters + '</div><p class="one">' + a.one + '</p></article>';
+  }).join("");
+  $("alts").innerHTML = html;
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BiTadilat Payment Flow</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column; the flow is a swimlane grid (lanes = who acts, last column = where the money is) that stacks to cards on phones. */
+:root {
+  --bg: #F5F7F6;
+  --surface: #FFFFFF;
+  --ink: #10272E;
+  --muted: #55686D;
+  --line: #D6E0DC;
+  --lane: #ECF1EF;
+  --primary: #0F4C5C;
+  --primary-soft: #E3EEF1;
+  --trust: #107A5B;
+  --trust-soft: #E5F3EE;
+  --warn: #C2601B;
+  --warn-soft: #FBEEE4;
+  --info: #1F6F94;
+  --info-soft: #E6F0F6;
+  --danger: #A3352B;
+  --danger-soft: #F8E7E5;
+  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C181C; --surface: #12232A; --ink: #E2ECE9; --muted: #9AB0B3; --line: #26414A; --lane: #102028;
+    --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229;
+    --warn: #F0A06A; --warn-soft: #36251A; --info: #7DB9DB; --info-soft: #142D3A;
+    --danger: #EE8E84; --danger-soft: #3A1E1B; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C181C; --surface: #12232A; --ink: #E2ECE9; --muted: #9AB0B3; --line: #26414A; --lane: #102028;
+  --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229;
+  --warn: #F0A06A; --warn-soft: #36251A; --info: #7DB9DB; --info-soft: #142D3A;
+  --danger: #EE8E84; --danger-soft: #3A1E1B; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15.5px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 46px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+h2 { font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 68ch; font-size: 17px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.mono { font-family: var(--font-mono); font-size: 0.86em; }
+section { display: grid; gap: 20px; }
+.section-head { display: grid; gap: 8px; max-width: 72ch; }
+.section-head p { color: var(--muted); }
+
+/* Hero answers */
+header { display: grid; gap: 18px; }
+.answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.answer { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; }
+.answer .q { font-size: 13px; font-weight: 700; color: var(--muted); }
+.answer .a { font-size: 19px; font-weight: 800; line-height: 1.25; }
+.answer .d { color: var(--muted); font-size: 14.5px; }
+.callout { border-radius: 12px; padding: 14px 16px; background: var(--warn-soft); color: var(--ink); display: grid; gap: 4px; max-width: 80ch; }
+.callout strong { color: var(--warn); }
+
+/* Swimlane flow */
+.flow-scroll { overflow-x: auto; }
+.flow { display: grid; grid-template-columns: 40px repeat(4, minmax(130px, 1fr)) 178px; column-gap: 8px; row-gap: 8px; min-width: 0; }
+.flow .row { display: contents; }
+.lane-head { font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 10px 10px; border-bottom: 2px solid var(--line); }
+.lane-head.money { color: var(--primary); }
+.num { font-family: var(--font-mono); font-weight: 600; font-size: 13px; color: var(--muted); padding-top: 12px; text-align: center; }
+.cell { background: var(--lane); border-radius: 8px; min-height: 100%; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px 12px; display: grid; gap: 4px; align-content: start; box-shadow: 0 1px 0 var(--line); }
+.card h3 { font-size: 15px; }
+.card p { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+.card .who { display: none; }
+.card.key { border-color: var(--primary); box-shadow: inset 3px 0 0 var(--primary); }
+.money-cell { display: flex; align-items: flex-start; padding-top: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; line-height: 1.25; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip.card-m { background: var(--lane); color: var(--muted); }
+.chip.held { background: var(--info-soft); color: var(--info); }
+.chip.pro { background: var(--trust-soft); color: var(--trust); }
+.chip.refund { background: var(--warn-soft); color: var(--warn); }
+.chip.plan { background: var(--trust-soft); color: var(--trust); outline: 1.5px dashed var(--trust); outline-offset: -1.5px; }
+.lane-span-2 { grid-column: span 2; }
+
+@media (max-width: 760px) {
+  .flow { display: grid; grid-template-columns: 1fr; row-gap: 10px; }
+  .lane-head, .cell { display: none; }
+  .flow .row { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 4px 10px; align-items: start; }
+  .flow .row .card { grid-column: 2; }
+  .flow .row .money-cell { grid-column: 2; padding-top: 0; }
+  .num { padding-top: 10px; }
+  .card .who { display: inline; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary); }
+  .lane-span-2 { grid-column: 2; }
+}
+
+/* Side paths */
+.paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.path { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.path p { color: var(--muted); font-size: 14.5px; }
+.path .result { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Money journey */
+.journey { display: grid; grid-template-columns: minmax(0, 0.9fr) 32px minmax(0, 1.1fr) 32px minmax(0, 1.3fr); align-items: center; gap: 10px; }
+.stage { border-radius: 14px; padding: 18px; display: grid; gap: 6px; }
+.stage .label { font-size: 12px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.stage .big { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.stage p { font-size: 14px; }
+.stage.start { background: var(--lane); }
+.stage.start .label { color: var(--muted); }
+.stage.hold { background: var(--info-soft); border: 2px solid var(--info); }
+.stage.hold .label { color: var(--info); }
+.stage.hold p, .stage.start p { color: var(--muted); }
+.outcomes { display: grid; gap: 10px; }
+.outcome { border-radius: 12px; padding: 12px 14px; display: grid; gap: 3px; }
+.outcome .t { font-weight: 800; font-size: 15px; }
+.outcome p { font-size: 13.5px; color: var(--muted); }
+.outcome.pro { background: var(--trust-soft); } .outcome.pro .t { color: var(--trust); }
+.outcome.refund { background: var(--warn-soft); } .outcome.refund .t { color: var(--warn); }
+.outcome.split { background: var(--primary-soft); } .outcome.split .t { color: var(--primary); }
+.arrow { color: var(--muted); display: grid; place-items: center; }
+.arrow svg { width: 28px; height: 28px; }
+.dispute-note { border: 1.5px dashed var(--danger); background: var(--danger-soft); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+.dispute-note strong { color: var(--danger); }
+@media (max-width: 820px) {
+  .journey { grid-template-columns: 1fr; }
+  .arrow svg { transform: rotate(90deg); }
+}
+
+/* Fraud table */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 800; background: var(--lane); }
+tr:last-child td { border-bottom: none; }
+td:first-child { font-weight: 700; width: 26%; }
+.status { display: inline-block; font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.status.ok { background: var(--trust-soft); color: var(--trust); }
+.status.part { background: var(--warn-soft); color: var(--warn); }
+.status.no { background: var(--danger-soft); color: var(--danger); }
+.legal { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; max-width: 86ch; }
+.legal p { color: var(--muted); font-size: 14.5px; }
+
+/* Alternatives */
+.options { display: grid; gap: 16px; }
+.option { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 4px 18px; }
+.option.top { border: 2px solid var(--primary); }
+.rank { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; color: var(--primary); grid-row: span 6; }
+.option:not(.top) .rank { color: var(--muted); }
+.option .title-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.option .tag { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); }
+.option .tag.now { background: var(--info-soft); color: var(--info); }
+.option .tag.add { background: var(--trust-soft); color: var(--trust); }
+.option .tag.weak { background: var(--danger-soft); color: var(--danger); }
+.option .ex { color: var(--muted); font-size: 14px; }
+.mini { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-block: 8px 4px; }
+.mini span.s { background: var(--lane); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 700; }
+.mini span.s.h { background: var(--info-soft); color: var(--info); }
+.mini span.s.p { background: var(--trust-soft); color: var(--trust); }
+.mini span.s.r { background: var(--warn-soft); color: var(--warn); }
+.mini span.ar { color: var(--muted); font-weight: 800; }
+.pc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 4px; }
+.pc ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; font-size: 14px; }
+.pc .h { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+.pc .plus .h { color: var(--trust); }
+.pc .minus .h { color: var(--danger); }
+.verdict { margin-top: 6px; font-size: 14.5px; background: var(--lane); border-radius: 10px; padding: 10px 12px; }
+.verdict strong { color: var(--primary); }
+@media (max-width: 640px) {
+  .option { grid-template-columns: 1fr; }
+  .rank { grid-row: auto; font-size: 32px; }
+  .pc { grid-template-columns: 1fr; }
+  .answers { grid-template-columns: 1fr; }
+  .paths { grid-template-columns: 1fr; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .answers { grid-template-columns: 1fr; }
+}
+
+/* Comparison */
+.dots { letter-spacing: 2px; font-size: 13px; color: var(--primary); white-space: nowrap; }
+.dots .off { color: var(--line); }
+.cmp td:first-child { width: 30%; }
+footer { color: var(--muted); font-size: 13px; display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 18px; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Capstone project · Payment and protection</span>
+  <h1>Where does the money in BiTadilat come from, where does it wait, and when does it reach the pro?</h1>
+  <p class="lede">This page walks through the payment path the app uses today, lists the safeguards against fraud, and compares the other payment models that could do the same job, ranked by how well they suit BiTadilat. Example amount: Kaya Tesisat's ₺2,200 offer.</p>
+  <div class="answers">
+    <div class="answer">
+      <span class="q">When is the money taken?</span>
+      <span class="a">The moment the customer accepts the offer, before work starts.</span>
+      <span class="d">The card is verified with 3D Secure and the amount is charged right then. This is a real charge, not a hold (pre-authorization).</span>
+    </div>
+    <div class="answer">
+      <span class="q">Where does the money wait?</span>
+      <span class="a">In BiTadilat's Craftgate account, as an "escrow".</span>
+      <span class="d">The money is not floating around; it sits in the platform's payment account. The system keeps this amount locked in its own ledger, and it counts as belonging to neither the customer nor the pro.</span>
+    </div>
+    <div class="answer">
+      <span class="q">When does it reach the pro?</span>
+      <span class="a">When the customer approves the job, or 48 hours pass with no complaint.</span>
+      <span class="d">A 10% commission is deducted: of ₺2,200, ₺1,980 goes to the pro and ₺220 to BiTadilat. If a complaint is opened, the money freezes and an admin decides.</span>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>In the current version, the payout to the pro is only a ledger entry.</strong>
+    <span>Charges and refunds run in the real Craftgate sandbox. Sending real money to the pro's bank account is not built yet; before launch we recommend completing it with Option 1 below.</span>
+  </div>
+</header>
+
+<section aria-labelledby="flow-title">
+  <div class="section-head">
+    <span class="eyebrow">Main flow</span>
+    <h2 id="flow-title">10 steps from request to the pro's payout</h2>
+    <p>The columns show who acts; the last column shows where the money is at that step.</p>
+  </div>
+  <div class="flow-scroll">
+    <div class="flow" role="list">
+      <div class="row" aria-hidden="true">
+        <div></div>
+        <div class="lane-head">Customer</div>
+        <div class="lane-head">BiTadilat server</div>
+        <div class="lane-head">Craftgate and bank</div>
+        <div class="lane-head">Pro</div>
+        <div class="lane-head money">Where is the money?</div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">1</div>
+        <div class="card"><span class="who">Customer</span><h3>Opens a request</h3><p>Describes the job, district and photos. No payment yet.</p></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">On the customer's card</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">2</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Pro</span><h3>Sends an offer</h3><p>Only pros whose documents an admin has approved. They see the district, not the full address.</p></div>
+        <div class="money-cell"><span class="chip card-m">On the customer's card</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">3</div>
+        <div class="card lane-span-2"><span class="who">Customer → BiTadilat</span><h3>Picks an offer, enters the card</h3><p>The app does not send the amount; the server works it out from the accepted offer (₺2,200).</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">On the customer's card</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">4</div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Craftgate and bank</span><h3>3D Secure verification</h3><p>The bank verifies the cardholder with a code sent to their phone.</p></div>
+        <div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">On the customer's card</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">5</div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="card key"><span class="who">Craftgate and bank</span><h3>Card is charged</h3><p>A real charge. ₺2,200 goes to BiTadilat's Craftgate merchant account.</p></div>
+        <div class="cell"></div>
+        <div class="money-cell"><span class="chip held">In escrow</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">6</div>
+        <div class="cell"></div>
+        <div class="card key"><span class="who">BiTadilat</span><h3>Verifies the result, opens the job</h3><p>It does not trust the message coming back from the bank alone; it asks Craftgate separately. Then, in one transaction: the offer is accepted, other offers close, the job opens, and the ledger shows <span class="mono">LOCKED</span>.</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip held">In escrow</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">7</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Pro</span><h3>Arrives, does the job, says "finished"</h3><p>The address is revealed to the pro only after payment. The money does not move to the pro in the meantime.</p></div>
+        <div class="money-cell"><span class="chip held">In escrow</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">8</div>
+        <div class="card key"><span class="who">Customer</span><h3>Approves the job</h3><p>If the customer neither approves nor complains, the system approves automatically after 48 hours (a reminder is sent at hour 24).</p></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip held">In escrow</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">9</div>
+        <div class="cell"></div>
+        <div class="card"><span class="who">BiTadilat</span><h3>Pays out to the pro</h3><p>First asks Craftgate whether this payment has already been refunded. If not, the ledger shows <span class="mono">RELEASED_TO_PRO</span>: ₺1,980 to the pro, ₺220 commission.</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip pro">Set aside for the pro</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">10</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Pro</span><h3>Receives the money</h3><p>Today: a ledger entry only. In production: a transfer to their IBAN, or an automatic payout by the payment institution.</p></div>
+        <div class="money-cell"><span class="chip plan">Pro's account (planned)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="paths-title">
+  <div class="section-head">
+    <span class="eyebrow">Side paths</span>
+    <h2 id="paths-title">When the job does not go as planned</h2>
+  </div>
+  <div class="paths">
+    <div class="path">
+      <h3>Customer cancels (before the pro starts)</h3>
+      <p>Can be cancelled while the appointment is pending, scheduled, or when the pro has arrived at the address. A reason is required.</p>
+      <div class="result"><span class="chip refund">Full ₺2,200 refund to card</span><span class="chip card-m">Request closes</span></div>
+    </div>
+    <div class="path">
+      <h3>Pro cancels (before starting)</h3>
+      <p>A cancellation is recorded against the pro; the request is reopened to other pros.</p>
+      <div class="result"><span class="chip refund">Full ₺2,200 refund to card</span><span class="chip card-m">Request reopens</span></div>
+    </div>
+    <div class="path">
+      <h3>A problem after the job has started</h3>
+      <p>No more cancelling; the customer files a complaint with evidence. The money is frozen (<span class="mono">DISPUTED</span>) and the automatic payout stops. An admin reviews both sides and the messages, then decides.</p>
+      <div class="result"><span class="chip refund">Full refund ₺2,200</span><span class="chip held">50% / 50%: ₺1,100 + ₺1,100</span><span class="chip pro">Pay out to pro: ₺1,980</span></div>
+    </div>
+    <div class="path">
+      <h3>Technical hiccups</h3>
+      <p>If two payments race for the same request, the second is refunded automatically. If the customer closes the bank page, they can pay again after 10 minutes. If a refund is interrupted, the system asks Craftgate and completes only the missing part; it never refunds twice.</p>
+      <div class="result"><span class="chip refund">Automatic refund</span><span class="chip card-m">No double refund</span></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="money-title">
+  <div class="section-head">
+    <span class="eyebrow">The money's journey</span>
+    <h2 id="money-title">The money is in one of three places</h2>
+    <p>On the card, in escrow, or at its final stop. Money leaves escrow only through the events below.</p>
+  </div>
+  <div class="journey">
+    <div class="stage start">
+      <span class="label">1 · Start</span>
+      <span class="big">Customer's card</span>
+      <p>Nothing is charged until the offer is accepted and 3D Secure is passed.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="stage hold">
+      <span class="label">2 · Escrow <span class="mono">LOCKED</span></span>
+      <span class="big">BiTadilat's Craftgate account</span>
+      <p>The money physically sits in the platform's payment account; the system records it in the ledger as a locked amount belonging to this job.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="outcomes">
+      <div class="outcome pro"><span class="t">Paid out to the pro</span><p>Customer approval · 48 hours without a complaint · admin "pay out to pro" decision. The 10% commission is taken only here.</p></div>
+      <div class="outcome refund"><span class="t">Refunded to the customer</span><p>Cancellation before work starts · admin "full refund" decision · payment race.</p></div>
+      <div class="outcome split"><span class="t">Split 50% / 50%</span><p>Only by admin decision, on jobs with a complaint. No commission is taken.</p></div>
+    </div>
+  </div>
+  <div class="dispute-note"><strong>When a complaint is opened</strong>, the money freezes in escrow (<span class="mono">DISPUTED</span>). The 48-hour automatic payout does not run; the only way out is an admin decision.</div>
+</section>
+
+<section aria-labelledby="fraud-title">
+  <div class="section-head">
+    <span class="eyebrow">Against fraud</span>
+    <h2 id="fraud-title">What do we do against which risk?</h2>
+    <p>"In place" marks safeguards that exist in the code and are verified by tests, "Partial" those that must be completed before launch, and "Missing" those not yet added.</p>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Risk</th><th>Safeguard</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Payment with a stolen card</td><td>3D Secure on every payment. The bank verifies the cardholder, and liability for chargebacks largely shifts to the bank.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Tampering with the amount</td><td>The app does not send an amount. The server calculates it from the accepted offer, and the offer's validity and status are re-checked at payment time.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Fake "payment successful" message</td><td>The result returned by the bank is queried separately from the Craftgate API. Verifying the signature of the return message needs a Craftgate key; it is mandatory in the production config and not set up yet.</td><td><span class="status part">Partial</span></td></tr>
+        <tr><td>Double click, double payment</td><td>Only one open payment per request at a time (a database constraint), and a unique key for every attempt.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Fake pro</td><td>ID and trade documents are uploaded, and the pro cannot send offers until an admin approves them. After complaints: a warning and account suspension.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Pro takes the money and does not do the job</td><td>The money does not reach the pro until the job is done and the customer approves (or 48 hours pass); it freezes on a complaint.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Customer avoids paying after the job</td><td>The money was charged before the work. If the customer gives no approval, the payout happens automatically after 48 hours.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Making a deal outside the platform</td><td>Pros do not see the full address or contact details until payment is made; only the district and neighbourhood are visible.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Double refund, wrong payout</td><td>Before every refund and payout, Craftgate is asked "how much has been refunded on this payment". Tested with real sandbox payments.</td><td><span class="status ok">In place</span></td></tr>
+        <tr><td>Card data leak</td><td>Card data is not stored, but today it passes through our server on its way to Craftgate. Before launch we recommend switching to Craftgate's payment form or card tokenization, so card data never touches our server (which reduces the PCI DSS burden).</td><td><span class="status part">Partial</span></td></tr>
+        <tr><td>Suspicious patterns (many attempts with one card, unusual amounts)</td><td>The app has no rules for this. Craftgate's fraud rules can be switched on from its dashboard, and an attempt limit can be added.</td><td><span class="status no">Missing</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="legal">
+    <h3>Legal note</h3>
+    <p>In Turkey, collecting, holding and transferring money on behalf of others is an activity that can require a licence under Turkish Law No. 6493 on payment services. This is why large marketplaces keep the money not in their own accounts but in the marketplace (sub-merchant) structure of a licensed payment institution. This note is not legal advice; it should be confirmed with a lawyer before launch. It is the main reason Option 1 comes out on top in the ranking below.</p>
+  </div>
+</section>
+
+<section aria-labelledby="alt-title">
+  <div class="section-head">
+    <span class="eyebrow">Alternative models</span>
+    <h2 id="alt-title">6 payment models, ranked by fit for BiTadilat</h2>
+    <p>Ranking criteria: protecting customer and pro together, legal burden, automation, and closeness to today's code. Company examples are only there to make each model familiar; their current terms may change.</p>
+  </div>
+
+  <div class="options">
+    <article class="option top">
+      <div class="rank">1</div>
+      <div class="title-line"><h3>Escrow at a licensed payment institution (marketplace model)</h3><span class="tag">Recommended target</span></div>
+      <p class="ex">Familiar example: marketplaces such as n11, Trendyol and Hepsiburada. The money waits at the payment institution and goes to the seller once the product is delivered and confirmed.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Customer's card</span><span class="ar">→</span><span class="s h">Waits at Craftgate (sub-merchant)</span><span class="ar">→</span><span class="s">Job approval</span><span class="ar">→</span><span class="s p">Pro's IBAN, commission split automatically</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>The flow the customer sees stays the same as today.</li><li>The money does not sit in the platform's account; the licensing burden lies with the payment institution.</li><li>Payout to the pro and the commission split become automatic.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>Every pro must register as a sub-merchant (ID/tax number, IBAN).</li><li>A medium-sized integration job; a contract with the provider is needed.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> the natural next step from today's model. In the code, only the payment start and the payout step change; refund, complaint and 48-hour rules stay as they are.</p>
+    </article>
+
+    <article class="option top">
+      <div class="rank">2</div>
+      <div class="title-line"><h3>Platform charges and holds the escrow in its own ledger</h3><span class="tag now">Today's model</span></div>
+      <p class="ex">The flow described above on this page. The money enters the platform's payment account and the system keeps it locked until the job is done.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Customer's card</span><span class="ar">→</span><span class="s h">BiTadilat account (locked in the ledger)</span><span class="ar">→</span><span class="s">Job approval / 48 h</span><span class="ar">→</span><span class="s p">Bank transfer (EFT) to pro</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>Built, tested, and working with real payments in the sandbox.</li><li>The pro does not need to register anything extra.</li><li>Fully sufficient for the jury demo.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>Other people's money sits in the platform account: a legal and tax burden.</li><li>Payouts to pros must be made by hand (bank transfer); this gets harder as the platform grows.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> keep it for the submission and demo; move to 1 before opening to real users.</p>
+    </article>
+
+    <article class="option top">
+      <div class="rank">3</div>
+      <div class="title-line"><h3>Staged (milestone) escrow</h3><span class="tag add">Add-on on top of 1 or 2</span></div>
+      <p class="ex">Familiar example: fixed-price jobs on freelance platforms (e.g. Upwork). The job is split into stages; each stage is funded in advance and released once approved.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Stage 1 is paid</span><span class="ar">→</span><span class="s h">In escrow</span><span class="ar">→</span><span class="s p">Approval: to the pro</span><span class="ar">→</span><span class="s">Stage 2 is paid …</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>On big renovations (bathroom, kitchen) the risk for both sides shrinks.</li><li>The pro can receive the materials money at the start.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>More steps and approvals; unnecessary for small jobs.</li><li>Partial refunds and complaints must be handled stage by stage.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> job stages already exist in the system; a good feature to add later for jobs above a certain amount.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">4</div>
+      <div class="title-line"><h3>Pre-authorization: hold first, charge when done</h3><span class="tag">Option for short jobs</span></div>
+      <p class="ex">Familiar example: Uber and similar ride apps, hotels, car rental. The amount is held on the card and the actual amount is charged when the service ends.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Held on card</span><span class="ar">→</span><span class="s">Job is done</span><span class="ar">→</span><span class="s h">Amount is charged</span><span class="ar">→</span><span class="s p">Pro</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>No refund needed on cancellation; the hold is just released.</li><li>No money leaves the customer's card until the job is done.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>The hold period is limited by the bank; it can expire on appointments set far ahead.</li><li>If the charge is declined when the job ends, the pro is left unprotected.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> could be considered for same-day urgent jobs; weak as a general model.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">5</div>
+      <div class="title-line"><h3>Direct charge, periodic payout to the seller</h3><span class="tag weak">Not suitable for services</span></div>
+      <p class="ex">Familiar example: Amazon. The card is charged when the order ships, the seller is paid in batches at set intervals, and disputes are settled by the platform's guarantee programme.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Card is charged</span><span class="ar">→</span><span class="s h">Platform</span><span class="ar">→</span><span class="s p">Periodic payout to seller</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>Simple, works well at high volume.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>There is no customer "job done" approval; it does not protect quality in services.</li><li>On a problem job, the refund comes out of the platform's pocket.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> fine for selling products; it does not protect the customer in trade services.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">6</div>
+      <div class="title-line"><h3>The money never touches the platform</h3><span class="tag weak">Contradicts the protection promise</span></div>
+      <p class="ex">Familiar example: many service classifieds sites. The customer pays the pro directly; the platform charges the pro a listing, offer or subscription fee.</p>
+      <div class="mini" aria-label="Flow"><span class="s">Customer</span><span class="ar">→</span><span class="s p">Cash / EFT to the pro</span><span class="ar">·</span><span class="s r">Platform: fee from the pro</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Upsides</span><ul><li>No payment infrastructure or licensing burden.</li></ul></div>
+        <div class="minus"><span class="h">Downsides</span><ul><li>No protection at all; the fraud risk falls entirely on users.</li><li>Collecting commission is hard, and deals outside the platform are easy.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>For BiTadilat:</strong> removes the escrow, the app's main differentiator.</p>
+    </article>
+  </div>
+</section>
+
+<section aria-labelledby="cmp-title">
+  <div class="section-head">
+    <span class="eyebrow">Side by side</span>
+    <h2 id="cmp-title">Quick comparison</h2>
+    <p>Out of five; more filled dots mean better. Ease of setup is judged against today's code.</p>
+  </div>
+  <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th>Model</th><th>Customer protection</th><th>Pro protection</th><th>Legal comfort</th><th>Ease of setup</th><th>Where does the money wait?</th></tr></thead>
+      <tbody>
+        <tr><td>1 · Escrow at a payment institution</td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="3 of 5">●●●<span class="off">●●</span></span></td><td>At the payment institution</td></tr>
+        <tr><td>2 · Escrow in the platform ledger (today)</td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2 of 5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td>In the platform's account</td></tr>
+        <tr><td>3 · Staged escrow</td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2 of 5">●●<span class="off">●●●</span></span></td><td>In escrow, stage by stage</td></tr>
+        <tr><td>4 · Pre-authorization</td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2 of 5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="3 of 5">●●●<span class="off">●●</span></span></td><td>On the customer's card (hold)</td></tr>
+        <tr><td>5 · Direct charge</td><td><span class="dots" aria-label="2 of 5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="3 of 5">●●●<span class="off">●●</span></span></td><td><span class="dots" aria-label="4 of 5">●●●●<span class="off">●</span></span></td><td>On the platform, briefly</td></tr>
+        <tr><td>6 · Money never touches the platform</td><td><span class="dots" aria-label="1 of 5">●<span class="off">●●●●</span></span></td><td><span class="dots" aria-label="2 of 5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td><span class="dots" aria-label="5 of 5">●●●●●</span></td><td>Does not wait at all</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <span>Source: BiTadilat code (<span class="mono">feature/flutter-app</span>), <span class="mono">docs/spec/STATE_MACHINES.md</span>, and the Craftgate sandbox tests of November 2026 (sample payment numbers 3275432, 3281697).</span>
+  <span>Amounts are examples; the commission rate is 10%. No real money moves in the sandbox.</span>
+</footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BiTadilat Ödeme Akışı</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column; the flow is a swimlane grid (lanes = who acts, last column = where the money is) that stacks to cards on phones. */
+:root {
+  --bg: #F5F7F6;
+  --surface: #FFFFFF;
+  --ink: #10272E;
+  --muted: #55686D;
+  --line: #D6E0DC;
+  --lane: #ECF1EF;
+  --primary: #0F4C5C;
+  --primary-soft: #E3EEF1;
+  --trust: #107A5B;
+  --trust-soft: #E5F3EE;
+  --warn: #C2601B;
+  --warn-soft: #FBEEE4;
+  --info: #1F6F94;
+  --info-soft: #E6F0F6;
+  --danger: #A3352B;
+  --danger-soft: #F8E7E5;
+  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C181C; --surface: #12232A; --ink: #E2ECE9; --muted: #9AB0B3; --line: #26414A; --lane: #102028;
+    --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229;
+    --warn: #F0A06A; --warn-soft: #36251A; --info: #7DB9DB; --info-soft: #142D3A;
+    --danger: #EE8E84; --danger-soft: #3A1E1B; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C181C; --surface: #12232A; --ink: #E2ECE9; --muted: #9AB0B3; --line: #26414A; --lane: #102028;
+  --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #133229;
+  --warn: #F0A06A; --warn-soft: #36251A; --info: #7DB9DB; --info-soft: #142D3A;
+  --danger: #EE8E84; --danger-soft: #3A1E1B; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15.5px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 46px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+h2 { font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 68ch; font-size: 17px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.mono { font-family: var(--font-mono); font-size: 0.86em; }
+section { display: grid; gap: 20px; }
+.section-head { display: grid; gap: 8px; max-width: 72ch; }
+.section-head p { color: var(--muted); }
+
+/* Hero answers */
+header { display: grid; gap: 18px; }
+.answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.answer { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 20px; display: grid; gap: 8px; align-content: start; }
+.answer .q { font-size: 13px; font-weight: 700; color: var(--muted); }
+.answer .a { font-size: 19px; font-weight: 800; line-height: 1.25; }
+.answer .d { color: var(--muted); font-size: 14.5px; }
+.callout { border-radius: 12px; padding: 14px 16px; background: var(--warn-soft); color: var(--ink); display: grid; gap: 4px; max-width: 80ch; }
+.callout strong { color: var(--warn); }
+
+/* Swimlane flow */
+.flow-scroll { overflow-x: auto; }
+.flow { display: grid; grid-template-columns: 40px repeat(4, minmax(130px, 1fr)) 178px; column-gap: 8px; row-gap: 8px; min-width: 0; }
+.flow .row { display: contents; }
+.lane-head { font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 10px 10px; border-bottom: 2px solid var(--line); }
+.lane-head.money { color: var(--primary); }
+.num { font-family: var(--font-mono); font-weight: 600; font-size: 13px; color: var(--muted); padding-top: 12px; text-align: center; }
+.cell { background: var(--lane); border-radius: 8px; min-height: 100%; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px 12px; display: grid; gap: 4px; align-content: start; box-shadow: 0 1px 0 var(--line); }
+.card h3 { font-size: 15px; }
+.card p { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+.card .who { display: none; }
+.card.key { border-color: var(--primary); box-shadow: inset 3px 0 0 var(--primary); }
+.money-cell { display: flex; align-items: flex-start; padding-top: 4px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; line-height: 1.25; }
+.chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.chip.card-m { background: var(--lane); color: var(--muted); }
+.chip.held { background: var(--info-soft); color: var(--info); }
+.chip.pro { background: var(--trust-soft); color: var(--trust); }
+.chip.refund { background: var(--warn-soft); color: var(--warn); }
+.chip.plan { background: var(--trust-soft); color: var(--trust); outline: 1.5px dashed var(--trust); outline-offset: -1.5px; }
+.lane-span-2 { grid-column: span 2; }
+
+@media (max-width: 760px) {
+  .flow { display: grid; grid-template-columns: 1fr; row-gap: 10px; }
+  .lane-head, .cell { display: none; }
+  .flow .row { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 4px 10px; align-items: start; }
+  .flow .row .card { grid-column: 2; }
+  .flow .row .money-cell { grid-column: 2; padding-top: 0; }
+  .num { padding-top: 10px; }
+  .card .who { display: inline; font-size: 11.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary); }
+  .lane-span-2 { grid-column: 2; }
+}
+
+/* Side paths */
+.paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.path { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.path p { color: var(--muted); font-size: 14.5px; }
+.path .result { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Money journey */
+.journey { display: grid; grid-template-columns: minmax(0, 0.9fr) 32px minmax(0, 1.1fr) 32px minmax(0, 1.3fr); align-items: center; gap: 10px; }
+.stage { border-radius: 14px; padding: 18px; display: grid; gap: 6px; }
+.stage .label { font-size: 12px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.stage .big { font-size: 20px; font-weight: 800; line-height: 1.2; }
+.stage p { font-size: 14px; }
+.stage.start { background: var(--lane); }
+.stage.start .label { color: var(--muted); }
+.stage.hold { background: var(--info-soft); border: 2px solid var(--info); }
+.stage.hold .label { color: var(--info); }
+.stage.hold p, .stage.start p { color: var(--muted); }
+.outcomes { display: grid; gap: 10px; }
+.outcome { border-radius: 12px; padding: 12px 14px; display: grid; gap: 3px; }
+.outcome .t { font-weight: 800; font-size: 15px; }
+.outcome p { font-size: 13.5px; color: var(--muted); }
+.outcome.pro { background: var(--trust-soft); } .outcome.pro .t { color: var(--trust); }
+.outcome.refund { background: var(--warn-soft); } .outcome.refund .t { color: var(--warn); }
+.outcome.split { background: var(--primary-soft); } .outcome.split .t { color: var(--primary); }
+.arrow { color: var(--muted); display: grid; place-items: center; }
+.arrow svg { width: 28px; height: 28px; }
+.dispute-note { border: 1.5px dashed var(--danger); background: var(--danger-soft); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+.dispute-note strong { color: var(--danger); }
+@media (max-width: 820px) {
+  .journey { grid-template-columns: 1fr; }
+  .arrow svg { transform: rotate(90deg); }
+}
+
+/* Fraud table */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 800; background: var(--lane); }
+tr:last-child td { border-bottom: none; }
+td:first-child { font-weight: 700; width: 26%; }
+.status { display: inline-block; font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.status.ok { background: var(--trust-soft); color: var(--trust); }
+.status.part { background: var(--warn-soft); color: var(--warn); }
+.status.no { background: var(--danger-soft); color: var(--danger); }
+.legal { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; max-width: 86ch; }
+.legal p { color: var(--muted); font-size: 14.5px; }
+
+/* Alternatives */
+.options { display: grid; gap: 16px; }
+.option { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 4px 18px; }
+.option.top { border: 2px solid var(--primary); }
+.rank { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; color: var(--primary); grid-row: span 6; }
+.option:not(.top) .rank { color: var(--muted); }
+.option .title-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.option .tag { font-size: 12px; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); }
+.option .tag.now { background: var(--info-soft); color: var(--info); }
+.option .tag.add { background: var(--trust-soft); color: var(--trust); }
+.option .tag.weak { background: var(--danger-soft); color: var(--danger); }
+.option .ex { color: var(--muted); font-size: 14px; }
+.mini { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-block: 8px 4px; }
+.mini span.s { background: var(--lane); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 700; }
+.mini span.s.h { background: var(--info-soft); color: var(--info); }
+.mini span.s.p { background: var(--trust-soft); color: var(--trust); }
+.mini span.s.r { background: var(--warn-soft); color: var(--warn); }
+.mini span.ar { color: var(--muted); font-weight: 800; }
+.pc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 4px; }
+.pc ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; font-size: 14px; }
+.pc .h { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+.pc .plus .h { color: var(--trust); }
+.pc .minus .h { color: var(--danger); }
+.verdict { margin-top: 6px; font-size: 14.5px; background: var(--lane); border-radius: 10px; padding: 10px 12px; }
+.verdict strong { color: var(--primary); }
+@media (max-width: 640px) {
+  .option { grid-template-columns: 1fr; }
+  .rank { grid-row: auto; font-size: 32px; }
+  .pc { grid-template-columns: 1fr; }
+  .answers { grid-template-columns: 1fr; }
+  .paths { grid-template-columns: 1fr; }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  .answers { grid-template-columns: 1fr; }
+}
+
+/* Comparison */
+.dots { letter-spacing: 2px; font-size: 13px; color: var(--primary); white-space: nowrap; }
+.dots .off { color: var(--line); }
+.cmp td:first-child { width: 30%; }
+footer { color: var(--muted); font-size: 13px; display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 18px; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Bitirme projesi · Ödeme ve güvence</span>
+  <h1>BiTadilat'ta para nereden gelir, nerede bekler, ustaya ne zaman geçer?</h1>
+  <p class="lede">Bu sayfa, uygulamanın bugün kullandığı ödeme yolunu adım adım gösterir, dolandırıcılığa karşı hangi önlemlerin olduğunu sıralar ve aynı işi yapabilecek diğer ödeme modellerini BiTadilat için uygunluk sırasına göre karşılaştırır. Örnek tutar: Kaya Tesisat'ın ₺2.200'lük teklifi.</p>
+  <div class="answers">
+    <div class="answer">
+      <span class="q">Para ne zaman alınıyor?</span>
+      <span class="a">Müşteri teklifi kabul ettiği anda, iş başlamadan önce.</span>
+      <span class="d">Kart 3D Secure ile doğrulanır ve tutar o an çekilir. Bu bir bloke (provizyon) değil, gerçek tahsilattır.</span>
+    </div>
+    <div class="answer">
+      <span class="q">Para nerede bekliyor?</span>
+      <span class="a">BiTadilat'ın Craftgate hesabında, "güvence havuzu" olarak.</span>
+      <span class="d">Para havada değil, platformun ödeme hesabındadır. Sistem bu tutarı kendi defterinde kilitli tutar; ne müşteriye ne ustaya ait sayılır.</span>
+    </div>
+    <div class="answer">
+      <span class="q">Ustaya ne zaman geçiyor?</span>
+      <span class="a">Müşteri işi onaylayınca ya da 48 saat şikayetsiz geçince.</span>
+      <span class="d">%10 komisyon düşülür: ₺2.200'ün ₺1.980'i ustaya, ₺220'si BiTadilat'a. Şikayet açılırsa para donar, kararı admin verir.</span>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Bugünkü sürümde ustaya aktarım yalnızca kayıt olarak yapılıyor.</strong>
+    <span>Tahsilat ve iadeler gerçek Craftgate sandbox'ında çalışıyor. Ustanın banka hesabına gerçek para gönderimi henüz yok; yayına çıkmadan önce aşağıdaki Seçenek 1 ile tamamlanması öneriliyor.</span>
+  </div>
+</header>
+
+<section aria-labelledby="flow-title">
+  <div class="section-head">
+    <span class="eyebrow">Ana akış</span>
+    <h2 id="flow-title">Talepten ustanın ödemesine 10 adım</h2>
+    <p>Sütunlar işi kimin yaptığını, son sütun o adımda paranın nerede olduğunu gösterir.</p>
+  </div>
+  <div class="flow-scroll">
+    <div class="flow" role="list">
+      <div class="row" aria-hidden="true">
+        <div></div>
+        <div class="lane-head">Müşteri</div>
+        <div class="lane-head">BiTadilat sunucusu</div>
+        <div class="lane-head">Craftgate ve banka</div>
+        <div class="lane-head">Usta</div>
+        <div class="lane-head money">Para nerede?</div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">1</div>
+        <div class="card"><span class="who">Müşteri</span><h3>Talep açar</h3><p>İşi, ilçeyi ve fotoğrafları yazar. Henüz ödeme yok.</p></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">Müşterinin kartında</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">2</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Usta</span><h3>Teklif verir</h3><p>Yalnızca belgeleri admin tarafından onaylanmış ustalar. Açık adresi değil, sadece ilçeyi görür.</p></div>
+        <div class="money-cell"><span class="chip card-m">Müşterinin kartında</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">3</div>
+        <div class="card lane-span-2"><span class="who">Müşteri → BiTadilat</span><h3>Teklifi seçer, kartını girer</h3><p>Tutarı uygulama göndermez; sunucu, kabul edilen tekliften kendisi hesaplar (₺2.200).</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">Müşterinin kartında</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">4</div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Craftgate ve banka</span><h3>3D Secure doğrulaması</h3><p>Banka, kart sahibini telefona gelen kodla doğrular.</p></div>
+        <div class="cell"></div>
+        <div class="money-cell"><span class="chip card-m">Müşterinin kartında</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">5</div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="card key"><span class="who">Craftgate ve banka</span><h3>Kart tahsil edilir</h3><p>Gerçek çekim. ₺2.200, BiTadilat'ın Craftgate üye işyeri hesabına geçer.</p></div>
+        <div class="cell"></div>
+        <div class="money-cell"><span class="chip held">Güvence havuzunda</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">6</div>
+        <div class="cell"></div>
+        <div class="card key"><span class="who">BiTadilat</span><h3>Sonucu doğrular, işi açar</h3><p>Bankadan dönen mesaja tek başına güvenmez, Craftgate'e ayrıca sorar. Sonra tek işlemde: teklif kabul, diğer teklifler kapanır, iş açılır, defterde <span class="mono">LOCKED</span>.</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip held">Güvence havuzunda</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">7</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Usta</span><h3>Gelir, işi yapar, "bitirdim" der</h3><p>Adres ancak ödemeden sonra ustaya açılır. Bu süre boyunca para ustaya geçmez.</p></div>
+        <div class="money-cell"><span class="chip held">Güvence havuzunda</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">8</div>
+        <div class="card key"><span class="who">Müşteri</span><h3>İşi onaylar</h3><p>Onaylamaz ve şikayet de açmazsa, 48 saat sonra sistem otomatik onaylar (24. saatte hatırlatma gider).</p></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip held">Güvence havuzunda</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">9</div>
+        <div class="cell"></div>
+        <div class="card"><span class="who">BiTadilat</span><h3>Ustaya aktarımı yapar</h3><p>Önce Craftgate'e bu ödemede iade olmuş mu diye sorar. Yoksa defterde <span class="mono">RELEASED_TO_PRO</span>: ₺1.980 usta, ₺220 komisyon.</p></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="money-cell"><span class="chip pro">Ustaya ayrıldı</span></div>
+      </div>
+
+      <div class="row" role="listitem">
+        <div class="num">10</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="card"><span class="who">Usta</span><h3>Parayı hesabına alır</h3><p>Bugün: yalnızca kayıt. Yayında: IBAN'a gönderim ya da ödeme kuruluşunun otomatik aktarımı.</p></div>
+        <div class="money-cell"><span class="chip plan">Ustanın hesabı (planlanan)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="paths-title">
+  <div class="section-head">
+    <span class="eyebrow">Yan yollar</span>
+    <h2 id="paths-title">İş planlandığı gibi gitmezse</h2>
+  </div>
+  <div class="paths">
+    <div class="path">
+      <h3>Müşteri iptal eder (usta işe başlamadan)</h3>
+      <p>Randevu bekleniyorken, planlanmışken ya da usta adrese ulaştığında iptal edilebilir. Gerekçe istenir.</p>
+      <div class="result"><span class="chip refund">₺2.200 kartına tam iade</span><span class="chip card-m">Talep kapanır</span></div>
+    </div>
+    <div class="path">
+      <h3>Usta iptal eder (işe başlamadan)</h3>
+      <p>Usta için iptal kaydı tutulur; talep başka ustalara yeniden açılır.</p>
+      <div class="result"><span class="chip refund">₺2.200 kartına tam iade</span><span class="chip card-m">Talep yeniden açılır</span></div>
+    </div>
+    <div class="path">
+      <h3>İş başladıktan sonra sorun çıkar</h3>
+      <p>Artık iptal yok; müşteri kanıtlı şikayet açar. Para dondurulur (<span class="mono">DISPUTED</span>), otomatik aktarım durur. Admin iki tarafı ve mesajları inceleyip karar verir.</p>
+      <div class="result"><span class="chip refund">Tam iade ₺2.200</span><span class="chip held">%50 / %50: ₺1.100 + ₺1.100</span><span class="chip pro">Ustaya aktar: ₺1.980</span></div>
+    </div>
+    <div class="path">
+      <h3>Teknik aksilikler</h3>
+      <p>Aynı talebe iki ödeme yarışırsa ikincisi otomatik iade edilir. Müşteri banka sayfasını kapatırsa 10 dakika sonra yeniden ödeyebilir. Bir iade yarıda kalırsa sistem Craftgate'e sorup yalnızca eksik kısmı tamamlar, asla iki kez iade etmez.</p>
+      <div class="result"><span class="chip refund">Otomatik iade</span><span class="chip card-m">Çift iade yok</span></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="money-title">
+  <div class="section-head">
+    <span class="eyebrow">Paranın yolculuğu</span>
+    <h2 id="money-title">Para üç yerden birinde olur</h2>
+    <p>Kartta, güvence havuzunda ya da son durağında. Havuzdan çıkış yalnızca aşağıdaki olaylarla olur.</p>
+  </div>
+  <div class="journey">
+    <div class="stage start">
+      <span class="label">1 · Başlangıç</span>
+      <span class="big">Müşterinin kartı</span>
+      <p>Teklif kabul edilip 3D Secure geçilene kadar hiçbir şey çekilmez.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="stage hold">
+      <span class="label">2 · Güvence havuzu <span class="mono">LOCKED</span></span>
+      <span class="big">BiTadilat'ın Craftgate hesabı</span>
+      <p>Para fiziksel olarak platformun ödeme hesabında; sistem onu bu işe ait, kilitli bir tutar olarak defterde tutar.</p>
+    </div>
+    <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="outcomes">
+      <div class="outcome pro"><span class="t">Ustaya aktarılır</span><p>Müşteri onayı · 48 saat şikayetsiz · admin "ustaya aktar" kararı. %10 komisyon yalnızca burada alınır.</p></div>
+      <div class="outcome refund"><span class="t">Müşteriye iade edilir</span><p>İş başlamadan iptal · admin "tam iade" kararı · ödeme yarışı.</p></div>
+      <div class="outcome split"><span class="t">%50 / %50 bölüşülür</span><p>Yalnızca admin kararıyla, şikayetli işlerde. Komisyon alınmaz.</p></div>
+    </div>
+  </div>
+  <div class="dispute-note"><strong>Şikayet açıldığında</strong> para havuzda donar (<span class="mono">DISPUTED</span>). 48 saatlik otomatik aktarım çalışmaz; çıkış yalnızca admin kararıyla olur.</div>
+</section>
+
+<section aria-labelledby="fraud-title">
+  <div class="section-head">
+    <span class="eyebrow">Dolandırıcılığa karşı</span>
+    <h2 id="fraud-title">Hangi riske karşı ne yapıyoruz?</h2>
+    <p>"Var" kodda olan ve testle doğrulanan önlemleri, "Kısmen" yayından önce tamamlanması gerekenleri, "Yok" henüz eklenmemiş olanları gösterir.</p>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Risk</th><th>Önlem</th><th>Durum</th></tr></thead>
+      <tbody>
+        <tr><td>Çalıntı kartla ödeme</td><td>Her ödemede 3D Secure. Kart sahibini banka doğrular; itiraz (chargeback) sorumluluğu büyük ölçüde bankaya geçer.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Tutarla oynanması</td><td>Uygulama tutar göndermez. Sunucu tutarı kabul edilen tekliften hesaplar; teklif süresi ve durumu ödeme anında yeniden kontrol edilir.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Sahte "ödeme başarılı" mesajı</td><td>Bankadan dönen sonuç Craftgate API'sinden ayrıca sorgulanır. Dönüş mesajının imza kontrolü için Craftgate anahtarı gerekiyor; prod ayarında zorunlu, henüz tanımlanmadı.</td><td><span class="status part">Kısmen</span></td></tr>
+        <tr><td>Çift tıklama, çift ödeme</td><td>Talep başına aynı anda tek açık ödeme (veritabanı kısıtı) ve her denemeye tekil anahtar.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Sahte usta</td><td>Kimlik ve ustalık belgesi yüklenir, admin onaylamadan teklif veremez. Şikayet sonrası uyarı ve hesap askıya alma.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Usta parayı alıp işi yapmaz</td><td>Para iş bitip müşteri onaylayana (ya da 48 saat dolana) kadar ustaya geçmez; şikayette donar.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Müşteri iş bitince ödemekten kaçar</td><td>Para işten önce tahsil edilmiştir. Müşteri onay vermezse 48 saat sonra otomatik aktarım yapılır.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Platform dışında anlaşma</td><td>Ustalar ödeme yapılana kadar açık adresi ve iletişim bilgisini görmez; yalnızca ilçe ve mahalle görünür.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Çift iade, yanlış aktarım</td><td>Her iade ve aktarımdan önce Craftgate'e "bu ödemede ne kadar iade edildi" diye sorulur. Gerçek sandbox ödemeleriyle denendi.</td><td><span class="status ok">Var</span></td></tr>
+        <tr><td>Kart bilgisinin sızması</td><td>Kart bilgisi saklanmaz, ama bugün sunucumuzdan geçerek Craftgate'e iletilir. Yayından önce Craftgate'in ödeme formuna ya da kart saklama (token) yapısına geçilmesi önerilir; böylece kart verisi hiç sunucumuza uğramaz (PCI DSS yükü küçülür).</td><td><span class="status part">Kısmen</span></td></tr>
+        <tr><td>Şüpheli kalıplar (aynı kartla çok deneme, olağan dışı tutar)</td><td>Uygulamada kural yok. Craftgate'in dolandırıcılık kuralları panelden açılabilir; deneme sayısı sınırı eklenebilir.</td><td><span class="status no">Yok</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="legal">
+    <h3>Hukuki not</h3>
+    <p>Türkiye'de başkası adına para toplayıp tutmak ve aktarmak, 6493 sayılı Ödeme Hizmetleri Kanunu kapsamında lisans gerektirebilen bir faaliyettir. Bu yüzden büyük pazaryerleri parayı kendi hesaplarında değil, lisanslı bir ödeme kuruluşunun pazaryeri (alt üye işyeri) yapısında bekletir. Bu not hukuki görüş değildir; yayın öncesi bir hukukçuyla teyit edilmelidir. Aşağıdaki sıralamada Seçenek 1'in öne çıkmasının ana nedeni budur.</p>
+  </div>
+</section>
+
+<section aria-labelledby="alt-title">
+  <div class="section-head">
+    <span class="eyebrow">Alternatif modeller</span>
+    <h2 id="alt-title">BiTadilat için uygunluk sırasıyla 6 ödeme modeli</h2>
+    <p>Sıralama ölçütleri: müşteriyi ve ustayı birlikte koruması, hukuki yük, otomasyon ve bugünkü koda yakınlık. Şirket örnekleri modeli tanımak içindir; güncel koşulları değişebilir.</p>
+  </div>
+
+  <div class="options">
+    <article class="option top">
+      <div class="rank">1</div>
+      <div class="title-line"><h3>Lisanslı ödeme kuruluşunda emanet (pazaryeri modeli)</h3><span class="tag">Önerilen hedef</span></div>
+      <p class="ex">Tanıdık örnek: n11, Trendyol, Hepsiburada gibi pazaryerleri. Para ödeme kuruluşunda bekler, ürün teslim edilip onaylanınca satıcıya geçer.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Müşterinin kartı</span><span class="ar">→</span><span class="s h">Craftgate'te bekler (alt üye işyeri)</span><span class="ar">→</span><span class="s">İş onayı</span><span class="ar">→</span><span class="s p">Ustanın IBAN'ı, komisyon otomatik ayrılır</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>Müşterinin gördüğü akış bugünküyle aynı kalır.</li><li>Para platformun hesabında durmaz; lisans yükü ödeme kuruluşundadır.</li><li>Ustaya ödeme ve komisyon ayrımı otomatik olur.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Her usta alt üye işyeri olarak kaydolmalı (kimlik/vergi no, IBAN).</li><li>Orta boy entegrasyon işi; sağlayıcıyla sözleşme gerekir.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> bugünkü modelin doğal devamı. Kodda değişen yer ödemenin başlatılması ve aktarım adımı; iade, şikayet ve 48 saat kuralları aynen kalır.</p>
+    </article>
+
+    <article class="option top">
+      <div class="rank">2</div>
+      <div class="title-line"><h3>Platform tahsil eder, emaneti kendi defterinde tutar</h3><span class="tag now">Bugünkü model</span></div>
+      <p class="ex">Bu sayfanın yukarıda anlattığı akış. Para platformun ödeme hesabına girer, sistem onu iş bitene kadar kilitli tutar.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Müşterinin kartı</span><span class="ar">→</span><span class="s h">BiTadilat hesabı (defterde kilitli)</span><span class="ar">→</span><span class="s">İş onayı / 48 saat</span><span class="ar">→</span><span class="s p">Ustaya EFT</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>Yazıldı, test edildi, sandbox'ta gerçek ödemelerle çalışıyor.</li><li>Ustanın ek kayıt yapması gerekmez.</li><li>Jüri demosu için tam yeterli.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Başkasının parası platform hesabında bekler: hukuki ve vergisel yük.</li><li>Ustaya ödeme elle (EFT) yapılmalı; büyüdükçe zorlaşır.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> teslim ve demo için kalsın; gerçek kullanıcıya açılmadan önce 1'e geçilsin.</p>
+    </article>
+
+    <article class="option top">
+      <div class="rank">3</div>
+      <div class="title-line"><h3>Aşamalı (milestone) emanet</h3><span class="tag add">1 ya da 2'nin üstüne eklenti</span></div>
+      <p class="ex">Tanıdık örnek: serbest çalışma platformlarındaki sabit fiyatlı işler (ör. Upwork). İş aşamalara bölünür; her aşamanın parası önceden yatırılır, onaylanınca serbest bırakılır.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Aşama 1 ödenir</span><span class="ar">→</span><span class="s h">Emanette</span><span class="ar">→</span><span class="s p">Onay: ustaya</span><span class="ar">→</span><span class="s">Aşama 2 ödenir …</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>Büyük tadilatlarda (banyo, mutfak) iki tarafın riski küçülür.</li><li>Usta malzeme parasını işin başında alabilir.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Daha çok adım ve onay; küçük işlerde gereksiz.</li><li>Kısmi iadeler ve şikayetler aşama bazında yönetilmeli.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> sistemde iş aşamaları zaten var; belirli bir tutarın üzerindeki işler için ileride eklenecek iyi bir özellik.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">4</div>
+      <div class="title-line"><h3>Ön provizyon: önce bloke, iş bitince çekim</h3><span class="tag">Kısa işler için seçenek</span></div>
+      <p class="ex">Tanıdık örnek: Uber ve benzeri yolculuk uygulamaları, oteller, araç kiralama. Kartta tutar bloke edilir, hizmet bitince asıl tutar çekilir.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Kartta bloke</span><span class="ar">→</span><span class="s">İş yapılır</span><span class="ar">→</span><span class="s h">Tutar çekilir</span><span class="ar">→</span><span class="s p">Usta</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>İptalde iade gerekmez; bloke kaldırılır.</li><li>Müşterinin kartından iş bitene kadar para çıkmaz.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Bloke süresi bankaya göre sınırlı; ileri tarihli randevuda düşebilir.</li><li>İş bitince çekim reddedilirse usta korumasız kalır.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> aynı gün yapılan acil işlerde düşünülebilir; genel model olarak zayıf.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">5</div>
+      <div class="title-line"><h3>Doğrudan çekim, satıcıya dönemsel ödeme</h3><span class="tag weak">Hizmet için uygun değil</span></div>
+      <p class="ex">Tanıdık örnek: Amazon. Kart sipariş gönderilince çekilir, satıcıya belirli aralıklarla toplu ödenir; anlaşmazlıkları platformun garanti programı çözer.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Kart çekilir</span><span class="ar">→</span><span class="s h">Platform</span><span class="ar">→</span><span class="s p">Satıcıya dönemsel ödeme</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>Basit, yüksek hacimde iyi çalışır.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Müşterinin "iş tamam" onayı yok; hizmette kaliteyi korumaz.</li><li>Sorunlu işte iade platformun cebinden çıkar.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> ürün satışına uygun; ustalık hizmetinde müşteriyi korumaz.</p>
+    </article>
+
+    <article class="option">
+      <div class="rank">6</div>
+      <div class="title-line"><h3>Para platforma hiç uğramaz</h3><span class="tag weak">Güvence vaadiyle çelişir</span></div>
+      <p class="ex">Tanıdık örnek: birçok hizmet ilan sitesi. Müşteri ustaya doğrudan öder; platform ustadan ilan, teklif ya da abonelik ücreti alır.</p>
+      <div class="mini" aria-label="Akış"><span class="s">Müşteri</span><span class="ar">→</span><span class="s p">Ustaya nakit / EFT</span><span class="ar">·</span><span class="s r">Platform: ustadan ücret</span></div>
+      <div class="pc">
+        <div class="plus"><span class="h">Artıları</span><ul><li>Ödeme altyapısı ve lisans yükü yok.</li></ul></div>
+        <div class="minus"><span class="h">Eksileri</span><ul><li>Hiç güvence yok; dolandırıcılık riski tamamen kullanıcıda.</li><li>Komisyon tahsili zor, platform dışı anlaşma kolay.</li></ul></div>
+      </div>
+      <p class="verdict"><strong>BiTadilat için:</strong> uygulamanın ana farkı olan güvence havuzunu ortadan kaldırır.</p>
+    </article>
+  </div>
+</section>
+
+<section aria-labelledby="cmp-title">
+  <div class="section-head">
+    <span class="eyebrow">Yan yana</span>
+    <h2 id="cmp-title">Hızlı karşılaştırma</h2>
+    <p>Beş üzerinden; dolu nokta daha iyi demektir. Kurulum kolaylığı bugünkü koda göre değerlendirildi.</p>
+  </div>
+  <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th>Model</th><th>Müşteri güvencesi</th><th>Usta güvencesi</th><th>Hukuki rahatlık</th><th>Kurulum kolaylığı</th><th>Para nerede bekler?</th></tr></thead>
+      <tbody>
+        <tr><td>1 · Ödeme kuruluşunda emanet</td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="3/5">●●●<span class="off">●●</span></span></td><td>Ödeme kuruluşunda</td></tr>
+        <tr><td>2 · Platform defterinde emanet (bugün)</td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2/5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td>Platformun hesabında</td></tr>
+        <tr><td>3 · Aşamalı emanet</td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2/5">●●<span class="off">●●●</span></span></td><td>Aşama aşama emanette</td></tr>
+        <tr><td>4 · Ön provizyon</td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="2/5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="3/5">●●●<span class="off">●●</span></span></td><td>Müşterinin kartında (bloke)</td></tr>
+        <tr><td>5 · Doğrudan çekim</td><td><span class="dots" aria-label="2/5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td><span class="dots" aria-label="3/5">●●●<span class="off">●●</span></span></td><td><span class="dots" aria-label="4/5">●●●●<span class="off">●</span></span></td><td>Platformda, kısa süre</td></tr>
+        <tr><td>6 · Para platforma uğramaz</td><td><span class="dots" aria-label="1/5">●<span class="off">●●●●</span></span></td><td><span class="dots" aria-label="2/5">●●<span class="off">●●●</span></span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td><span class="dots" aria-label="5/5">●●●●●</span></td><td>Hiç beklemez</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <span>Kaynak: BiTadilat kodu (<span class="mono">feature/flutter-app</span>), <span class="mono">docs/spec/STATE_MACHINES.md</span> ve Kasım 2026'daki Craftgate sandbox testleri (örnek ödeme numaraları 3275432, 3281697).</span>
+  <span>Tutarlar örnektir; komisyon oranı %10. Sandbox'ta gerçek para hareket etmez.</span>
+</footer>
+
+</div>
+
+</body>
+</html>
