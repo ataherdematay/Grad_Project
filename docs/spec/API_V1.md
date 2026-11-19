@@ -17,7 +17,7 @@ Mobil ve admin istemcilerinin konuşacağı uç noktalar. Uygulandıkça springd
 | 401 | `UNAUTHENTICATED`, `TOKEN_EXPIRED`, `BAD_CREDENTIALS`, `ACCOUNT_SUSPENDED` |
 | 403 | `FORBIDDEN`, `PRO_NOT_APPROVED` |
 | 404 | `NOT_FOUND` (yetkisiz kayıtlar için de 404; varlık sızdırılmaz) |
-| 409 | `ILLEGAL_STATE`, `DUPLICATE_ATTEMPT`, `PAYMENT_IN_PROGRESS`, `OFFER_EXPIRED`, `ALREADY_OFFERED`, `EMAIL_TAKEN`, `PHONE_TAKEN` |
+| 409 | `ILLEGAL_STATE`, `DUPLICATE_ATTEMPT`, `PAYMENT_IN_PROGRESS`, `OFFER_EXPIRED`, `ALREADY_OFFERED`, `EMAIL_TAKEN`, `PHONE_TAKEN`, `ESCROW_DISPUTED` |
 | 402 | `PAYMENT_DECLINED` (+ `ref`) |
 | 429 | `TOO_MANY_ATTEMPTS` |
 | 502 | `GATEWAY_ERROR` |
@@ -809,15 +809,16 @@ Binding for backend, the mobile app and the admin web app. Earlier contracts sti
 #### Admin: payments in review
 
 `GET /admin/payments/review` returns `{items: [PaymentReviewItem]}`, oldest first, at most 500. No gateway call.
-- Rows: escrow `LOCKED` or `DISPUTED` with `errorCode` `REFUND_NEEDS_REVIEW` or `PAYOUT_NEEDS_REVIEW`.
+- Rows: escrow `LOCKED` or `DISPUTED` with `errorCode` `REFUND_NEEDS_REVIEW` or `PAYOUT_NEEDS_REVIEW`. A `DISPUTED` row is listed for visibility only: its money moves only through the complaint decision (STATE_MACHINES §5-6); the admin app shows no resolve action for it.
 - `PaymentReviewItem` = `{ref, jobId, jobPublicCode, jobStatus, status, errorCode, pendingAction, totalAmount, refundedAmount, customerName, proBusinessName, attempts, lastAttemptAt, createdAt}`. `jobId` and `jobStatus` are null for a payment that never opened a job (race refund).
 
 `GET /admin/payments/{ref}/review` asks Craftgate (read only) and returns `PaymentReviewCheck` = `{payment: PaymentReviewItem, gatewayRefundState, gatewayRefundedTotal, allowedResolutions}`.
 - `gatewayRefundState`: `NOT_REFUNDED`, `PARTIALLY_REFUNDED`, `REFUND_PENDING` or `FULLY_REFUNDED`.
-- `allowedResolutions` is computed from the Craftgate answer (STATE_MACHINES §6 "Elle inceleme çözümü"): `MARK_REFUNDED` only when fully refunded; `RETRY_REFUND` when nothing or less than the total is refunded (sends only the remainder); `RELEASE` only for a completed job's pending payout with no refund at all. Empty when a refund is pending or the state is inconsistent.
+- `allowedResolutions` is computed from the Craftgate answer (STATE_MACHINES §6 "Elle inceleme çözümü"): `MARK_REFUNDED` only when fully refunded; `RETRY_REFUND` when nothing or less than the total is refunded (sends only the remainder); `RELEASE` only for a completed job's pending payout with no refund at all. Empty when a refund is pending or the state is inconsistent, and always empty for a `DISPUTED` escrow.
 - Not in review → 404. Craftgate not answering → 502 `GATEWAY_ERROR`.
 
 `POST /admin/payments/{ref}/resolve` with `{resolution, note (10-1000)}` returns `PaymentReviewCheck` (with the new state and `allowedResolutions` empty).
+- A `DISPUTED` escrow → 409 `ESCROW_DISPUTED` before any Craftgate call; nothing changes (no audit row, no notification).
 - The server locks the row and asks Craftgate again; a resolution that the current answer does not allow → 409 `ILLEGAL_STATE` (nothing changes). Not in review → 409. Unknown `resolution` → 400 (`resolution`); bad note → 400 (`note`).
 - Craftgate error → 502, nothing changes (no audit row, no notification). A retry after a refund that reached Craftgate but timed out sees `FULLY_REFUNDED` and only `MARK_REFUNDED` is allowed.
 - Writes `admin_actions` (`RESOLVE_PAYMENT_REVIEW`, target type `PAYMENT`, target id = ref, note = `"<RESOLUTION>: <note>"`) in the same transaction.
@@ -833,8 +834,9 @@ Binding for backend, the mobile app and the admin web app. Earlier contracts sti
 #### Account
 
 - `DELETE /me` accepts an optional JSON body `{reason}`. `reason` is one of `NO_LONGER_NEEDED`, `FOUND_ALTERNATIVE`, `PRIVACY`, `BAD_EXPERIENCE`, `OTHER`, or omitted. An unknown value → 400 (`reason`) and the account is not deleted. The reason is stored only for analytics in `account_deletion_feedback` (reason, whether the user had a pro profile, day); no user id and no free text.
-- `POST /me/email` `{newEmail, password}` → 202. Wrong password → 400 (`password`); same as the current address → 400 (`newEmail`); address in use → 409 `EMAIL_TAKEN` (`newEmail`); more than 5 codes per hour → 429 `TOO_MANY_ATTEMPTS`. A 6-digit code is e-mailed to the new address (`EmailSender`), valid 15 minutes, 5 wrong tries.
-- `POST /me/email/confirm` `{code}` → 200 `Me` with the new e-mail. Invalid, expired, used or locked code → 400 (`code`). The old address gets an information e-mail. The e-mail never changes without the code.
+- `POST /me/email` `{newEmail, password}` → 202. Wrong password → 400 (`password`); same as the current address → 400 (`newEmail`); address in use → 409 `EMAIL_TAKEN` (`newEmail`); more than 5 codes per hour → 429 `TOO_MANY_ATTEMPTS`; 5 wrong passwords within 15 minutes → 429 `TOO_MANY_ATTEMPTS` for this endpoint (even with the right password) until the oldest wrong try is 15 minutes old; the right password resets the counter. A 6-digit code is e-mailed to the new address (`EmailSender`), valid 15 minutes, 5 wrong tries.
+- `POST /me/email/confirm` `{code}` → 200 `Me` with the new e-mail. Invalid, expired, used or locked code → 400 (`code`). The address taken by another account meanwhile (also in a race with a concurrent confirm or registration) → 409 `EMAIL_TAKEN` (`newEmail`); the e-mail does not change. The old address gets an information e-mail. The e-mail never changes without the code.
+- `POST /me/password` `{currentPassword, newPassword}` → 204. Wrong current password → 400 (`currentPassword`); 5 wrong current passwords within 15 minutes → 429 `TOO_MANY_ATTEMPTS` (same rule as `/me/email`, separate counter).
 - Phone stays read-only: there is no SMS provider, so a phone change cannot be verified and is not offered.
 
 #### Pro reviews filter

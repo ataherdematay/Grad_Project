@@ -180,7 +180,7 @@ Eklenenler:
 | İade yok, iptal/öksüz kayıt (`REFUND`) | `RETRY_REFUND` | Tam iade |
 | İade yok, tamamlanmış işin aktarımı (`RELEASE`, `LOCKED`) | `RELEASE` | `RELEASED_TO_PRO` (PAYOUT + COMMISSION) |
 
-`LOCKED | DISPUTED → REFUNDED_TO_CUSTOMER` ve `LOCKED → RELEASED_TO_PRO` geçişleri yeni değildir; çözüm `pending_action`'ı ve inceleme kodunu temizler. Not zorunludur (10-1000), aynı işlemde `admin_actions` satırı (`RESOLVE_PAYMENT_REVIEW`, hedef `PAYMENT`) yazılır. Craftgate hatası veya tutarsızlık her şeyi geri alır. Tam iade edilmiş ama iş `COMPLETED` olan kayıtta iş durumu değişmez (para gerçeği esastır; usta ödeme almaz).
+`DISPUTED` emanet bu ekranda listelenir ama buradan çözülmez: parası yalnızca şikayet kararıyla (§5-6) hareket eder. Kontrol izin verilen çözüm döndürmez, çözüm isteği 409 `ESCROW_DISPUTED` alır ve hiçbir şey değişmez. `LOCKED → REFUNDED_TO_CUSTOMER` ve `LOCKED → RELEASED_TO_PRO` geçişleri yeni değildir; çözüm `pending_action`'ı ve inceleme kodunu temizler. Not zorunludur (10-1000), aynı işlemde `admin_actions` satırı (`RESOLVE_PAYMENT_REVIEW`, hedef `PAYMENT`) yazılır. Craftgate hatası veya tutarsızlık her şeyi geri alır. Tam iade edilmiş ama iş `COMPLETED` olan kayıtta iş durumu değişmez (para gerçeği esastır; usta ödeme almaz).
 
 ## 7. Eski adlarla eşleme
 

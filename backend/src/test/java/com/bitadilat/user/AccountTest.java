@@ -248,6 +248,119 @@ class AccountTest extends ApiTestBase {
         assertThat(body(call(HttpMethod.GET, ME, a.access(), null)).get("email").asString()).isEqualTo(a.email());
     }
 
+    // ─── Hatalı şifre sınırı (/me/email, /me/password) ─────────────────────
+
+    private void ageWrongPasswordAttempts(Account a, String scope) {
+        jdbc.update("update login_attempts set created_at = created_at - interval '16 minutes' "
+                + "where identifier_hash = ?", com.bitadilat.common.Hashing.sha256Hex("me-" + scope + ":" + a.id()));
+    }
+
+    @Test
+    void emailChangeLocksForFifteenMinutesAfterFiveWrongPasswords() throws Exception {
+        Account a = register();
+        String newEmail = uniqueEmail();
+        for (int i = 0; i < 5; i++) {
+            call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", "Yanlis1234"))
+                    .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("password"));
+        }
+        // Doğru şifre de artık 429; kod gönderilmez.
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isTooManyRequests()).andExpect(jsonPath("$.code").value("TOO_MANY_ATTEMPTS"));
+        assertThat(emails.sentTo(newEmail)).isZero();
+        // Sayaç uç nokta başına: şifre değişikliği etkilenmez.
+        call(HttpMethod.POST, ME + "/password", a.access(),
+                Map.of("currentPassword", "Yanlis1234", "newPassword", "YeniParola9"))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.field").value("currentPassword"));
+
+        ageWrongPasswordAttempts(a, "EMAIL_CHANGE");
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void correctPasswordResetsTheWrongPasswordCounter() throws Exception {
+        Account a = register();
+        for (int i = 0; i < 4; i++) {
+            call(HttpMethod.POST, ME + "/email", a.access(),
+                    Map.of("newEmail", uniqueEmail(), "password", "Yanlis1234")).andExpect(status().isBadRequest());
+        }
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", uniqueEmail(), "password", PASSWORD))
+                .andExpect(status().isAccepted());
+        for (int i = 0; i < 5; i++) {
+            call(HttpMethod.POST, ME + "/email", a.access(),
+                    Map.of("newEmail", uniqueEmail(), "password", "Yanlis1234")).andExpect(status().isBadRequest());
+        }
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", uniqueEmail(), "password", PASSWORD))
+                .andExpect(status().isTooManyRequests());
+    }
+
+    @Test
+    void passwordChangeLocksForFifteenMinutesAfterFiveWrongPasswords() throws Exception {
+        Account a = register();
+        for (int i = 0; i < 5; i++) {
+            call(HttpMethod.POST, ME + "/password", a.access(),
+                    Map.of("currentPassword", "Yanlis1234", "newPassword", "YeniParola9"))
+                    .andExpect(status().isBadRequest());
+        }
+        call(HttpMethod.POST, ME + "/password", a.access(),
+                Map.of("currentPassword", PASSWORD, "newPassword", "YeniParola9"))
+                .andExpect(status().isTooManyRequests()).andExpect(jsonPath("$.code").value("TOO_MANY_ATTEMPTS"));
+        call(HttpMethod.POST, "/api/v1/auth/login", null, Map.of("identifier", a.email(), "password", PASSWORD))
+                .andExpect(status().isOk());
+
+        ageWrongPasswordAttempts(a, "PASSWORD_CHANGE");
+        call(HttpMethod.POST, ME + "/password", a.access(),
+                Map.of("currentPassword", PASSWORD, "newPassword", "YeniParola9"))
+                .andExpect(status().isNoContent());
+    }
+
+    // ─── E-posta değişikliği yarışı ─────────────────────────────────────────
+
+    @Test
+    void emailTakenBetweenRecheckAndSaveIsConflictNotServerError() throws Exception {
+        Account a = register();
+        Account b = register();
+        String newEmail = uniqueEmail();
+        call(HttpMethod.POST, ME + "/email", a.access(), Map.of("newEmail", newEmail, "password", PASSWORD))
+                .andExpect(status().isAccepted());
+        String code = emails.changeCodeFor(newEmail);
+
+        javax.sql.DataSource ds = jdbc.getDataSource();
+        java.util.concurrent.ExecutorService pool = java.util.concurrent.Executors.newSingleThreadExecutor();
+        try (java.sql.Connection other = ds.getConnection()) {
+            // B'nin işlemi adresi alır ama henüz kesinleştirmez: A'nın yeniden denetimi onu görmez, kaydı benzersizlik
+            // dizininde bekler; B kesinleşince A'nın kaydı benzersizlik ihlaliyle düşer.
+            other.setAutoCommit(false);
+            try (java.sql.PreparedStatement st = other.prepareStatement("update users set email = ? where id = ?::uuid")) {
+                st.setString(1, newEmail);
+                st.setString(2, b.id());
+                st.executeUpdate();
+            }
+            java.util.concurrent.Future<org.springframework.test.web.servlet.ResultActions> confirm = pool.submit(
+                    () -> call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", code)));
+            long deadline = System.currentTimeMillis() + 15_000;
+            while (System.currentTimeMillis() < deadline) {
+                Integer waiting = jdbc.queryForObject("select count(*) from pg_stat_activity "
+                        + "where datname = current_database() and wait_event_type = 'Lock'", Integer.class);
+                if (waiting != null && waiting > 0) {
+                    break;
+                }
+                Thread.sleep(20);
+            }
+            other.commit();
+            confirm.get(30, java.util.concurrent.TimeUnit.SECONDS)
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.code").value("EMAIL_TAKEN"))
+                    .andExpect(jsonPath("$.field").value("newEmail"));
+        } finally {
+            pool.shutdownNow();
+        }
+        assertThat(body(call(HttpMethod.GET, ME, a.access(), null)).get("email").asString()).isEqualTo(a.email());
+        // İşlem geri alındı; aynı kod yeniden denenince yine 409 (yeniden denetim yakalar), 500 değil.
+        call(HttpMethod.POST, ME + "/email/confirm", a.access(), Map.of("code", code))
+                .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("EMAIL_TAKEN"));
+    }
+
     // ─── Adresler ───────────────────────────────────────────────────────────
 
     private Map<String, Object> addressBody(String label, String line) {

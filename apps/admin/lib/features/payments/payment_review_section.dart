@@ -200,21 +200,31 @@ class _PaymentReviewSectionState extends ConsumerState<PaymentReviewSection> {
                                   ),
                                 ],
                               ),
-                              FilledButton.icon(
-                                onPressed: _checking == null
-                                    ? () => _resolve(item)
-                                    : null,
-                                icon: _checking == item.ref
-                                    ? const SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : const Icon(Icons.fact_check_outlined),
-                                label: Text(l.reviewCheck),
-                              ),
+                              // İtirazlı emanetin parası yalnızca şikayet
+                              // kararıyla hareket eder (STATE_MACHINES §5-6);
+                              // sunucu da 409 ESCROW_DISPUTED döner.
+                              if (item.status == 'DISPUTED')
+                                Text(
+                                  l.reviewDisputedNote,
+                                  key: Key('review-disputed-${item.ref}'),
+                                  style: AppTypography.bodySecondary,
+                                )
+                              else
+                                FilledButton.icon(
+                                  onPressed: _checking == null
+                                      ? () => _resolve(item)
+                                      : null,
+                                  icon: _checking == item.ref
+                                      ? const SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Icon(Icons.fact_check_outlined),
+                                  label: Text(l.reviewCheck),
+                                ),
                             ],
                           ),
                         ),

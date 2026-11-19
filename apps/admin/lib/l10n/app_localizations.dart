@@ -230,6 +230,12 @@ abstract class AppLocalizations {
   /// **'Çok fazla deneme yaptın. Birkaç dakika bekleyip tekrar dene.'**
   String get apiErrorTooManyAttempts;
 
+  /// No description provided for @apiErrorEscrowDisputed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu ödemede açık şikayet var; para yalnızca şikayet kararıyla hareket eder.'**
+  String get apiErrorEscrowDisputed;
+
   /// No description provided for @apiErrorGatewayError.
   ///
   /// In tr, this message translates to:
@@ -1681,6 +1687,12 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Aktarım incelemede'**
   String get reviewCodePayout;
+
+  /// No description provided for @reviewDisputedNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet açık: yalnızca şikayet kararıyla çözülür.'**
+  String get reviewDisputedNote;
 
   /// No description provided for @reviewAttempts.
   ///

@@ -83,6 +83,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many attempts. Wait a few minutes and try again.';
 
   @override
+  String get apiErrorEscrowDisputed =>
+      'This payment has an open complaint; its money moves only through the complaint decision.';
+
+  @override
   String get apiErrorGatewayError =>
       'The payment system is unreachable right now. Try again in a few minutes.';
 
@@ -865,6 +869,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewCodePayout => 'Payout in review';
+
+  @override
+  String get reviewDisputedNote =>
+      'Open complaint: resolved only through the complaint decision.';
 
   @override
   String reviewAttempts(int count) {

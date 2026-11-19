@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,29 +36,29 @@ public class EmailChangeService {
     static final Duration CODE_WINDOW = Duration.ofHours(1);
 
     private final UserRepository users;
-    private final PasswordEncoder encoder;
+    private final PasswordCheckLimiter passwordCheck;
     private final EmailSender emailSender;
     private final JdbcTemplate jdbc;
     private final AccountService accounts;
     private final RefreshTokenRepository refreshTokens;
     private final SecureRandom random = new SecureRandom();
 
-    public EmailChangeService(UserRepository users, PasswordEncoder encoder, EmailSender emailSender,
+    public EmailChangeService(UserRepository users, PasswordCheckLimiter passwordCheck, EmailSender emailSender,
                               JdbcTemplate jdbc, AccountService accounts, RefreshTokenRepository refreshTokens) {
         this.refreshTokens = refreshTokens;
         this.users = users;
-        this.encoder = encoder;
+        this.passwordCheck = passwordCheck;
         this.emailSender = emailSender;
         this.jdbc = jdbc;
         this.accounts = accounts;
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = ApiException.class)
     public void request(UUID userId, String rawEmail, String password) {
         User user = users.findById(userId).orElseThrow(() -> ApiException.unauthenticated("Kullanıcı bulunamadı."));
-        if (!encoder.matches(password, user.getPasswordHash())) {
-            throw ApiException.validation("password", "Şifre yanlış.");
-        }
+        // Hatalı şifre sınırı: 15 dakikada 5 yanlış → 429 TOO_MANY_ATTEMPTS.
+        passwordCheck.verify(userId, PasswordCheckLimiter.Scope.EMAIL_CHANGE, password, user.getPasswordHash(),
+                "password", "Şifre yanlış.");
         String email = rawEmail.trim();
         if (email.equalsIgnoreCase(user.getEmail())) {
             throw ApiException.validation("newEmail", "Yeni e-posta mevcut adresinle aynı.");
@@ -88,7 +87,7 @@ public class EmailChangeService {
         }
     }
 
-    @Transactional(noRollbackFor = ApiException.class)
+    @Transactional(noRollbackFor = ApiException.class, rollbackFor = EmailTakenRace.class)
     public Me confirm(UUID userId, String code) {
         return confirm(userId, null, code);
     }
@@ -97,7 +96,7 @@ public class EmailChangeService {
      * Kod doğrulanınca e-posta değişir ve diğer cihazlardaki oturumlar kapanır (şifre değişikliğindeki kural); isteği
      * yapan oturumun ailesi ({@code currentFamilyId}, biliniyorsa) açık kalır.
      */
-    @Transactional(noRollbackFor = ApiException.class)
+    @Transactional(noRollbackFor = ApiException.class, rollbackFor = EmailTakenRace.class)
     public Me confirm(UUID userId, UUID currentFamilyId, String code) {
         User user = users.findById(userId).orElseThrow(() -> ApiException.unauthenticated("Kullanıcı bulunamadı."));
         Instant now = Instant.now();
@@ -126,7 +125,9 @@ public class EmailChangeService {
         try {
             users.saveAndFlush(user);
         } catch (DataIntegrityViolationException e) {
-            throw emailTaken();
+            // Yarış: adres yeniden denetimden sonra başka hesaba geçti. Postgres işlemi artık iptal durumda olduğundan
+            // kesinleştirilemez; EmailTakenRace işlemi temiz biçimde geri alır (kod kullanılmamış kalır) ve 409 döner.
+            throw new EmailTakenRace();
         }
         if (currentFamilyId == null) {
             refreshTokens.revokeAllForUser(userId, now);
@@ -150,6 +151,16 @@ public class EmailChangeService {
 
     private static ApiException invalid() {
         return ApiException.validation("code", "Kod geçersiz veya süresi dolmuş.");
+    }
+
+    /**
+     * Benzersizlik kısıtı ihlali: 409 {@code EMAIL_TAKEN}, ama işlem geri alınır ({@code rollbackFor} kuralı
+     * {@code noRollbackFor = ApiException} kuralından daha özeldir).
+     */
+    static final class EmailTakenRace extends ApiException {
+        EmailTakenRace() {
+            super(HttpStatus.CONFLICT, "EMAIL_TAKEN", "Bu e-posta ile kayıtlı bir hesap var.", "newEmail");
+        }
     }
 
     private static ApiException emailTaken() {

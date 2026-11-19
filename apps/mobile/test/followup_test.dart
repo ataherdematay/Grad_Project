@@ -263,6 +263,34 @@ void main() {
     });
   });
 
+  group('Hatalı şifre sınırı', () {
+    testWidgets('e-posta değişikliğinde 429 metni gösterilir', (t) async {
+      await pumpApp(
+        t,
+        session: SessionState.signedIn(testMe()),
+        initial: '/c/profile',
+        handler: routes({
+          ...baseRoutes(),
+          'GET /me': (_) => json(200, meJson()),
+          'POST /me/email': (_) => apiError(429, 'TOO_MANY_ATTEMPTS'),
+        }),
+      );
+      await t.tap(find.text('E-postayı değiştir'));
+      await t.pumpAndSettle();
+      final fields = find.byType(TextFormField);
+      await t.enterText(fields.at(0), 'yeni@example.com');
+      await t.enterText(fields.at(1), 'Parola123');
+      await t.tap(find.text('Kod gönder'));
+      await t.pumpAndSettle();
+      expect(
+        find.text(
+          'Çok fazla deneme yaptın. Birkaç dakika bekleyip tekrar dene.',
+        ),
+        findsOneWidget,
+      );
+    });
+  });
+
   group('Yasal taslaklar', () {
     test('uygulamadaki kopyalar docs/legal ile aynı ve TASLAK işaretli', () {
       for (final doc in kLegalDocs) {

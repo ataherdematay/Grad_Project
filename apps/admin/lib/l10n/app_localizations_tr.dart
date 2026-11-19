@@ -83,6 +83,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Çok fazla deneme yaptın. Birkaç dakika bekleyip tekrar dene.';
 
   @override
+  String get apiErrorEscrowDisputed =>
+      'Bu ödemede açık şikayet var; para yalnızca şikayet kararıyla hareket eder.';
+
+  @override
   String get apiErrorGatewayError =>
       'Ödeme sistemine şu an ulaşılamıyor. Birkaç dakika sonra tekrar dene.';
 
@@ -862,6 +866,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get reviewCodePayout => 'Aktarım incelemede';
+
+  @override
+  String get reviewDisputedNote =>
+      'Şikayet açık: yalnızca şikayet kararıyla çözülür.';
 
   @override
   String reviewAttempts(int count) {

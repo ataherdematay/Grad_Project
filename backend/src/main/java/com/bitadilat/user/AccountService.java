@@ -29,12 +29,15 @@ public class AccountService {
     private final List<AccountDeletionGuard> deletionGuards;
     private final NotificationQueryService notifications;
     private final JdbcTemplate jdbc;
+    private final PasswordCheckLimiter passwordCheck;
 
     public AccountService(UserRepository users, ProProfileRepository proProfiles, AddressRepository addresses,
                           RefreshTokenRepository refreshTokens, PasswordResetCodeRepository resetCodes,
                           PasswordEncoder encoder, List<AccountDeletionGuard> deletionGuards,
-                          NotificationQueryService notifications, JdbcTemplate jdbc) {
+                          NotificationQueryService notifications, JdbcTemplate jdbc,
+                          PasswordCheckLimiter passwordCheck) {
         this.jdbc = jdbc;
+        this.passwordCheck = passwordCheck;
         this.users = users;
         this.proProfiles = proProfiles;
         this.addresses = addresses;
@@ -81,12 +84,12 @@ public class AccountService {
         return toMe(users.save(user));
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = ApiException.class)
     public void changePassword(UUID userId, UUID currentFamilyId, ChangePasswordRequest request) {
         User user = load(userId);
-        if (!encoder.matches(request.currentPassword(), user.getPasswordHash())) {
-            throw ApiException.validation("currentPassword", "Mevcut şifre yanlış.");
-        }
+        // Hatalı şifre sınırı: 15 dakikada 5 yanlış → 429 TOO_MANY_ATTEMPTS (sayaç işlem geri alınsa da kalmalı).
+        passwordCheck.verify(userId, PasswordCheckLimiter.Scope.PASSWORD_CHANGE, request.currentPassword(),
+                user.getPasswordHash(), "currentPassword", "Mevcut şifre yanlış.");
         user.setPasswordHash(encoder.encode(request.newPassword()));
         users.save(user);
         // Diğer cihazlardaki oturumlar kapanır; isteği yapan oturumun ailesi (biliniyorsa) açık kalır.

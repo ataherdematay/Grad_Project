@@ -248,6 +248,28 @@ class AdminPaymentReviewTest extends AdminTestBase {
     }
 
     @Test
+    void disputedEscrowIsNeverResolvedFromTheReviewScreen() throws Exception {
+        // İtirazlı emanetin parası yalnızca şikayet kararıyla hareket eder (STATE_MACHINES §5-6).
+        Account admin = admin();
+        Stuck r = refundReview();
+        jdbc.update("update escrow_payment set status = 'DISPUTED' where ref = ?", r.ref());
+        when(gateway.refundState(anyLong())).thenReturn(RefundState.NOT_REFUNDED);
+        when(gateway.refundedTotal(anyLong())).thenReturn(BigDecimal.ZERO);
+
+        JsonNode check = ok(get(admin, "/admin/payments/" + r.ref() + "/review"));
+        assertThat(check.get("allowedResolutions")).isEmpty();
+        for (String resolution : List.of("RETRY_REFUND", "MARK_REFUNDED", "RELEASE")) {
+            resolve(admin, r.ref(), resolution).andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.code").value("ESCROW_DISPUTED"));
+        }
+        verify(gateway, never()).refundFully(anyLong(), anyString());
+        verify(gateway, never()).refundPartially(anyLong(), any(), anyString());
+        assertThat(escrowRow(r.ref())).isEqualTo("DISPUTED/REFUND/REFUND_NEEDS_REVIEW");
+        assertThat(ledgerRows(r.ref(), "REFUND")).isZero();
+        assertThat(count("select count(*) from admin_actions")).isZero();
+    }
+
+    @Test
     void seedPaymentIsNotResolvedOutsideTheDevProfile() throws Exception {
         Account admin = admin();
         Stuck q = payoutReview("0");

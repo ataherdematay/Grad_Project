@@ -7,12 +7,13 @@ Map<String, dynamic> _item({
   String ref = 'ESC-9',
   String code = 'REFUND_NEEDS_REVIEW',
   String pending = 'REFUND',
+  String status = 'LOCKED',
 }) => {
   'ref': ref,
   'jobId': 'j9',
   'jobPublicCode': 'BD-10009',
   'jobStatus': 'CANCELLED',
-  'status': 'LOCKED',
+  'status': status,
   'errorCode': code,
   'pendingAction': pending,
   'totalAmount': 1200.0,
@@ -136,6 +137,23 @@ void main() {
       expect(find.text('Şu an çözülemez'), findsOneWidget);
       expect(find.textContaining('iade sonucu bekleniyor'), findsOneWidget);
       expect(fake.count('POST', '/admin/payments/ESC-9/resolve'), 0);
+    });
+
+    testWidgets('itirazlı (DISPUTED) ödemede çözüm düğmesi yok', (
+      tester,
+    ) async {
+      final fake = FakeApi()
+        ..onJson('GET', '/admin/payments/review', {
+          'items': [_item(status: 'DISPUTED')],
+        });
+      await pumpAdmin(tester, fake: fake, initial: '/payments');
+      expect(find.text('BD-10009'), findsOneWidget);
+      expect(find.text('Craftgate\'e sor ve çöz'), findsNothing);
+      expect(
+        find.text('Şikayet açık: yalnızca şikayet kararıyla çözülür.'),
+        findsOneWidget,
+      );
+      expect(fake.count('GET', '/admin/payments/ESC-9/review'), 0);
     });
 
     testWidgets('durum değiştiyse (409) liste yenilenir', (tester) async {

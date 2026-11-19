@@ -14,6 +14,7 @@ String apiErrorMessage(AppLocalizations l, ApiErrorCode code) => switch (code) {
   ApiErrorCode.notFound => l.apiErrorNotFound,
   ApiErrorCode.illegalState => l.apiErrorIllegalState,
   ApiErrorCode.tooManyAttempts => l.apiErrorTooManyAttempts,
+  ApiErrorCode.escrowDisputed => l.apiErrorEscrowDisputed,
   ApiErrorCode.gatewayError => l.apiErrorGatewayError,
   ApiErrorCode.internalError => l.apiErrorInternalError,
   ApiErrorCode.networkError => l.apiErrorNetworkError,

@@ -95,7 +95,8 @@ public class AdminPaymentReviewService {
         ReviewItem item = fetch(ref);
         EscrowPayment p = repository.findById(ref).orElseThrow(() -> ApiException.notFound("Ödeme bulunamadı."));
         Gateway g = ask(p);
-        return new ReviewCheck(item, g.state().name(), g.refunded(), seedBlocked(p) ? List.of() : allowed(p, g));
+        boolean blocked = seedBlocked(p) || p.getStatus() == EscrowStatus.DISPUTED;
+        return new ReviewCheck(item, g.state().name(), g.refunded(), blocked ? List.of() : allowed(p, g));
     }
 
     /**
@@ -112,6 +113,10 @@ public class AdminPaymentReviewService {
         EscrowPayment p = repository.findForUpdate(ref).orElseThrow(() -> ApiException.notFound("Ödeme bulunamadı."));
         if (!p.needsReview() || (p.getStatus() != EscrowStatus.LOCKED && p.getStatus() != EscrowStatus.DISPUTED)) {
             throw ApiException.illegalState("Bu ödeme elle incelemede değil.");
+        }
+        if (p.getStatus() == EscrowStatus.DISPUTED) {
+            // İtirazlı emanetin parası yalnızca şikayet kararıyla hareket eder (STATE_MACHINES §5-6).
+            throw disputed();
         }
         if (seedBlocked(p)) {
             // SEED kaydında Craftgate'e sorulamaz; defter yalnızca dev profilinde işlenir (EscrowService ile aynı kural).
@@ -176,6 +181,12 @@ public class AdminPaymentReviewService {
                         : List.of(Resolution.RETRY_REFUND.name());
             }
         };
+    }
+
+    /** İtirazlı emanet bu ekrandan çözülmez; şikayet kararı akışı kullanılır. */
+    static ApiException disputed() {
+        return new ApiException(org.springframework.http.HttpStatus.CONFLICT, "ESCROW_DISPUTED",
+                "İtirazlı ödeme yalnızca şikayet kararıyla çözülür.");
     }
 
     private boolean seedBlocked(EscrowPayment p) {
