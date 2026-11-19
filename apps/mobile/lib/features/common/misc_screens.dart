@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import 'widgets.dart';
 
+export 'legal_screen.dart' show LegalScreen, kLegalDocs, legalTitle;
+
 /// Markalı "bulunamadı" ekranı.
 class NotFoundScreen extends StatelessWidget {
   const NotFoundScreen({super.key});
@@ -31,36 +33,6 @@ class NotFoundScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// KVKK, koşullar ve gizlilik için taslak (yer tutucu) metin sayfası; son metni sahibi hazırlar.
-class LegalScreen extends StatelessWidget {
-  const LegalScreen({super.key, required this.doc});
-
-  final String doc;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final title = switch (doc) {
-      'kvkk' => l.legalKvkkTitle,
-      'terms' => l.legalTermsTitle,
-      'privacy' => l.legalPrivacyTitle,
-      _ => null,
-    };
-    if (title == null) return const NotFoundScreen();
-    return PageScaffold(
-      title: title,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StatusChip(label: l.legalDraftBadge, icon: Icons.edit_note),
-          const SizedBox(height: AppSpacing.sm),
-          Text(l.legalPlaceholder, style: AppTypography.body),
-        ],
       ),
     );
   }

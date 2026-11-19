@@ -116,13 +116,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
         SearchField(
           label: l.search,
           hint: l.accountsSearchHint,
-          onChanged: (q) => setState(
-            () => _query = UsersQuery(
-              q: q,
-              role: _query.role,
-              status: _query.status,
-            ),
-          ),
+          onChanged: (q) => setState(() => _query = _query.copyWith(q: q)),
         ),
         const SizedBox(height: AppSpacing.md),
         Wrap(
@@ -136,13 +130,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                 (null, l.filterAll),
                 for (final r in AccountRole.values) (r, accountRoleLabel(l, r)),
               ],
-              onSelected: (r) => setState(
-                () => _query = UsersQuery(
-                  q: _query.q,
-                  role: r,
-                  status: _query.status,
-                ),
-              ),
+              onSelected: (r) =>
+                  setState(() => _query = _query.copyWith(role: () => r)),
             ),
             FilterRow<AccountStatus?>(
               label: l.filterStatus,
@@ -152,13 +141,13 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                 for (final s in AccountStatus.values)
                   (s, accountStatusLabel(l, s)),
               ],
-              onSelected: (s) => setState(
-                () => _query = UsersQuery(
-                  q: _query.q,
-                  role: _query.role,
-                  status: s,
-                ),
-              ),
+              onSelected: (s) =>
+                  setState(() => _query = _query.copyWith(status: () => s)),
+            ),
+            _DistrictFilter(
+              selected: _query.districtId,
+              onSelected: (d) =>
+                  setState(() => _query = _query.copyWith(districtId: () => d)),
             ),
           ],
         ),
@@ -310,5 +299,34 @@ class _ActionCell extends StatelessWidget {
           child: button,
         );
     }
+  }
+}
+
+/// İlçe süzgeci (açılır liste). İlçeler yüklenemezse süzgeç gösterilmez.
+class _DistrictFilter extends ConsumerWidget {
+  const _DistrictFilter({required this.selected, required this.onSelected});
+
+  final String? selected;
+  final ValueChanged<String?> onSelected;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final districts = ref.watch(districtsProvider).asData?.value;
+    if (districts == null || districts.isEmpty) return const SizedBox.shrink();
+    return SizedBox(
+      width: 240,
+      child: DropdownButtonFormField<String?>(
+        key: const Key('district-filter'),
+        initialValue: selected,
+        decoration: InputDecoration(labelText: l.filterDistrict),
+        items: [
+          DropdownMenuItem<String?>(child: Text(l.filterAll)),
+          for (final d in districts)
+            DropdownMenuItem<String?>(value: d.id, child: Text(d.name)),
+        ],
+        onChanged: onSelected,
+      ),
+    );
   }
 }

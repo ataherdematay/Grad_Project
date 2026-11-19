@@ -35,3 +35,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  # docs/legal taslaklarının kopyası (TASLAK; legal_assets_test eşitliği denetler).
+  assets:
+    - assets/legal/

@@ -8,6 +8,9 @@ import com.bitadilat.admin.AdminDtos.DecisionBody;
 import com.bitadilat.admin.AdminDtos.NoteBody;
 import com.bitadilat.admin.AdminDtos.PaymentLedger;
 import com.bitadilat.admin.AdminDtos.RequestDocumentsBody;
+import com.bitadilat.admin.AdminDtos.ReviewCheck;
+import com.bitadilat.admin.AdminDtos.ReviewList;
+import com.bitadilat.admin.AdminDtos.ReviewResolveBody;
 import com.bitadilat.admin.AdminDtos.Stats;
 import com.bitadilat.admin.AdminDtos.UserItem;
 import com.bitadilat.admin.AdminDtos.UserList;
@@ -36,9 +39,12 @@ public class AdminController {
     private final AdminApplicationService applications;
     private final AdminComplaintService complaints;
     private final AdminAccountService accounts;
+    private final AdminPaymentReviewService paymentReviews;
 
     public AdminController(AdminReportService reports, AdminApplicationService applications,
-                           AdminComplaintService complaints, AdminAccountService accounts) {
+                           AdminComplaintService complaints, AdminAccountService accounts,
+                           AdminPaymentReviewService paymentReviews) {
+        this.paymentReviews = paymentReviews;
         this.reports = reports;
         this.applications = applications;
         this.complaints = complaints;
@@ -124,9 +130,10 @@ public class AdminController {
     @GetMapping("/users")
     public UserList users(@AuthenticationPrincipal AuthPrincipal me, @RequestParam(required = false) String q,
                           @RequestParam(required = false) String role,
-                          @RequestParam(required = false) String status) {
+                          @RequestParam(required = false) String status,
+                          @RequestParam(required = false) Integer district) {
         admin(me);
-        return accounts.list(q, role, status);
+        return accounts.list(q, role, status, district);
     }
 
     @PostMapping("/users/{id}/suspend")
@@ -147,5 +154,25 @@ public class AdminController {
                                   @RequestParam(required = false) String status) {
         admin(me);
         return reports.payments(status);
+    }
+
+    // ─── İncelemedeki ödemeler ──────────────────────────────────────────────
+
+    @GetMapping("/payments/review")
+    public ReviewList paymentReviews(@AuthenticationPrincipal AuthPrincipal me) {
+        admin(me);
+        return paymentReviews.list();
+    }
+
+    @GetMapping("/payments/{ref}/review")
+    public ReviewCheck paymentReview(@AuthenticationPrincipal AuthPrincipal me, @PathVariable String ref) {
+        admin(me);
+        return paymentReviews.check(ref);
+    }
+
+    @PostMapping("/payments/{ref}/resolve")
+    public ReviewCheck resolvePayment(@AuthenticationPrincipal AuthPrincipal me, @PathVariable String ref,
+                                      @RequestBody ReviewResolveBody body) {
+        return paymentReviews.resolve(admin(me), ref, body);
     }
 }

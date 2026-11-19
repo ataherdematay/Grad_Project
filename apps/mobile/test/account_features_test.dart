@@ -55,8 +55,12 @@ class _RecordingPhotoStore implements DraftPhotoStore {
 
 /// Onay kutusunu işaretleyip "Hesabı sil"e basar.
 Future<void> _confirmDelete(WidgetTester t, String label) async {
+  await t.ensureVisible(find.byType(CheckboxListTile));
+  await t.pumpAndSettle();
   await t.tap(find.byType(CheckboxListTile));
   await t.pump();
+  await t.ensureVisible(find.text(label));
+  await t.pumpAndSettle();
   await t.tap(find.text(label));
   await t.pumpAndSettle();
 }
@@ -189,12 +193,37 @@ void main() {
       expect(find.text('Hesabın silinsin mi?'), findsOneWidget);
       await _confirmDelete(t, 'Hesabı sil');
       expect(h.adapter.count('DELETE', '/me'), 1);
+      // Gerekçe seçilmedi: gövde gönderilmez.
+      expect(h.adapter.last('/me').data, isNull);
       expect(h.location, '/welcome');
       expect(await h.store.read(), isNull);
       expect(prefs.containsKey(draftKeyFor(id)), isFalse);
       expect(prefs.containsKey(draftKeyFor('baska')), isTrue);
       expect(photos.wiped, [id]);
       expect(find.text('Hesabın silindi.'), findsOneWidget);
+    });
+
+    testWidgets('seçilen gerekçe gövdede gider', (t) async {
+      final h = await pumpApp(
+        t,
+        session: SessionState.signedIn(testMe()),
+        initial: '/settings',
+        handler: _handler(),
+        tokens: const TokenPair(accessToken: 'A', refreshToken: 'R'),
+        overrides: [
+          draftPhotoStoreProvider.overrideWithValue(_RecordingPhotoStore()),
+        ],
+      );
+      await t.ensureVisible(find.text('Hesabımı sil'));
+      await t.tap(find.text('Hesabımı sil'));
+      await t.pumpAndSettle();
+      expect(find.text('Neden ayrılıyorsun? (isteğe bağlı)'), findsOneWidget);
+      await t.ensureVisible(find.text('Gizlilik kaygısı'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Gizlilik kaygısı'));
+      await t.pumpAndSettle();
+      await _confirmDelete(t, 'Hesabı sil');
+      expect(h.adapter.last('/me').data, {'reason': 'PRIVACY'});
     });
 
     testWidgets('vazgeçilirse istek gitmez', (t) async {
@@ -368,6 +397,13 @@ void main() {
         expect(
           find.textContaining(locale == 'tr' ? 'taslaktır' : 'is a draft'),
           findsOneWidget,
+        );
+        // Gövde docs/legal taslağından gelir (dil dosyasına göre).
+        expect(
+          find.textContaining(
+            locale == 'tr' ? 'KVKK Aydınlatma Metni' : 'Privacy Notice',
+          ),
+          findsWidgets,
         );
       });
     }

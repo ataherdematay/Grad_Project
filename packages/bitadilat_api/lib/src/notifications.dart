@@ -30,6 +30,8 @@ enum NotificationType {
   proApproved('PRO_APPROVED'),
   proRejected('PRO_REJECTED'),
   proNeedsDocuments('PRO_NEEDS_DOCUMENTS'),
+  refundCompleted('REFUND_COMPLETED'),
+  payoutCompleted('PAYOUT_COMPLETED'),
   unknown('');
 
   const NotificationType(this.wire);

@@ -42,8 +42,23 @@ public abstract class ApiTestBase {
             recipients.add(toEmail.toLowerCase());
         }
 
+        @Override
+        public void sendEmailChangeCode(String toEmail, String code) {
+            lastCode.put("change:" + toEmail.toLowerCase(), code);
+            recipients.add(toEmail.toLowerCase());
+        }
+
+        @Override
+        public void sendEmailChangedNotice(String oldEmail) {
+            recipients.add("notice:" + oldEmail.toLowerCase());
+        }
+
         public String codeFor(String email) {
             return lastCode.get(email.toLowerCase());
+        }
+
+        public String changeCodeFor(String email) {
+            return lastCode.get("change:" + email.toLowerCase());
         }
 
         public long sentTo(String email) {

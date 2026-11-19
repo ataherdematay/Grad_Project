@@ -1746,7 +1746,7 @@ $MediaRefCopyWith<$Res>? get photo {
 /// @nodoc
 mixin _$JobPayment {
 
- String get ref; EscrowStatus get status;@MoneyConverter() Money get totalAmount;@MoneyConverter() Money get refundedAmount;@NullableMoneyConverter() Money? get serviceFee;@NullableMoneyConverter() Money? get netEarning;
+ String get ref; EscrowStatus get status;@MoneyConverter() Money get totalAmount;@MoneyConverter() Money get refundedAmount;@NullableMoneyConverter() Money? get serviceFee;@NullableMoneyConverter() Money? get netEarning;@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? get pendingAction;@JsonKey(unknownEnumValue: PaymentErrorCode.unknown) PaymentErrorCode? get errorCode;
 /// Create a copy of JobPayment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1759,16 +1759,16 @@ $JobPaymentCopyWith<JobPayment> get copyWith => _$JobPaymentCopyWithImpl<JobPaym
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobPayment&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.status, status) || other.status == status)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobPayment&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.status, status) || other.status == status)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning)&&(identical(other.pendingAction, pendingAction) || other.pendingAction == pendingAction)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,ref,status,totalAmount,refundedAmount,serviceFee,netEarning);
+int get hashCode => Object.hash(runtimeType,ref,status,totalAmount,refundedAmount,serviceFee,netEarning,pendingAction,errorCode);
 
 @override
 String toString() {
-  return 'JobPayment(ref: $ref, status: $status, totalAmount: $totalAmount, refundedAmount: $refundedAmount, serviceFee: $serviceFee, netEarning: $netEarning)';
+  return 'JobPayment(ref: $ref, status: $status, totalAmount: $totalAmount, refundedAmount: $refundedAmount, serviceFee: $serviceFee, netEarning: $netEarning, pendingAction: $pendingAction, errorCode: $errorCode)';
 }
 
 
@@ -1779,7 +1779,7 @@ abstract mixin class $JobPaymentCopyWith<$Res>  {
   factory $JobPaymentCopyWith(JobPayment value, $Res Function(JobPayment) _then) = _$JobPaymentCopyWithImpl;
 @useResult
 $Res call({
- String ref, EscrowStatus status,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount,@NullableMoneyConverter() Money? serviceFee,@NullableMoneyConverter() Money? netEarning
+ String ref, EscrowStatus status,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount,@NullableMoneyConverter() Money? serviceFee,@NullableMoneyConverter() Money? netEarning,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? pendingAction,@JsonKey(unknownEnumValue: PaymentErrorCode.unknown) PaymentErrorCode? errorCode
 });
 
 
@@ -1796,7 +1796,7 @@ class _$JobPaymentCopyWithImpl<$Res>
 
 /// Create a copy of JobPayment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? ref = null,Object? status = null,Object? totalAmount = null,Object? refundedAmount = null,Object? serviceFee = freezed,Object? netEarning = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? ref = null,Object? status = null,Object? totalAmount = null,Object? refundedAmount = null,Object? serviceFee = freezed,Object? netEarning = freezed,Object? pendingAction = freezed,Object? errorCode = freezed,}) {
   return _then(_self.copyWith(
 ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -1804,7 +1804,9 @@ as EscrowStatus,totalAmount: null == totalAmount ? _self.totalAmount : totalAmou
 as Money,refundedAmount: null == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
 as Money,serviceFee: freezed == serviceFee ? _self.serviceFee : serviceFee // ignore: cast_nullable_to_non_nullable
 as Money?,netEarning: freezed == netEarning ? _self.netEarning : netEarning // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,pendingAction: freezed == pendingAction ? _self.pendingAction : pendingAction // ignore: cast_nullable_to_non_nullable
+as EscrowPendingAction?,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as PaymentErrorCode?,
   ));
 }
 
@@ -1889,10 +1891,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @JsonKey(unknownEnumValue: PaymentErrorCode.unknown)  PaymentErrorCode? errorCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JobPayment() when $default != null:
-return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning);case _:
+return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning,_that.pendingAction,_that.errorCode);case _:
   return orElse();
 
 }
@@ -1910,10 +1912,10 @@ return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @JsonKey(unknownEnumValue: PaymentErrorCode.unknown)  PaymentErrorCode? errorCode)  $default,) {final _that = this;
 switch (_that) {
 case _JobPayment():
-return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning);case _:
+return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning,_that.pendingAction,_that.errorCode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1930,10 +1932,10 @@ return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String ref,  EscrowStatus status, @MoneyConverter()  Money totalAmount, @MoneyConverter()  Money refundedAmount, @NullableMoneyConverter()  Money? serviceFee, @NullableMoneyConverter()  Money? netEarning, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)  EscrowPendingAction? pendingAction, @JsonKey(unknownEnumValue: PaymentErrorCode.unknown)  PaymentErrorCode? errorCode)?  $default,) {final _that = this;
 switch (_that) {
 case _JobPayment() when $default != null:
-return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning);case _:
+return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_that.serviceFee,_that.netEarning,_that.pendingAction,_that.errorCode);case _:
   return null;
 
 }
@@ -1944,8 +1946,8 @@ return $default(_that.ref,_that.status,_that.totalAmount,_that.refundedAmount,_t
 /// @nodoc
 @JsonSerializable()
 
-class _JobPayment implements JobPayment {
-  const _JobPayment({required this.ref, required this.status, @MoneyConverter() required this.totalAmount, @MoneyConverter() this.refundedAmount = Money.zero, @NullableMoneyConverter() this.serviceFee, @NullableMoneyConverter() this.netEarning});
+class _JobPayment extends JobPayment {
+  const _JobPayment({required this.ref, required this.status, @MoneyConverter() required this.totalAmount, @MoneyConverter() this.refundedAmount = Money.zero, @NullableMoneyConverter() this.serviceFee, @NullableMoneyConverter() this.netEarning, @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) this.pendingAction, @JsonKey(unknownEnumValue: PaymentErrorCode.unknown) this.errorCode}): super._();
   factory _JobPayment.fromJson(Map<String, dynamic> json) => _$JobPaymentFromJson(json);
 
 @override final  String ref;
@@ -1954,6 +1956,8 @@ class _JobPayment implements JobPayment {
 @override@JsonKey()@MoneyConverter() final  Money refundedAmount;
 @override@NullableMoneyConverter() final  Money? serviceFee;
 @override@NullableMoneyConverter() final  Money? netEarning;
+@override@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) final  EscrowPendingAction? pendingAction;
+@override@JsonKey(unknownEnumValue: PaymentErrorCode.unknown) final  PaymentErrorCode? errorCode;
 
 /// Create a copy of JobPayment
 /// with the given fields replaced by the non-null parameter values.
@@ -1968,16 +1972,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobPayment&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.status, status) || other.status == status)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobPayment&&(identical(other.ref, ref) || other.ref == ref)&&(identical(other.status, status) || other.status == status)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.refundedAmount, refundedAmount) || other.refundedAmount == refundedAmount)&&(identical(other.serviceFee, serviceFee) || other.serviceFee == serviceFee)&&(identical(other.netEarning, netEarning) || other.netEarning == netEarning)&&(identical(other.pendingAction, pendingAction) || other.pendingAction == pendingAction)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,ref,status,totalAmount,refundedAmount,serviceFee,netEarning);
+int get hashCode => Object.hash(runtimeType,ref,status,totalAmount,refundedAmount,serviceFee,netEarning,pendingAction,errorCode);
 
 @override
 String toString() {
-  return 'JobPayment(ref: $ref, status: $status, totalAmount: $totalAmount, refundedAmount: $refundedAmount, serviceFee: $serviceFee, netEarning: $netEarning)';
+  return 'JobPayment(ref: $ref, status: $status, totalAmount: $totalAmount, refundedAmount: $refundedAmount, serviceFee: $serviceFee, netEarning: $netEarning, pendingAction: $pendingAction, errorCode: $errorCode)';
 }
 
 
@@ -1988,7 +1992,7 @@ abstract mixin class _$JobPaymentCopyWith<$Res> implements $JobPaymentCopyWith<$
   factory _$JobPaymentCopyWith(_JobPayment value, $Res Function(_JobPayment) _then) = __$JobPaymentCopyWithImpl;
 @override @useResult
 $Res call({
- String ref, EscrowStatus status,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount,@NullableMoneyConverter() Money? serviceFee,@NullableMoneyConverter() Money? netEarning
+ String ref, EscrowStatus status,@MoneyConverter() Money totalAmount,@MoneyConverter() Money refundedAmount,@NullableMoneyConverter() Money? serviceFee,@NullableMoneyConverter() Money? netEarning,@JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue) EscrowPendingAction? pendingAction,@JsonKey(unknownEnumValue: PaymentErrorCode.unknown) PaymentErrorCode? errorCode
 });
 
 
@@ -2005,7 +2009,7 @@ class __$JobPaymentCopyWithImpl<$Res>
 
 /// Create a copy of JobPayment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? ref = null,Object? status = null,Object? totalAmount = null,Object? refundedAmount = null,Object? serviceFee = freezed,Object? netEarning = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? ref = null,Object? status = null,Object? totalAmount = null,Object? refundedAmount = null,Object? serviceFee = freezed,Object? netEarning = freezed,Object? pendingAction = freezed,Object? errorCode = freezed,}) {
   return _then(_JobPayment(
 ref: null == ref ? _self.ref : ref // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -2013,7 +2017,9 @@ as EscrowStatus,totalAmount: null == totalAmount ? _self.totalAmount : totalAmou
 as Money,refundedAmount: null == refundedAmount ? _self.refundedAmount : refundedAmount // ignore: cast_nullable_to_non_nullable
 as Money,serviceFee: freezed == serviceFee ? _self.serviceFee : serviceFee // ignore: cast_nullable_to_non_nullable
 as Money?,netEarning: freezed == netEarning ? _self.netEarning : netEarning // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,pendingAction: freezed == pendingAction ? _self.pendingAction : pendingAction // ignore: cast_nullable_to_non_nullable
+as EscrowPendingAction?,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
+as PaymentErrorCode?,
   ));
 }
 

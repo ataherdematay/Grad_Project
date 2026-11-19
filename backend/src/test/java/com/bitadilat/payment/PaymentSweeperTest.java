@@ -95,6 +95,13 @@ class PaymentSweeperTest extends Wave3TestBase {
         sweeper.run(Instant.now().plus(Duration.ofMinutes(10)));
         verify(gateway, times(1)).refundFully(anyLong(), anyString());
         assertThat(state(ref)).isEqualTo("REFUNDED_TO_CUSTOMER/OFFER_EXPIRED/1");
+        // Gecikmeli iade: müşteri ödeme sonucuna yönlenen bildirim alır (iş yok, ustaya gitmez).
+        String customer = jdbc.queryForObject("select customer_id::text from escrow_payment where ref = ?",
+                String.class, ref);
+        assertThat(count("select count(*) from notifications where user_id = ?::uuid and type = 'REFUND_COMPLETED'",
+                customer)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select target_route from notifications where user_id = ?::uuid "
+                + "and type = 'REFUND_COMPLETED'", String.class, customer)).isEqualTo("/c/payments/" + ref + "/result");
     }
 
     @Test

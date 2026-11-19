@@ -43,10 +43,11 @@ public class AdminAccountService {
 
     /**
      * {@code role}: ADMIN = admin bayrağı, PRO = usta profili olanlar, CUSTOMER = ne admin ne usta olanlar.
+     * {@code district}: ilçe kimliği; o ilçede adresi olan veya o ilçeye hizmet veren hesaplar.
      * En yeni hesap önce; en çok {@value #MAX_ITEMS} satır.
      */
     @Transactional(readOnly = true)
-    public UserList list(String q, String role, String status) {
+    public UserList list(String q, String role, String status, Integer district) {
         List<Object> args = new ArrayList<>();
         StringBuilder sql = new StringBuilder(SELECT).append(" where true");
         if (q != null && !q.isBlank()) {
@@ -69,6 +70,13 @@ public class AdminAccountService {
         if (status != null && !status.isBlank()) {
             args.add(AdminAudit.parseEnum(UserStatus.class, status, "status").name());
             sql.append(" and u.status = ?");
+        }
+        if (district != null) {
+            // Müşteri: o ilçede kayıtlı adresi var; usta: o ilçeye hizmet veriyor.
+            args.add(district);
+            args.add(district);
+            sql.append(" and (exists (select 1 from addresses a where a.user_id = u.id and a.district_id = ?)"
+                    + " or exists (select 1 from pro_districts d where d.pro_id = u.id and d.district_id = ?))");
         }
         sql.append(" order by u.created_at desc, u.id desc limit ").append(MAX_ITEMS);
         return new UserList(jdbc.query(sql.toString(), (rs, i) -> item(rs, null), args.toArray()));

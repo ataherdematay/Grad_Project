@@ -299,6 +299,18 @@ public class EscrowPayment {
         return needsRefundReview() || ERROR_PAYOUT_NEEDS_REVIEW.equals(errorCode);
     }
 
+    /**
+     * Admin incelemeyi çözdü (iade tamamlandı veya ustaya aktarıldı): inceleme kodu ve kullanıcıya gösterilen inceleme
+     * metni temizlenir. Yalnızca para hareketi kesinleştikten sonra çağrılır.
+     */
+    public void clearReview() {
+        if (needsReview()) {
+            errorCode = null;
+            errorMessage = null;
+        }
+        resultUncertain = false;
+    }
+
     /** Craftgate yanıtı kayıtla uyuşmadı: para çekilmiş olabilir, kullanıcıya "ücret alınmadı" denmez. */
     public void failUnverified(String message) {
         fail(message);

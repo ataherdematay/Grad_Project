@@ -87,6 +87,9 @@ class EscrowSafetyTest extends Wave3TestBase {
         assertThat(escrowRow(jobId)).isEqualTo("REFUNDED_TO_CUSTOMER/-/-/0");
         assertThat(count("select count(*) from payout_ledger where payment_ref = ? and kind = 'REFUND'", refOf(jobId)))
                 .isEqualTo(1);
+        // İlk denemede yapılan iade gecikmeli sayılmaz: JOB_CANCELLED tutarı zaten bildirir.
+        assertThat(notifications(s.customer(), "REFUND_COMPLETED")).isZero();
+        assertThat(notifications(s.pro(), "REFUND_COMPLETED")).isZero();
     }
 
     @Test
@@ -120,10 +123,22 @@ class EscrowSafetyTest extends Wave3TestBase {
         JsonNode after = job(s.customer(), jobId);
         assertThat(after.get("payment").get("status").asString()).isEqualTo("REFUNDED_TO_CUSTOMER");
         assertThat(after.get("payment").get("pendingAction").isNull()).isTrue();
+        // Gecikmeli iade tamamlandı: iki taraf da haber alır, kendi iş ekranına gider.
+        assertThat(notifications(s.customer(), "REFUND_COMPLETED")).isEqualTo(1);
+        assertThat(notifications(s.pro(), "REFUND_COMPLETED")).isEqualTo(1);
+        Map<String, Object> n = jdbc.queryForMap("select params->>'amount' as amount, params->>'publicCode' as code, "
+                + "target_route from notifications where user_id = ?::uuid and type = 'REFUND_COMPLETED'",
+                s.customer().id());
+        assertThat(n.get("amount")).isEqualTo("1200.00");
+        assertThat(n.get("code")).isEqualTo(s.publicCode());
+        assertThat(n.get("target_route")).isEqualTo("/c/jobs/" + jobId);
+        assertThat(jdbc.queryForObject("select target_route from notifications where user_id = ?::uuid "
+                + "and type = 'REFUND_COMPLETED'", String.class, s.pro().id())).isEqualTo("/p/jobs/" + jobId);
 
         // Tekrar çalışma zararsız.
         sweeper.run(Instant.now().plus(Duration.ofHours(1)));
         verify(gateway, times(2)).refundFully(anyLong(), anyString());
+        assertThat(notifications(s.customer(), "REFUND_COMPLETED")).isEqualTo(1);
     }
 
     @Test
@@ -160,6 +175,11 @@ class EscrowSafetyTest extends Wave3TestBase {
             sweeper.run(t);
         }
         assertThat(escrowRow(jobId)).isEqualTo("LOCKED/REFUND/REFUND_NEEDS_REVIEW/8");
+        // İş ekranı inceleme kodunu gösterir (istemci destek mesajı gösterir).
+        JsonNode view = job(s.customer(), jobId);
+        assertThat(view.get("payment").get("errorCode").asString()).isEqualTo("REFUND_NEEDS_REVIEW");
+        assertThat(view.get("payment").get("pendingAction").asString()).isEqualTo("REFUND");
+        assertThat(notifications(s.customer(), "REFUND_COMPLETED")).isZero();
         clearInvocations(gateway);
         sweeper.run(t.plus(Duration.ofDays(30)));
         verify(gateway, never()).refundFully(anyLong(), anyString());
@@ -281,6 +301,7 @@ class EscrowSafetyTest extends Wave3TestBase {
         assertThat(done.get("status").asString()).isEqualTo("COMPLETED");
         assertThat(done.get("payment").get("status").asString()).isEqualTo("LOCKED");
         assertThat(done.get("payment").get("pendingAction").asString()).isEqualTo("RELEASE");
+        assertThat(done.get("payment").get("errorCode").isNull()).isTrue();
         assertThat(escrowRow(jobId)).isEqualTo("LOCKED/RELEASE/-/1");
         assertThat(count("select count(*) from payout_ledger where payment_ref = ?", refOf(jobId))).isZero();
         assertThat(notifications(s.pro(), "PAYOUT_RELEASED")).isZero();
@@ -298,6 +319,9 @@ class EscrowSafetyTest extends Wave3TestBase {
         assertThat(count("select count(*) from payout_ledger where payment_ref = ? and kind = 'COMMISSION'",
                 refOf(jobId))).isEqualTo(1);
         assertThat(notifications(s.pro(), "PAYOUT_RELEASED")).isEqualTo(1);
+        assertThat(notifications(s.customer(), "PAYOUT_COMPLETED")).isEqualTo(1);
+        assertThat(jdbc.queryForObject("select target_route from notifications where user_id = ?::uuid "
+                + "and type = 'PAYOUT_COMPLETED'", String.class, s.customer().id())).isEqualTo("/c/jobs/" + jobId);
 
         sweeper.run(Instant.now().plus(Duration.ofHours(2)));
         assertThat(count("select count(*) from payout_ledger where payment_ref = ?", refOf(jobId))).isEqualTo(2);

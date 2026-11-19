@@ -347,6 +347,22 @@ class ProFlowTest extends Wave2TestBase {
         assertThat(authors).containsExactlyInAnyOrder("A.Y.", "Anonim");
         assertThat(reviews.get("items").get(0).get("tags").isArray()).isTrue();
 
+        // Süzgeç: yıldız sayısı ve yalnızca yorumlu.
+        insertReview(usta, customer, null, false, 2);
+        String base = "/api/v1/pros/" + usta.id() + "/reviews";
+        call(HttpMethod.GET, base + "?rating=5", viewer.access(), null).andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(2));
+        call(HttpMethod.GET, base + "?rating=2", viewer.access(), null).andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(1))
+                .andExpect(jsonPath("$.items[0].rating").value(2));
+        call(HttpMethod.GET, base + "?withComment=true", viewer.access(), null).andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(2));
+        call(HttpMethod.GET, base + "?rating=2&withComment=true", viewer.access(), null).andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()").value(0));
+        call(HttpMethod.GET, base, viewer.access(), null).andExpect(jsonPath("$.items.length()").value(3));
+        call(HttpMethod.GET, base + "?rating=6", viewer.access(), null).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.field").value("rating"));
+
         jdbc.update("update pro_profiles set review_status = 'PENDING_REVIEW' where user_id = ?::uuid", usta.id());
         call(HttpMethod.GET, "/api/v1/pros/" + usta.id(), viewer.access(), null).andExpect(status().isNotFound());
         call(HttpMethod.GET, "/api/v1/pros/" + usta.id() + "/reviews", viewer.access(), null)
@@ -357,6 +373,10 @@ class ProFlowTest extends Wave2TestBase {
     private int jobSeq = 0;
 
     private void insertReview(Account pro, String customerId, String comment, boolean anonymous) {
+        insertReview(pro, customerId, comment, anonymous, 5);
+    }
+
+    private void insertReview(Account pro, String customerId, String comment, boolean anonymous, int rating) {
         // reviews.job_id benzersiz ve jobs'a bağlı: minimal talep + teklif + iş satırı kurulur.
         String addr = jdbc.queryForObject("""
                 insert into addresses (user_id, label, district_id, neighborhood, line_full_encrypted)
@@ -379,7 +399,7 @@ class ProFlowTest extends Wave2TestBase {
                 req, offer, customerId, pro.id());
         jdbc.update("""
                 insert into reviews (job_id, customer_id, pro_id, rating, tags, comment, is_anonymous)
-                values (?::uuid, ?::uuid, ?::uuid, 5, array['Dakik'], ?, ?)""", job, customerId, pro.id(), comment,
-                anonymous);
+                values (?::uuid, ?::uuid, ?::uuid, ?, array['Dakik'], ?, ?)""", job, customerId, pro.id(), rating,
+                comment, anonymous);
     }
 }

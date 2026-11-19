@@ -230,6 +230,12 @@ abstract class AppLocalizations {
   /// **'Çok fazla deneme yaptın. Birkaç dakika bekleyip tekrar dene.'**
   String get apiErrorTooManyAttempts;
 
+  /// No description provided for @apiErrorEscrowDisputed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu ödemede açık şikayet var; para yalnızca şikayet kararıyla hareket eder.'**
+  String get apiErrorEscrowDisputed;
+
   /// No description provided for @apiErrorGatewayError.
   ///
   /// In tr, this message translates to:
@@ -1651,6 +1657,156 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'İade edilen'**
   String get totalRefunded;
+
+  /// No description provided for @reviewSectionTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'İncelemedeki ödemeler'**
+  String get reviewSectionTitle;
+
+  /// No description provided for @reviewSectionSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomatik iade veya ustaya aktarım durdu. Çözmeden önce Craftgate\'teki gerçek durum sorulur; para iki kez hareket etmez.'**
+  String get reviewSectionSubtitle;
+
+  /// No description provided for @reviewEmpty.
+  ///
+  /// In tr, this message translates to:
+  /// **'İncelemede ödeme yok.'**
+  String get reviewEmpty;
+
+  /// No description provided for @reviewCodeRefund.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade incelemede'**
+  String get reviewCodeRefund;
+
+  /// No description provided for @reviewCodePayout.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarım incelemede'**
+  String get reviewCodePayout;
+
+  /// No description provided for @reviewDisputedNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet açık: yalnızca şikayet kararıyla çözülür.'**
+  String get reviewDisputedNote;
+
+  /// No description provided for @reviewAttempts.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} deneme'**
+  String reviewAttempts(int count);
+
+  /// No description provided for @reviewCheck.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate\'e sor ve çöz'**
+  String get reviewCheck;
+
+  /// No description provided for @reviewGatewayState.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate: {state}, iade edilen {amount}'**
+  String reviewGatewayState(String state, String amount);
+
+  /// No description provided for @reviewStateNotRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'iade yok'**
+  String get reviewStateNotRefunded;
+
+  /// No description provided for @reviewStatePartial.
+  ///
+  /// In tr, this message translates to:
+  /// **'kısmi iade'**
+  String get reviewStatePartial;
+
+  /// No description provided for @reviewStatePending.
+  ///
+  /// In tr, this message translates to:
+  /// **'iade sonucu bekleniyor'**
+  String get reviewStatePending;
+
+  /// No description provided for @reviewStateFull.
+  ///
+  /// In tr, this message translates to:
+  /// **'tam iade edilmiş'**
+  String get reviewStateFull;
+
+  /// No description provided for @reviewNoResolution.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate\'in şu anki yanıtı hiçbir çözüme izin vermiyor (iade sonucu bekleniyor ya da tutarlar tutarsız). Biraz sonra yeniden sor veya Craftgate panelinden düzelt.'**
+  String get reviewNoResolution;
+
+  /// No description provided for @reviewNoResolutionTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şu an çözülemez'**
+  String get reviewNoResolutionTitle;
+
+  /// No description provided for @reviewResolveTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'{ref} ödemesini çöz'**
+  String reviewResolveTitle(String ref);
+
+  /// No description provided for @reviewResolutionLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çözüm'**
+  String get reviewResolutionLabel;
+
+  /// No description provided for @reviewResolutionRequired.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir çözüm seç.'**
+  String get reviewResolutionRequired;
+
+  /// No description provided for @resolutionMarkRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade edildi olarak işaretle (para gönderilmez)'**
+  String get resolutionMarkRefunded;
+
+  /// No description provided for @resolutionRetryRefund.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalan tutarı iade et'**
+  String get resolutionRetryRefund;
+
+  /// No description provided for @resolutionRelease.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya aktar'**
+  String get resolutionRelease;
+
+  /// No description provided for @resolveNoteLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Not (10-1000 karakter)'**
+  String get resolveNoteLabel;
+
+  /// No description provided for @reviewResolve.
+  ///
+  /// In tr, this message translates to:
+  /// **'Çöz'**
+  String get reviewResolve;
+
+  /// No description provided for @reviewResolvedNotice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme çözüldü.'**
+  String get reviewResolvedNotice;
+
+  /// No description provided for @filterDistrict.
+  ///
+  /// In tr, this message translates to:
+  /// **'İlçe'**
+  String get filterDistrict;
 }
 
 class _AppLocalizationsDelegate

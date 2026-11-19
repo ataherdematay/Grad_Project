@@ -63,18 +63,40 @@ public class ProPublicService {
 
     @Transactional(readOnly = true)
     public ReviewList reviews(UUID id, String cursor, Integer limit) {
+        return reviews(id, cursor, limit, null, false);
+    }
+
+    /**
+     * {@code rating}: yalnızca bu yıldız sayısı (1-5, aksi 400 {@code rating}); {@code withComment}: yalnızca yorumu
+     * olanlar. Süzgeç sunucuda uygulanır, imleç süzülmüş listede ilerler.
+     */
+    @Transactional(readOnly = true)
+    public ReviewList reviews(UUID id, String cursor, Integer limit, Integer rating, boolean withComment) {
+        if (rating != null && (rating < 1 || rating > 5)) {
+            throw com.bitadilat.common.ApiException.validation("rating", "rating 1-5 olmalı.");
+        }
         approved(id);
+        List<Object> args = new java.util.ArrayList<>();
+        args.add(id);
+        String filter = "";
+        if (rating != null) {
+            filter += " and r.rating = ?";
+            args.add(rating);
+        }
+        if (withComment) {
+            filter += " and r.comment is not null and btrim(r.comment) <> ''";
+        }
         List<ReviewList.Item> all = jdbc.query("""
                 select r.id, r.rating, r.tags, r.comment, r.is_anonymous, u.full_name, r.created_at
                 from reviews r join users u on u.id = r.customer_id
-                where r.pro_id = ? order by r.created_at desc, r.id""", (rs, i) -> {
+                where r.pro_id = ?""" + filter + " order by r.created_at desc, r.id", (rs, i) -> {
             java.sql.Array arr = rs.getArray("tags");
             List<String> tags = arr == null ? List.of() : List.of((String[]) arr.getArray());
             return new ReviewList.Item(rs.getObject("id", UUID.class), rs.getInt("rating"), tags,
                     rs.getString("comment"),
                     rs.getBoolean("is_anonymous") ? "Anonim" : initials(rs.getString("full_name")),
                     rs.getTimestamp("created_at").toInstant());
-        }, id);
+        }, args.toArray());
         Paging.Slice<ReviewList.Item> page = Paging.slice(all, cursor, limit);
         return new ReviewList(page.items(), page.nextCursor());
     }

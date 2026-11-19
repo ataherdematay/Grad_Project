@@ -83,6 +83,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many attempts. Wait a few minutes and try again.';
 
   @override
+  String get apiErrorEscrowDisputed =>
+      'This payment has an open complaint; its money moves only through the complaint decision.';
+
+  @override
   String get apiErrorGatewayError =>
       'The payment system is unreachable right now. Try again in a few minutes.';
 
@@ -849,4 +853,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalRefunded => 'Refunded';
+
+  @override
+  String get reviewSectionTitle => 'Payments in review';
+
+  @override
+  String get reviewSectionSubtitle =>
+      'Automatic refund or payout stopped. The real state is checked at Craftgate before any resolution, so money never moves twice.';
+
+  @override
+  String get reviewEmpty => 'No payments in review.';
+
+  @override
+  String get reviewCodeRefund => 'Refund in review';
+
+  @override
+  String get reviewCodePayout => 'Payout in review';
+
+  @override
+  String get reviewDisputedNote =>
+      'Open complaint: resolved only through the complaint decision.';
+
+  @override
+  String reviewAttempts(int count) {
+    return '$count attempts';
+  }
+
+  @override
+  String get reviewCheck => 'Check Craftgate and resolve';
+
+  @override
+  String reviewGatewayState(String state, String amount) {
+    return 'Craftgate: $state, refunded $amount';
+  }
+
+  @override
+  String get reviewStateNotRefunded => 'not refunded';
+
+  @override
+  String get reviewStatePartial => 'partly refunded';
+
+  @override
+  String get reviewStatePending => 'refund pending';
+
+  @override
+  String get reviewStateFull => 'fully refunded';
+
+  @override
+  String get reviewNoResolution =>
+      'Craftgate\'s current answer allows no resolution (a refund is pending or the amounts are inconsistent). Check again later or fix it in the Craftgate panel.';
+
+  @override
+  String get reviewNoResolutionTitle => 'Cannot be resolved now';
+
+  @override
+  String reviewResolveTitle(String ref) {
+    return 'Resolve payment $ref';
+  }
+
+  @override
+  String get reviewResolutionLabel => 'Resolution';
+
+  @override
+  String get reviewResolutionRequired => 'Pick a resolution.';
+
+  @override
+  String get resolutionMarkRefunded => 'Mark as refunded (no money is sent)';
+
+  @override
+  String get resolutionRetryRefund => 'Refund the remaining amount';
+
+  @override
+  String get resolutionRelease => 'Pay out to the pro';
+
+  @override
+  String get resolveNoteLabel => 'Note (10-1000 characters)';
+
+  @override
+  String get reviewResolve => 'Resolve';
+
+  @override
+  String get reviewResolvedNotice => 'The payment was resolved.';
+
+  @override
+  String get filterDistrict => 'District';
 }

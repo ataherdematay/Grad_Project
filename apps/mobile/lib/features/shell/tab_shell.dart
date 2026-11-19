@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/error_messages.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
+import '../settings/change_email_dialog.dart';
 import '../settings/edit_profile_dialog.dart';
 
 class TabSpec {
@@ -165,6 +166,16 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
       ..showSnackBar(SnackBar(content: Text(l.accountUpdated)));
   }
 
+  Future<void> _changeEmail() async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showChangeEmailDialog(context);
+    if (!ok) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(l.emailChangeDone)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -189,14 +200,25 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                     Text(me.fullName, style: AppTypography.cardTitle),
                     const SizedBox(height: 4),
                     Text(me.email, style: AppTypography.bodySecondary),
+                    if ((me.phone ?? '').isNotEmpty) ...[
+                      Text(me.phone!, style: AppTypography.bodySecondary),
+                      Text(l.phoneReadOnlyNote, style: AppTypography.label),
+                    ],
                     const SizedBox(height: AppSpacing.xs),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton.icon(
-                        onPressed: () => _edit(me),
-                        icon: const Icon(Icons.edit_outlined, size: 18),
-                        label: Text(l.accountEdit),
-                      ),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () => _edit(me),
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: Text(l.accountEdit),
+                        ),
+                        TextButton.icon(
+                          onPressed: _changeEmail,
+                          icon: const Icon(Icons.alternate_email, size: 18),
+                          label: Text(l.emailChangeAction),
+                        ),
+                      ],
                     ),
                   ],
                 ),

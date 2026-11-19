@@ -66,27 +66,60 @@ final complaintProvider = FutureProvider.autoDispose
 
 @immutable
 class UsersQuery {
-  const UsersQuery({this.q = '', this.role, this.status});
+  const UsersQuery({this.q = '', this.role, this.status, this.districtId});
 
   final String q;
   final AccountRole? role;
   final AccountStatus? status;
+
+  /// İlçe süzgeci: o ilçede adresi olan veya o ilçeye hizmet veren hesaplar.
+  final String? districtId;
+
+  UsersQuery copyWith({
+    String? q,
+    AccountRole? Function()? role,
+    AccountStatus? Function()? status,
+    String? Function()? districtId,
+  }) => UsersQuery(
+    q: q ?? this.q,
+    role: role == null ? this.role : role(),
+    status: status == null ? this.status : status(),
+    districtId: districtId == null ? this.districtId : districtId(),
+  );
 
   @override
   bool operator ==(Object other) =>
       other is UsersQuery &&
       other.q == q &&
       other.role == role &&
-      other.status == status;
+      other.status == status &&
+      other.districtId == districtId;
 
   @override
-  int get hashCode => Object.hash(q, role, status);
+  int get hashCode => Object.hash(q, role, status, districtId);
 }
+
+/// İstanbul ilçeleri (hesap süzgeci).
+final districtsProvider = FutureProvider.autoDispose<List<District>>(
+  (ref) => ref.watch(apiClientProvider).catalog.districts(),
+  retry: noRetry,
+);
+
+/// İncelemedeki ödemeler (`GET /admin/payments/review`).
+final paymentReviewsProvider =
+    FutureProvider.autoDispose<List<AdminPaymentReviewItem>>(
+      (ref) => _admin(ref).paymentReviews(),
+      retry: noRetry,
+    );
 
 final usersProvider = FutureProvider.autoDispose
     .family<List<AdminUser>, UsersQuery>(
-      (ref, query) =>
-          _admin(ref).users(q: query.q, role: query.role, status: query.status),
+      (ref, query) => _admin(ref).users(
+        q: query.q,
+        role: query.role,
+        status: query.status,
+        districtId: query.districtId,
+      ),
       retry: noRetry,
     );
 
