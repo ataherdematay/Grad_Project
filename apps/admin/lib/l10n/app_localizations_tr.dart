@@ -846,4 +846,85 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get totalRefunded => 'İade edilen';
+
+  @override
+  String get reviewSectionTitle => 'İncelemedeki ödemeler';
+
+  @override
+  String get reviewSectionSubtitle =>
+      'Otomatik iade veya ustaya aktarım durdu. Çözmeden önce Craftgate\'teki gerçek durum sorulur; para iki kez hareket etmez.';
+
+  @override
+  String get reviewEmpty => 'İncelemede ödeme yok.';
+
+  @override
+  String get reviewCodeRefund => 'İade incelemede';
+
+  @override
+  String get reviewCodePayout => 'Aktarım incelemede';
+
+  @override
+  String reviewAttempts(int count) {
+    return '$count deneme';
+  }
+
+  @override
+  String get reviewCheck => 'Craftgate\'e sor ve çöz';
+
+  @override
+  String reviewGatewayState(String state, String amount) {
+    return 'Craftgate: $state, iade edilen $amount';
+  }
+
+  @override
+  String get reviewStateNotRefunded => 'iade yok';
+
+  @override
+  String get reviewStatePartial => 'kısmi iade';
+
+  @override
+  String get reviewStatePending => 'iade sonucu bekleniyor';
+
+  @override
+  String get reviewStateFull => 'tam iade edilmiş';
+
+  @override
+  String get reviewNoResolution =>
+      'Craftgate\'in şu anki yanıtı hiçbir çözüme izin vermiyor (iade sonucu bekleniyor ya da tutarlar tutarsız). Biraz sonra yeniden sor veya Craftgate panelinden düzelt.';
+
+  @override
+  String get reviewNoResolutionTitle => 'Şu an çözülemez';
+
+  @override
+  String reviewResolveTitle(String ref) {
+    return '$ref ödemesini çöz';
+  }
+
+  @override
+  String get reviewResolutionLabel => 'Çözüm';
+
+  @override
+  String get reviewResolutionRequired => 'Bir çözüm seç.';
+
+  @override
+  String get resolutionMarkRefunded =>
+      'İade edildi olarak işaretle (para gönderilmez)';
+
+  @override
+  String get resolutionRetryRefund => 'Kalan tutarı iade et';
+
+  @override
+  String get resolutionRelease => 'Ustaya aktar';
+
+  @override
+  String get resolveNoteLabel => 'Not (10-1000 karakter)';
+
+  @override
+  String get reviewResolve => 'Çöz';
+
+  @override
+  String get reviewResolvedNotice => 'Ödeme çözüldü.';
+
+  @override
+  String get filterDistrict => 'İlçe';
 }

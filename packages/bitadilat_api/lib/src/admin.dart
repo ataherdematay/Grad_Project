@@ -574,7 +574,7 @@ class AdminApi {
     String? q,
     AccountRole? role,
     AccountStatus? status,
-    int? districtId,
+    String? districtId,
   }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
@@ -583,7 +583,7 @@ class AdminApi {
           'q': q,
           'role': role?.wire,
           'status': status?.wire,
-          'district': districtId?.toString(),
+          'district': districtId,
         }),
       ),
     );

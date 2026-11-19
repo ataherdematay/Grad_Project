@@ -222,10 +222,8 @@ class _ProReviewsScreenState extends ConsumerState<ProReviewsScreen> {
                     itemCount: page.items.length,
                     separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (_, i) => _ReviewCard(
-                      review: page.items[i],
-                      now: now,
-                    ),
+                    itemBuilder: (_, i) =>
+                        _ReviewCard(review: page.items[i], now: now),
                   ),
                 );
               },

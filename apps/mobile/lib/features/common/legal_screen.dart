@@ -108,24 +108,19 @@ class LegalMarkdown extends StatelessWidget {
           TextSpan(
             text: parts[i],
             style: i.isOdd
-                ? const TextStyle(fontWeight: FontWeight.w700)
+                ? AppTypography.weight(AppTypography.body, FontWeight.w700)
                 : null,
           ),
     ];
   }
 
-  static Widget _rich(String text) => Text.rich(
-    TextSpan(children: _inline(text)),
-    style: AppTypography.body,
-  );
+  static Widget _rich(String text) =>
+      Text.rich(TextSpan(children: _inline(text)), style: AppTypography.body);
 
   static Widget _header(String text, TextStyle style, {double top = 0}) =>
       Padding(
         padding: EdgeInsets.only(top: top),
-        child: Semantics(
-          header: true,
-          child: Text(text, style: style),
-        ),
+        child: Semantics(header: true, child: Text(text, style: style)),
       );
 
   @override
@@ -141,11 +136,7 @@ class LegalMarkdown extends StatelessWidget {
         children.add(_header(line.substring(4), AppTypography.cardTitle));
       } else if (line.startsWith('## ')) {
         children.add(
-          _header(
-            line.substring(3),
-            AppTypography.section,
-            top: AppSpacing.sm,
-          ),
+          _header(line.substring(3), AppTypography.section, top: AppSpacing.sm),
         );
       } else if (line.startsWith('# ')) {
         children.add(_header(line.substring(2), AppTypography.screenTitle));

@@ -150,9 +150,7 @@ String notificationText(AppLocalizations l, Notification n, DateTime now) {
       p('publicCode'),
       money('amount'),
     ),
-    NotificationType.payoutCompleted => l.notifPayoutCompleted(
-      p('publicCode'),
-    ),
+    NotificationType.payoutCompleted => l.notifPayoutCompleted(p('publicCode')),
     NotificationType.unknown => l.notifUnknown,
   };
 }

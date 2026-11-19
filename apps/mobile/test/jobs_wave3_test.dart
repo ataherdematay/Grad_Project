@@ -759,9 +759,7 @@ void main() {
       });
       expect(h.location, '/p/jobs/j1/cancelled');
       expect(
-        find.text(
-          'Müşteriye iade yapıldı ve talep yeniden açıldı. İptaller profilinde görünür.',
-        ),
+        find.text('Talep yeniden açıldı. İptaller profilinde görünür.'),
         findsOneWidget,
       );
     });

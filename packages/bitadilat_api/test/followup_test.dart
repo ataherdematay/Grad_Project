@@ -224,7 +224,7 @@ void main() {
 
     test('users ilçe süzgecini yollar', () async {
       final a = _Adapter((_) => _json(200, {'items': []}));
-      await _client(a).admin.users(districtId: 23, q: 'ali');
+      await _client(a).admin.users(districtId: '23', q: 'ali');
       expect(a.requests.single.queryParameters, {'q': 'ali', 'district': '23'});
     });
   });

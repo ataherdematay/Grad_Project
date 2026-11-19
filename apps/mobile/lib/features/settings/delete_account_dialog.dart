@@ -63,16 +63,12 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
                   ChoiceChip(
                     label: Text(deletionReasonLabel(l, r)),
                     selected: _reason == r,
-                    onSelected: (on) =>
-                        setState(() => _reason = on ? r : null),
+                    onSelected: (on) => setState(() => _reason = on ? r : null),
                   ),
               ],
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              l.deleteAccountReasonNote,
-              style: AppTypography.bodySecondary,
-            ),
+            Text(l.deleteAccountReasonNote, style: AppTypography.bodySecondary),
             const SizedBox(height: AppSpacing.sm),
             CheckboxListTile(
               value: _ack,
@@ -98,10 +94,9 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
             foregroundColor: Colors.white,
           ),
           onPressed: _ack
-              ? () => Navigator.of(context).pop((
-                  confirmed: true,
-                  reason: _reason,
-                ))
+              ? () =>
+                    Navigator.of(context)
+                        .pop((confirmed: true, reason: _reason))
               : null,
           child: Text(l.deleteAccountConfirm, textAlign: TextAlign.center),
         ),
