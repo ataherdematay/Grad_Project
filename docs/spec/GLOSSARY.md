@@ -59,6 +59,9 @@ Renk tek başına durum anlatmaz; her etikette ikon ve metin olur (DES:36).
 | İş `COMPLETED` | Tamamlandı | Completed | Yeşil |
 | İş `DISPUTED` | Şikayet inceleniyor | Under review | Kırmızı |
 | İş `CANCELLED` | İptal edildi | Cancelled | İkincil metin |
+| Ödeme: iptal edilmiş iş, iade bekliyor (`LOCKED` + `REFUND`) | İade işleniyor | Refund in progress | Turuncu |
+| Ödeme: tamamlanmış iş, aktarım bekliyor (`LOCKED` + `RELEASE`) | Ustaya aktarım işleniyor | Payout to pro in progress | Turuncu |
+| Ödeme: `REFUND_NEEDS_REVIEW` / `PAYOUT_NEEDS_REVIEW` | Destek inceliyor | Support is reviewing | Turuncu |
 | Usta `PENDING_REVIEW` | İnceleniyor | Under review | Turuncu |
 | Usta `APPROVED` | Doğrulandı | Verified | Yeşil |
 

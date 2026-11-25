@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/draft_photos.dart';
 import '../../core/providers.dart';
+import '../customer/wizard_state.dart' show draftKeyFor;
 
 enum SessionStatus { unknown, bootstrapFailed, signedOut, signedIn }
 
@@ -177,6 +179,40 @@ class SessionController extends Notifier<SessionState> {
     }
     await ref.read(tokenStoreProvider).clear();
     state = const SessionState.signedOut(loggedOut: true);
+  }
+
+  /// Hesap silindi (`DELETE /me`): sunucu tüm oturumları kapattı. Yerel
+  /// token'lar, bu hesabın talep taslağı ve taslak fotoğrafları silinir,
+  /// karşılama ekranına dönülür.
+  Future<void> accountDeleted() async {
+    final userId = state.me?.id;
+    await ref.read(tokenStoreProvider).clear();
+    if (userId != null) {
+      await ref.read(sharedPreferencesProvider).remove(draftKeyFor(userId));
+      await ref.read(draftPhotoStoreProvider).deleteAll(userId);
+    }
+    _wantsPro = false;
+    state = const SessionState.signedOut(loggedOut: true);
+  }
+
+  /// `PATCH /me` ile adı günceller; dönen kullanıcı oturuma yazılır.
+  /// Başarısızlıkta `ApiException` fırlatır.
+  Future<void> updateFullName(String fullName) async {
+    final before = state.me;
+    final me = await _client.me.update(UpdateMeRequest(fullName: fullName));
+    final now = state.me;
+    if (before == null || now == null || now.id != me.id) return;
+    state = SessionState.signedIn(me);
+  }
+
+  /// `POST /me/email/confirm`: kod doğrulanınca yeni e-postalı kullanıcı
+  /// oturuma yazılır. Başarısızlıkta `ApiException` fırlatır.
+  Future<void> confirmEmailChange(String code) async {
+    final before = state.me;
+    final me = await _client.me.confirmEmailChange(code);
+    final now = state.me;
+    if (before == null || now == null || now.id != me.id) return;
+    state = SessionState.signedIn(me);
   }
 
   /// `GET /me` ile kullanıcıyı yeniler (başvuru ve müsaitlik değişince).

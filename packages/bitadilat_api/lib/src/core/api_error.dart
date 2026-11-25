@@ -21,6 +21,7 @@ enum ApiErrorCode {
   paymentInProgress('PAYMENT_IN_PROGRESS'),
   offerExpired('OFFER_EXPIRED'),
   alreadyOffered('ALREADY_OFFERED'),
+  escrowDisputed('ESCROW_DISPUTED'),
   gatewayError('GATEWAY_ERROR'),
   internalError('INTERNAL_ERROR'),
   networkError('NETWORK_ERROR'),

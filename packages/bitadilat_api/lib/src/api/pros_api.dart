@@ -24,11 +24,18 @@ class ProsApi {
     String id, {
     String? cursor,
     int? limit,
+    int? rating,
+    bool withComment = false,
   }) async {
     final res = await guardApi(
       () => _dio.get<Map<String, dynamic>>(
         '$_base/$id/reviews',
-        queryParameters: {'cursor': ?cursor, 'limit': ?limit},
+        queryParameters: {
+          'cursor': ?cursor,
+          'limit': ?limit,
+          'rating': ?rating,
+          if (withComment) 'withComment': true,
+        },
       ),
     );
     return decodeApi(() => Paged.fromJson(res.data!, ReviewItem.fromJson));

@@ -1,13 +1,20 @@
+import 'package:bitadilat_api/bitadilat_api.dart';
 import 'package:bitadilat_ui/bitadilat_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../core/error_messages.dart';
+import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
+import '../common/legal_screen.dart' show kLegalDocs, legalTitle;
 import '../common/widgets.dart';
+import 'change_password_dialog.dart';
+import 'delete_account_dialog.dart';
 
-/// Ayarlar: dil ve çıkış (onay diyaloğu). Çıkış sonrası yığını router
-/// sıfırlar (`/welcome`).
+/// Ayarlar: dil, şifre değiştirme, çıkış (onay diyaloğu) ve hesap silme.
+/// Çıkış ve silme sonrası yığını router sıfırlar (`/welcome`).
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
@@ -17,6 +24,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _loggingOut = false;
+  bool _deleting = false;
 
   Future<void> _logout() async {
     if (_loggingOut) return;
@@ -38,6 +46,43 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  Future<void> _changePassword() async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showChangePasswordDialog(context);
+    if (!ok) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(l.changePasswordDone)));
+  }
+
+  /// Onaydan sonra `DELETE /me`. Açık iş ya da kilitli ödeme varsa sunucu
+  /// 409 döner; hesap silinmez ve nedeni açıkça gösterilir.
+  Future<void> _deleteAccount() async {
+    if (_deleting) return;
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final choice = await showDeleteAccountDialog(context);
+    if (!choice.confirmed || !mounted) return;
+    setState(() => _deleting = true);
+    try {
+      await ref.read(apiClientProvider).me.deleteAccount(reason: choice.reason);
+      await ref.read(sessionProvider.notifier).accountDeleted();
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(l.deleteAccountDone)));
+    } on ApiException catch (e) {
+      final text = e.code == ApiErrorCode.illegalState
+          ? l.deleteAccountBlocked
+          : apiErrorMessage(l, e.code);
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(text)));
+    } finally {
+      if (mounted) setState(() => _deleting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -51,11 +96,36 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Align(alignment: Alignment.centerLeft, child: LanguageSwitch()),
           const SizedBox(height: AppSpacing.lg),
           AppButton(
+            label: l.settingsChangePassword,
+            icon: Icons.lock_outline,
+            variant: AppButtonVariant.secondary,
+            onPressed: _changePassword,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          AppButton(
             label: l.settingsLogout,
             icon: Icons.logout,
             variant: AppButtonVariant.secondary,
             isLoading: _loggingOut,
             onPressed: _logout,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(l.settingsLegalTitle, style: AppTypography.section),
+          const SizedBox(height: AppSpacing.xs),
+          for (final doc in kLegalDocs)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(legalTitle(l, doc)!),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push('/legal/$doc'),
+            ),
+          const SizedBox(height: AppSpacing.lg),
+          AppButton(
+            label: l.settingsDeleteAccount,
+            icon: Icons.delete_outline,
+            variant: AppButtonVariant.secondary,
+            isLoading: _deleting,
+            onPressed: _deleteAccount,
           ),
         ],
       ),

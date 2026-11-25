@@ -13,7 +13,9 @@ String apiErrorMessage(AppLocalizations l, ApiErrorCode code) => switch (code) {
   ApiErrorCode.forbidden => l.apiErrorForbidden,
   ApiErrorCode.proNotApproved => l.apiErrorProNotApproved,
   ApiErrorCode.notFound => l.apiErrorNotFound,
-  ApiErrorCode.illegalState => l.apiErrorIllegalState,
+  // ESCROW_DISPUTED yalnız admin uç noktasından gelir; mobilde genel durum metni.
+  ApiErrorCode.illegalState ||
+  ApiErrorCode.escrowDisputed => l.apiErrorIllegalState,
   ApiErrorCode.emailTaken => l.apiErrorEmailTaken,
   ApiErrorCode.phoneTaken => l.apiErrorPhoneTaken,
   ApiErrorCode.tooManyAttempts => l.apiErrorTooManyAttempts,

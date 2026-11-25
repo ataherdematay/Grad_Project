@@ -14,4 +14,14 @@ public class LoggingEmailSender implements EmailSender {
     public void sendPasswordResetCode(String toEmail, String code) {
         log.info("[DEV] Şifre sıfırlama kodu to={} code={}", toEmail, code);
     }
+
+    @Override
+    public void sendEmailChangeCode(String toEmail, String code) {
+        log.info("[DEV] E-posta değişikliği kodu to={} code={}", toEmail, code);
+    }
+
+    @Override
+    public void sendEmailChangedNotice(String oldEmail) {
+        log.info("[DEV] E-posta değişti bilgisi to={}", oldEmail);
+    }
 }

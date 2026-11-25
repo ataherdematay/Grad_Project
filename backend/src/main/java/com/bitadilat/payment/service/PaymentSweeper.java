@@ -1,5 +1,6 @@
 package com.bitadilat.payment.service;
 
+import com.bitadilat.job.PendingEscrowActions;
 import com.bitadilat.payment.domain.EscrowPayment;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -14,8 +15,11 @@ import org.springframework.stereotype.Component;
  * Para durumu belirsiz kalmış uygulama ödemelerini toparlar (5 dk'da bir):
  * <ul>
  *   <li>30 dakikadan eski INITIALIZED kayıtlar (kullanıcı WebView'i kapattı veya callback işlenemedi): Craftgate'e
- *       sorulur: başarılıysa teklif kabul edilir (yarışta iade), başarısız veya hâlâ 3DS'te ise FAILED olur
- *       (talep serbest kalır). Craftgate yanıt vermezse dokunulmaz.</li>
+ *       sorulur: başarılıysa teklif kabul edilir (yarışta iade), başarısızsa FAILED olur (talep serbest kalır). Hâlâ
+ *       3DS'te ise ancak {@link PaymentService#ABANDON_AFTER} dolunca terk edilmiş sayılır (geç banka başarısı yine de
+ *       gelirse callback onu yarış iadesine sokar). Craftgate yanıt vermezse dokunulmaz.</li>
+ *   <li>Bekleyen emanet hareketleri ({@code pending_action}: iptal iadesi, ustaya aktarım): aynı artan aralık ve
+ *       8 deneme sınırıyla {@link PendingEscrowActions} üzerinden yeniden denenir.</li>
  *   <li>İadesi yapılamamış öksüz LOCKED kayıtlar (iş açılmadı, hata kodu var): önce Craftgate'e iade durumu sorulur,
  *       artan aralıkla en fazla 8 deneme yapılır, sonra REFUND_NEEDS_REVIEW olur.</li>
  * </ul>
@@ -30,10 +34,12 @@ public class PaymentSweeper {
 
     private final JdbcTemplate jdbc;
     private final PaymentService payments;
+    private final PendingEscrowActions pendingActions;
 
-    public PaymentSweeper(JdbcTemplate jdbc, PaymentService payments) {
+    public PaymentSweeper(JdbcTemplate jdbc, PaymentService payments, PendingEscrowActions pendingActions) {
         this.jdbc = jdbc;
         this.payments = payments;
+        this.pendingActions = pendingActions;
     }
 
     @Scheduled(fixedDelayString = "${bitadilat.jobs.payment-sweep-interval:PT5M}",
@@ -53,7 +59,7 @@ public class PaymentSweeper {
                 order by created_at limit ?""", String.class, Timestamp.from(now.minus(STALE_AFTER)), BATCH);
         for (String ref : stale) {
             try {
-                payments.reconcileStale(ref);
+                payments.reconcileStale(ref, now);
             } catch (RuntimeException e) {
                 log.error("Eski ödeme toparlanamadı. ref={}", ref, e);
             }
@@ -70,6 +76,20 @@ public class PaymentSweeper {
                 payments.retryOrphanRefund(ref, now);
             } catch (RuntimeException e) {
                 log.error("Öksüz ödemenin iadesi denenemedi. ref={}", ref, e);
+            }
+        }
+        List<String> pending = jdbc.queryForList("""
+                select ref from escrow_payment
+                where pending_action is not null and status in ('LOCKED', 'DISPUTED')
+                  and (error_code is null or error_code not in ('REFUND_NEEDS_REVIEW', 'PAYOUT_NEEDS_REVIEW'))
+                  and refund_attempts < ? and (next_refund_attempt_at is null or next_refund_attempt_at <= ?)
+                order by coalesce(next_refund_attempt_at, created_at) limit ?""", String.class,
+                EscrowPayment.MAX_REFUND_ATTEMPTS, Timestamp.from(now), BATCH);
+        for (String ref : pending) {
+            try {
+                pendingActions.process(ref, now);
+            } catch (RuntimeException e) {
+                log.error("Bekleyen emanet hareketi denenemedi. ref={}", ref, e);
             }
         }
     }

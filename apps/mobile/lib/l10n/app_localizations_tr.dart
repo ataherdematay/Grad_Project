@@ -251,12 +251,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tabJobs => 'İşlerim';
 
   @override
-  String get comingSoonTitle => 'Bu bölüm hazırlanıyor';
-
-  @override
-  String get comingSoonBody => 'Hazır olunca burada göreceksin.';
-
-  @override
   String get profileSettings => 'Ayarlar';
 
   @override
@@ -315,7 +309,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get legalPrivacyTitle => 'Gizlilik politikası';
 
   @override
-  String get legalPlaceholder => 'Bu metin yayına alınmadan önce hazırlanacak.';
+  String get legalPlaceholder =>
+      'Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.';
 
   @override
   String get splashErrorTitle => 'Oturumun açılamadı';
@@ -2647,4 +2642,222 @@ class AppLocalizationsTr extends AppLocalizations {
   String suspendedMailFailed(String email) {
     return 'E-posta uygulaması açılamadı. $email adresine kendin yazabilirsin.';
   }
+
+  @override
+  String get settingsChangePassword => 'Şifreyi değiştir';
+
+  @override
+  String get changePasswordTitle => 'Şifreni değiştir';
+
+  @override
+  String get fieldCurrentPassword => 'Mevcut şifre';
+
+  @override
+  String get fieldConfirmPassword => 'Yeni şifre (tekrar)';
+
+  @override
+  String get errPasswordMismatch => 'Şifreler aynı değil.';
+
+  @override
+  String get errCurrentPasswordWrong => 'Mevcut şifre yanlış.';
+
+  @override
+  String get changePasswordDone =>
+      'Şifren değişti. Diğer cihazlardaki oturumların kapandı.';
+
+  @override
+  String get settingsDeleteAccount => 'Hesabımı sil';
+
+  @override
+  String get deleteAccountTitle => 'Hesabın silinsin mi?';
+
+  @override
+  String get deleteAccountBody =>
+      'Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAccountConfirm => 'Hesabı sil';
+
+  @override
+  String get deleteAccountBlocked =>
+      'Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.';
+
+  @override
+  String get accountEdit => 'Profili düzenle';
+
+  @override
+  String get accountEditTitle => 'Profili düzenle';
+
+  @override
+  String get accountEditContactNote =>
+      'E-posta ve telefon şimdilik değiştirilemez.';
+
+  @override
+  String get accountUpdated => 'Profilin güncellendi.';
+
+  @override
+  String get legalDraftBadge => 'Taslak metin';
+
+  @override
+  String get deleteAccountAck =>
+      'Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.';
+
+  @override
+  String get deleteAccountDone => 'Hesabın silindi.';
+
+  @override
+  String get escrowRefundPending => 'İade işleniyor';
+
+  @override
+  String get escrowRefundPendingPro => 'Müşteriye iade işleniyor';
+
+  @override
+  String get escrowPayoutPending => 'Ustaya aktarım işleniyor';
+
+  @override
+  String get escrowReview => 'Destek inceliyor';
+
+  @override
+  String get escrowExplainRefundPending =>
+      'İş iptal edildi. Tutarın kartına iadesi işleniyor; tamamlanınca bildirim alacaksın.';
+
+  @override
+  String get escrowExplainRefundPendingPro =>
+      'İş iptal edildi. Tutar müşteriye iade ediliyor.';
+
+  @override
+  String get escrowExplainPayoutPending =>
+      'İş tamamlandı. Ödeme ustaya aktarılıyor; senin yapman gereken bir şey yok.';
+
+  @override
+  String get escrowExplainPayoutPendingPro =>
+      'İş tamamlandı. Ödemenin aktarımı kontrol ediliyor; aktarılınca bildirim alacaksın.';
+
+  @override
+  String get escrowExplainReview =>
+      'Bu ödeme destek ekibinin incelemesinde. Ekip kontrol edip seninle iletişime geçecek.';
+
+  @override
+  String escrowExplainReviewEmail(String email) {
+    return 'Bu ödeme destek ekibinin incelemesinde. Sorun için $email adresine yazabilirsin.';
+  }
+
+  @override
+  String get proCancelledRequestReopened =>
+      'Talep yeniden açıldı. İptaller profilinde görünür.';
+
+  @override
+  String notifRefundCompleted(String publicCode, String amount) {
+    return '$publicCode için $amount tutarındaki iade tamamlandı.';
+  }
+
+  @override
+  String notifPayoutCompleted(String publicCode) {
+    return '$publicCode işinin ödemesi ustaya aktarıldı.';
+  }
+
+  @override
+  String get deleteAccountReasonTitle => 'Neden ayrılıyorsun? (isteğe bağlı)';
+
+  @override
+  String get deleteAccountReasonNote =>
+      'Cevabın yalnızca hizmeti iyileştirmek için, hesabına bağlanmadan saklanır.';
+
+  @override
+  String get deleteReasonNoLongerNeeded => 'Artık ihtiyacım yok';
+
+  @override
+  String get deleteReasonFoundAlternative => 'Başka bir çözüm buldum';
+
+  @override
+  String get deleteReasonPrivacy => 'Gizlilik kaygısı';
+
+  @override
+  String get deleteReasonBadExperience => 'Kötü bir deneyim yaşadım';
+
+  @override
+  String get deleteReasonOther => 'Diğer';
+
+  @override
+  String get reviewsFilterAll => 'Tümü';
+
+  @override
+  String reviewsFilterStars(int count) {
+    return '$count yıldız';
+  }
+
+  @override
+  String get reviewsFilterWithComment => 'Yorumlu';
+
+  @override
+  String get reviewsFilterEmpty => 'Bu süzgece uyan değerlendirme yok.';
+
+  @override
+  String get emailChangeAction => 'E-postayı değiştir';
+
+  @override
+  String get emailChangeTitle => 'E-posta adresini değiştir';
+
+  @override
+  String get emailChangeNewLabel => 'Yeni e-posta';
+
+  @override
+  String get emailChangePasswordLabel => 'Şifren';
+
+  @override
+  String get emailChangeSendCode => 'Kod gönder';
+
+  @override
+  String emailChangeCodeIntro(String email) {
+    return '$email adresine 6 haneli bir kod gönderdik. Kodu girince e-postan değişir.';
+  }
+
+  @override
+  String get emailChangeCodeLabel => 'Doğrulama kodu';
+
+  @override
+  String get emailChangeConfirm => 'Onayla';
+
+  @override
+  String get emailChangeDone => 'E-posta adresin güncellendi.';
+
+  @override
+  String get emailChangeWrongPassword => 'Şifre yanlış. Tekrar dene.';
+
+  @override
+  String get emailChangeSame => 'Bu zaten kullandığın e-posta adresi.';
+
+  @override
+  String get emailChangeTaken => 'Bu e-posta başka bir hesapta kayıtlı.';
+
+  @override
+  String get emailChangeCodeInvalid =>
+      'Kod geçersiz veya süresi dolmuş. 6 haneyi kontrol et ya da yeni kod iste.';
+
+  @override
+  String get emailChangeCodeFormat => 'Kod 6 haneli olmalı.';
+
+  @override
+  String get phoneReadOnlyNote =>
+      'Telefon numarası şimdilik uygulamadan değiştirilemez.';
+
+  @override
+  String get legalPaymentTitle => 'Ödeme ve güvence havuzu koşulları';
+
+  @override
+  String get legalProTitle => 'Usta sözleşmesi özeti';
+
+  @override
+  String get legalDraftNotice =>
+      'Bu metin taslaktır ve henüz hukuken geçerli değildir. Hukukçu incelemesinden sonra son hâli yayına alınacak.';
+
+  @override
+  String get legalLoadFailed => 'Metin açılamadı. Tekrar dene.';
+
+  @override
+  String get settingsLegalTitle => 'Yasal metinler';
+
+  @override
+  String get payFailAbandoned =>
+      'Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin.';
 }

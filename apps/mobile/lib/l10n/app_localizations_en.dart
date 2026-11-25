@@ -258,12 +258,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabJobs => 'My jobs';
 
   @override
-  String get comingSoonTitle => 'This section is being prepared';
-
-  @override
-  String get comingSoonBody => 'You will see it here when it is ready.';
-
-  @override
   String get profileSettings => 'Settings';
 
   @override
@@ -322,7 +316,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get legalPrivacyTitle => 'Privacy policy';
 
   @override
-  String get legalPlaceholder => 'This text will be prepared before launch.';
+  String get legalPlaceholder =>
+      'This text is a draft and is not legally binding yet. The final version will appear here before launch.';
 
   @override
   String get splashErrorTitle => 'Could not open your session';
@@ -2713,4 +2708,222 @@ class AppLocalizationsEn extends AppLocalizations {
   String suspendedMailFailed(String email) {
     return 'Could not open the email app. You can write to $email yourself.';
   }
+
+  @override
+  String get settingsChangePassword => 'Change password';
+
+  @override
+  String get changePasswordTitle => 'Change your password';
+
+  @override
+  String get fieldCurrentPassword => 'Current password';
+
+  @override
+  String get fieldConfirmPassword => 'New password (again)';
+
+  @override
+  String get errPasswordMismatch => 'The passwords do not match.';
+
+  @override
+  String get errCurrentPasswordWrong => 'The current password is wrong.';
+
+  @override
+  String get changePasswordDone =>
+      'Your password was changed. Your sessions on other devices were signed out.';
+
+  @override
+  String get settingsDeleteAccount => 'Delete my account';
+
+  @override
+  String get deleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get deleteAccountBody =>
+      'Your personal details are erased, your addresses are removed and all your sessions are signed out. This cannot be undone.';
+
+  @override
+  String get deleteAccountConfirm => 'Delete account';
+
+  @override
+  String get deleteAccountBlocked =>
+      'You cannot delete your account while you have an open job or a payment in the secure hold. Try again once your jobs are finished.';
+
+  @override
+  String get accountEdit => 'Edit profile';
+
+  @override
+  String get accountEditTitle => 'Edit profile';
+
+  @override
+  String get accountEditContactNote =>
+      'Email and phone cannot be changed for now.';
+
+  @override
+  String get accountUpdated => 'Your profile was updated.';
+
+  @override
+  String get legalDraftBadge => 'Draft text';
+
+  @override
+  String get deleteAccountAck =>
+      'I understand that my account and personal details will be deleted permanently.';
+
+  @override
+  String get deleteAccountDone => 'Your account was deleted.';
+
+  @override
+  String get escrowRefundPending => 'Refund in progress';
+
+  @override
+  String get escrowRefundPendingPro => 'Refund to the customer in progress';
+
+  @override
+  String get escrowPayoutPending => 'Payout to pro in progress';
+
+  @override
+  String get escrowReview => 'Support is reviewing';
+
+  @override
+  String get escrowExplainRefundPending =>
+      'The job was cancelled. The refund to your card is being processed; you will get a notification when it is done.';
+
+  @override
+  String get escrowExplainRefundPendingPro =>
+      'The job was cancelled. The amount is being refunded to the customer.';
+
+  @override
+  String get escrowExplainPayoutPending =>
+      'The job is complete. The payment is being transferred to the pro; there is nothing else for you to do.';
+
+  @override
+  String get escrowExplainPayoutPendingPro =>
+      'The job is complete. Your payout is being checked; you will get a notification once it is transferred.';
+
+  @override
+  String get escrowExplainReview =>
+      'This payment is being reviewed by our support team. They will check it and get in touch with you.';
+
+  @override
+  String escrowExplainReviewEmail(String email) {
+    return 'This payment is being reviewed by our support team. If you have questions, write to $email.';
+  }
+
+  @override
+  String get proCancelledRequestReopened =>
+      'The request is open again. Cancellations show on your profile.';
+
+  @override
+  String notifRefundCompleted(String publicCode, String amount) {
+    return 'The $amount refund for $publicCode is complete.';
+  }
+
+  @override
+  String notifPayoutCompleted(String publicCode) {
+    return 'The payment for $publicCode has been transferred to the pro.';
+  }
+
+  @override
+  String get deleteAccountReasonTitle => 'Why are you leaving? (optional)';
+
+  @override
+  String get deleteAccountReasonNote =>
+      'Your answer is stored only to improve the service and is not linked to your account.';
+
+  @override
+  String get deleteReasonNoLongerNeeded => 'I no longer need it';
+
+  @override
+  String get deleteReasonFoundAlternative => 'I found another option';
+
+  @override
+  String get deleteReasonPrivacy => 'Privacy concerns';
+
+  @override
+  String get deleteReasonBadExperience => 'I had a bad experience';
+
+  @override
+  String get deleteReasonOther => 'Other';
+
+  @override
+  String get reviewsFilterAll => 'All';
+
+  @override
+  String reviewsFilterStars(int count) {
+    return '$count stars';
+  }
+
+  @override
+  String get reviewsFilterWithComment => 'With comment';
+
+  @override
+  String get reviewsFilterEmpty => 'No reviews match this filter.';
+
+  @override
+  String get emailChangeAction => 'Change e-mail';
+
+  @override
+  String get emailChangeTitle => 'Change your e-mail';
+
+  @override
+  String get emailChangeNewLabel => 'New e-mail';
+
+  @override
+  String get emailChangePasswordLabel => 'Your password';
+
+  @override
+  String get emailChangeSendCode => 'Send code';
+
+  @override
+  String emailChangeCodeIntro(String email) {
+    return 'We sent a 6-digit code to $email. Your e-mail changes once you enter it.';
+  }
+
+  @override
+  String get emailChangeCodeLabel => 'Verification code';
+
+  @override
+  String get emailChangeConfirm => 'Confirm';
+
+  @override
+  String get emailChangeDone => 'Your e-mail has been updated.';
+
+  @override
+  String get emailChangeWrongPassword => 'Wrong password. Try again.';
+
+  @override
+  String get emailChangeSame => 'This is already your e-mail address.';
+
+  @override
+  String get emailChangeTaken => 'This e-mail belongs to another account.';
+
+  @override
+  String get emailChangeCodeInvalid =>
+      'The code is invalid or expired. Check the 6 digits or request a new code.';
+
+  @override
+  String get emailChangeCodeFormat => 'The code must have 6 digits.';
+
+  @override
+  String get phoneReadOnlyNote =>
+      'Your phone number cannot be changed in the app for now.';
+
+  @override
+  String get legalPaymentTitle => 'Payment and secure hold terms';
+
+  @override
+  String get legalProTitle => 'Pro agreement summary';
+
+  @override
+  String get legalDraftNotice =>
+      'This text is a draft and is not legally binding yet. The final version will be published after legal review.';
+
+  @override
+  String get legalLoadFailed => 'The text could not be opened. Try again.';
+
+  @override
+  String get settingsLegalTitle => 'Legal';
+
+  @override
+  String get payFailAbandoned =>
+      'The bank verification was not completed and your card was not charged. You can try again.';
 }

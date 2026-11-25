@@ -9,6 +9,7 @@ import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../common/labels.dart';
 import '../common/widgets.dart';
+import 'payment_review_section.dart';
 
 const _statuses = [
   'LOCKED',
@@ -41,6 +42,10 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
       title: l.paymentsTitle,
       subtitle: l.paymentsSubtitle,
       children: [
+        PaymentReviewSection(
+          onResolved: () => ref.invalidate(paymentsProvider(_status)),
+        ),
+        const SizedBox(height: AppSpacing.lg),
         FilterRow<String?>(
           label: l.filterStatus,
           selected: _status,

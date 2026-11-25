@@ -123,6 +123,47 @@ void main() {
       expect(find.textContaining('askıya alındı'), findsOneWidget);
     });
 
+    testWidgets('oturum sürerken 403: sunucuda çıkış, girişe dönüş, açıklama', (
+      tester,
+    ) async {
+      final fake = FakeApi()
+        ..onJson('POST', '/auth/login', authJson())
+        ..on('POST', '/auth/logout', (_) => empty(204));
+      final h = await pumpAdmin(tester, fake: fake, signedIn: false);
+      await submitLogin(tester);
+      expect(h.location, '/');
+
+      fake.on('GET', '/admin/applications', (_) => apiError(403, 'FORBIDDEN'));
+      h.router.go(Routes.applications);
+      await tester.pumpAndSettle();
+
+      expect(h.location, '/login');
+      expect(find.textContaining('oturumun kapatıldı'), findsOneWidget);
+      expect(await h.store.read(), isNull);
+      expect(fake.count('POST', '/auth/logout'), 1);
+      expect(fake.last('POST', '/auth/logout').data, {
+        'refreshToken': 'REFRESH',
+      });
+    });
+
+    testWidgets('403 İngilizce açıklama gösterir', (tester) async {
+      final fake = FakeApi()
+        ..onJson('POST', '/auth/login', authJson())
+        ..on('POST', '/auth/logout', (_) => empty(204));
+      final h = await pumpAdmin(
+        tester,
+        fake: fake,
+        signedIn: false,
+        locale: 'en',
+      );
+      await submitLogin(tester);
+      fake.on('GET', '/admin/applications', (_) => apiError(403, 'FORBIDDEN'));
+      h.router.go(Routes.applications);
+      await tester.pumpAndSettle();
+      expect(h.location, '/login');
+      expect(find.textContaining('no longer valid'), findsOneWidget);
+    });
+
     testWidgets('askıdaki hesabın girişi açık mesajla reddedilir', (
       tester,
     ) async {

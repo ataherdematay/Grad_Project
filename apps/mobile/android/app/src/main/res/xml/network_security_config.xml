@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Release: yalnizca HTTPS (iOS ATS ile ayni). Debug icin src/debug/res/xml ayni dosyayi
+     yerel gelistirme sunucularina HTTP izniyle degistirir. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>

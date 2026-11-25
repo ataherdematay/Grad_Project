@@ -16,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Teslimin onaylanması: müşteri onayı ve 48 saatlik otomatik tamamlama aynı yoldan geçer. İş COMPLETED, emanet
  * RELEASED_TO_PRO olur, PAYOUT ve COMMISSION defter satırları yazılır, ustanın tamamlanan iş sayısı artar ve usta
- * bilgilendirilir.
+ * bilgilendirilir. Aktarımdan önce Craftgate'te iade sorulur ({@link EscrowService#releaseChecked}): iade görünürse
+ * emanet LOCKED + {@code PAYOUT_NEEDS_REVIEW} kalır; Craftgate yanıt vermezse aktarım bekler ve zamanlayıcı yeniden dener.
  */
 @Component
 public class JobSettlement {
@@ -42,10 +43,15 @@ public class JobSettlement {
         JobStateMachine.target(job.getStatus(), Trigger.CONFIRM); // emanete dokunmadan önce geçişi doğrula
         EscrowPayment payment = escrow.lockForJob(job.getId());
         flow.move(job, Trigger.CONFIRM, actorId, actorRole, null, now);
-        escrow.release(payment);
+        // Craftgate'te iade görünürse aktarılmaz (elle inceleme); Craftgate yanıt vermezse aktarım bekler ve ödeme
+        // toplayıcısı yeniden dener. İki durumda da iş tamamlanır: müşteri Craftgate kesintisi yüzünden bekletilmez.
+        EscrowService.ReleaseOutcome outcome = escrow.releaseChecked(payment, now);
         // Atomik artış: aynı ustanın başka bir işi aynı anda tamamlansa bile sürüm çakışması olmaz.
         jdbc.update("update pro_profiles set completed_jobs = completed_jobs + 1, version = version + 1 "
                 + "where user_id = ?", job.getProId());
+        if (outcome != EscrowService.ReleaseOutcome.RELEASED) {
+            return; // PAYOUT_RELEASED, aktarım gerçekten yapıldığında (PendingEscrowActions) gönderilir
+        }
         String code = requests.findById(job.getRequestId()).map(r -> r.getPublicCode()).orElse("");
         notifications.notify(job.getProId(), NotificationService.PAYOUT_RELEASED,
                 Map.of("jobId", job.getId().toString(), "publicCode", code,

@@ -566,18 +566,6 @@ abstract class AppLocalizations {
   /// **'İşlerim'**
   String get tabJobs;
 
-  /// No description provided for @comingSoonTitle.
-  ///
-  /// In tr, this message translates to:
-  /// **'Bu bölüm hazırlanıyor'**
-  String get comingSoonTitle;
-
-  /// No description provided for @comingSoonBody.
-  ///
-  /// In tr, this message translates to:
-  /// **'Hazır olunca burada göreceksin.'**
-  String get comingSoonBody;
-
   /// No description provided for @profileSettings.
   ///
   /// In tr, this message translates to:
@@ -695,7 +683,7 @@ abstract class AppLocalizations {
   /// No description provided for @legalPlaceholder.
   ///
   /// In tr, this message translates to:
-  /// **'Bu metin yayına alınmadan önce hazırlanacak.'**
+  /// **'Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.'**
   String get legalPlaceholder;
 
   /// No description provided for @splashErrorTitle.
@@ -4815,6 +4803,390 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'E-posta uygulaması açılamadı. {email} adresine kendin yazabilirsin.'**
   String suspendedMailFailed(String email);
+
+  /// No description provided for @settingsChangePassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreyi değiştir'**
+  String get settingsChangePassword;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreni değiştir'**
+  String get changePasswordTitle;
+
+  /// No description provided for @fieldCurrentPassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mevcut şifre'**
+  String get fieldCurrentPassword;
+
+  /// No description provided for @fieldConfirmPassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni şifre (tekrar)'**
+  String get fieldConfirmPassword;
+
+  /// No description provided for @errPasswordMismatch.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifreler aynı değil.'**
+  String get errPasswordMismatch;
+
+  /// No description provided for @errCurrentPasswordWrong.
+  ///
+  /// In tr, this message translates to:
+  /// **'Mevcut şifre yanlış.'**
+  String get errCurrentPasswordWrong;
+
+  /// No description provided for @changePasswordDone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifren değişti. Diğer cihazlardaki oturumların kapandı.'**
+  String get changePasswordDone;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabımı sil'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın silinsin mi?'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.'**
+  String get deleteAccountBody;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabı sil'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteAccountBlocked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.'**
+  String get deleteAccountBlocked;
+
+  /// No description provided for @accountEdit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profili düzenle'**
+  String get accountEdit;
+
+  /// No description provided for @accountEditTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profili düzenle'**
+  String get accountEditTitle;
+
+  /// No description provided for @accountEditContactNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta ve telefon şimdilik değiştirilemez.'**
+  String get accountEditContactNote;
+
+  /// No description provided for @accountUpdated.
+  ///
+  /// In tr, this message translates to:
+  /// **'Profilin güncellendi.'**
+  String get accountUpdated;
+
+  /// No description provided for @legalDraftBadge.
+  ///
+  /// In tr, this message translates to:
+  /// **'Taslak metin'**
+  String get legalDraftBadge;
+
+  /// No description provided for @deleteAccountAck.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.'**
+  String get deleteAccountAck;
+
+  /// No description provided for @deleteAccountDone.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hesabın silindi.'**
+  String get deleteAccountDone;
+
+  /// No description provided for @escrowRefundPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade işleniyor'**
+  String get escrowRefundPending;
+
+  /// No description provided for @escrowRefundPendingPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteriye iade işleniyor'**
+  String get escrowRefundPendingPro;
+
+  /// No description provided for @escrowPayoutPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya aktarım işleniyor'**
+  String get escrowPayoutPending;
+
+  /// No description provided for @escrowReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Destek inceliyor'**
+  String get escrowReview;
+
+  /// No description provided for @escrowExplainRefundPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş iptal edildi. Tutarın kartına iadesi işleniyor; tamamlanınca bildirim alacaksın.'**
+  String get escrowExplainRefundPending;
+
+  /// No description provided for @escrowExplainRefundPendingPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş iptal edildi. Tutar müşteriye iade ediliyor.'**
+  String get escrowExplainRefundPendingPro;
+
+  /// No description provided for @escrowExplainPayoutPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş tamamlandı. Ödeme ustaya aktarılıyor; senin yapman gereken bir şey yok.'**
+  String get escrowExplainPayoutPending;
+
+  /// No description provided for @escrowExplainPayoutPendingPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş tamamlandı. Ödemenin aktarımı kontrol ediliyor; aktarılınca bildirim alacaksın.'**
+  String get escrowExplainPayoutPendingPro;
+
+  /// No description provided for @escrowExplainReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu ödeme destek ekibinin incelemesinde. Ekip kontrol edip seninle iletişime geçecek.'**
+  String get escrowExplainReview;
+
+  /// No description provided for @escrowExplainReviewEmail.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu ödeme destek ekibinin incelemesinde. Sorun için {email} adresine yazabilirsin.'**
+  String escrowExplainReviewEmail(String email);
+
+  /// No description provided for @proCancelledRequestReopened.
+  ///
+  /// In tr, this message translates to:
+  /// **'Talep yeniden açıldı. İptaller profilinde görünür.'**
+  String get proCancelledRequestReopened;
+
+  /// No description provided for @notifRefundCompleted.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} için {amount} tutarındaki iade tamamlandı.'**
+  String notifRefundCompleted(String publicCode, String amount);
+
+  /// No description provided for @notifPayoutCompleted.
+  ///
+  /// In tr, this message translates to:
+  /// **'{publicCode} işinin ödemesi ustaya aktarıldı.'**
+  String notifPayoutCompleted(String publicCode);
+
+  /// No description provided for @deleteAccountReasonTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Neden ayrılıyorsun? (isteğe bağlı)'**
+  String get deleteAccountReasonTitle;
+
+  /// No description provided for @deleteAccountReasonNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Cevabın yalnızca hizmeti iyileştirmek için, hesabına bağlanmadan saklanır.'**
+  String get deleteAccountReasonNote;
+
+  /// No description provided for @deleteReasonNoLongerNeeded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Artık ihtiyacım yok'**
+  String get deleteReasonNoLongerNeeded;
+
+  /// No description provided for @deleteReasonFoundAlternative.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başka bir çözüm buldum'**
+  String get deleteReasonFoundAlternative;
+
+  /// No description provided for @deleteReasonPrivacy.
+  ///
+  /// In tr, this message translates to:
+  /// **'Gizlilik kaygısı'**
+  String get deleteReasonPrivacy;
+
+  /// No description provided for @deleteReasonBadExperience.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kötü bir deneyim yaşadım'**
+  String get deleteReasonBadExperience;
+
+  /// No description provided for @deleteReasonOther.
+  ///
+  /// In tr, this message translates to:
+  /// **'Diğer'**
+  String get deleteReasonOther;
+
+  /// No description provided for @reviewsFilterAll.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tümü'**
+  String get reviewsFilterAll;
+
+  /// No description provided for @reviewsFilterStars.
+  ///
+  /// In tr, this message translates to:
+  /// **'{count} yıldız'**
+  String reviewsFilterStars(int count);
+
+  /// No description provided for @reviewsFilterWithComment.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yorumlu'**
+  String get reviewsFilterWithComment;
+
+  /// No description provided for @reviewsFilterEmpty.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu süzgece uyan değerlendirme yok.'**
+  String get reviewsFilterEmpty;
+
+  /// No description provided for @emailChangeAction.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-postayı değiştir'**
+  String get emailChangeAction;
+
+  /// No description provided for @emailChangeTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta adresini değiştir'**
+  String get emailChangeTitle;
+
+  /// No description provided for @emailChangeNewLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yeni e-posta'**
+  String get emailChangeNewLabel;
+
+  /// No description provided for @emailChangePasswordLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifren'**
+  String get emailChangePasswordLabel;
+
+  /// No description provided for @emailChangeSendCode.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kod gönder'**
+  String get emailChangeSendCode;
+
+  /// No description provided for @emailChangeCodeIntro.
+  ///
+  /// In tr, this message translates to:
+  /// **'{email} adresine 6 haneli bir kod gönderdik. Kodu girince e-postan değişir.'**
+  String emailChangeCodeIntro(String email);
+
+  /// No description provided for @emailChangeCodeLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Doğrulama kodu'**
+  String get emailChangeCodeLabel;
+
+  /// No description provided for @emailChangeConfirm.
+  ///
+  /// In tr, this message translates to:
+  /// **'Onayla'**
+  String get emailChangeConfirm;
+
+  /// No description provided for @emailChangeDone.
+  ///
+  /// In tr, this message translates to:
+  /// **'E-posta adresin güncellendi.'**
+  String get emailChangeDone;
+
+  /// No description provided for @emailChangeWrongPassword.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şifre yanlış. Tekrar dene.'**
+  String get emailChangeWrongPassword;
+
+  /// No description provided for @emailChangeSame.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu zaten kullandığın e-posta adresi.'**
+  String get emailChangeSame;
+
+  /// No description provided for @emailChangeTaken.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu e-posta başka bir hesapta kayıtlı.'**
+  String get emailChangeTaken;
+
+  /// No description provided for @emailChangeCodeInvalid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kod geçersiz veya süresi dolmuş. 6 haneyi kontrol et ya da yeni kod iste.'**
+  String get emailChangeCodeInvalid;
+
+  /// No description provided for @emailChangeCodeFormat.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kod 6 haneli olmalı.'**
+  String get emailChangeCodeFormat;
+
+  /// No description provided for @phoneReadOnlyNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'Telefon numarası şimdilik uygulamadan değiştirilemez.'**
+  String get phoneReadOnlyNote;
+
+  /// No description provided for @legalPaymentTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme ve güvence havuzu koşulları'**
+  String get legalPaymentTitle;
+
+  /// No description provided for @legalProTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta sözleşmesi özeti'**
+  String get legalProTitle;
+
+  /// No description provided for @legalDraftNotice.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu metin taslaktır ve henüz hukuken geçerli değildir. Hukukçu incelemesinden sonra son hâli yayına alınacak.'**
+  String get legalDraftNotice;
+
+  /// No description provided for @legalLoadFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Metin açılamadı. Tekrar dene.'**
+  String get legalLoadFailed;
+
+  /// No description provided for @settingsLegalTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yasal metinler'**
+  String get settingsLegalTitle;
+
+  /// No description provided for @payFailAbandoned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin.'**
+  String get payFailAbandoned;
 }
 
 class _AppLocalizationsDelegate

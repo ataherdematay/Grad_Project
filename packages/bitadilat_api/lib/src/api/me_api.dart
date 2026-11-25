@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../core/api_config.dart';
 import '../core/api_error.dart';
 import '../models/address.dart';
+import '../models/enums.dart';
 import '../models/me.dart';
 import '../models/requests.dart';
 
@@ -63,4 +64,38 @@ class MeApi {
     () =>
         _dio.post<void>('${ApiConfig.prefix}/me/password', data: body.toJson()),
   );
+
+  /// `DELETE /me`: hesabı siler (anonimleştirir) ve tüm oturumları kapatır.
+  /// Açık iş ya da kilitli güvence havuzu varsa sunucu `ILLEGAL_STATE` (409)
+  /// döner. [reason] isteğe bağlıdır; yalnızca analiz için, kullanıcıya
+  /// bağlanmadan saklanır.
+  Future<void> deleteAccount({AccountDeletionReason? reason}) => guardApi(
+    () => _dio.delete<void>(
+      '${ApiConfig.prefix}/me',
+      data: reason == null ? null : {'reason': reason.wire},
+    ),
+  );
+
+  /// `POST /me/email`: yeni adrese 6 haneli doğrulama kodu gönderir (202).
+  /// E-posta, kod [confirmEmailChange] ile doğrulanmadan değişmez.
+  Future<void> requestEmailChange({
+    required String newEmail,
+    required String password,
+  }) => guardApi(
+    () => _dio.post<void>(
+      '${ApiConfig.prefix}/me/email',
+      data: {'newEmail': newEmail, 'password': password},
+    ),
+  );
+
+  /// `POST /me/email/confirm`: kodu doğrular; yeni e-postalı `Me` döner.
+  Future<Me> confirmEmailChange(String code) async {
+    final res = await guardApi(
+      () => _dio.post<Map<String, dynamic>>(
+        '${ApiConfig.prefix}/me/email/confirm',
+        data: {'code': code},
+      ),
+    );
+    return decodeApi(() => Me.fromJson(res.data!));
+  }
 }

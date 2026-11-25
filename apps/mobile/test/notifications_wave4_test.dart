@@ -259,6 +259,20 @@ List<_Case> get _cases => [
     'Başvurunda eksik belgeler var. İnceleme notu: Kimlik okunmuyor.',
     'Your application has missing documents. Review note: Kimlik okunmuyor.',
   ),
+  const _Case(
+    'REFUND_COMPLETED',
+    {'publicCode': 'BD-88409', 'amount': '1200.00', 'ref': 'e1'},
+    '/c/jobs/j1',
+    'BD-88409 için ₺1.200 tutarındaki iade tamamlandı.',
+    'The ₺1,200 refund for BD-88409 is complete.',
+  ),
+  const _Case(
+    'PAYOUT_COMPLETED',
+    {'publicCode': 'BD-88409'},
+    '/c/jobs/j1',
+    'BD-88409 işinin ödemesi ustaya aktarıldı.',
+    'The payment for BD-88409 has been transferred to the pro.',
+  ),
 ];
 
 AppLocalizations lang(String code) => lookupAppLocalizations(Locale(code));
@@ -271,8 +285,8 @@ void main() {
 
   // ---------------------------------------------------------------------------
   group('Metinler (type + params)', () {
-    test('sözleşmedeki 19 tür tabloda', () {
-      expect(_cases.length, 19);
+    test('sözleşmedeki 21 tür tabloda', () {
+      expect(_cases.length, 21);
       expect(
         {for (final c in _cases) c.type},
         {

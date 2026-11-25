@@ -513,6 +513,10 @@ String paymentFailureBody(AppLocalizations l, PaymentResult r) =>
       PaymentErrorCode.requestAlreadyAssigned => l.payFailAssigned,
       PaymentErrorCode.offerExpired => l.payFailExpired,
       PaymentErrorCode.resultUncertain => l.payFailUncertain,
+      PaymentErrorCode.threedsAbandoned => l.payFailAbandoned,
+      // İade/aktarım destek incelemesinde (otomatik deneme bitti).
+      PaymentErrorCode.refundNeedsReview ||
+      PaymentErrorCode.payoutNeedsReview => l.escrowExplainReview,
       PaymentErrorCode.unknown || null => l.payFailGeneric,
     };
 

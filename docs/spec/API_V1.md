@@ -17,7 +17,7 @@ Mobil ve admin istemcilerinin konuşacağı uç noktalar. Uygulandıkça springd
 | 401 | `UNAUTHENTICATED`, `TOKEN_EXPIRED`, `BAD_CREDENTIALS`, `ACCOUNT_SUSPENDED` |
 | 403 | `FORBIDDEN`, `PRO_NOT_APPROVED` |
 | 404 | `NOT_FOUND` (yetkisiz kayıtlar için de 404; varlık sızdırılmaz) |
-| 409 | `ILLEGAL_STATE`, `DUPLICATE_ATTEMPT`, `PAYMENT_IN_PROGRESS`, `OFFER_EXPIRED`, `ALREADY_OFFERED`, `EMAIL_TAKEN`, `PHONE_TAKEN` |
+| 409 | `ILLEGAL_STATE`, `DUPLICATE_ATTEMPT`, `PAYMENT_IN_PROGRESS`, `OFFER_EXPIRED`, `ALREADY_OFFERED`, `EMAIL_TAKEN`, `PHONE_TAKEN`, `ESCROW_DISPUTED` |
 | 402 | `PAYMENT_DECLINED` (+ `ref`) |
 | 429 | `TOO_MANY_ATTEMPTS` |
 | 502 | `GATEWAY_ERROR` |
@@ -35,7 +35,8 @@ Mobil ve admin istemcilerinin konuşacağı uç noktalar. Uygulandıkça springd
 | GET | `/me` | Kullanıcı, modlar, usta profil durumu, okunmamış sayıları |
 | PATCH | `/me` | Ad, dil, son mod |
 | POST | `/me/password` | Şifre değiştir |
-| DELETE | `/me` | Hesap sil (açık iş varsa 409) |
+| POST | `/me/email` · `/me/email/confirm` | E-posta değiştir (yeni adrese kod; follow-up) |
+| DELETE | `/me` | Hesap sil (açık iş varsa 409); isteğe bağlı gövde `{reason}` |
 | GET/POST/PATCH/DELETE | `/me/addresses[/{id}]` | Adresler |
 
 ## Katalog
@@ -66,7 +67,7 @@ Mobil ve admin istemcilerinin konuşacağı uç noktalar. Uygulandıkça springd
 | GET | `/offers/{id}` | Teklif detayı (kalemler dahil) |
 | POST | `/offers/{id}/decline` | Gerekçeyle reddet |
 | GET | `/pros/{id}` | Usta herkese açık profili |
-| GET | `/pros/{id}/reviews` | Değerlendirmeler |
+| GET | `/pros/{id}/reviews?rating=&withComment=` | Değerlendirmeler (süzgeç: follow-up) |
 
 ## Ödeme
 
@@ -139,6 +140,8 @@ Eski `/api/offers/{id}` ve `/api/payments/*` uç noktaları yalnızca `dev` prof
 | GET | `/admin/users?q=&role=&status=&district=` | Hesaplar |
 | POST | `/admin/users/{id}/suspend` · `/reactivate` | Hesap durumu |
 | GET | `/admin/payments?status=` | Emanet defteri |
+| GET | `/admin/payments/review` · `/admin/payments/{ref}/review` | İncelemedeki ödemeler, Craftgate kontrolü (follow-up) |
+| POST | `/admin/payments/{ref}/resolve` | İncelemeyi çöz: `MARK_REFUNDED` / `RETRY_REFUND` / `RELEASE`, not |
 
 ## Geliştirme
 
@@ -390,7 +393,7 @@ Binding for both backend and Flutter. Wave 1 and wave 2 contracts still apply. T
 | `address` | `{districtName, neighborhood, lineFull, doorNote}`. Both participants see the full line once a job exists. |
 | `appointment` | `{scheduledFrom, scheduledTo, pendingProposal}`. `pendingProposal` is null or `{id, proposedBy ("CUSTOMER"\|"PRO"), slotFrom, slotTo, createdAt}`. |
 | `timeline` | `[JobEvent]`, oldest first |
-| `payment` | `{ref, status, totalAmount, refundedAmount, serviceFee, netEarning}`. `serviceFee` and `netEarning` are filled only for the pro. |
+| `payment` | `{ref, status, totalAmount, refundedAmount, serviceFee, netEarning, pendingAction, errorCode}` (`errorCode`: follow-up contract). `serviceFee` and `netEarning` are filled only for the pro. `pendingAction` is null, `"REFUND"` (job cancelled, refund queued or being retried; `status` stays `LOCKED` until it is done) or `"RELEASE"` (job completed, payout to the pro waiting; `status` stays `LOCKED`). |
 | `autoCompleteAt` | Nullable |
 | `review` | `ReviewItem` or null |
 | `complaint` | null or `{id, publicCode, status}` |
@@ -418,7 +421,7 @@ Binding for both backend and Flutter. Wave 1 and wave 2 contracts still apply. T
 **`PaymentResult`** = `{ref, status, offerId, requestId, jobId, totalAmount, cardLast4, errorCode, errorMessage, resultUncertain}`.
 - `status` is the escrow status: `INITIALIZED`, `LOCKED`, `FAILED`, `REFUNDED_TO_CUSTOMER`, `RELEASED_TO_PRO`, `DISPUTED` or `SPLIT_SETTLED`.
 - `jobId` is nullable.
-- `errorCode` is nullable: `PAYMENT_DECLINED`, `REQUEST_ALREADY_ASSIGNED`, `OFFER_EXPIRED` or `RESULT_UNCERTAIN`.
+- `errorCode` is nullable: `PAYMENT_DECLINED`, `THREEDS_ABANDONED`, `REQUEST_ALREADY_ASSIGNED`, `OFFER_EXPIRED`, `RESULT_UNCERTAIN`, `REFUND_NEEDS_REVIEW` (automatic refund gave up, support reviews) or `PAYOUT_NEEDS_REVIEW` (payout to the pro stopped because Craftgate shows a refund, or the pre-payout check failed 8 times; support reviews).
 - `errorMessage` is a nullable, friendly Turkish message for display.
 
 Wave 2 changes:
@@ -437,7 +440,7 @@ Wave 2 changes:
   - The offer is PENDING and its `validUntil` is in the future. Otherwise 409 `OFFER_EXPIRED` / `ILLEGAL_STATE`.
 - The amount always comes from the offer on the server.
 - Errors:
-  - An INITIALIZED payment already exists for this request → 409 `PAYMENT_IN_PROGRESS`.
+  - An INITIALIZED payment already exists for this request → 409 `PAYMENT_IN_PROGRESS`, with one exception: if that attempt is older than 10 minutes, the server asks Craftgate about it synchronously. When Craftgate says 3DS was never finished at the bank (`INIT_THREEDS`), the old attempt becomes FAILED + `THREEDS_ABANDONED` (no money was taken; the server never called `complete3ds`) and the new attempt proceeds. If Craftgate says `CALLBACK_THREEDS`, `WAITING` or success, does not answer, or the old row is being processed right now, the answer stays 409 `PAYMENT_IN_PROGRESS`.
   - Same `attemptKey` reused → 409 `DUPLICATE_ATTEMPT`.
   - 400 `INVALID_CARD` with `field` = `holderName` | `number` | `expiry` | `cvc`.
   - 402 `PAYMENT_DECLINED` with `ref`.
@@ -448,6 +451,8 @@ Wave 2 changes:
 - The bank posts to the existing `POST /api/payments/3ds/callback`; that path does not change.
 - For `channel = APP` the result page goes to `GET /api/payments/3ds/done?ref=<ref>`. That page is minimal static HTML ("İşlem tamamlandı, uygulamaya dönülüyor…"), shows no payment data and is public.
 - The `PROTOTYPE` channel behaves exactly as before.
+- Without a new attempt, the sweeper marks a payment whose 3DS never finished FAILED + `THREEDS_ABANDONED` only 2 h after it was created (or at once if Craftgate reports a final failure). A new attempt from the customer can close it earlier (10 minutes, `INIT_THREEDS` only, see the 409 rule above).
+- If a successful bank return still arrives for an abandoned payment and Craftgate confirms the money was taken, the payment becomes LOCKED and goes through the normal acceptance below (job opens if the request is still OPEN, otherwise automatic refund with `REQUEST_ALREADY_ASSIGNED` / `OFFER_EXPIRED`). The server never completes (`complete3ds`) an abandoned payment itself.
 
 **`GET /payments/{ref}`** returns `PaymentResult`.
 - Visible to the customer who owns it, the assigned pro and admins; anyone else gets 404.
@@ -505,25 +510,28 @@ Wave 2 changes:
 All of these return `JobDetail` and notify the customer.
 
 **`POST /jobs/{id}/confirm`** (customer, WORK_FINISHED)
-- Job → COMPLETED.
-- Escrow → RELEASED_TO_PRO.
-- `payout_ledger` gets a PAYOUT row and a COMMISSION row.
-- The pro's `completed_jobs` goes up by 1.
-- Notify the pro with `PAYOUT_RELEASED`.
+- Job → COMPLETED. The pro's `completed_jobs` goes up by 1.
+- Before paying the pro, the server asks Craftgate whether this payment has any refund (not for `provider = SEED`):
+  - No refund: escrow → RELEASED_TO_PRO, `payout_ledger` gets a PAYOUT row and a COMMISSION row, notify the pro with `PAYOUT_RELEASED`.
+  - A refund exists: no payout. Escrow stays LOCKED with `pendingAction = "RELEASE"` and `errorCode = PAYOUT_NEEDS_REVIEW` (ERROR log, visible in the admin payment report). Support reviews it by hand.
+  - Craftgate does not answer: the confirm still succeeds (200, job COMPLETED). Escrow stays LOCKED with `pendingAction = "RELEASE"`; the payment sweeper retries the check and the payout (backoff 5 min doubling to 6 h, at most 8 attempts, then `PAYOUT_NEEDS_REVIEW`). `PAYOUT_RELEASED` is sent when the payout actually happens.
 
 **`POST /jobs/{id}/cancel`** with body `{reason, note?}`
 - Allowed in AWAITING_APPOINTMENT, SCHEDULED and ARRIVED.
 - Customer reasons: `PLANS_CHANGED`, `SOLVED`, `PRO_UNREACHABLE`, `OTHER_PROVIDER`, `OTHER`.
 - Pro reasons: `SCHEDULE_CONFLICT`, `CANNOT_DO_JOB`, `CUSTOMER_UNREACHABLE`, `OTHER`.
-- Every cancel issues a full refund through the gateway, then sets escrow REFUNDED_TO_CUSTOMER and job CANCELLED.
+- Every cancel sets job CANCELLED and records a full-refund intent on the escrow (`pendingAction = "REFUND"`) in one transaction. The gateway refund runs only after that transaction commits (outbox), so a refund can never go out for a cancellation that was rolled back.
+- Response (200 `JobDetail`) after the first refund attempt:
+  - Refund done: `payment.status = REFUNDED_TO_CUSTOMER`, `pendingAction = null`, `refundedAmount` = total.
+  - Refund not done yet (gateway error or crash): `payment.status = LOCKED`, `pendingAction = "REFUND"`. The payment sweeper retries with backoff (5 min doubling to 6 h, at most 8 attempts, then `errorCode = REFUND_NEEDS_REVIEW`). Every attempt first asks Craftgate how much is already refunded, so a retry never refunds twice.
 - **Customer cancel:** request → CANCELLED.
 - **Pro cancel:**
   - Request → OPEN.
   - The accepted offer → WITHDRAWN.
   - SUPERSEDED offers whose `validUntil` is still in the future → PENDING again.
   - The pro's `cancellation_count` goes up by 1.
-- If the gateway refund fails: 502 `GATEWAY_ERROR` and nothing changes.
-- Notify the other side with `JOB_CANCELLED`.
+- A gateway failure no longer returns 502 for cancel (contract change, Nov 2026): the cancellation stands and the refund is retried as above.
+- Notify the other side with `JOB_CANCELLED`; `refundAmount` is the full total that is being refunded.
 
 **`POST /jobs/{id}/review`** (customer, COMPLETED, once)
 - Body: `{rating (1-5), tags, comment (0-1000), anonymous}`.
@@ -693,7 +701,7 @@ Review actions:
 
 ##### Accounts
 
-`GET /admin/users?q=&role=&status=` returns `{items}`.
+`GET /admin/users?q=&role=&status=&district=` returns `{items}` (`district` added in the follow-up contract below).
 - `role` is `CUSTOMER`, `PRO` or `ADMIN`.
 - `status` is `ACTIVE`, `SUSPENDED` or `DELETED`.
 - Each item is `{id, fullName, email, phone, isAdmin, status, createdAt, pro}`, where `pro` is `{businessName, reviewStatus}` or null.
@@ -776,3 +784,79 @@ Existing notify calls get the missing params and targets. `APPOINTMENT_PROPOSED`
 - `stats.activeJobs` COMPLETED, CANCELLED ve RESOLVED dışındaki işlerdir (DISPUTED dahil); `lockedEscrowTotal` LOCKED + DISPUTED emanet toplamıdır.
 - Bildirimler: tür adları yukarıdaki sözleşme tablosundadır (`APPOINTMENT_CONFIRMED`, `JOB_STAGE_CHANGED`; wave 3'teki geçici `APPOINTMENT_ACCEPTED` / `JOB_STAGE_UPDATED` adları kalktı; mobil istemci de sözleşme adlarını kullanır). `JOB_STAGE_CHANGED` wave 3'teki gibi varışta, başlangıçta ve ustanın notu/fotoğrafında müşteriye gider; `status` işin o anki durumudur (`ARRIVED` / `IN_PROGRESS`), ek `event` anahtarı `STATUS_CHANGED`, `NOTE` veya `PHOTO` olur (sözleşmede not/fotoğraf için ayrı tür yok). Sözleşmedeki parametrelere ek olarak kimlik anahtarları (`jobId`, `requestId`, `offerId`, `complaintId`) taşınır; para tutarları iki ondalıklı dizedir (`"1200.00"`). `NEW_MESSAGE.senderName` ustada işletme adı, müşteride kısa addır ("Ali Y."). Admin'e giden `COMPLAINT_OPENED` hedefi `/complaints/<id>`'dir.
 - `GET /notifications` imleci sıra numarasıdır (opak dize), varsayılan `limit` 20, en çok 50. `POST /notifications/read` başkasının kimliklerini sessizce yok sayar, boş `ids` listesi hiçbir şeyi değiştirmez, 500'den fazla kimlik 400 `VALIDATION_FAILED` (`ids`), gövdesiz çağrı ve `{}` hepsini okundu yapar. `PUT /devices` token'a göre upsert eder; token başka kullanıcıdaysa yeni sahibine taşınır.
+
+
+## Ayrıntılı sözleşme (follow-up, Kasım 2026)
+
+### Follow-up contract: in-flight payment states, payment review, small features
+
+Binding for backend, the mobile app and the admin web app. Earlier contracts still apply.
+
+#### JobDetail.payment
+
+- `JobDetail.payment` gains `errorCode`: null, `"REFUND_NEEDS_REVIEW"` or `"PAYOUT_NEEDS_REVIEW"`. Other escrow error codes are never shown here (they stay in `PaymentResult`).
+- Client display rule (the client never computes money; amounts come from the server):
+
+| Job | `payment` | Customer | Pro |
+|---|---|---|---|
+| `CANCELLED` | `LOCKED` + `pendingAction = REFUND`, no `errorCode` | "İade işleniyor" / "Refund in progress" | "Müşteriye iade işleniyor" / "Refund to the customer in progress" |
+| `COMPLETED` | `LOCKED` + `pendingAction = RELEASE`, no `errorCode` | "Ustaya aktarım işleniyor" / "Payout to pro in progress" | same label; explanation says the payout is being checked |
+| any | `errorCode` set | "Destek inceliyor" + support text | same |
+
+- The support text names an e-mail address only when the app is built with `--dart-define=SUPPORT_EMAIL=...`; otherwise it says support will get in touch.
+- `POST /jobs/{id}/cancel` never returns 502 for a refund problem (wave 3 change); the client shows the state above from the 200 response.
+
+#### Admin: payments in review
+
+`GET /admin/payments/review` returns `{items: [PaymentReviewItem]}`, oldest first, at most 500. No gateway call.
+- Rows: escrow `LOCKED` or `DISPUTED` with `errorCode` `REFUND_NEEDS_REVIEW` or `PAYOUT_NEEDS_REVIEW`. A `DISPUTED` row is listed for visibility only: its money moves only through the complaint decision (STATE_MACHINES §5-6); the admin app shows no resolve action for it.
+- `PaymentReviewItem` = `{ref, jobId, jobPublicCode, jobStatus, status, errorCode, pendingAction, totalAmount, refundedAmount, customerName, proBusinessName, attempts, lastAttemptAt, createdAt}`. `jobId` and `jobStatus` are null for a payment that never opened a job (race refund).
+
+`GET /admin/payments/{ref}/review` asks Craftgate (read only) and returns `PaymentReviewCheck` = `{payment: PaymentReviewItem, gatewayRefundState, gatewayRefundedTotal, allowedResolutions}`.
+- `gatewayRefundState`: `NOT_REFUNDED`, `PARTIALLY_REFUNDED`, `REFUND_PENDING` or `FULLY_REFUNDED`.
+- `allowedResolutions` is computed from the Craftgate answer (STATE_MACHINES §6 "Elle inceleme çözümü"): `MARK_REFUNDED` only when fully refunded; `RETRY_REFUND` when nothing or less than the total is refunded (sends only the remainder); `RELEASE` only for a completed job's pending payout with no refund at all. Empty when a refund is pending or the state is inconsistent, and always empty for a `DISPUTED` escrow.
+- Not in review → 404. Craftgate not answering → 502 `GATEWAY_ERROR`.
+
+`POST /admin/payments/{ref}/resolve` with `{resolution, note (10-1000)}` returns `PaymentReviewCheck` (with the new state and `allowedResolutions` empty).
+- A `DISPUTED` escrow → 409 `ESCROW_DISPUTED` before any Craftgate call; nothing changes (no audit row, no notification).
+- The server locks the row and asks Craftgate again; a resolution that the current answer does not allow → 409 `ILLEGAL_STATE` (nothing changes). Not in review → 409. Unknown `resolution` → 400 (`resolution`); bad note → 400 (`note`).
+- Craftgate error → 502, nothing changes (no audit row, no notification). A retry after a refund that reached Craftgate but timed out sees `FULLY_REFUNDED` and only `MARK_REFUNDED` is allowed.
+- Writes `admin_actions` (`RESOLVE_PAYMENT_REVIEW`, target type `PAYMENT`, target id = ref, note = `"<RESOLUTION>: <note>"`) in the same transaction.
+- On success the review code and `pendingAction` are cleared. Notifications: refund → `REFUND_COMPLETED`; release → `PAYOUT_RELEASED` (pro) and `PAYOUT_COMPLETED` (customer).
+
+#### Notifications (new types)
+
+| Type | Params | Target | When |
+|---|---|---|---|
+| `REFUND_COMPLETED` | `publicCode`, `amount`, `ref`, `jobId` (if a job exists) | customer `/c/jobs/<id>`, pro `/p/jobs/<id>`; no job: customer `/c/payments/<ref>/result` | A delayed refund finished: sweeper retry (cancel refund or race refund) or admin resolution. Not sent when the first attempt right after the cancel succeeds. |
+| `PAYOUT_COMPLETED` | `publicCode`, `jobId` | customer `/c/jobs/<id>` | A delayed payout finished (sweeper or admin). The pro gets `PAYOUT_RELEASED` as before. |
+
+#### Account
+
+- `DELETE /me` accepts an optional JSON body `{reason}`. `reason` is one of `NO_LONGER_NEEDED`, `FOUND_ALTERNATIVE`, `PRIVACY`, `BAD_EXPERIENCE`, `OTHER`, or omitted. An unknown value → 400 (`reason`) and the account is not deleted. The reason is stored only for analytics in `account_deletion_feedback` (reason, whether the user had a pro profile, day); no user id and no free text.
+- `POST /me/email` `{newEmail, password}` → 202. Wrong password → 400 (`password`); same as the current address → 400 (`newEmail`); address in use → 409 `EMAIL_TAKEN` (`newEmail`); more than 5 codes per hour → 429 `TOO_MANY_ATTEMPTS`; 5 wrong passwords within 15 minutes → 429 `TOO_MANY_ATTEMPTS` for this endpoint (even with the right password) until the oldest wrong try is 15 minutes old; the right password resets the counter. A 6-digit code is e-mailed to the new address (`EmailSender`), valid 15 minutes, 5 wrong tries.
+- `POST /me/email/confirm` `{code}` → 200 `Me` with the new e-mail. Invalid, expired, used or locked code → 400 (`code`). The address taken by another account meanwhile (also in a race with a concurrent confirm or registration) → 409 `EMAIL_TAKEN` (`newEmail`); the e-mail does not change. The old address gets an information e-mail. The e-mail never changes without the code.
+- `POST /me/password` `{currentPassword, newPassword}` → 204. Wrong current password → 400 (`currentPassword`); 5 wrong current passwords within 15 minutes → 429 `TOO_MANY_ATTEMPTS` (same rule as `/me/email`, separate counter).
+- Phone stays read-only: there is no SMS provider, so a phone change cannot be verified and is not offered.
+
+#### Pro reviews filter
+
+`GET /pros/{id}/reviews?rating=&withComment=`
+- `rating` (1-5): only reviews with exactly this many stars; outside 1-5 → 400 (`rating`).
+- `withComment=true`: only reviews with a non-empty comment.
+- Paging works on the filtered list.
+
+#### Admin accounts district filter
+
+`GET /admin/users?district=<districtId>` keeps users that have a saved address in that district or a pro profile serving it. Combines with `q`, `role` and `status`. Not a number → 400.
+
+#### Out of scope (documented)
+
+- "Ustaya soru sor" (ROLE_SCREEN_MAP `/c/offers/:id`): the spec only names the action ("Kabul et, reddet (14), ustaya soru sor, profil"); no endpoint, data model, state or notification is defined, and chat is job-only. Not built until the spec defines the flow.
+- Phone change (no SMS provider). Push delivery stays as in wave 4.
+
+#### Uygulama notları (backend, follow-up)
+
+- Şema: `V8__account_feedback_email_change.sql` (`account_deletion_feedback`, `email_change_codes`).
+- Kod: `admin/AdminPaymentReviewService`, `job/EscrowNotifications` (gecikmeli hareket bildirimleri), `job/PendingEscrowActions.processAfterCommit` (iptal sonrası ilk deneme; bildirim yok) ve `process` (zamanlayıcı; gecikmeli sayılır), `user/EmailChangeService`.
+

@@ -7,9 +7,17 @@ import 'package:go_router/go_router.dart';
 import '../../core/error_messages.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/session.dart';
+import '../settings/change_email_dialog.dart';
+import '../settings/edit_profile_dialog.dart';
 
 class TabSpec {
-  const TabSpec(this.icon, this.selectedIcon, this.label, {this.refresh});
+  const TabSpec(
+    this.icon,
+    this.selectedIcon,
+    this.label, {
+    this.refresh,
+    this.root,
+  });
 
   final IconData icon;
   final IconData selectedIcon;
@@ -18,17 +26,64 @@ class TabSpec {
   /// Sekmeye dönülünce çalışır: sekmenin verisini yeniden çekmek için
   /// sağlayıcıları geçersiz kılar (NAVIGATION_RULES §4).
   final void Function(WidgetRef ref)? refresh;
+
+  /// Sekmenin kök adresi. Verilirse, sekmeden açılan bir ekran kapanıp bu
+  /// adrese dönüldüğünde de [refresh] çalışır.
+  final String? root;
 }
 
 /// Alt sekme iskeleti. Sekme kökünde geri oku yoktur; Android geri tuşu
 /// önce ilk sekmeye döner.
-class TabShell extends ConsumerWidget {
+class TabShell extends ConsumerStatefulWidget {
   const TabShell({super.key, required this.shell, required this.tabs});
 
   final StatefulNavigationShell shell;
   final List<TabSpec> tabs;
 
-  void _open(WidgetRef ref, int i) {
+  @override
+  ConsumerState<TabShell> createState() => _TabShellState();
+}
+
+class _TabShellState extends ConsumerState<TabShell> {
+  GoRouterDelegate? _delegate;
+  bool _onRoot = true;
+
+  StatefulNavigationShell get shell => widget.shell;
+  List<TabSpec> get tabs => widget.tabs;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final delegate = GoRouter.maybeOf(context)?.routerDelegate;
+    if (identical(delegate, _delegate)) return;
+    _delegate?.removeListener(_onRouteChanged);
+    _delegate = delegate?..addListener(_onRouteChanged);
+  }
+
+  @override
+  void dispose() {
+    _delegate?.removeListener(_onRouteChanged);
+    super.dispose();
+  }
+
+  /// Sekmeden açılan ekran (talep, iş, teklif...) kapanıp sekme köküne
+  /// dönülünce sekmenin verisi yeniden çekilir (NAVIGATION_RULES §4); ekran
+  /// sunucudaki durumu değiştirmiş olabilir.
+  void _onRouteChanged() {
+    final delegate = _delegate;
+    if (delegate == null || !mounted) return;
+    final config = delegate.currentConfiguration;
+    if (config.isEmpty) return;
+    final last = config.matches.last;
+    final uri = last is ImperativeRouteMatch ? last.matches.uri : config.uri;
+    final root = tabs[shell.currentIndex].root;
+    final onRoot = root != null && uri.path == root;
+    final returned = onRoot && !_onRoot;
+    _onRoot = onRoot || root == null;
+    if (returned) tabs[shell.currentIndex].refresh?.call(ref);
+  }
+
+  void _open(int i) {
     // Sekmeler yığında canlı kalır; dönüşte eski veri değil güncel veri
     // gösterilsin diye sekmenin sağlayıcıları geçersiz kılınır.
     tabs[i].refresh?.call(ref);
@@ -36,17 +91,17 @@ class TabShell extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return PopScope(
       canPop: shell.currentIndex == 0,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _open(ref, 0);
+        if (!didPop) _open(0);
       },
       child: Scaffold(
         body: shell,
         bottomNavigationBar: NavigationBar(
           selectedIndex: shell.currentIndex,
-          onDestinationSelected: (i) => _open(ref, i),
+          onDestinationSelected: _open,
           destinations: [
             for (final t in tabs)
               NavigationDestination(
@@ -101,6 +156,26 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
     }
   }
 
+  Future<void> _edit(Me me) async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showEditProfileDialog(context, me);
+    if (!ok) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(l.accountUpdated)));
+  }
+
+  Future<void> _changeEmail() async {
+    final l = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await showChangeEmailDialog(context);
+    if (!ok) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(l.emailChangeDone)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -125,6 +200,26 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                     Text(me.fullName, style: AppTypography.cardTitle),
                     const SizedBox(height: 4),
                     Text(me.email, style: AppTypography.bodySecondary),
+                    if ((me.phone ?? '').isNotEmpty) ...[
+                      Text(me.phone!, style: AppTypography.bodySecondary),
+                      Text(l.phoneReadOnlyNote, style: AppTypography.label),
+                    ],
+                    const SizedBox(height: AppSpacing.xs),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () => _edit(me),
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: Text(l.accountEdit),
+                        ),
+                        TextButton.icon(
+                          onPressed: _changeEmail,
+                          icon: const Icon(Icons.alternate_email, size: 18),
+                          label: Text(l.emailChangeAction),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

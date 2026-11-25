@@ -61,5 +61,8 @@ const _$PaymentErrorCodeEnumMap = {
   PaymentErrorCode.requestAlreadyAssigned: 'REQUEST_ALREADY_ASSIGNED',
   PaymentErrorCode.offerExpired: 'OFFER_EXPIRED',
   PaymentErrorCode.resultUncertain: 'RESULT_UNCERTAIN',
+  PaymentErrorCode.threedsAbandoned: 'THREEDS_ABANDONED',
+  PaymentErrorCode.refundNeedsReview: 'REFUND_NEEDS_REVIEW',
+  PaymentErrorCode.payoutNeedsReview: 'PAYOUT_NEEDS_REVIEW',
   PaymentErrorCode.unknown: 'UNKNOWN',
 };

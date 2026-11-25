@@ -103,8 +103,12 @@ abstract class JobEvent with _$JobEvent {
 }
 
 /// İşin ödeme özeti. `serviceFee` ve `netEarning` yalnız ustaya dolu gelir.
+/// [pendingAction]: kayıtlı ama henüz yapılmamış iade/aktarım (durum `LOCKED`
+/// kalır). [errorCode]: yalnızca elle inceleme kodları.
 @freezed
 abstract class JobPayment with _$JobPayment {
+  const JobPayment._();
+
   const factory JobPayment({
     required String ref,
     required EscrowStatus status,
@@ -112,7 +116,16 @@ abstract class JobPayment with _$JobPayment {
     @MoneyConverter() @Default(Money.zero) Money refundedAmount,
     @NullableMoneyConverter() Money? serviceFee,
     @NullableMoneyConverter() Money? netEarning,
+    @JsonKey(unknownEnumValue: JsonKey.nullForUndefinedEnumValue)
+    EscrowPendingAction? pendingAction,
+    @JsonKey(unknownEnumValue: PaymentErrorCode.unknown)
+    PaymentErrorCode? errorCode,
   }) = _JobPayment;
+
+  /// İade veya aktarım destek incelemesinde.
+  bool get needsReview =>
+      errorCode == PaymentErrorCode.refundNeedsReview ||
+      errorCode == PaymentErrorCode.payoutNeedsReview;
 
   factory JobPayment.fromJson(Map<String, dynamic> json) =>
       _$JobPaymentFromJson(json);

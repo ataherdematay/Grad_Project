@@ -12,6 +12,19 @@ const String kApiBaseUrl = String.fromEnvironment(
   defaultValue: 'http://localhost:8090',
 );
 
+/// Release derlemesinde API yalnız HTTPS ile çağrılır. Android network security
+/// config ve iOS ATS yalnız platform ağını (3-D Secure WebView vb.) denetler;
+/// dio'nun kullandığı dart:io soketleri bu kurallardan geçmez. Bu yüzden düz
+/// HTTP adresiyle derlenmiş bir release açılışta durur.
+void ensureSecureApiBaseUrl(String url, {required bool release}) {
+  if (release && Uri.tryParse(url)?.scheme != 'https') {
+    throw StateError(
+      'Release derlemesi HTTPS API adresi ister: '
+      '--dart-define=API_BASE_URL=https://...',
+    );
+  }
+}
+
 /// `main()` içinde gerçek örnekle, testlerde sahteyle ezilir.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
   (ref) => throw UnimplementedError('sharedPreferencesProvider ezilmeli'),

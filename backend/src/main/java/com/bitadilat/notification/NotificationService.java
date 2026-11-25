@@ -39,6 +39,10 @@ public class NotificationService {
     public static final String PRO_REJECTED = "PRO_REJECTED";
     public static final String PRO_NEEDS_DOCUMENTS = "PRO_NEEDS_DOCUMENTS";
 
+    // Gecikmeli para hareketi tamamlandı (follow-up sözleşmesi)
+    public static final String REFUND_COMPLETED = "REFUND_COMPLETED";
+    public static final String PAYOUT_COMPLETED = "PAYOUT_COMPLETED";
+
     private final JdbcTemplate jdbc;
     private final ObjectMapper json;
 

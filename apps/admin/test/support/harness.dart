@@ -71,6 +71,11 @@ class FakeApi implements HttpClientAdapter {
 
   void _standard() {
     onJson('GET', '/admin/stats', statsJson());
+    onJson('GET', '/admin/payments/review', {'items': <Object>[]});
+    onJson('GET', '/districts', [
+      {'id': 3, 'name': 'Ataşehir', 'side': 'ANADOLU'},
+      {'id': 23, 'name': 'Kadıköy', 'side': 'ANADOLU'},
+    ]);
     onJson('GET', '/categories', [
       {
         'id': 'plumbing',

@@ -549,3 +549,86 @@ Map<String, dynamic> _$AdminPaymentTotalsToJson(
   'commissionTotal': const MoneyConverter().toJson(instance.commissionTotal),
   'refundedTotal': const MoneyConverter().toJson(instance.refundedTotal),
 };
+
+_AdminPaymentReviewItem _$AdminPaymentReviewItemFromJson(
+  Map<String, dynamic> json,
+) => _AdminPaymentReviewItem(
+  ref: json['ref'] as String,
+  jobId: json['jobId'] as String?,
+  jobPublicCode: json['jobPublicCode'] as String?,
+  jobStatus: $enumDecodeNullable(
+    _$JobStatusEnumMap,
+    json['jobStatus'],
+    unknownValue: JsonKey.nullForUndefinedEnumValue,
+  ),
+  status: json['status'] as String,
+  errorCode: json['errorCode'] as String?,
+  pendingAction: $enumDecodeNullable(
+    _$EscrowPendingActionEnumMap,
+    json['pendingAction'],
+    unknownValue: JsonKey.nullForUndefinedEnumValue,
+  ),
+  totalAmount: const MoneyConverter().fromJson(json['totalAmount']),
+  refundedAmount: json['refundedAmount'] == null
+      ? Money.zero
+      : const MoneyConverter().fromJson(json['refundedAmount']),
+  customerName: json['customerName'] as String?,
+  proBusinessName: json['proBusinessName'] as String?,
+  attempts: (json['attempts'] as num?)?.toInt() ?? 0,
+  lastAttemptAt: json['lastAttemptAt'] == null
+      ? null
+      : DateTime.parse(json['lastAttemptAt'] as String),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+);
+
+Map<String, dynamic> _$AdminPaymentReviewItemToJson(
+  _AdminPaymentReviewItem instance,
+) => <String, dynamic>{
+  'ref': instance.ref,
+  'jobId': instance.jobId,
+  'jobPublicCode': instance.jobPublicCode,
+  'jobStatus': _$JobStatusEnumMap[instance.jobStatus],
+  'status': instance.status,
+  'errorCode': instance.errorCode,
+  'pendingAction': _$EscrowPendingActionEnumMap[instance.pendingAction],
+  'totalAmount': const MoneyConverter().toJson(instance.totalAmount),
+  'refundedAmount': const MoneyConverter().toJson(instance.refundedAmount),
+  'customerName': instance.customerName,
+  'proBusinessName': instance.proBusinessName,
+  'attempts': instance.attempts,
+  'lastAttemptAt': instance.lastAttemptAt?.toIso8601String(),
+  'createdAt': instance.createdAt.toIso8601String(),
+};
+
+const _$EscrowPendingActionEnumMap = {
+  EscrowPendingAction.refund: 'REFUND',
+  EscrowPendingAction.release: 'RELEASE',
+};
+
+_AdminPaymentReviewCheck _$AdminPaymentReviewCheckFromJson(
+  Map<String, dynamic> json,
+) => _AdminPaymentReviewCheck(
+  payment: AdminPaymentReviewItem.fromJson(
+    json['payment'] as Map<String, dynamic>,
+  ),
+  gatewayRefundState: json['gatewayRefundState'] as String,
+  gatewayRefundedTotal: json['gatewayRefundedTotal'] == null
+      ? Money.zero
+      : const MoneyConverter().fromJson(json['gatewayRefundedTotal']),
+  allowedResolutions:
+      (json['allowedResolutions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
+);
+
+Map<String, dynamic> _$AdminPaymentReviewCheckToJson(
+  _AdminPaymentReviewCheck instance,
+) => <String, dynamic>{
+  'payment': instance.payment.toJson(),
+  'gatewayRefundState': instance.gatewayRefundState,
+  'gatewayRefundedTotal': const MoneyConverter().toJson(
+    instance.gatewayRefundedTotal,
+  ),
+  'allowedResolutions': instance.allowedResolutions,
+};

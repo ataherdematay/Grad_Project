@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -56,6 +57,19 @@ class AdminAccountPaymentTest extends AdminTestBase {
             assertThat(u.get("status").asString()).isEqualTo("SUSPENDED");
         }
         assertThat(ok(get(admin, "/admin/users?status=SUSPENDED")).get("items").size()).isGreaterThanOrEqualTo(1);
+        // İlçe süzgeci: o ilçede adresi olan müşteri ve o ilçeye hizmet veren usta.
+        Account kadikoyCustomer = register();
+        addressId(kadikoyCustomer, "Kadıköy");
+        Account besiktasCustomer = register();
+        addressId(besiktasCustomer, "Beşiktaş");
+        List<String> inKadikoy = new ArrayList<>();
+        ok(get(admin, "/admin/users?district=" + districtId("Kadıköy"))).get("items")
+                .forEach(u -> inKadikoy.add(u.get("id").asString()));
+        assertThat(inKadikoy).contains(kadikoyCustomer.id(), pro.id()).doesNotContain(besiktasCustomer.id(),
+                customer.id());
+        assertThat(ok(get(admin, "/admin/users?district=" + districtId("Beşiktaş") + "&role=CUSTOMER&q="
+                + besiktasCustomer.email())).get("items")).hasSize(1);
+        get(admin, "/admin/users?district=abc").andExpect(status().isBadRequest());
         get(admin, "/admin/users?role=BOSS").andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.field").value("role"));
         get(admin, "/admin/users?status=GONE").andExpect(status().isBadRequest());

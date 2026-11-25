@@ -78,8 +78,6 @@
   "tabProfile": "Profil",
   "tabFeed": "Talepler",
   "tabJobs": "İşlerim",
-  "comingSoonTitle": "Bu bölüm hazırlanıyor",
-  "comingSoonBody": "Hazır olunca burada göreceksin.",
   "profileSettings": "Ayarlar",
   "switchToPro": "Usta moduna geç",
   "applyAsPro": "Usta olarak başvur",
@@ -99,7 +97,7 @@
   "legalKvkkTitle": "KVKK aydınlatma metni",
   "legalTermsTitle": "Kullanım koşulları",
   "legalPrivacyTitle": "Gizlilik politikası",
-  "legalPlaceholder": "Bu metin yayına alınmadan önce hazırlanacak.",
+  "legalPlaceholder": "Bu metin taslaktır ve henüz hukuken geçerli değildir. Yayına alınmadan önce son hâli burada yer alacak.",
   "splashErrorTitle": "Oturumun açılamadı",
   "noticeAdmin": "Yönetici hesabıyla web panelinden giriş yap.",
   "noticeSessionExpired": "Oturumunun süresi doldu. Tekrar giriş yap.",
@@ -1388,5 +1386,107 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsChangePassword": "Şifreyi değiştir",
+  "changePasswordTitle": "Şifreni değiştir",
+  "fieldCurrentPassword": "Mevcut şifre",
+  "fieldConfirmPassword": "Yeni şifre (tekrar)",
+  "errPasswordMismatch": "Şifreler aynı değil.",
+  "errCurrentPasswordWrong": "Mevcut şifre yanlış.",
+  "changePasswordDone": "Şifren değişti. Diğer cihazlardaki oturumların kapandı.",
+  "settingsDeleteAccount": "Hesabımı sil",
+  "deleteAccountTitle": "Hesabın silinsin mi?",
+  "deleteAccountBody": "Kişisel bilgilerin silinir, adreslerin kaldırılır ve tüm oturumların kapanır. Bu işlem geri alınamaz.",
+  "deleteAccountConfirm": "Hesabı sil",
+  "deleteAccountBlocked": "Açık işin ya da güvence havuzunda bekleyen ödemen varken hesabını silemezsin. İşler bitince tekrar dene.",
+  "accountEdit": "Profili düzenle",
+  "accountEditTitle": "Profili düzenle",
+  "accountEditContactNote": "E-posta ve telefon şimdilik değiştirilemez.",
+  "accountUpdated": "Profilin güncellendi.",
+  "legalDraftBadge": "Taslak metin",
+  "deleteAccountAck": "Hesabımın ve kişisel bilgilerimin kalıcı olarak silineceğini anlıyorum.",
+  "deleteAccountDone": "Hesabın silindi.",
+  "escrowRefundPending": "İade işleniyor",
+  "escrowRefundPendingPro": "Müşteriye iade işleniyor",
+  "escrowPayoutPending": "Ustaya aktarım işleniyor",
+  "escrowReview": "Destek inceliyor",
+  "escrowExplainRefundPending": "İş iptal edildi. Tutarın kartına iadesi işleniyor; tamamlanınca bildirim alacaksın.",
+  "escrowExplainRefundPendingPro": "İş iptal edildi. Tutar müşteriye iade ediliyor.",
+  "escrowExplainPayoutPending": "İş tamamlandı. Ödeme ustaya aktarılıyor; senin yapman gereken bir şey yok.",
+  "escrowExplainPayoutPendingPro": "İş tamamlandı. Ödemenin aktarımı kontrol ediliyor; aktarılınca bildirim alacaksın.",
+  "escrowExplainReview": "Bu ödeme destek ekibinin incelemesinde. Ekip kontrol edip seninle iletişime geçecek.",
+  "escrowExplainReviewEmail": "Bu ödeme destek ekibinin incelemesinde. Sorun için {email} adresine yazabilirsin.",
+  "@escrowExplainReviewEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "proCancelledRequestReopened": "Talep yeniden açıldı. İptaller profilinde görünür.",
+  "notifRefundCompleted": "{publicCode} için {amount} tutarındaki iade tamamlandı.",
+  "@notifRefundCompleted": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notifPayoutCompleted": "{publicCode} işinin ödemesi ustaya aktarıldı.",
+  "@notifPayoutCompleted": {
+    "placeholders": {
+      "publicCode": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountReasonTitle": "Neden ayrılıyorsun? (isteğe bağlı)",
+  "deleteAccountReasonNote": "Cevabın yalnızca hizmeti iyileştirmek için, hesabına bağlanmadan saklanır.",
+  "deleteReasonNoLongerNeeded": "Artık ihtiyacım yok",
+  "deleteReasonFoundAlternative": "Başka bir çözüm buldum",
+  "deleteReasonPrivacy": "Gizlilik kaygısı",
+  "deleteReasonBadExperience": "Kötü bir deneyim yaşadım",
+  "deleteReasonOther": "Diğer",
+  "reviewsFilterAll": "Tümü",
+  "reviewsFilterStars": "{count} yıldız",
+  "@reviewsFilterStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewsFilterWithComment": "Yorumlu",
+  "reviewsFilterEmpty": "Bu süzgece uyan değerlendirme yok.",
+  "emailChangeAction": "E-postayı değiştir",
+  "emailChangeTitle": "E-posta adresini değiştir",
+  "emailChangeNewLabel": "Yeni e-posta",
+  "emailChangePasswordLabel": "Şifren",
+  "emailChangeSendCode": "Kod gönder",
+  "emailChangeCodeIntro": "{email} adresine 6 haneli bir kod gönderdik. Kodu girince e-postan değişir.",
+  "@emailChangeCodeIntro": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "emailChangeCodeLabel": "Doğrulama kodu",
+  "emailChangeConfirm": "Onayla",
+  "emailChangeDone": "E-posta adresin güncellendi.",
+  "emailChangeWrongPassword": "Şifre yanlış. Tekrar dene.",
+  "emailChangeSame": "Bu zaten kullandığın e-posta adresi.",
+  "emailChangeTaken": "Bu e-posta başka bir hesapta kayıtlı.",
+  "emailChangeCodeInvalid": "Kod geçersiz veya süresi dolmuş. 6 haneyi kontrol et ya da yeni kod iste.",
+  "emailChangeCodeFormat": "Kod 6 haneli olmalı.",
+  "phoneReadOnlyNote": "Telefon numarası şimdilik uygulamadan değiştirilemez.",
+  "legalPaymentTitle": "Ödeme ve güvence havuzu koşulları",
+  "legalProTitle": "Usta sözleşmesi özeti",
+  "legalDraftNotice": "Bu metin taslaktır ve henüz hukuken geçerli değildir. Hukukçu incelemesinden sonra son hâli yayına alınacak.",
+  "legalLoadFailed": "Metin açılamadı. Tekrar dene.",
+  "settingsLegalTitle": "Yasal metinler",
+  "payFailAbandoned": "Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin."
 }

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bitadilat_mobile/core/providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String _read(String path) => File(path).readAsStringSync();
@@ -195,6 +196,138 @@ void main() {
 
     test('düz HTTP yalnız debug manifestinde', () {
       expect(debug, contains('android:usesCleartextTraffic="true"'));
+    });
+
+    test(
+      'network security config: release yalnız HTTPS, debug yalnız yerel HTTP',
+      () {
+        expect(
+          main,
+          contains(
+            'android:networkSecurityConfig="@xml/network_security_config"',
+          ),
+        );
+        final release = _read(
+          'android/app/src/main/res/xml/network_security_config.xml',
+        );
+        expect(release, contains('cleartextTrafficPermitted="false"'));
+        expect(release, isNot(contains('cleartextTrafficPermitted="true"')));
+        expect(release, isNot(contains('<certificates src="user"')));
+        final dbg = _read(
+          'android/app/src/debug/res/xml/network_security_config.xml',
+        );
+        final domains = RegExp(r'<domain[^>]*>([^<]+)</domain>')
+            .allMatches(dbg)
+            .map((m) => m.group(1))
+            .toSet();
+        expect(domains, {'10.0.2.2', 'localhost', '127.0.0.1'});
+        // profile derlemesi release kuralını kullanır (kendi kopyası yok).
+        expect(
+          File('android/app/src/profile/res/xml/network_security_config.xml')
+              .existsSync(),
+          isFalse,
+        );
+      },
+    );
+
+    test('yalnız INTERNET izni; release imzası repoda değil', () {
+      final perms = RegExp(r'<uses-permission android:name="([^"]+)"')
+          .allMatches(main)
+          .map((m) => m.group(1))
+          .toList();
+      expect(perms, ['android.permission.INTERNET']);
+      final ignore = _read('android/.gitignore');
+      expect(ignore, contains('key.properties'));
+      expect(ignore, contains('**/*.jks'));
+      expect(ignore, contains('**/*.keystore'));
+      expect(File('android/key.properties').existsSync(), isFalse);
+      final keystores = Directory('android')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where(
+            (f) => f.path.endsWith('.jks') || f.path.endsWith('.keystore'),
+          );
+      expect(keystores, isEmpty);
+      expect(gradle, contains('signingConfigs.getByName("release")'));
+      expect(gradle, isNot(contains('signingConfigs.getByName("debug")')));
+    });
+
+    test('simge her yoğunlukta, adaptive simge ve açılış kaynakları var', () {
+      const sizes = {
+        'mdpi': 48,
+        'hdpi': 72,
+        'xhdpi': 96,
+        'xxhdpi': 144,
+        'xxxhdpi': 192,
+      };
+      for (final e in sizes.entries) {
+        for (final name in ['ic_launcher', 'ic_launcher_round']) {
+          final png = _png(
+            'android/app/src/main/res/mipmap-${e.key}/$name.png',
+          );
+          expect(png.width, e.value, reason: '${e.key}/$name');
+          expect(png.height, e.value, reason: '${e.key}/$name');
+        }
+      }
+      expect(main, contains('android:icon="@mipmap/ic_launcher"'));
+      expect(main, contains('android:roundIcon="@mipmap/ic_launcher_round"'));
+      const res = 'android/app/src/main/res';
+      for (final f in [
+        'mipmap-anydpi-v26/ic_launcher.xml',
+        'mipmap-anydpi-v26/ic_launcher_round.xml',
+        'drawable/ic_launcher_background.xml',
+        'drawable/ic_launcher_foreground.xml',
+        'drawable/ic_launcher_monochrome.xml',
+        'drawable/launch_background.xml',
+        'drawable/launch_logo.xml',
+        'drawable/splash_icon.xml',
+        'values/colors.xml',
+      ]) {
+        expect(File('$res/$f').existsSync(), isTrue, reason: f);
+      }
+      // Kaynaklarda adı geçen her @drawable/@color/@mipmap tanımlı olmalı.
+      final defined = <String>{
+        for (final f in Directory(
+          res,
+        ).listSync(recursive: true).whereType<File>())
+          '${f.parent.path.split('/').last.split('-').first}/'
+              '${f.uri.pathSegments.last.split('.').first}',
+        ...RegExp(r'<color name="([^"]+)"')
+            .allMatches(_read('$res/values/colors.xml'))
+            .map((m) => 'color/${m.group(1)}'),
+      };
+      final refs = <String>{};
+      for (final f in [
+        ...Directory(res).listSync(recursive: true).whereType<File>(),
+        File('android/app/src/main/AndroidManifest.xml'),
+      ].where((f) => f.path.endsWith('.xml'))) {
+        refs.addAll(
+          RegExp(r'@(drawable|color|mipmap|xml|style)/([A-Za-z0-9_]+)')
+              .allMatches(f.readAsStringSync())
+              .where((m) => m.group(1) != 'style')
+              .map((m) => '${m.group(1)}/${m.group(2)}'),
+        );
+      }
+      expect(
+        defined.containsAll(refs),
+        isTrue,
+        reason: '${refs.difference(defined)}',
+      );
+    });
+  });
+
+  group('release API adresi', () {
+    test('release yalnız https kabul eder, debug her şeyi', () {
+      expect(
+        () => ensureSecureApiBaseUrl('http://localhost:8090', release: true),
+        throwsStateError,
+      );
+      expect(
+        () => ensureSecureApiBaseUrl('api.example.com', release: true),
+        throwsStateError,
+      );
+      ensureSecureApiBaseUrl('https://api.example.com', release: true);
+      ensureSecureApiBaseUrl('http://10.0.2.2:8090', release: false);
     });
   });
 }

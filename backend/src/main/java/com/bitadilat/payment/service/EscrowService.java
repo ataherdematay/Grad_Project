@@ -7,6 +7,7 @@ import com.bitadilat.payment.exception.GatewayException;
 import com.bitadilat.payment.gateway.PaymentGateway;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * İş modülünün emanet üzerindeki işlemleri: serbest bırakma, tam iade, itiraz ve defter. Hepsi çağıranın işlemine
  * katılır ve emanet satırını kilitli bekler (kilit sırası: iş, emanet, talep). Gerçek iade Craftgate'e gider; hata
- * {@code GatewayException} olarak yayılır ve çağıranın işlemi geri alınır (durum değişmez, 502).
+ * {@code GatewayException} olarak yayılır ve çağıranın işlemi geri alınır (durum değişmez, 502). İş iptali bunun
+ * yerine outbox kullanır ({@link #queueRefund}, {@link #refundPending}): iade, iptal kesinleştikten sonra yapılır.
+ * Ustaya aktarım öncesi Craftgate'te iade sorulur ({@link #releaseChecked}).
  *
  * <p>{@code provider = SEED} kayıtlarında iade ve aktarım yalnızca defterde işlenir; bu yalnızca {@code dev}
  * profilinde izinlidir.
@@ -70,6 +73,103 @@ public class EscrowService {
             }
         }
         release(payment);
+    }
+
+    /** {@link #releaseChecked} sonucu. */
+    public enum ReleaseOutcome {
+        /** Emanet ustaya aktarıldı. */
+        RELEASED,
+        /** Craftgate'e sorulamadı: aktarım bekliyor, ödeme toplayıcısı yeniden dener. */
+        QUEUED,
+        /** Craftgate'te iade görünüyor (veya denemeler bitti): aktarılmadı, elle incelenir. */
+        REVIEW
+    }
+
+    /**
+     * Teslim onayı ve 48 saatlik otomatik tamamlama (ve onların yeniden denemesi): ustaya aktarmadan önce Craftgate'te bu
+     * ödemeye iade yapılmış mı diye sorulur. İade görünürse aktarılmaz; kayıt {@code PAYOUT_NEEDS_REVIEW} olur (ERROR
+     * logu, admin raporunda görünür). Craftgate yanıt vermezse aktarım {@code pending_action = RELEASE} olarak bekler ve
+     * ödeme toplayıcısı artan aralıkla en fazla 8 kez yeniden dener; iş yine de tamamlanır (müşteri bekletilmez).
+     * SEED kaydı yalnızca defterde aktarılır.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public ReleaseOutcome releaseChecked(EscrowPayment payment, Instant now) {
+        payment.requireRefundable();
+        if (!payment.isSeed()) {
+            BigDecimal already;
+            try {
+                already = gateway.refundedTotal(payment.getCraftgatePaymentId());
+            } catch (GatewayException e) {
+                if (payment.getPendingAction() == null) {
+                    payment.queueRelease(now);
+                }
+                boolean exhausted = payment.recordRefundFailure(now);
+                if (exhausted) {
+                    log.error("Ustaya aktarım öncesi iade kontrolü {} denemede yapılamadı; elle incelenmeli. ref={}",
+                            payment.getRefundAttempts(), payment.getRef());
+                } else {
+                    log.warn("Ustaya aktarım öncesi Craftgate'e sorulamadı; aktarım yeniden denenecek. ref={} deneme={}",
+                            payment.getRef(), payment.getRefundAttempts());
+                }
+                repository.saveAndFlush(payment);
+                return exhausted ? ReleaseOutcome.REVIEW : ReleaseOutcome.QUEUED;
+            }
+            if (already != null && already.signum() > 0) {
+                if (payment.getPendingAction() == null) {
+                    payment.queueRelease(now);
+                }
+                payment.sendToPayoutReview(now);
+                repository.saveAndFlush(payment);
+                log.error("Craftgate'te iade görünen ödeme ustaya aktarılmadı; elle incelenmeli. ref={} iade={}",
+                        payment.getRef(), money(already).toPlainString());
+                return ReleaseOutcome.REVIEW;
+            }
+        }
+        release(payment);
+        return ReleaseOutcome.RELEASED;
+    }
+
+    /**
+     * İş iptali: tam iade niyeti kaydedilir (outbox), Craftgate'e bu işlemde gidilmez. İade işlem kesinleştikten sonra
+     * {@link #refundPending} ile yapılır. SEED kaydı dev dışında reddedilir (409) ve iptal de geri alınır.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void queueRefund(EscrowPayment payment, Instant now) {
+        payment.requireRefundable();
+        if (payment.isSeed()) {
+            requireDevForSeed();
+        }
+        payment.queueRefund(now);
+        repository.saveAndFlush(payment);
+    }
+
+    /**
+     * Bekleyen tam iadeyi yapar (iptal sonrası ilk deneme ve zamanlayıcı denemeleri). {@link #refundFully} önce
+     * Craftgate'e ne kadar iade edildiğini sorar; böylece yeniden deneme asla ikinci kez iade göndermez. Craftgate hatası
+     * deneme sayılır (artan aralık, en fazla 8, sonra {@code REFUND_NEEDS_REVIEW}); Craftgate'te tutarsız iade görünürse
+     * kayıt hemen elle incelemeye düşer. Dönüş: iade tamamlandı mı.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public boolean refundPending(EscrowPayment payment, Instant now) {
+        try {
+            refundFully(payment);
+            log.info("Bekleyen iptal iadesi yapıldı. ref={}", payment.getRef());
+            return true;
+        } catch (GatewayException e) {
+            if (payment.recordRefundFailure(now)) {
+                log.error("İptal iadesi {} denemede yapılamadı, elle incelenmeli. ref={} paymentId={}",
+                        payment.getRefundAttempts(), payment.getRef(), payment.getCraftgatePaymentId());
+            } else {
+                log.warn("İptal iadesi başarısız, yeniden denenecek. ref={} deneme={}", payment.getRef(),
+                        payment.getRefundAttempts());
+            }
+        } catch (ApiException e) {
+            log.error("İptal iadesi güvenle yapılamadı, elle incelenmeli. ref={} neden={}", payment.getRef(),
+                    e.getMessage());
+            payment.sendToRefundReview(now);
+        }
+        repository.saveAndFlush(payment);
+        return false;
     }
 
     /** Teslim onayı: emanet ustaya aktarılır, PAYOUT ve COMMISSION defter satırları yazılır. */

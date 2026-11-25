@@ -4,6 +4,9 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- Yalnızca debug: yerel backend düz HTTP ile erişilir. -->
+    <!-- Yalnızca debug: yerel backend düz HTTP ile erişilir. Android 7+ üzerinde
+         networkSecurityConfig bu bayrağa üstündür; fiilî izin
+         src/debug/res/xml/network_security_config.xml içinde yalnızca
+         10.0.2.2, localhost ve 127.0.0.1 ile sınırlıdır. -->
     <application android:usesCleartextTraffic="true"/>
 </manifest>

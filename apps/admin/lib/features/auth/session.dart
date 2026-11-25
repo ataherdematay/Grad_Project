@@ -8,7 +8,7 @@ import '../../core/providers.dart';
 enum SessionStatus { signedOut, signedIn }
 
 /// Oturum kapanışının girişte gösterilecek nedeni.
-enum SessionNotice { sessionExpired, accountSuspended }
+enum SessionNotice { sessionExpired, accountSuspended, accessDenied }
 
 /// Giriş yapan hesap yönetici değil: oturum hemen kapatılır.
 class NotAdminException implements Exception {
@@ -82,7 +82,35 @@ class SessionController extends Notifier<SessionState> {
     await ref.read(tokenStoreProvider).clear();
     state = const SessionState.signedOut();
   }
+
+  /// Oturum sürerken sunucu 403 verdi (yönetici yetkisi alınmış olabilir):
+  /// sunucuda oturum kapatılmaya çalışılır, yerel token'lar silinir ve girişe
+  /// dönülür.
+  Future<void> accessDenied() async {
+    if (state.status == SessionStatus.signedOut) return;
+    // Durum await'ten önce kapanır: aynı anda gelen başka 403'ler ikinci bir
+    // logout çağrısı başlatmaz.
+    state = const SessionState.signedOut(notice: SessionNotice.accessDenied);
+    final tokens = await ref.read(tokenStoreProvider).read();
+    try {
+      if (tokens != null) await _client.auth.logout(tokens.refreshToken);
+    } on ApiException {
+      // Sunucu reddetse de yerel oturum kapanır.
+    }
+    await ref.read(tokenStoreProvider).clear();
+  }
 }
+
+/// Oturum açıkken gelen her 403 yanıtında oturumu temiz biçimde kapatır.
+/// Uygulama kökünde izlenir; `/auth/*` çağrıları kapsam dışıdır.
+final sessionGuardProvider = Provider<void>((ref) {
+  final sub = ref.watch(apiClientProvider).forbidden.listen((_) {
+    if (ref.read(sessionProvider).isSignedIn) {
+      unawaited(ref.read(sessionProvider.notifier).accessDenied());
+    }
+  });
+  ref.onDispose(sub.cancel);
+});
 
 final sessionProvider = NotifierProvider<SessionController, SessionState>(
   SessionController.new,

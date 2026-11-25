@@ -15,6 +15,9 @@ abstract class DraftPhotoStore {
   Future<Uint8List?> read(String path);
 
   Future<void> delete(String path);
+
+  /// Kullanıcının tüm taslak fotoğraflarını siler (hesap silinince).
+  Future<void> deleteAll(String userId);
 }
 
 class FileDraftPhotoStore implements DraftPhotoStore {
@@ -58,6 +61,16 @@ class FileDraftPhotoStore implements DraftPhotoStore {
       if (await f.exists()) await f.delete();
     } catch (_) {
       // Silinemeyen dosya bir sonraki temizlikte kalır; kullanıcıya yansımaz.
+    }
+  }
+
+  @override
+  Future<void> deleteAll(String userId) async {
+    try {
+      final dir = await _dir(userId);
+      if (await dir.exists()) await dir.delete(recursive: true);
+    } catch (_) {
+      // Klasöre erişilemiyorsa yapılacak bir şey yok; oturum yine kapanır.
     }
   }
 }

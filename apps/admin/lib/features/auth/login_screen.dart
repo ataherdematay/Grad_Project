@@ -63,6 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final noticeText = switch (notice) {
       SessionNotice.sessionExpired => l.noticeSessionExpired,
       SessionNotice.accountSuspended => l.noticeAccountSuspended,
+      SessionNotice.accessDenied => l.noticeAccessDenied,
       null => null,
     };
     return Scaffold(

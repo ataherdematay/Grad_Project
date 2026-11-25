@@ -66,6 +66,76 @@ ApiClient clientWith(FakeAdapter adapter, TokenStore store) => ApiClient(
 );
 
 void main() {
+  group('ApiClient.forbidden', () {
+    test('403 olay verir, /auth/ ve diğer kodlar vermez', () async {
+      final adapter = FakeAdapter((o) {
+        if (o.path.endsWith('/auth/login')) {
+          return jsonBody(403, {'code': 'FORBIDDEN', 'message': 'x'});
+        }
+        if (o.path.endsWith('/admin/stats')) {
+          return jsonBody(403, {'code': 'FORBIDDEN', 'message': 'x'});
+        }
+        return jsonBody(500, {'code': 'INTERNAL_ERROR', 'message': 'x'});
+      });
+      final client = clientWith(adapter, MemoryTokenStore());
+      var events = 0;
+      final sub = client.forbidden.listen((_) => events++);
+      await expectLater(client.admin.stats(), throwsA(isA<ApiException>()));
+      await Future<void>.delayed(Duration.zero);
+      expect(events, 1);
+      await expectLater(
+        client.auth.login(const LoginRequest(identifier: 'a', password: 'b')),
+        throwsA(isA<ApiException>()),
+      );
+      await expectLater(client.me.get(), throwsA(isA<ApiException>()));
+      await Future<void>.delayed(Duration.zero);
+      expect(events, 1);
+      await sub.cancel();
+    });
+  });
+
+  group('MeApi hesap işlemleri', () {
+    test(
+      'deleteAccount DELETE /me çağırır, 409 ILLEGAL_STATE fırlatır',
+      () async {
+        var status = 204;
+        final adapter = FakeAdapter(
+          (_) => status == 204
+              ? ResponseBody.fromString('', 204)
+              : jsonBody(409, {'code': 'ILLEGAL_STATE', 'message': 'x'}),
+        );
+        final client = clientWith(adapter, MemoryTokenStore());
+        await client.me.deleteAccount();
+        expect(adapter.requests.single.method, 'DELETE');
+        expect(adapter.requests.single.path, endsWith('/api/v1/me'));
+        status = 409;
+        await expectLater(
+          client.me.deleteAccount(),
+          throwsA(
+            isA<ApiException>().having(
+              (e) => e.code,
+              'code',
+              ApiErrorCode.illegalState,
+            ),
+          ),
+        );
+      },
+    );
+
+    test('changePassword gövdeyi POST /me/password olarak yollar', () async {
+      final adapter = FakeAdapter((_) => ResponseBody.fromString('', 204));
+      final client = clientWith(adapter, MemoryTokenStore());
+      await client.me.changePassword(
+        const ChangePasswordRequest(currentPassword: 'a1', newPassword: 'b2'),
+      );
+      expect(adapter.requests.single.path, endsWith('/me/password'));
+      expect(adapter.requests.single.data, {
+        'currentPassword': 'a1',
+        'newPassword': 'b2',
+      });
+    });
+  });
+
   group('hata çözümleme', () {
     test('hata JSON\'u ApiException olur', () async {
       final adapter = FakeAdapter(

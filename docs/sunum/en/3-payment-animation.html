@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BiTadilat Payment Animation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a 16:9 stage like a short explainer film; header shows the chapter, caption under the stage, chapter bar + controls at the bottom. */
+:root {
+  --bg: #F1F5F4;
+  --surface: #FFFFFF;
+  --ink: #10272E;
+  --muted: #5A6D72;
+  --line: #D3DEDA;
+  --track: #B5C6C1;
+  --lane: #E7EEEC;
+  --primary: #0F4C5C;
+  --primary-soft: #DDEBEF;
+  --trust: #107A5B;
+  --trust-soft: #E0F1EA;
+  --warn: #C2601B;
+  --warn-soft: #FBEBDF;
+  --info: #1F6F94;
+  --info-soft: #E1EEF6;
+  --danger: #A3352B;
+  --danger-soft: #F8E4E1;
+  --coin: #E3A92A;
+  --coin-ink: #3A2800;
+  --font: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A161A; --surface: #12232A; --ink: #E2ECE9; --muted: #9DB2B5; --line: #27424B; --track: #3D5D66; --lane: #0F1F26;
+    --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #123129; --warn: #F0A06A; --warn-soft: #36251A;
+    --info: #7DB9DB; --info-soft: #142D3A; --danger: #EE8E84; --danger-soft: #3A1E1B; --coin: #F2C14E; --coin-ink: #2A1D00; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A161A; --surface: #12232A; --ink: #E2ECE9; --muted: #9DB2B5; --line: #27424B; --track: #3D5D66; --lane: #0F1F26;
+  --primary: #7CC3D4; --primary-soft: #16343D; --trust: #5BCB9F; --trust-soft: #123129; --warn: #F0A06A; --warn-soft: #36251A;
+  --info: #7DB9DB; --info-soft: #142D3A; --danger: #EE8E84; --danger-soft: #3A1E1B; --coin: #F2C14E; --coin-ink: #2A1D00; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 22px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 12px; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+.chapter { display: grid; gap: 2px; min-width: 0; }
+.chapter small { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.chapter h1 { margin: 0; font-size: clamp(20px, 2.6vw, 28px); font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
+.counter { font-size: 13px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage-box { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+svg#stage { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.caption { min-height: 3.2em; font-size: clamp(15px, 1.7vw, 19px); font-weight: 600; text-wrap: pretty; padding: 2px 4px; }
+.bar { display: flex; gap: 4px; }
+.bar button { flex: var(--w) 1 0; height: 10px; border: 0; border-radius: 5px; background: var(--lane); position: relative; overflow: hidden; cursor: pointer; padding: 0; }
+.bar button i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--primary); border-radius: 5px; }
+.bar button.done i { width: 100%; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-size: 14px; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 10px; cursor: pointer; }
+.btn.primary { background: var(--primary); color: var(--surface); border-color: var(--primary); min-width: 96px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 12.5px; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--muted); padding: 5px 10px; border-radius: 999px; cursor: pointer; }
+.chips button[aria-current="true"] { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* SVG */
+.nd rect { fill: var(--surface); stroke: var(--line); stroke-width: 2; }
+.ndi { transform-box: fill-box; transform-origin: center; }
+.nd .ib { fill: var(--lane); }
+.nd use { color: var(--muted); }
+.nd .l1 { font: 800 20px var(--font); fill: var(--ink); }
+.nd .l2 { font: 600 14.5px var(--font); fill: var(--muted); }
+.nd.vault rect { fill: var(--info-soft); stroke: var(--info); stroke-width: 2.5; }
+.nd.vault .ib { fill: var(--surface); } .nd.vault use { color: var(--info); }
+.nd.hl rect { stroke: var(--primary); stroke-width: 3.5; } .nd.hl .ib { fill: var(--primary-soft); } .nd.hl use { color: var(--primary); }
+.nd.hlp rect, .nd.hlp2 rect { stroke: var(--trust); stroke-width: 3.5; } .nd.hlp .ib, .nd.hlp2 .ib { fill: var(--trust-soft); } .nd.hlp use, .nd.hlp2 use { color: var(--trust); }
+.nd.hld rect { stroke: var(--danger); stroke-width: 3.5; } .nd.hld .ib { fill: var(--danger-soft); } .nd.hld use { color: var(--danger); }
+.nd.frozen rect { stroke: var(--danger); stroke-dasharray: 8 6; }
+.ln { fill: none; stroke: var(--track); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.ln.main { stroke: var(--primary); } .ln.pro { stroke: var(--trust); } .ln.ref { stroke: var(--warn); } .ln.adm { stroke: var(--danger); stroke-dasharray: 6 8; }
+.ah { fill: var(--track); } .ah.main { fill: var(--primary); } .ah.pro { fill: var(--trust); } .ah.ref { fill: var(--warn); } .ah.adm { fill: var(--danger); }
+.coin rect { fill: var(--coin); stroke: var(--coin-ink); stroke-width: 2; }
+.coin text { font: 800 16px var(--font); fill: var(--coin-ink); text-anchor: middle; dominant-baseline: central; }
+.coin.red rect { fill: var(--warn); stroke: var(--warn); } .coin.red text { fill: var(--surface); }
+.tag { font: 800 16px var(--font); }
+.tag.info { fill: var(--info); } .tag.pro { fill: var(--trust); } .tag.warn { fill: var(--warn); } .tag.danger { fill: var(--danger); } .tag.muted { fill: var(--muted); } .tag.primary { fill: var(--primary); }
+.big { font: 800 56px var(--font); fill: var(--ink); text-anchor: middle; }
+.sub { font: 600 24px var(--font); fill: var(--muted); text-anchor: middle; }
+.card-r rect.bg { fill: var(--lane); }
+.card-r .ct { font: 800 22px var(--font); }
+.card-r .ct.why { fill: var(--danger); } .card-r .ct.target { fill: var(--primary); }
+.card-r .cl { font: 600 19px var(--font); fill: var(--ink); }
+.card-r .dot { fill: var(--muted); }
+.rank rect { fill: var(--primary); } .rank text { font: 800 22px var(--font); fill: var(--surface); text-anchor: middle; dominant-baseline: central; }
+.rank.dim rect { fill: var(--muted); }
+.ex { font: 600 18px var(--font); fill: var(--muted); }
+.icon-ink { color: var(--primary); } .icon-pro { color: var(--trust); } .icon-warn { color: var(--warn); } .icon-danger { color: var(--danger); } .icon-info { color: var(--info); }
+.fin-t { font: 800 34px var(--font); fill: var(--ink); }
+.fin-l { font: 600 22px var(--font); fill: var(--ink); }
+.fin-s { font: 600 18px var(--font); fill: var(--muted); }
+.fin-box rect { fill: var(--primary-soft); stroke: var(--primary); stroke-width: 2; }
+.fin-box text { font: 800 21px var(--font); fill: var(--primary); }
+</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-person" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></g></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 20.5h18"/></g></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 14.5h4"/></g></symbol>
+    <symbol id="i-vault" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="18" height="15.5" rx="2.5"/><circle cx="12" cy="11.2" r="3.8"/><path d="M12 7.4v1.4M12 13.6V15M8.2 11.2h1.4M14.4 11.2h1.4"/><path d="M6.5 19v2M17.5 19v2"/></g></symbol>
+    <symbol id="i-helmet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"/><path d="M2.5 15.5h19v3h-19z"/><path d="M12 8v-2.5M9 9l-.8-2.6M15 9l.8-2.6"/></g></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M7.5 20.5h9"/><path d="M5 7h14"/><path d="M5 7l-2.8 6h5.6z"/><path d="M19 7l-2.8 6h5.6z"/></g></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="7" rx="6" ry="2.6"/><path d="M3 7v4c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6V7"/><path d="M9 16.2c-3.3 0-6-1.2-6-2.6"/><ellipse cx="15.5" cy="15" rx="5.5" ry="2.4"/><path d="M10 15v3.2c0 1.3 2.5 2.4 5.5 2.4s5.5-1.1 5.5-2.4V15"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.6-1.8"/></g></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.5 2.5l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.4 2.4-2.3-.6-.6-2.3z"/></g></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h5v-5h5V9h5V4h3"/></g></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l1.5-5h13L20 9"/><path d="M4 9h16v2.5a2.7 2.7 0 0 1-5.3 0 2.7 2.7 0 0 1-5.4 0 2.7 2.7 0 0 1-5.3 0z"/><path d="M5.5 13v7.5h13V13"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></g></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <div class="top">
+    <div class="chapter"><small id="chSmall">BiTadilat · payment flow</small><h1 id="chTitle">The journey of ₺2,200</h1></div>
+    <span class="counter" id="counter">1 / 9</span>
+  </div>
+  <div class="stage-box"><svg id="stage" viewBox="0 0 1280 720" role="img" aria-label="Payment flow animation"><g id="layer"></g></svg></div>
+  <p class="caption" id="caption" aria-live="polite"></p>
+  <div class="bar" id="bar"></div>
+  <div class="controls">
+    <div class="btns">
+      <button type="button" class="btn" id="prev">Previous scene</button>
+      <button type="button" class="btn primary" id="play">Pause</button>
+      <button type="button" class="btn" id="next">Next scene</button>
+      <button type="button" class="btn" id="restart">Restart</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var layer = $("layer");
+  var tracks = [], caps = [];
+  function clamp(x) { return Math.max(0, Math.min(1, x)); }
+  function ease(k) { return k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; }
+  function mk(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || layer).appendChild(e); return e;
+  }
+  function txt(x, y, s, cls, parent, anchor) { var e = mk("text", { x: x, y: y, "class": cls }, parent); if (anchor) e.setAttribute("text-anchor", anchor); e.textContent = s; return e; }
+
+  // ---- primitives (all time-driven, so pausing and jumping are exact) ----
+  function node(cx, cy, w, h, icon, l1, l2, cls) {
+    var outer = mk("g", { transform: "translate(" + (cx - w / 2) + " " + (cy - h / 2) + ")", "class": "nd " + (cls || "") });
+    var inner = mk("g", { "class": "ndi" }, outer);
+    mk("rect", { width: w, height: h, rx: 16 }, inner);
+    var r = 22;
+    mk("circle", { "class": "ib", cx: 14 + r, cy: h / 2, r: r }, inner);
+    mk("use", { href: "#" + icon, x: 14 + r - 13, y: h / 2 - 13, width: 26, height: 26 }, inner);
+    var tx = 14 + 2 * r + 12;
+    var a = txt(tx, l2 ? h / 2 - 3 : h / 2 + 7, l1, "l1", inner);
+    var b = l2 != null ? txt(tx, h / 2 + 19, l2, "l2", inner) : null;
+    outer.style.opacity = 0;
+    return { g: outer, inner: inner, cx: cx, cy: cy, w: w, h: h, l1: a, sub: b, top: cy - h / 2, bottom: cy + h / 2, left: cx - w / 2, right: cx + w / 2 };
+  }
+  function appear(n, t0, t1) {
+    tracks.push(function (t) {
+      var p = ease(clamp((t - t0) / 0.5));
+      if (t1 != null && t >= t1) p = 1 - ease(clamp((t - t1) / 0.4));
+      n.g.style.opacity = p; n.inner.style.transform = "scale(" + (0.9 + 0.1 * p) + ")";
+    });
+  }
+  function fade(el, t0, t1) {
+    el.style.opacity = 0;
+    tracks.push(function (t) {
+      var p = clamp((t - t0) / 0.45);
+      if (t1 != null && t >= t1) p = 1 - clamp((t - t1) / 0.4);
+      el.style.opacity = p;
+    });
+    return el;
+  }
+  function cls(n, c, t0, t1) { tracks.push(function (t) { n.g.classList.toggle(c, t >= t0 && (t1 == null || t < t1)); }); }
+  function sub(n, list) { tracks.push(function (t) { var s = null; list.forEach(function (x) { if (t >= x[0]) s = x[1]; }); if (s !== null && n.sub) n.sub.textContent = s; }); }
+  function polyLen(pts) { var L = 0; for (var i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
+  function pointAt(pts, f) {
+    var L = polyLen(pts) * f;
+    for (var i = 1; i < pts.length; i++) {
+      var d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      if (L <= d || i === pts.length - 1) { var k = d ? Math.min(1, L / d) : 0; return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k]; }
+      L -= d;
+    }
+    return pts[pts.length - 1];
+  }
+  function line(pts, kind, t0, t1, d) {
+    d = d || 0.6;
+    var g = mk("g", {});
+    var dstr = "M" + pts.map(function (p) { return p[0] + " " + p[1]; }).join("L");
+    var path = mk("path", { d: dstr, "class": "ln " + kind }, g);
+    var L = polyLen(pts);
+    path.style.strokeDasharray = kind === "adm" ? "6 8" : L + " " + L;
+    var a = pts[pts.length - 1], b = pts[pts.length - 2];
+    var ang = Math.atan2(a[1] - b[1], a[0] - b[0]) * 180 / Math.PI;
+    var head = mk("path", { d: "M0 0L-13 -7.5L-13 7.5z", "class": "ah " + kind, transform: "translate(" + a[0] + " " + a[1] + ") rotate(" + ang + ")" }, g);
+    tracks.push(function (t) {
+      var p = ease(clamp((t - t0) / d));
+      var o = 1;
+      if (t1 != null && t >= t1) o = 1 - clamp((t - t1) / 0.4);
+      g.style.opacity = t < t0 ? 0 : o;
+      if (kind !== "adm") path.style.strokeDashoffset = L * (1 - p);
+      head.style.opacity = p > 0.95 ? 1 : 0;
+    });
+    layer.insertBefore(g, layer.firstChild);
+    return g;
+  }
+  function coin(label, legs, show, until, red) {
+    var g = mk("g", { "class": "coin" + (red ? " red" : "") });
+    var w = Math.max(44, 16 + label.length * 10.5);
+    mk("rect", { x: -w / 2, y: -17, width: w, height: 34, rx: 17 }, g);
+    txt(0, 1, label, "", g);
+    var first = legs[0];
+    if (show == null) show = first.t0;
+    tracks.push(function (t) {
+      if (t < show || (until != null && t >= until + 0.4)) { g.style.opacity = 0; return; }
+      g.style.opacity = until != null && t >= until ? 1 - clamp((t - until) / 0.4) : Math.min(1, (t - show) / 0.3);
+      var pos = first.pts[0];
+      for (var i = 0; i < legs.length; i++) {
+        var lg = legs[i];
+        if (t < lg.t0) break;
+        pos = pointAt(lg.pts, ease(clamp((t - lg.t0) / lg.d)));
+      }
+      g.setAttribute("transform", "translate(" + pos[0] + " " + pos[1] + ")");
+    });
+    return g;
+  }
+  function icon(id, x, y, size, c, t0, t1, spin) {
+    var g = mk("g", { "class": c });
+    var u = mk("use", { href: "#" + id, x: -size / 2, y: -size / 2, width: size, height: size }, g);
+    fade(g, t0, t1);
+    tracks.push(function (t) {
+      var r = spin ? Math.sin((t - t0) * 6) * 28 : 0;
+      g.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + r + ")");
+    });
+    return g;
+  }
+  function tag(x, y, s, c, t0, t1, anchor) { return fade(txt(x, y, s, "tag " + c, layer, anchor || "middle"), t0, t1); }
+  function counterText(el, t0, t1, fmt) { tracks.push(function (t) { var p = clamp((t - t0) / (t1 - t0)); if (t >= t0 && t <= t1) el.textContent = fmt(p); }); }
+  function caption(list) { caps = list; }
+  function reasonCard(title, lines, kind, t0) {
+    var g = mk("g", { "class": "card-r", transform: "translate(140 420)" });
+    mk("rect", { "class": "bg", width: 1000, height: 70 + lines.length * 38, rx: 18 }, g);
+    txt(32, 46, title, "ct " + kind, g);
+    lines.forEach(function (s, i) { mk("circle", { "class": "dot", cx: 40, cy: 86 + i * 38, r: 4 }, g); txt(56, 92 + i * 38, s, "cl", g); });
+    fade(g, t0);
+  }
+  function rank(n, dim, x, y, t0) {
+    var g = mk("g", { "class": "rank" + (dim ? " dim" : ""), transform: "translate(" + x + " " + y + ")" });
+    mk("rect", { x: -22, y: -22, width: 44, height: 44, rx: 12 }, g); txt(0, 1, String(n), "", g); fade(g, t0);
+  }
+
+  // ---- scenes ----
+  var M = function () { return node(130, 330, 196, 86, "i-person", "Customer", "card"); };
+  var scenes = [
+    { small: "BiTadilat · payment flow", title: "The journey of ₺2,200", chip: "Intro", dur: 5, build: function () {
+      fade(txt(640, 300, "The journey of ₺2,200", "big"), 0.2);
+      fade(txt(640, 352, "Where does the money in BiTadilat come from, wait, and go?", "sub"), 0.7);
+      line([[260, 470], [1020, 470]], "main", 1.2, null, 0.8);
+      coin("₺2,200", [{ pts: [[260, 470], [1020, 470]], t0: 1.6, d: 2.6 }], 1.3);
+      fade(txt(640, 530, "Example: Kaya Tesisat's offer · 10% commission", "sub"), 2.2);
+      caption([[0, "We will follow a customer's ₺2,200 plumbing job from start to finish. Then we will look at how other payment models handle the same job, and why we did not choose them."]]);
+    } },
+    { small: "Our model", title: "Escrow vault: money stays locked until the job is done", chip: "Our model", dur: 25, build: function () {
+      var m = M(), b = node(360, 330, 196, 86, "i-bank", "Bank", "3D Secure"), c = node(590, 330, 196, 86, "i-card", "Craftgate", "payments"),
+        k = node(835, 330, 220, 120, "i-vault", "Escrow vault", "empty", "vault"), u = node(1160, 180, 196, 86, "i-helmet", "Pro", "Kaya Tesisat"), f = node(1160, 480, 196, 86, "i-coins", "BiTadilat", "commission");
+      [m, b, c, k, u, f].forEach(function (n, i) { appear(n, 0.2 + i * 0.25); });
+      coin("₺2,200", [{ pts: [[130, 265], [360, 265]], t0: 4.3, d: 1 }, { pts: [[360, 265], [590, 265]], t0: 8.2, d: 1 }, { pts: [[590, 265], [835, 248]], t0: 10, d: 1 }], 1.9, 20);
+      line([[228, 330], [258, 330]], "main", 3.6, null, 0.4);
+      cls(m, "hl", 1.9, 5.3); cls(b, "hl", 5.3, 7.6);
+      icon("i-check", 360, 222, 30, "icon-pro", 6.2, 8);
+      line([[458, 330], [488, 330]], "main", 7.6, null, 0.4);
+      cls(c, "hl", 7.8, 10.2);
+      sub(c, [[0, "payments"], [9.3, "result verified"]]);
+      line([[688, 330], [721, 330]], "main", 9.6, null, 0.4);
+      cls(k, "hl", 11, 19.5);
+      sub(k, [[0, "empty"], [11.2, "₺2,200 locked"], [16.8, "48 h left"], [19.3, "approved"], [19.7, "unlocked"]]);
+      icon("i-lock", 925, 264, 34, "icon-info", 11.2, 19.6);
+      icon("i-unlock", 925, 264, 34, "icon-pro", 19.6, null);
+      cls(u, "hlp", 12.6, 16.4);
+      icon("i-wrench", 1160, 112, 40, "icon-pro", 12.8, 16.4, true);
+      counterText(k.sub, 16.8, 19.3, function (p) { var h = Math.round(48 * (1 - p)); return h > 0 ? h + " h left" : "approved"; });
+      line([[945, 305], [1000, 305], [1000, 180], [1058, 180]], "pro", 19.6, null, 0.6);
+      line([[945, 355], [1000, 355], [1000, 480], [1058, 480]], "main", 19.6, null, 0.6);
+      coin("₺1,980", [{ pts: [[835, 248], [1000, 248], [1000, 115], [1160, 115]], t0: 20, d: 1.3 }], 20);
+      coin("₺220", [{ pts: [[835, 248], [1000, 248], [1000, 415], [1160, 415]], t0: 20, d: 1.3 }], 20);
+      cls(u, "hlp2", 21.3, null); cls(f, "hl", 21.3, null);
+      caption([[0, "The customer opens a request and documented pros send offers. The money is still on the customer's card."],
+        [3.5, "The customer accepts an offer and enters the card. The server, not the app, works out the amount: ₺2,200."],
+        [5.4, "With 3D Secure, the bank verifies the cardholder with a code sent to their phone."],
+        [7.6, "Craftgate charges the card. BiTadilat does not trust the message from the bank alone; it asks Craftgate for the result separately."],
+        [10, "₺2,200 enters the escrow vault and is locked. The money now belongs to neither the customer nor the pro: it is set aside for the job and waits."],
+        [12.6, "The pro arrives and does the job. The full address was shown to them only after payment. The money waits in the vault."],
+        [16.6, "The customer approves the job. If they neither approve nor complain, the system approves by itself after 48 hours."],
+        [19.5, "The lock opens: ₺1,980 to the pro and ₺220 (10%) as BiTadilat's commission. Before that, Craftgate is asked whether this payment has already been refunded."]]);
+    } },
+    { small: "Our model", title: "When the job goes wrong: cancellation and complaint", chip: "Cancel and complaint", dur: 20, build: function () {
+      var m = M(), k = node(835, 330, 220, 120, "i-vault", "Escrow vault", "₺2,200 locked", "vault"), u = node(1160, 180, 196, 86, "i-helmet", "Pro", "Kaya Tesisat"),
+        a = node(835, 110, 220, 86, "i-scale", "Admin", "reviews complaint");
+      appear(m, 0.1); appear(k, 0.3); appear(u, 0.5); appear(a, 7.3);
+      icon("i-lock", 925, 264, 34, "icon-info", 0.4, null);
+      coin("₺2,200", [{ pts: [[835, 248], [835, 600], [130, 600], [130, 400]], t0: 2.6, d: 2 }], 0.4, 6.8);
+      line([[835, 392], [835, 600], [130, 600], [130, 377]], "ref", 1.8, 6.8, 0.8);
+      tag(480, 630, "Refund path: via Craftgate to card", "warn", 2.2, 6.8);
+      cls(m, "hl", 4.6, 6.8);
+      tag(130, 460, "₺2,200 is back", "warn", 4.7, 6.8);
+      coin("₺2,200", [{ pts: [[835, 248], [835, 248]], t0: 7.4, d: 0.1 }], 7.4, 12.8);
+      line([[835, 155], [835, 268]], "adm", 7.8, null, 0.5);
+      cls(k, "frozen", 8.2, null);
+      sub(k, [[0, "₺2,200 locked"], [8.2, "frozen"], [12.8, "ruling applied"]]);
+      icon("i-pause", 1000, 400, 34, "icon-danger", 8.4, 12.6);
+      tag(1000, 450, "48 h timer stopped", "danger", 8.6, 12.6);
+      cls(a, "hld", 10.4, null);
+      line([[835, 392], [835, 600], [130, 600], [130, 377]], "ref", 12.5, null, 0.6);
+      line([[945, 305], [1000, 305], [1000, 180], [1058, 180]], "pro", 12.5, null, 0.6);
+      coin("₺1,100", [{ pts: [[835, 248], [835, 600], [130, 600], [130, 400]], t0: 12.9, d: 2 }], 12.8);
+      coin("₺1,100", [{ pts: [[835, 248], [1000, 248], [1000, 115], [1160, 115]], t0: 12.9, d: 1.4 }], 12.8);
+      tag(835, 510, "No commission on this decision", "primary", 15.4);
+      caption([[0, "The money is locked in the vault. From here, two things can go wrong."],
+        [1.6, "1) Cancelled before the pro starts: the full ₺2,200 is refunded to the customer's card. Nothing goes to the pro or as commission."],
+        [7.1, "2) The job started and a problem came up: no more cancelling, so the customer files a complaint with evidence. The money freezes in the vault and the 48-hour timer stops."],
+        [10.4, "The admin reviews both sides and the messages, then decides: full refund, 50% / 50%, or payout to the pro."],
+        [12.7, "For example 50% / 50%: ₺1,100 refunded to the customer, ₺1,100 to the pro. On no path is money sent twice."]]);
+    } },
+    { small: "What is escrow?", title: "Where does the money really sit today?", chip: "What is escrow?", dur: 17, build: function () {
+      var m = node(180, 250, 196, 86, "i-person", "Customer", "card"), c = node(520, 250, 196, 86, "i-card", "Craftgate", "charges card"),
+        co = node(900, 250, 260, 96, "i-bank", "Company funds", "BiTadilat's bank", "vault");
+      appear(m, 0.1); appear(c, 0.3); appear(co, 0.5);
+      line([[278, 250], [420, 250]], "main", 1.0, null, 0.5);
+      line([[618, 250], [768, 250]], "main", 2.6, null, 0.5);
+      coin("₺2,200", [{ pts: [[180, 185], [520, 185]], t0: 1.4, d: 1 }, { pts: [[520, 185], [900, 180]], t0: 3, d: 1 }], 1.2, null);
+      line([[900, 300], [900, 328]], "track", 4.4, null, 0.3);
+      var card = mk("g", { transform: "translate(760 330)" });
+      mk("rect", { width: 280, height: 140, rx: 14, fill: "var(--surface)", stroke: "var(--info)", "stroke-width": 2, "stroke-dasharray": "7 6" }, card);
+      txt(20, 34, "Database record", "tag info", card);
+      txt(20, 70, "₺2,200 · Kaya Tesisat job", "fin-s", card);
+      txt(20, 102, "Status: locked", "fin-s", card);
+      var lk = mk("use", { href: "#i-lock", x: 232, y: 82, width: 28, height: 28 }, card); lk.setAttribute("class", "icon-info");
+      fade(card, 4.6);
+      fade(txt(140, 372, "Escrow vault = this record.", "fin-l"), 6.2);
+      fade(txt(140, 408, "The money is physically in the company's account;", "fin-s"), 6.6);
+      fade(txt(140, 436, "what locks it is the rules in the software.", "fin-s"), 6.8);
+      var risks = [[160, "Mixed with company money", 9], [540, "At risk if the company fails", 10.2], [920, "May need a licence", 11.4]];
+      risks.forEach(function (r) { icon("i-x", r[0], 560, 30, "icon-danger", r[2]); fade(txt(r[0] + 26, 567, r[1], "fin-s"), r[2] + 0.2); });
+      tag(640, 640, "Enough for a demo and capstone project, not for real users.", "pro", 12.8);
+      caption([[0, "The customer pays; Craftgate takes the money from the card and moves it to BiTadilat's account, and from there to the company's bank account."],
+        [4.5, "The system attaches a note to this money: \"This ₺2,200 belongs to Kaya Tesisat's job, locked.\" What we call the escrow vault is this record."],
+        [6.2, "So there is no separate vault. What protects the money is the rules in the software: no payout to the pro without approval or 48 hours, a refund on cancellation, an admin decision on a complaint."],
+        [9, "The weak point: the money sits in the same place as the company's own money. It could be spent by mistake, it is at risk if the company fails, and holding other people's money may require a licence."],
+        [12.8, "That is why today's method is enough for a demo and a capstone project, but not for opening to real users."]]);
+    } },
+    { small: "What is escrow?", title: "In real life, where is money kept safe?", chip: "In real life", dur: 17, build: function () {
+      var m = node(170, 260, 196, 86, "i-person", "Customer", "card"), k = node(600, 260, 300, 104, "i-vault", "Payment institution", "licensed · supervised", "vault"),
+        u = node(1090, 160, 210, 86, "i-helmet", "Pro", "own IBAN"), f = node(1090, 360, 210, 86, "i-coins", "BiTadilat", "commission");
+      appear(m, 0.1); appear(k, 0.3); appear(u, 0.5); appear(f, 0.7);
+      line([[268, 260], [448, 260]], "main", 0.9, null, 0.5);
+      coin("₺2,200", [{ pts: [[170, 195], [600, 186]], t0: 1.2, d: 1.2 }], 1.0, 5.4);
+      tag(600, 345, "Money waits here, separate from company funds", "info", 2.6);
+      icon("i-check", 735, 215, 32, "icon-pro", 4.6);
+      line([[750, 235], [880, 235], [880, 160], [983, 160]], "pro", 5.2, null, 0.6);
+      line([[750, 285], [880, 285], [880, 360], [983, 360]], "main", 5.2, null, 0.6);
+      coin("₺1,980", [{ pts: [[600, 186], [880, 186], [880, 95], [1090, 95]], t0: 5.5, d: 1.3 }], 5.4);
+      coin("₺220", [{ pts: [[600, 186], [880, 186], [880, 295], [1090, 295]], t0: 5.5, d: 1.3 }], 5.4);
+      cls(u, "hlp", 6.8, null); cls(f, "hl", 6.8, null);
+      var b1 = mk("g", { transform: "translate(140 450)" });
+      mk("rect", { width: 480, height: 140, rx: 16, fill: "var(--lane)" }, b1);
+      var u1 = mk("use", { href: "#i-person", x: 24, y: 26, width: 30, height: 30 }, b1); u1.setAttribute("class", "icon-warn");
+      txt(66, 50, "Today ≈ deposit with the landlord", "fin-l", b1);
+      txt(24, 96, "Getting it back relies on the landlord.", "fin-s", b1);
+      fade(b1, 8);
+      var b2 = mk("g", { "class": "fin-box", transform: "translate(660 450)" });
+      mk("rect", { width: 480, height: 140, rx: 16 }, b2);
+      var u2 = mk("use", { href: "#i-scale", x: 24, y: 26, width: 30, height: 30 }, b2); u2.setAttribute("class", "icon-ink");
+      txt(66, 50, "Target ≈ deposit with a notary", "", b2);
+      txt(24, 96, "Money waits somewhere neutral.", "fin-s", b2);
+      fade(b2, 9.6);
+      caption([[0, "The right method: the money never enters BiTadilat's account. n11 and Trendyol work this way too."],
+        [1.2, "The customer pays; the money waits at a licensed payment institution (for example Craftgate). These institutions are supervised by the state and must keep customer money separate from their own."],
+        [4.6, "Once the job is approved, the institution sends ₺1,980 straight to the pro's IBAN and ₺220 to BiTadilat. If something goes wrong, the refund is made from the same place."],
+        [8, "An analogy: today's model is like giving the deposit to the landlord; the target model is like leaving it with a notary. Even if BiTadilat went under, the money waiting there is safe."],
+        [12, "One sentence for the instructor: today the money is locked by software in the company account; in production we will move to the marketplace model, where a licensed payment institution holds the money and sends it straight to the pro on approval."]]);
+    } },
+    altScene({ r: 1, small: "Alternative · ranked 1st", title: "Escrow at a licensed payment institution", chip: "Alt. 1", ex: "Marketplace model · e.g. n11, Trendyol, Hepsiburada",
+      mid: ["i-bank", "Craftgate", "sub-merchant"], right: ["i-helmet", "Pro", "own IBAN"], kind: "target", cardTitle: "Why haven't we switched to this yet?",
+      lines: ["This is our target: money waits with a licensed institution, not us.", "But every pro must register as a sub-merchant: ID/tax number, IBAN.", "It needs a Craftgate marketplace contract; it won't make the delivery date.", "We will switch to it, with the same flow, before launch."],
+      anim: function (L) {
+        coin("₺2,200", [{ pts: [L.ms, L.xs], t0: 1.6, d: 1.1 }, { pts: [L.xs, L.us], t0: 4.4, d: 1.1 }], 1.2, null);
+        tag(640, 345, "Money waits here", "info", 2.8);
+        icon("i-check", 960, 200, 34, "icon-pro", 3.8);
+        tag(1060, 345, "Auto payout on approval", "pro", 5.5);
+        return [[0, "In marketplaces like n11 and Trendyol, the money goes not to the seller but to a licensed payment institution, and waits there."], [3.6, "When delivery or the job is approved, the institution itself sends the money to the seller (the pro) and keeps the commission aside."]];
+      } }),
+    altScene({ r: 3, small: "Alternative · ranked 3rd", title: "Staged (milestone) escrow", chip: "Alt. 3", ex: "e.g. Upwork fixed-price jobs",
+      mid: ["i-steps", "Stage escrow", "each stage separate"], right: ["i-helmet", "Pro", "stage by stage"], kind: "why", cardTitle: "Why we haven't chosen it for now",
+      lines: ["On small repairs it adds a payment and approval step per stage.", "Our typical job is a few hours, done in one visit.", "Good for big renovations: can be added on top of our model later."],
+      anim: function (L) {
+        [0, 1, 2].forEach(function (i) {
+          var t = 1.3 + i * 2.2;
+          coin("Stage " + (i + 1), [{ pts: [L.ms, L.xs], t0: t, d: 0.8 }, { pts: [L.xs, L.us], t0: t + 1.2, d: 0.8 }], t - 0.2, i < 2 ? t + 2.2 : null);
+          icon("i-check", 960, 200, 30, "icon-pro", t + 1.0, t + 2.1);
+        });
+        tag(640, 345, "Each stage waits separately", "info", 1.8);
+        return [[0, "The job is split into stages. The money for each stage is paid in advance and waits in escrow."], [2.6, "When the customer approves a stage, that stage's money goes to the pro; then the next stage begins."]];
+      } }),
+    altScene({ r: 4, small: "Alternative · ranked 4th", title: "Pre-authorization: hold first, charge later", chip: "Alt. 4", ex: "e.g. Uber, hotels, car rental",
+      mid: ["i-wrench", "Job is done", "not yet charged"], right: ["i-helmet", "Pro", "at the end"], waitLeft: true, kind: "why", cardTitle: "Why didn't we choose it?",
+      lines: ["A bank hold lapses on its own within days to a few weeks.", "If a hold lapses before a future appointment, money and protection vanish.", "If the charge is declined at the end, the pro isn't paid for the work."],
+      anim: function (L) {
+        coin("hold ₺2,200", [{ pts: [L.ms, L.ms], t0: 1.2, d: 0.1 }, { pts: [L.ms, L.xs, L.us], t0: 5.6, d: 1.6 }], 1.2, null);
+        icon("i-lock", 300, 200, 30, "icon-info", 1.4, 5.5);
+        var c = tag(220, 345, "", "info", 1.6, 5.5);
+        counterText(c, 1.8, 5.2, function (p) { var d = Math.max(1, Math.round(7 * (1 - p))); return "Hold expires in " + d + " days"; });
+        icon("i-wrench", 640, 190, 38, "icon-ink", 2.6, 5.4, true);
+        icon("i-x", 1150, 200, 34, "icon-danger", 7.4);
+        tag(1060, 345, "Charge declined: pro unpaid", "danger", 7.5);
+        return [[0, "The amount is held on the card but not charged. The money stays on the customer's card, with the bank's countdown running."], [5.5, "When the job ends, the actual charge is made. If the hold has lapsed in the meantime or the charge is declined, the pro is left unprotected."]];
+      } }),
+    altScene({ r: 5, small: "Alternative · ranked 5th", title: "Direct charge, periodic payout to the seller", chip: "Alt. 5", ex: "e.g. Amazon",
+      mid: ["i-store", "Platform", "no waiting"], right: ["i-helmet", "Pro", "before job ends"], noWait: true, kind: "why", cardTitle: "Why didn't we choose it?",
+      lines: ["No customer \"job done\" approval; money moves regardless of the work.", "Does not protect service quality: the pro can be paid before finishing.", "On a problem job, the refund comes out of the platform's own pocket."],
+      anim: function (L) {
+        coin("₺2,200", [{ pts: [L.ms, L.xs], t0: 1.2, d: 0.9 }, { pts: [L.xs, L.us], t0: 2.3, d: 0.9 }], 1, null);
+        tag(1060, 345, "Job not done yet", "warn", 3.4);
+        line([[640, 308], [640, 372], [220, 372], [220, 306]], "ref", 4.6, null, 0.6);
+        coin("refund ₺2,200", [{ pts: [[640, 230], [640, 372], [220, 372], [220, 320]], t0: 5.2, d: 1.6 }], 5, null, true);
+        tag(430, 400, "Platform pays the refund", "warn", 6.8);
+        return [[0, "The card is charged immediately and the money is paid to the seller at regular intervals, without waiting for the job."], [4.5, "If a problem comes up, the platform pays the customer's refund from its own funds; getting the money back from the pro is hard."]];
+      } }),
+    altScene({ r: 6, small: "Alternative · ranked 6th", title: "The money never touches the platform", chip: "Alt. 6", ex: "e.g. service classifieds sites",
+      mid: ["i-coins", "BiTadilat", "listing fee only"], right: ["i-helmet", "Pro", "cash / EFT"], noWait: true, kind: "why", cardTitle: "Why didn't we choose it?",
+      lines: ["No protection for the customer: the pro can take the money and walk away.", "Commission can't be collected; deals outside the platform are wide open.", "Removes the escrow vault, the app's main promise."],
+      anim: function (L) {
+        line([[318, 245], [640, 150], [962, 245]], "track", 1.0, null, 0.7);
+        coin("₺2,200", [{ pts: [L.ms, [640, 128], L.us], t0: 1.4, d: 1.6 }], 1.2, null);
+        coin("listing fee", [{ pts: [L.us, L.xs], t0: 3.6, d: 1 }], 3.5, null);
+        icon("i-x", 300, 200, 32, "icon-danger", 4.8);
+        tag(220, 345, "No protection", "danger", 4.9);
+        return [[0, "The customer pays the pro directly; the money never passes through the platform."], [3.5, "The platform only charges the pro a listing or offer fee. If something goes wrong, there is no vault the customer can turn to."]];
+      } }),
+    { small: "Result", title: "Why did we choose today's model?", chip: "Result", dur: 12, build: function () {
+      fade(txt(140, 120, "Why today's model?", "fin-t"), 0.2);
+      var items = [["Customer is protected", "Money stays put until the job is approved; on a problem: refund or admin ruling.", 0.9],
+        ["Pro is protected", "Charged before the work; if the customer stays silent, auto payout after 48 h.", 2.6],
+        ["Works today", "Tested in the Craftgate sandbox with real 3D Secure, refunds and complaint rulings.", 4.3]];
+      items.forEach(function (it, i) {
+        var y = 205 + i * 105;
+        icon("i-check", 165, y + 8, 40, "icon-pro", it[2]);
+        fade(txt(205, y + 4, it[0], "fin-l"), it[2] + 0.2);
+        fade(txt(205, y + 36, it[1], "fin-s"), it[2] + 0.4);
+      });
+      var box = mk("g", { "class": "fin-box", transform: "translate(140 545)" });
+      mk("rect", { width: 1000, height: 86, rx: 18 }, box);
+      txt(32, 52, "Before launch: same flow, money at a licensed institution (Alt. 1).", "", box);
+      fade(box, 6.2);
+      caption([[0, "Today's model protects both the customer and the pro, and it works for the submission."], [6, "Before opening to real users, we will move the place where the money waits to a licensed payment institution; the screens and rules will stay the same."]]);
+    } }
+  ];
+
+  function altScene(o) {
+    return { small: o.small, title: o.title, chip: o.chip, dur: 14 + (o.lines.length > 3 ? 1 : 0), build: function () {
+      var m = node(220, 260, 196, 86, "i-person", "Customer", "card");
+      var x = node(640, 260, 250, 96, o.mid[0], o.mid[1], o.mid[2], o.noWait ? "" : (o.waitLeft ? "" : "vault"));
+      var u = node(1060, 260, 196, 86, o.right[0], o.right[1], o.right[2]);
+      if (o.waitLeft) m.g.classList.add("vault");
+      appear(m, 0.1); appear(x, 0.35); appear(u, 0.6);
+      rank(o.r, o.r !== 1, 76, 78, 0.1);
+      fade(txt(116, 86, o.ex, "ex"), 0.3);
+      if (o.r !== 6) { line([[318, 260], [513, 260]], "track", 0.8, null, 0.5); line([[765, 260], [960, 260]], "track", 1.0, null, 0.5); }
+      var L = { ms: [220, 195], xs: [640, 190], us: [1060, 195] };
+      var caps1 = o.anim(L);
+      var t0 = o.r === 1 ? 6.6 : 8.2;
+      reasonCard(o.cardTitle, o.lines, o.kind, t0);
+      caps1.push([t0, o.kind === "target" ? "This is the target model we recommend; what holds us back today is time and the sign-up process." : "Why this model does not suit BiTadilat:"]);
+      caption(caps1);
+    } };
+  }
+
+  // ---- player ----
+  var cur = 0, t = 0, playing = !reduce, last = null;
+  var bar = $("bar"), chips = $("chips");
+  scenes.forEach(function (s, i) {
+    var b = document.createElement("button"); b.type = "button"; b.style.setProperty("--w", s.dur); b.setAttribute("aria-label", "Scene " + (i + 1) + ": " + s.chip);
+    b.appendChild(document.createElement("i")); b.addEventListener("click", function () { go(i); }); bar.appendChild(b);
+    var c = document.createElement("button"); c.type = "button"; c.textContent = s.chip; c.addEventListener("click", function () { go(i); }); chips.appendChild(c);
+  });
+  function build(i) {
+    while (layer.firstChild) layer.removeChild(layer.firstChild);
+    tracks = []; caps = [];
+    scenes[i].build();
+    $("chSmall").textContent = scenes[i].small; $("chTitle").textContent = scenes[i].title;
+    $("counter").textContent = (i + 1) + " / " + scenes.length;
+    Array.prototype.forEach.call(chips.children, function (c, j) { c.setAttribute("aria-current", j === i ? "true" : "false"); });
+  }
+  function draw() {
+    tracks.forEach(function (f) { f(t); });
+    var c = ""; caps.forEach(function (x) { if (t >= x[0]) c = x[1]; });
+    if ($("caption").textContent !== c) $("caption").textContent = c;
+    Array.prototype.forEach.call(bar.children, function (b, j) {
+      b.classList.toggle("done", j < cur);
+      b.firstChild.style.width = j === cur ? (100 * Math.min(1, t / scenes[cur].dur)) + "%" : (j < cur ? "100%" : "0");
+    });
+  }
+  function go(i) { cur = Math.max(0, Math.min(scenes.length - 1, i)); build(cur); t = playing ? 0 : scenes[cur].dur; draw(); }
+  function setPlaying(p) { playing = p; $("play").textContent = p ? "Pause" : "Play"; last = null; }
+  function loop(ts) {
+    if (playing) {
+      if (last != null) t += Math.min(0.1, (ts - last) / 1000);
+      last = ts;
+      if (t >= scenes[cur].dur) {
+        if (cur < scenes.length - 1) { cur++; build(cur); t = 0; }
+        else { t = scenes[cur].dur; setPlaying(false); }
+      }
+      draw();
+    }
+    requestAnimationFrame(loop);
+  }
+  $("play").addEventListener("click", function () {
+    if (!playing && cur === scenes.length - 1 && t >= scenes[cur].dur) { go(0); t = 0; }
+    if (!playing && t >= scenes[cur].dur) t = 0;
+    setPlaying(!playing);
+  });
+  $("next").addEventListener("click", function () { go(cur + 1); });
+  $("prev").addEventListener("click", function () { go(cur - 1); });
+  $("restart").addEventListener("click", function () { setPlaying(!reduce); go(0); });
+  setPlaying(playing);
+  build(0); t = playing ? 0 : scenes[0].dur; draw();
+  requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>

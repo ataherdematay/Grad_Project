@@ -1,0 +1,47 @@
+# One command for the jury: docker compose up --build
+# Backend: http://localhost:${BACKEND_PORT:-8090}   (dev profile: demo seed + POST /api/v1/dev/reset)
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: bitadilat
+      POSTGRES_USER: bitadilat
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bitadilat}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bitadilat -d bitadilat"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Dev only: the image's socat forward (container port 8091) exists only in the dev profile.
+      # Do not reuse this file for prod; see docs/spec/PROD_CONFIG.md.
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/bitadilat
+      DB_USER: bitadilat
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-bitadilat}
+      # Passed through from the host environment / .env; never stored in this file.
+      # The backend refuses to start with empty Craftgate keys (CraftgateConfig), so without real sandbox
+      # keys a non-secret placeholder is used: everything runs, only the card payment step fails.
+      CRAFTGATE_API_KEY: ${CRAFTGATE_API_KEY:-not-configured}
+      CRAFTGATE_SECRET_KEY: ${CRAFTGATE_SECRET_KEY:-not-configured}
+      CRAFTGATE_CALLBACK_KEY: ${CRAFTGATE_CALLBACK_KEY:-}
+      APP_PUBLIC_BASE_URL: http://localhost:${BACKEND_PORT:-8090}
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8090}:8091"
+    volumes:
+      - media:/app/data/media
+
+volumes:
+  pgdata:
+  media:

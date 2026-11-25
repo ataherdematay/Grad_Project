@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bitadilat_api/bitadilat_api.dart';
@@ -7,6 +8,7 @@ import 'package:bitadilat_mobile/app/app.dart';
 import 'package:bitadilat_mobile/app/router.dart';
 import 'package:bitadilat_mobile/core/providers.dart';
 import 'package:bitadilat_mobile/features/auth/session.dart';
+import 'package:bitadilat_mobile/features/common/legal_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -165,6 +167,11 @@ Future<Harness> pumpApp(
       initialLocationProvider.overrideWithValue(initial),
       if (session != null)
         sessionProvider.overrideWith(() => FakeSession(session)),
+      // Yasal taslaklar: gerçek asset dosyası eşzamanlı okunur (sahte zamanda
+      // rootBundle G/Ç'si bitmeyebilir). Asset kaydı followup_test'te denetlenir.
+      legalTextLoaderProvider.overrideWithValue(
+        (path) async => File(path).readAsStringSync(),
+      ),
       ...overrides,
     ],
   );

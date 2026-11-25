@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 
 import '../admin.dart';
@@ -41,6 +43,18 @@ class ApiClient {
       config: config,
     );
     this.dio.interceptors.add(_auth);
+    this.dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (err, handler) {
+          if (err.response?.statusCode == 403 &&
+              !err.requestOptions.path.contains('/auth/') &&
+              !_forbidden.isClosed) {
+            _forbidden.add(null);
+          }
+          handler.next(err);
+        },
+      ),
+    );
     auth = AuthApi(this.dio, tokenStore);
     me = MeApi(this.dio);
     catalog = CatalogApi(this.dio);
@@ -62,6 +76,7 @@ class ApiClient {
   final TokenStore tokenStore;
   final Dio dio;
   late final AuthInterceptor _auth;
+  final StreamController<void> _forbidden = StreamController<void>.broadcast();
   late final AuthApi auth;
   late final MeApi me;
   late final CatalogApi catalog;
@@ -85,7 +100,12 @@ class ApiClient {
   /// Yalnız refresh reddedilince olay verir.
   Stream<void> get sessionExpired => _auth.sessionExpired;
 
+  /// Kimlikli bir çağrı 403 (FORBIDDEN) alınca olay verir. Yönetici paneli
+  /// bununla oturumu kapatır; mobil uygulama dinlemez.
+  Stream<void> get forbidden => _forbidden.stream;
+
   Future<void> dispose() async {
+    await _forbidden.close();
     await _auth.dispose();
     dio.close();
   }
