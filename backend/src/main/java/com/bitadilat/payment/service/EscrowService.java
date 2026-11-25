@@ -137,16 +137,17 @@ public class EscrowService {
     /**
      * İş iptali: tam iade niyeti kaydedilir (outbox), Craftgate'e bu işlemde gidilmez. İade işlem kesinleştikten sonra
      * {@link #refundPending} ile yapılır. SEED kaydı dev dışında reddedilir (409) ve iptal de geri alınır.
+     * {@code actor}: iptali yapan taraf (CUSTOMER, PRO veya ADMIN); olay kaydına yazılır.
      */
     @Transactional(propagation = Propagation.MANDATORY)
-    public void queueRefund(EscrowPayment payment, Instant now) {
+    public void queueRefund(EscrowPayment payment, Instant now, String actor) {
         payment.requireRefundable();
         if (payment.isSeed()) {
             requireDevForSeed();
         }
         payment.queueRefund(now);
         repository.saveAndFlush(payment);
-        events.record(payment, EscrowEventType.REFUND_REQUESTED, payment.getTotalAmount(), "CUSTOMER");
+        events.record(payment, EscrowEventType.REFUND_REQUESTED, payment.getTotalAmount(), actor);
     }
 
     /**
@@ -206,6 +207,12 @@ public class EscrowService {
      */
     @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
     public void refundFully(EscrowPayment payment) {
+        refundFully(payment, "SYSTEM");
+    }
+
+    /** {@link #refundFully(EscrowPayment)}; {@code actor} (SYSTEM veya ADMIN) olay kaydına yazılır. */
+    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
+    public void refundFully(EscrowPayment payment, String actor) {
         payment.requireRefundable();
         BigDecimal amount = payment.getTotalAmount();
         if (payment.isSeed()) {
@@ -216,7 +223,7 @@ public class EscrowService {
         payment.refundFully();
         repository.saveAndFlush(payment);
         ledger(payment, amount, "REFUND");
-        events.record(payment, EscrowEventType.REFUNDED, amount, "SYSTEM");
+        events.record(payment, EscrowEventType.REFUNDED, amount, actor);
     }
 
     /**
@@ -259,13 +266,13 @@ public class EscrowService {
      * düzeltir.
      */
     @Transactional(propagation = Propagation.MANDATORY)
-    public void recordRefundAlreadyDone(EscrowPayment payment) {
+    public void recordRefundAlreadyDone(EscrowPayment payment, String actor) {
         payment.requireRefundable();
         BigDecimal amount = payment.getTotalAmount();
         payment.refundFully();
         repository.saveAndFlush(payment);
         ledger(payment, amount, "REFUND");
-        events.record(payment, EscrowEventType.REFUNDED, amount, "ADMIN", "ALREADY_REFUNDED_AT_GATEWAY");
+        events.record(payment, EscrowEventType.REFUNDED, amount, actor, "ALREADY_REFUNDED_AT_GATEWAY");
     }
 
     /** Şikayet: emanet DISPUTED olur. */

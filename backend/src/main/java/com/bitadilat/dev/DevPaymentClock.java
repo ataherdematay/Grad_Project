@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * İşin {@code auto_complete_at} zamanını şimdiye çeker ve otomatik tamamlamayı hemen çalıştırır. Aktarım normal
@@ -30,16 +31,29 @@ public class DevPaymentClock {
     private final JdbcTemplate jdbc;
     private final JobScheduler scheduler;
     private final EscrowPaymentRepository escrows;
+    private final TransactionTemplate tx;
 
-    public DevPaymentClock(JdbcTemplate jdbc, JobScheduler scheduler, EscrowPaymentRepository escrows) {
+    public DevPaymentClock(JdbcTemplate jdbc, JobScheduler scheduler, EscrowPaymentRepository escrows,
+                           TransactionTemplate tx) {
         this.jdbc = jdbc;
         this.scheduler = scheduler;
         this.escrows = escrows;
+        this.tx = tx;
     }
 
+    /**
+     * Tek işlemde: iş satırı kilitlenir, kontroller yapılır, {@code auto_complete_at} geri alınır ve otomatik
+     * tamamlama aynı işlemde çalışır. Tamamlama yapılamazsa (hata veya 409) zaman geri alma da geri alınır; böylece
+     * başarısız bir çağrı, zamanlayıcının işi sonradan habersizce tamamlamasına yol açmaz. Eşzamanlı ikinci çağrı
+     * kilidi bekler ve iş artık WORK_FINISHED olmadığı için 409 alır (çifte aktarım yok).
+     */
     public FastForwardResult fastForward(UUID userId, boolean admin, UUID jobId) {
+        return tx.execute(s -> run(userId, admin, jobId));
+    }
+
+    private FastForwardResult run(UUID userId, boolean admin, UUID jobId) {
         List<Map<String, Object>> rows = jdbc.queryForList(
-                "select customer_id, pro_id, status from jobs where id = ?", jobId);
+                "select customer_id, pro_id, status from jobs where id = ? for update", jobId);
         if (rows.isEmpty()) {
             throw ApiException.notFound("İş bulunamadı.");
         }
@@ -56,10 +70,17 @@ public class DevPaymentClock {
         if (open != null && open > 0) {
             throw ApiException.illegalState("Açık şikayeti olan işte otomatik aktarım yapılmaz.");
         }
+        EscrowPayment before = escrows.findByJobId(jobId)
+                .orElseThrow(() -> ApiException.notFound("Bu işin ödeme kaydı bulunamadı."));
+        if (before.getStatus() != EscrowStatus.LOCKED || before.getPendingAction() != null || before.needsReview()) {
+            throw ApiException.illegalState("Kasada aktarılmayı bekleyen (LOCKED) bir ödeme yok.");
+        }
         Instant now = Instant.now();
         jdbc.update("update jobs set auto_complete_at = ? where id = ?", Timestamp.from(now.minusSeconds(1)), jobId);
-        boolean completed = scheduler.completeOne(jobId, now);
-        log.info("Demo saati: otomatik tamamlama tetiklendi. jobId={} tamamlandı={}", jobId, completed);
+        if (!scheduler.completeOne(jobId, now)) {
+            throw ApiException.illegalState("Otomatik tamamlama çalıştırılamadı; iş durumu değişmiş olabilir.");
+        }
+        log.info("Demo saati: otomatik tamamlama tetiklendi. jobId={}", jobId);
         String status = jdbc.queryForObject("select status from jobs where id = ?", String.class, jobId);
         EscrowPayment p = escrows.findByJobId(jobId)
                 .orElseThrow(() -> ApiException.notFound("Bu işin ödeme kaydı bulunamadı."));

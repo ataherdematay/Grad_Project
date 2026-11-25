@@ -929,7 +929,7 @@ Rules:
 | `DISPUTE_OPENED` | Customer filed a complaint; money frozen | | CUSTOMER | |
 | `CUSTOMER_APPROVED` | Customer confirmed delivery | | CUSTOMER | |
 | `AUTO_APPROVED` | 48 hours passed, system confirmed delivery | | SYSTEM | |
-| `REFUND_REQUESTED` | Job cancelled, full refund queued | gross | CUSTOMER | |
+| `REFUND_REQUESTED` | Job cancelled, full refund queued | gross | CUSTOMER, PRO or ADMIN (who cancelled) | |
 | `RELEASED_TO_PRO` | Pro's share paid out | pro net (pro/admin only) | SYSTEM | |
 | `REFUNDED` | Full refund done | refunded amount | SYSTEM or ADMIN | `ALREADY_REFUNDED_AT_GATEWAY` when Craftgate had already refunded |
 | `SPLIT_SETTLED` | Admin decision 50/50 applied | refund half | ADMIN | |
@@ -1049,7 +1049,7 @@ What it does: sets the job's `autoCompleteAt` to just before now and runs the no
 ```
 
 - `released` false means the payout did not happen yet: `pendingAction = "RELEASE"` (Craftgate did not answer; the sweeper retries) or `errorCode = "PAYOUT_NEEDS_REVIEW"` (Craftgate shows a refund; support reviews). The job is `COMPLETED` in both cases.
-- 409 `ILLEGAL_STATE`: job is not `WORK_FINISHED` (including a second call), or it has an open complaint. 404: unknown job or not a participant.
+- 409 `ILLEGAL_STATE`: job is not `WORK_FINISHED` (including a second call), it has an open complaint, or its payment is not waiting in the vault (`LOCKED` with no `pendingAction` and no review code). A refused or failed call changes nothing (the clock rewind runs in the same transaction as the auto-completion). 404: unknown job or not a participant.
 - After the call the job's timeline shows `AUTO_APPROVED` (actor `SYSTEM`) followed by `RELEASED_TO_PRO`, and the pro gets the usual `PAYOUT_RELEASED` notification.
 
 #### Demo (fake) payment mode

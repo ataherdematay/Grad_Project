@@ -111,6 +111,56 @@ class PaymentFastForwardTest extends AdminTestBase {
     }
 
     @Test
+    void fastForwardNeedsAToken() throws Exception {
+        // Bearer çözümleyici jetonu yalnızca /api/v1/dev/reset için yok sayar; demo saati kimliksiz 401'dir.
+        Setup s = openRequestWithOffer();
+        String jobId = deliveredJob(s);
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .post("/api/v1/dev/jobs/" + jobId + "/payment/fast-forward"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .post("/api/v1/dev/jobs/" + jobId + "/payment/fast-forward/"))
+                .andExpect(status().isUnauthorized());
+        assertThat(escrowStatus(jobId)).isEqualTo("LOCKED");
+    }
+
+    @Test
+    void failedFastForwardLeavesTheClockUntouched() throws Exception {
+        // Denetim: geri alınan auto_complete_at eskiden ayrı işlemdeydi; tamamlama patlasa bile kalıcı oluyordu ve
+        // zamanlayıcı işi 5 dk içinde habersizce tamamlıyordu.
+        Setup s = openRequestWithOffer();
+        String jobId = deliveredJob(s);
+        java.sql.Timestamp due = jdbc.queryForObject("select auto_complete_at from jobs where id = ?::uuid",
+                java.sql.Timestamp.class, jobId);
+        when(gateway.refundedTotal(anyLong())).thenThrow(new IllegalStateException("beklenmeyen"));
+        try {
+            forward(s.customer(), jobId);
+        } catch (Exception expected) {
+            // MockMvc işlenmemiş istisnayı yeniden fırlatabilir; önemli olan veritabanı durumu.
+        }
+        assertThat(jdbc.queryForObject("select auto_complete_at from jobs where id = ?::uuid",
+                java.sql.Timestamp.class, jobId)).isEqualTo(due);
+        assertThat(jdbc.queryForObject("select status from jobs where id = ?::uuid", String.class, jobId))
+                .isEqualTo("WORK_FINISHED");
+        assertThat(escrowStatus(jobId)).isEqualTo("LOCKED");
+    }
+
+    @Test
+    void fastForwardRefusesAPaymentThatIsNotWaitingInTheVault() throws Exception {
+        Setup s = openRequestWithOffer();
+        String jobId = deliveredJob(s);
+        java.sql.Timestamp due = jdbc.queryForObject("select auto_complete_at from jobs where id = ?::uuid",
+                java.sql.Timestamp.class, jobId);
+        jdbc.update("update escrow_payment set error_code = 'PAYOUT_NEEDS_REVIEW' where job_id = ?::uuid", jobId);
+        forward(s.customer(), jobId).andExpect(status().isConflict());
+        jdbc.update("update escrow_payment set error_code = null, status = 'DISPUTED' where job_id = ?::uuid", jobId);
+        forward(s.customer(), jobId).andExpect(status().isConflict());
+        verify(gateway, never()).refundedTotal(anyLong());
+        assertThat(jdbc.queryForObject("select auto_complete_at from jobs where id = ?::uuid",
+                java.sql.Timestamp.class, jobId)).isEqualTo(due);
+    }
+
+    @Test
     void seedPaymentIsReleasedLedgerOnly() throws Exception {
         Setup s = openRequestWithOffer();
         String jobId = deliveredJob(s);

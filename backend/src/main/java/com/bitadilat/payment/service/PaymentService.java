@@ -415,13 +415,14 @@ public class PaymentService {
                     : gateway.refundState(payment.getCraftgatePaymentId());
             if (refunded == PaymentGateway.RefundState.FULLY_REFUNDED) {
                 log.warn("Ödeme Craftgate'te zaten iade edilmiş, yeniden iade gönderilmedi. ref={}", ref);
-                escrow.recordRefundAlreadyDone(payment);
+                escrow.recordRefundAlreadyDone(payment, "SYSTEM");
             } else if (refunded == PaymentGateway.RefundState.PARTIALLY_REFUNDED) {
                 // Tam iade, kısmen iade edilmiş ödemede tutarı ve defteri bozar: elle incelenir.
                 log.error("Öksüz ödeme Craftgate'te kısmen iade edilmiş, tam iade gönderilmedi; elle incelenmeli. "
                         + "ref={} paymentId={}", ref, payment.getCraftgatePaymentId());
                 payment.sendToRefundReview(now);
                 repository.saveAndFlush(payment);
+                events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
                 return;
             } else if (refunded == PaymentGateway.RefundState.REFUND_PENDING) {
                 // Önceki iade isteği Craftgate'te sonuç bekliyor: ikinci iade gönderilmez, sonraki turda yeniden sorulur.
@@ -436,6 +437,7 @@ public class PaymentService {
             escrowNotifications.refundCompleted(payment);
         } catch (GatewayException e) {
             if (payment.recordRefundFailure(now)) {
+                events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
                 log.error("Öksüz ödemenin iadesi {} denemede yapılamadı, elle incelenmeli. ref={} paymentId={}",
                         payment.getRefundAttempts(), ref, payment.getCraftgatePaymentId());
             } else {

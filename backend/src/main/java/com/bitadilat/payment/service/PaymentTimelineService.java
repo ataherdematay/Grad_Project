@@ -149,10 +149,19 @@ public class PaymentTimelineService {
                 sandbox ? SANDBOX_NOTICE : null);
     }
 
-    /** Müşterinin ödeme geçmişi (yeniden eskiye): kilitlenmiş ve sonrası; başarısız/yarım denemeler yok. */
+    /**
+     * Müşterinin ödeme geçmişi (yeniden eskiye): kilitlenmiş ve sonrası; başarısız/yarım denemeler yok. Sayfalama
+     * veritabanında yapılır (sabit üst sınır yok): {@code limit + 1} satır okunur, fazlası sonraki sayfanın varlığını
+     * gösterir. İmleç ve limit kuralları {@link Paging} ile aynıdır.
+     */
     @Transactional(readOnly = true)
     public PaymentHistory history(UUID customerId, String cursor, Integer limit) {
-        List<PaymentHistoryItem> all = jdbc.query("""
+        if (limit != null && limit < 1) {
+            throw ApiException.validation("limit", "limit en az 1 olmalı.");
+        }
+        int size = Math.min(limit == null ? Paging.DEFAULT_LIMIT : limit, Paging.MAX_LIMIT);
+        int offset = offset(cursor);
+        List<PaymentHistoryItem> rows = jdbc.query("""
                 select e.ref, e.job_id, e.job_ref, r.title, p.business_name, e.total_amount, e.refunded_amount,
                        e.status, e.provider, e.locked_at, e.created_at
                 from escrow_payment e
@@ -160,7 +169,7 @@ public class PaymentTimelineService {
                 left join pro_profiles p on p.user_id = e.pro_id
                 where e.customer_id = ? and e.channel = 'APP'
                   and e.status in ('LOCKED', 'DISPUTED', 'RELEASED_TO_PRO', 'REFUNDED_TO_CUSTOMER', 'SPLIT_SETTLED')
-                order by coalesce(e.locked_at, e.created_at) desc, e.ref desc limit 500""", (rs, i) -> {
+                order by coalesce(e.locked_at, e.created_at) desc, e.ref desc limit ? offset ?""", (rs, i) -> {
             EscrowStatus status = EscrowStatus.valueOf(rs.getString("status"));
             EscrowProvider provider = EscrowProvider.valueOf(rs.getString("provider"));
             return new PaymentHistoryItem(rs.getString("ref"), rs.getObject("job_id", UUID.class),
@@ -168,9 +177,25 @@ public class PaymentTimelineService {
                     money(rs.getBigDecimal("total_amount")), money(rs.getBigDecimal("refunded_amount")), status,
                     location(status), providerName(provider), sandbox(provider), instant(rs.getTimestamp("locked_at")),
                     instant(rs.getTimestamp("created_at")));
-        }, customerId);
-        Paging.Slice<PaymentHistoryItem> page = Paging.slice(all, cursor, limit);
-        return new PaymentHistory(page.items(), page.nextCursor());
+        }, customerId, size + 1, offset);
+        boolean more = rows.size() > size;
+        return new PaymentHistory(more ? rows.subList(0, size) : rows, more ? String.valueOf(offset + size) : null);
+    }
+
+    /** {@link Paging} ile aynı imleç kuralı: boş = 0, negatif veya sayı değil = 400 {@code cursor}. */
+    private static int offset(String cursor) {
+        if (cursor == null || cursor.isBlank()) {
+            return 0;
+        }
+        try {
+            int start = Integer.parseInt(cursor.trim());
+            if (start >= 0) {
+                return start;
+            }
+        } catch (NumberFormatException e) {
+            // aşağıda
+        }
+        throw ApiException.validation("cursor", "Geçersiz imleç.");
     }
 
     /** Admin kasa özeti: tüm APP kanalı ödemeleri üzerinden tek sorgu. */

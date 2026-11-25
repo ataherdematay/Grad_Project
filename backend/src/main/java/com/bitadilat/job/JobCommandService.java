@@ -289,7 +289,7 @@ public class JobCommandService {
         }
         requests.saveAndFlush(request);
 
-        escrow.queueRefund(payment, now); // Craftgate'e bu işlemde gidilmez (outbox)
+        escrow.queueRefund(payment, now, l.role().name()); // Craftgate'e bu işlemde gidilmez (outbox)
 
         notifyOther(job, l.role(), NotificationService.JOB_CANCELLED,
                 Map.of("jobId", jobId.toString(), "publicCode", request.getPublicCode(),

@@ -145,6 +145,37 @@ class PaymentDemoTest extends AdminTestBase {
     }
 
     @Test
+    void refundRequestedRecordsWhoCancelled() throws Exception {
+        // Denetim: REFUND_REQUESTED eskiden usta iptal etse bile actor=CUSTOMER yazıyordu.
+        Setup s = openRequestWithOffer();
+        String jobId = payAndOpenJob(s);
+        schedule(s, jobId);
+        jobPost(s.pro(), jobId, "/cancel", Map.of("reason", "CANNOT_DO_JOB")).andExpect(status().isOk());
+        JsonNode t = timeline(admin(), jobId);
+        String actor = null;
+        for (JsonNode e : t.get("events")) {
+            if (e.get("type").asString().equals("REFUND_REQUESTED")) {
+                actor = e.get("actor").asString();
+            }
+        }
+        assertThat(actor).isEqualTo("PRO");
+        assertThat(jdbc.queryForObject("select count(*) from escrow_event where type = 'REFUND_REQUESTED' "
+                + "and actor_role = 'PRO' and payment_ref = ?", Long.class, t.get("paymentRef").asString()))
+                .isEqualTo(1L);
+    }
+
+    @Test
+    void adminFullRefundDecisionIsRecordedAsAdmin() throws Exception {
+        Account admin = admin();
+        Disputed d = disputedJob();
+        decide(admin, d, "FULL_REFUND").andExpect(status().isOk());
+        assertThat(jdbc.queryForObject("select count(*) from escrow_event where type = 'REFUNDED' "
+                + "and actor_role = 'ADMIN' and payment_ref = ?", Long.class, d.ref())).isEqualTo(1L);
+        assertThat(jdbc.queryForObject("select count(*) from escrow_event where type = 'REFUNDED' "
+                + "and actor_role = 'SYSTEM' and payment_ref = ?", Long.class, d.ref())).isZero();
+    }
+
+    @Test
     void disputeAndSplitSettlementAreShown() throws Exception {
         Account admin = admin();
         Disputed d = disputedJob();
@@ -249,6 +280,13 @@ class PaymentDemoTest extends AdminTestBase {
         assertThat(page2.get("nextCursor").isNull()).isTrue();
 
         get(first.customer(), "/me/payments?limit=0").andExpect(status().isBadRequest());
+        get(first.customer(), "/me/payments?cursor=-1").andExpect(status().isBadRequest());
+        get(first.customer(), "/me/payments?cursor=abc").andExpect(status().isBadRequest());
+        JsonNode past = ok(get(first.customer(), "/me/payments?cursor=99"));
+        assertThat(past.get("items").size()).isZero();
+        assertThat(past.get("nextCursor").isNull()).isTrue();
+        // limit üst sınırı 50: daha büyük istek 400 değil, 50'ye kırpılır.
+        assertThat(ok(get(first.customer(), "/me/payments?limit=500")).get("items").size()).isEqualTo(2);
         // Ödemesi olmayan müşteri: boş liste, 404 değil.
         JsonNode none = ok(get(register(), "/me/payments"));
         assertThat(none.get("items").size()).isZero();
