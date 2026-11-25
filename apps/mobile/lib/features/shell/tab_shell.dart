@@ -232,6 +232,13 @@ class _ProfileTabState extends ConsumerState<ProfileTab> {
                 onPressed: () => context.push('/c/addresses'),
               ),
               const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: l.paymentsTitle,
+                icon: Icons.receipt_long_outlined,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => context.push('/c/payments'),
+              ),
+              const SizedBox(height: AppSpacing.sm),
             ],
             AppButton(
               label: l.profileSettings,

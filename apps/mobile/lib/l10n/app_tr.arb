@@ -1488,5 +1488,113 @@
   "legalDraftNotice": "Bu metin taslaktır ve henüz hukuken geçerli değildir. Hukukçu incelemesinden sonra son hâli yayına alınacak.",
   "legalLoadFailed": "Metin açılamadı. Tekrar dene.",
   "settingsLegalTitle": "Yasal metinler",
-  "payFailAbandoned": "Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin."
+  "payFailAbandoned": "Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin.",
+  "journeyTitle": "Paranın yolculuğu",
+  "journeyNowLabel": "Para şu an",
+  "moneyLocCustomerCard": "Kartında",
+  "moneyLocVault": "Güvence kasasında",
+  "moneyLocPro": "Ustada",
+  "moneyLocRefunded": "Sana iade edildi",
+  "moneyLocSplit": "Bölüşüldü",
+  "moneyLocCustomerCardPro": "Müşterinin kartında",
+  "moneyLocProPro": "Sende",
+  "moneyLocRefundedPro": "Müşteriye iade edildi",
+  "journeyExplainCard": "Tutar henüz kartından çekilmedi.",
+  "journeyExplainVault": "Tutar güvence kasasında bekliyor. İş bitip onayladığında ustaya aktarılır.",
+  "journeyExplainPro": "Tutar ustaya aktarıldı.",
+  "journeyExplainRefunded": "Tutarın iadesi kartına yapıldı.",
+  "journeyExplainSplit": "Karar gereği tutar yarı yarıya bölüştürüldü: yarısı sana iade edildi, yarısı ustaya aktarıldı.",
+  "journeyExplainCardPro": "Tutar henüz müşterinin kartından çekilmedi.",
+  "journeyExplainVaultPro": "Tutar güvence kasasında bekliyor. Müşteri işi onayladığında sana aktarılır.",
+  "journeyExplainProPro": "Tutar sana aktarıldı.",
+  "journeyExplainRefundedPro": "Tutar müşteriye iade edildi.",
+  "journeyExplainSplitPro": "Karar gereği tutar yarı yarıya bölüştürüldü: yarısı müşteriye iade edildi, yarısı sana aktarıldı.",
+  "journeyNodeCard": "Kart",
+  "journeyNodeCardPro": "Müşteri",
+  "journeyNodeVault": "Güvence kasası",
+  "journeyNodePro": "Usta",
+  "journeyNodeProPro": "Sen",
+  "journeyCountdownTitle": "Otomatik aktarıma kalan süre",
+  "journeyCountdownValue": "{hours} sa {minutes} dk",
+  "@journeyCountdownValue": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "journeyCountdownNote": "48 saat içinde onaylamazsan tutar ustaya otomatik aktarılır.",
+  "journeyCountdownNotePro": "Müşteri 48 saat içinde onaylamazsa tutar sana otomatik aktarılır.",
+  "journeyCountdownDue": "Otomatik aktarım işleniyor.",
+  "journeyEventsTitle": "Hareketler",
+  "journeyEvtInitialized": "Ödeme başlatıldı",
+  "journeyEvtThreeds": "Banka doğrulaması başladı",
+  "journeyEvtLocked": "Tutar güvence kasasına alındı",
+  "journeyEvtDelivered": "Usta işi bitirdi",
+  "journeyEvtScheduled": "48 saatlik otomatik aktarım planlandı",
+  "journeyEvtDispute": "Şikayet açıldı, tutar donduruldu",
+  "journeyEvtApproved": "İşi onayladın",
+  "journeyEvtApprovedPro": "Müşteri işi onayladı",
+  "journeyEvtAutoApproved": "48 saat doldu, sistem onayladı",
+  "journeyEvtRefundRequested": "İade talep edildi",
+  "journeyEvtReleased": "Tutar ustaya aktarıldı",
+  "journeyEvtReleasedPro": "Tutar sana aktarıldı",
+  "journeyEvtRefunded": "Tutar kartına iade edildi",
+  "journeyEvtRefundedPro": "Tutar müşteriye iade edildi",
+  "journeyEvtSplit": "Karar uygulandı: tutar yarı yarıya bölüştürüldü",
+  "journeyEvtReview": "Destek inceliyor",
+  "journeyEvtFailed": "Ödeme alınamadı",
+  "journeyEvtUnknown": "Ödeme hareketi",
+  "journeyNoteLateSuccess": "Banka onayı geç geldi",
+  "journeyNoteAlreadyRefunded": "İade bankada daha önce yapılmıştı",
+  "journeyNotePayoutReview": "Aktarım destek incelemesinde",
+  "journeyNoteRefundReview": "İade destek incelemesinde",
+  "journeyNoteDeclined": "Banka reddetti",
+  "journeyNoteThreedsAbandoned": "Banka doğrulaması tamamlanmadı",
+  "journeyNoteUncertain": "Sonuç kesinleşmedi",
+  "journeySandboxChip": "Sandbox (test)",
+  "journeyCardLabel": "Kart",
+  "journeyViewReceipt": "Makbuzu gör",
+  "journeyOpenDetails": "Hareketleri gör",
+  "journeyAmountsTitle": "Tutarlar",
+  "receiptTitle": "Makbuz",
+  "receiptNo": "Makbuz no",
+  "receiptDate": "Tarih",
+  "receiptJob": "İş",
+  "receiptPro": "Usta",
+  "receiptCustomer": "Müşteri",
+  "receiptItems": "Kalemler",
+  "receiptNetPaid": "Net ödenen",
+  "receiptCard": "Ödeme kartı",
+  "receiptStatus": "Durum",
+  "receiptSandboxTitle": "Sandbox (test) ödemesi",
+  "receiptSandboxBody": "Kartından gerçek para çekilmedi. Bu makbuz yalnız deneme amaçlıdır.",
+  "receiptItemQty": "{qty} × {price}",
+  "@receiptItemQty": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsTitle": "Ödemelerim",
+  "paymentsEmptyTitle": "Henüz ödemen yok",
+  "paymentsEmptyBody": "Bir teklifi kabul edip ödeme yaptığında burada görünür.",
+  "paymentsMoneyLine": "Para: {where}",
+  "@paymentsMoneyLine": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsLoadMore": "Daha fazla göster",
+  "paymentsMoreFailed": "Daha fazlası yüklenemedi. Tekrar dene.",
+  "paymentsNoJob": "Bağlı iş yok"
 }

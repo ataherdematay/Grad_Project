@@ -1436,5 +1436,113 @@
   "legalDraftNotice": "This text is a draft and is not legally binding yet. The final version will be published after legal review.",
   "legalLoadFailed": "The text could not be opened. Try again.",
   "settingsLegalTitle": "Legal",
-  "payFailAbandoned": "The bank verification was not completed and your card was not charged. You can try again."
+  "payFailAbandoned": "The bank verification was not completed and your card was not charged. You can try again.",
+  "journeyTitle": "Money journey",
+  "journeyNowLabel": "Money right now",
+  "moneyLocCustomerCard": "On your card",
+  "moneyLocVault": "In the secure vault",
+  "moneyLocPro": "With the pro",
+  "moneyLocRefunded": "Refunded to you",
+  "moneyLocSplit": "Split",
+  "moneyLocCustomerCardPro": "On the customer's card",
+  "moneyLocProPro": "With you",
+  "moneyLocRefundedPro": "Refunded to the customer",
+  "journeyExplainCard": "The amount has not been taken from your card yet.",
+  "journeyExplainVault": "The amount is held in the secure vault. It goes to the pro once the work is done and you confirm.",
+  "journeyExplainPro": "The amount has been paid out to the pro.",
+  "journeyExplainRefunded": "The amount has been refunded to your card.",
+  "journeyExplainSplit": "By decision the amount was split in half: half refunded to you, half paid to the pro.",
+  "journeyExplainCardPro": "The amount has not been taken from the customer's card yet.",
+  "journeyExplainVaultPro": "The amount is held in the secure vault. It is paid out to you once the customer confirms the work.",
+  "journeyExplainProPro": "The amount has been paid out to you.",
+  "journeyExplainRefundedPro": "The amount was refunded to the customer.",
+  "journeyExplainSplitPro": "By decision the amount was split in half: half refunded to the customer, half paid out to you.",
+  "journeyNodeCard": "Card",
+  "journeyNodeCardPro": "Customer",
+  "journeyNodeVault": "Secure vault",
+  "journeyNodePro": "Pro",
+  "journeyNodeProPro": "You",
+  "journeyCountdownTitle": "Time until automatic payout",
+  "journeyCountdownValue": "{hours} h {minutes} min",
+  "@journeyCountdownValue": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "journeyCountdownNote": "If you do not confirm within 48 hours, the amount is paid out to the pro automatically.",
+  "journeyCountdownNotePro": "If the customer does not confirm within 48 hours, the amount is paid out to you automatically.",
+  "journeyCountdownDue": "Automatic payout is being processed.",
+  "journeyEventsTitle": "Activity",
+  "journeyEvtInitialized": "Payment started",
+  "journeyEvtThreeds": "Bank verification started",
+  "journeyEvtLocked": "Amount placed in the secure vault",
+  "journeyEvtDelivered": "The pro finished the work",
+  "journeyEvtScheduled": "48-hour automatic payout scheduled",
+  "journeyEvtDispute": "Complaint opened, amount frozen",
+  "journeyEvtApproved": "You confirmed the work",
+  "journeyEvtApprovedPro": "The customer confirmed the work",
+  "journeyEvtAutoApproved": "48 hours passed, the system confirmed",
+  "journeyEvtRefundRequested": "Refund requested",
+  "journeyEvtReleased": "Amount paid out to the pro",
+  "journeyEvtReleasedPro": "Amount paid out to you",
+  "journeyEvtRefunded": "Amount refunded to your card",
+  "journeyEvtRefundedPro": "Amount refunded to the customer",
+  "journeyEvtSplit": "Decision applied: amount split in half",
+  "journeyEvtReview": "Support is reviewing",
+  "journeyEvtFailed": "Payment was not taken",
+  "journeyEvtUnknown": "Payment activity",
+  "journeyNoteLateSuccess": "The bank confirmed late",
+  "journeyNoteAlreadyRefunded": "The refund had already been made at the bank",
+  "journeyNotePayoutReview": "Payout is under support review",
+  "journeyNoteRefundReview": "Refund is under support review",
+  "journeyNoteDeclined": "The bank declined",
+  "journeyNoteThreedsAbandoned": "Bank verification was not completed",
+  "journeyNoteUncertain": "The result is not final",
+  "journeySandboxChip": "Sandbox (test)",
+  "journeyCardLabel": "Card",
+  "journeyViewReceipt": "View receipt",
+  "journeyOpenDetails": "See activity",
+  "journeyAmountsTitle": "Amounts",
+  "receiptTitle": "Receipt",
+  "receiptNo": "Receipt no.",
+  "receiptDate": "Date",
+  "receiptJob": "Job",
+  "receiptPro": "Pro",
+  "receiptCustomer": "Customer",
+  "receiptItems": "Items",
+  "receiptNetPaid": "Net paid",
+  "receiptCard": "Payment card",
+  "receiptStatus": "Status",
+  "receiptSandboxTitle": "Sandbox (test) payment",
+  "receiptSandboxBody": "No real money was taken from your card. This receipt is for testing only.",
+  "receiptItemQty": "{qty} × {price}",
+  "@receiptItemQty": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsTitle": "My payments",
+  "paymentsEmptyTitle": "No payments yet",
+  "paymentsEmptyBody": "Once you accept an offer and pay, it shows up here.",
+  "paymentsMoneyLine": "Money: {where}",
+  "@paymentsMoneyLine": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsLoadMore": "Show more",
+  "paymentsMoreFailed": "Could not load more. Try again.",
+  "paymentsNoJob": "No linked job"
 }

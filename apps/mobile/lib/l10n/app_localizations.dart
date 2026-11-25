@@ -5187,6 +5187,492 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin.'**
   String get payFailAbandoned;
+
+  /// No description provided for @journeyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Paranın yolculuğu'**
+  String get journeyTitle;
+
+  /// No description provided for @journeyNowLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para şu an'**
+  String get journeyNowLabel;
+
+  /// No description provided for @moneyLocCustomerCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kartında'**
+  String get moneyLocCustomerCard;
+
+  /// No description provided for @moneyLocVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence kasasında'**
+  String get moneyLocVault;
+
+  /// No description provided for @moneyLocPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustada'**
+  String get moneyLocPro;
+
+  /// No description provided for @moneyLocRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sana iade edildi'**
+  String get moneyLocRefunded;
+
+  /// No description provided for @moneyLocSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölüşüldü'**
+  String get moneyLocSplit;
+
+  /// No description provided for @moneyLocCustomerCardPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşterinin kartında'**
+  String get moneyLocCustomerCardPro;
+
+  /// No description provided for @moneyLocProPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sende'**
+  String get moneyLocProPro;
+
+  /// No description provided for @moneyLocRefundedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteriye iade edildi'**
+  String get moneyLocRefundedPro;
+
+  /// No description provided for @journeyExplainCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar henüz kartından çekilmedi.'**
+  String get journeyExplainCard;
+
+  /// No description provided for @journeyExplainVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar güvence kasasında bekliyor. İş bitip onayladığında ustaya aktarılır.'**
+  String get journeyExplainVault;
+
+  /// No description provided for @journeyExplainPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar ustaya aktarıldı.'**
+  String get journeyExplainPro;
+
+  /// No description provided for @journeyExplainRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutarın iadesi kartına yapıldı.'**
+  String get journeyExplainRefunded;
+
+  /// No description provided for @journeyExplainSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar gereği tutar yarı yarıya bölüştürüldü: yarısı sana iade edildi, yarısı ustaya aktarıldı.'**
+  String get journeyExplainSplit;
+
+  /// No description provided for @journeyExplainCardPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar henüz müşterinin kartından çekilmedi.'**
+  String get journeyExplainCardPro;
+
+  /// No description provided for @journeyExplainVaultPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar güvence kasasında bekliyor. Müşteri işi onayladığında sana aktarılır.'**
+  String get journeyExplainVaultPro;
+
+  /// No description provided for @journeyExplainProPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar sana aktarıldı.'**
+  String get journeyExplainProPro;
+
+  /// No description provided for @journeyExplainRefundedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar müşteriye iade edildi.'**
+  String get journeyExplainRefundedPro;
+
+  /// No description provided for @journeyExplainSplitPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar gereği tutar yarı yarıya bölüştürüldü: yarısı müşteriye iade edildi, yarısı sana aktarıldı.'**
+  String get journeyExplainSplitPro;
+
+  /// No description provided for @journeyNodeCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kart'**
+  String get journeyNodeCard;
+
+  /// No description provided for @journeyNodeCardPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri'**
+  String get journeyNodeCardPro;
+
+  /// No description provided for @journeyNodeVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence kasası'**
+  String get journeyNodeVault;
+
+  /// No description provided for @journeyNodePro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta'**
+  String get journeyNodePro;
+
+  /// No description provided for @journeyNodeProPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sen'**
+  String get journeyNodeProPro;
+
+  /// No description provided for @journeyCountdownTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomatik aktarıma kalan süre'**
+  String get journeyCountdownTitle;
+
+  /// No description provided for @journeyCountdownValue.
+  ///
+  /// In tr, this message translates to:
+  /// **'{hours} sa {minutes} dk'**
+  String journeyCountdownValue(int hours, int minutes);
+
+  /// No description provided for @journeyCountdownNote.
+  ///
+  /// In tr, this message translates to:
+  /// **'48 saat içinde onaylamazsan tutar ustaya otomatik aktarılır.'**
+  String get journeyCountdownNote;
+
+  /// No description provided for @journeyCountdownNotePro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri 48 saat içinde onaylamazsa tutar sana otomatik aktarılır.'**
+  String get journeyCountdownNotePro;
+
+  /// No description provided for @journeyCountdownDue.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomatik aktarım işleniyor.'**
+  String get journeyCountdownDue;
+
+  /// No description provided for @journeyEventsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hareketler'**
+  String get journeyEventsTitle;
+
+  /// No description provided for @journeyEvtInitialized.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme başlatıldı'**
+  String get journeyEvtInitialized;
+
+  /// No description provided for @journeyEvtThreeds.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka doğrulaması başladı'**
+  String get journeyEvtThreeds;
+
+  /// No description provided for @journeyEvtLocked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar güvence kasasına alındı'**
+  String get journeyEvtLocked;
+
+  /// No description provided for @journeyEvtDelivered.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta işi bitirdi'**
+  String get journeyEvtDelivered;
+
+  /// No description provided for @journeyEvtScheduled.
+  ///
+  /// In tr, this message translates to:
+  /// **'48 saatlik otomatik aktarım planlandı'**
+  String get journeyEvtScheduled;
+
+  /// No description provided for @journeyEvtDispute.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet açıldı, tutar donduruldu'**
+  String get journeyEvtDispute;
+
+  /// No description provided for @journeyEvtApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'İşi onayladın'**
+  String get journeyEvtApproved;
+
+  /// No description provided for @journeyEvtApprovedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri işi onayladı'**
+  String get journeyEvtApprovedPro;
+
+  /// No description provided for @journeyEvtAutoApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'48 saat doldu, sistem onayladı'**
+  String get journeyEvtAutoApproved;
+
+  /// No description provided for @journeyEvtRefundRequested.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade talep edildi'**
+  String get journeyEvtRefundRequested;
+
+  /// No description provided for @journeyEvtReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar ustaya aktarıldı'**
+  String get journeyEvtReleased;
+
+  /// No description provided for @journeyEvtReleasedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar sana aktarıldı'**
+  String get journeyEvtReleasedPro;
+
+  /// No description provided for @journeyEvtRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar kartına iade edildi'**
+  String get journeyEvtRefunded;
+
+  /// No description provided for @journeyEvtRefundedPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutar müşteriye iade edildi'**
+  String get journeyEvtRefundedPro;
+
+  /// No description provided for @journeyEvtSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar uygulandı: tutar yarı yarıya bölüştürüldü'**
+  String get journeyEvtSplit;
+
+  /// No description provided for @journeyEvtReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Destek inceliyor'**
+  String get journeyEvtReview;
+
+  /// No description provided for @journeyEvtFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme alınamadı'**
+  String get journeyEvtFailed;
+
+  /// No description provided for @journeyEvtUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme hareketi'**
+  String get journeyEvtUnknown;
+
+  /// No description provided for @journeyNoteLateSuccess.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka onayı geç geldi'**
+  String get journeyNoteLateSuccess;
+
+  /// No description provided for @journeyNoteAlreadyRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade bankada daha önce yapılmıştı'**
+  String get journeyNoteAlreadyRefunded;
+
+  /// No description provided for @journeyNotePayoutReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarım destek incelemesinde'**
+  String get journeyNotePayoutReview;
+
+  /// No description provided for @journeyNoteRefundReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade destek incelemesinde'**
+  String get journeyNoteRefundReview;
+
+  /// No description provided for @journeyNoteDeclined.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka reddetti'**
+  String get journeyNoteDeclined;
+
+  /// No description provided for @journeyNoteThreedsAbandoned.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka doğrulaması tamamlanmadı'**
+  String get journeyNoteThreedsAbandoned;
+
+  /// No description provided for @journeyNoteUncertain.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sonuç kesinleşmedi'**
+  String get journeyNoteUncertain;
+
+  /// No description provided for @journeySandboxChip.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sandbox (test)'**
+  String get journeySandboxChip;
+
+  /// No description provided for @journeyCardLabel.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kart'**
+  String get journeyCardLabel;
+
+  /// No description provided for @journeyViewReceipt.
+  ///
+  /// In tr, this message translates to:
+  /// **'Makbuzu gör'**
+  String get journeyViewReceipt;
+
+  /// No description provided for @journeyOpenDetails.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hareketleri gör'**
+  String get journeyOpenDetails;
+
+  /// No description provided for @journeyAmountsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutarlar'**
+  String get journeyAmountsTitle;
+
+  /// No description provided for @receiptTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Makbuz'**
+  String get receiptTitle;
+
+  /// No description provided for @receiptNo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Makbuz no'**
+  String get receiptNo;
+
+  /// No description provided for @receiptDate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tarih'**
+  String get receiptDate;
+
+  /// No description provided for @receiptJob.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş'**
+  String get receiptJob;
+
+  /// No description provided for @receiptPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta'**
+  String get receiptPro;
+
+  /// No description provided for @receiptCustomer.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri'**
+  String get receiptCustomer;
+
+  /// No description provided for @receiptItems.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kalemler'**
+  String get receiptItems;
+
+  /// No description provided for @receiptNetPaid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Net ödenen'**
+  String get receiptNetPaid;
+
+  /// No description provided for @receiptCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme kartı'**
+  String get receiptCard;
+
+  /// No description provided for @receiptStatus.
+  ///
+  /// In tr, this message translates to:
+  /// **'Durum'**
+  String get receiptStatus;
+
+  /// No description provided for @receiptSandboxTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sandbox (test) ödemesi'**
+  String get receiptSandboxTitle;
+
+  /// No description provided for @receiptSandboxBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kartından gerçek para çekilmedi. Bu makbuz yalnız deneme amaçlıdır.'**
+  String get receiptSandboxBody;
+
+  /// No description provided for @receiptItemQty.
+  ///
+  /// In tr, this message translates to:
+  /// **'{qty} × {price}'**
+  String receiptItemQty(String qty, String price);
+
+  /// No description provided for @paymentsTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödemelerim'**
+  String get paymentsTitle;
+
+  /// No description provided for @paymentsEmptyTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Henüz ödemen yok'**
+  String get paymentsEmptyTitle;
+
+  /// No description provided for @paymentsEmptyBody.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bir teklifi kabul edip ödeme yaptığında burada görünür.'**
+  String get paymentsEmptyBody;
+
+  /// No description provided for @paymentsMoneyLine.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para: {where}'**
+  String paymentsMoneyLine(String where);
+
+  /// No description provided for @paymentsLoadMore.
+  ///
+  /// In tr, this message translates to:
+  /// **'Daha fazla göster'**
+  String get paymentsLoadMore;
+
+  /// No description provided for @paymentsMoreFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Daha fazlası yüklenemedi. Tekrar dene.'**
+  String get paymentsMoreFailed;
+
+  /// No description provided for @paymentsNoJob.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bağlı iş yok'**
+  String get paymentsNoJob;
 }
 
 class _AppLocalizationsDelegate

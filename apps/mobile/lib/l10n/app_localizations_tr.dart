@@ -2860,4 +2860,263 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get payFailAbandoned =>
       'Banka doğrulaması tamamlanmadı, kartından para çekilmedi. Tekrar deneyebilirsin.';
+
+  @override
+  String get journeyTitle => 'Paranın yolculuğu';
+
+  @override
+  String get journeyNowLabel => 'Para şu an';
+
+  @override
+  String get moneyLocCustomerCard => 'Kartında';
+
+  @override
+  String get moneyLocVault => 'Güvence kasasında';
+
+  @override
+  String get moneyLocPro => 'Ustada';
+
+  @override
+  String get moneyLocRefunded => 'Sana iade edildi';
+
+  @override
+  String get moneyLocSplit => 'Bölüşüldü';
+
+  @override
+  String get moneyLocCustomerCardPro => 'Müşterinin kartında';
+
+  @override
+  String get moneyLocProPro => 'Sende';
+
+  @override
+  String get moneyLocRefundedPro => 'Müşteriye iade edildi';
+
+  @override
+  String get journeyExplainCard => 'Tutar henüz kartından çekilmedi.';
+
+  @override
+  String get journeyExplainVault =>
+      'Tutar güvence kasasında bekliyor. İş bitip onayladığında ustaya aktarılır.';
+
+  @override
+  String get journeyExplainPro => 'Tutar ustaya aktarıldı.';
+
+  @override
+  String get journeyExplainRefunded => 'Tutarın iadesi kartına yapıldı.';
+
+  @override
+  String get journeyExplainSplit =>
+      'Karar gereği tutar yarı yarıya bölüştürüldü: yarısı sana iade edildi, yarısı ustaya aktarıldı.';
+
+  @override
+  String get journeyExplainCardPro =>
+      'Tutar henüz müşterinin kartından çekilmedi.';
+
+  @override
+  String get journeyExplainVaultPro =>
+      'Tutar güvence kasasında bekliyor. Müşteri işi onayladığında sana aktarılır.';
+
+  @override
+  String get journeyExplainProPro => 'Tutar sana aktarıldı.';
+
+  @override
+  String get journeyExplainRefundedPro => 'Tutar müşteriye iade edildi.';
+
+  @override
+  String get journeyExplainSplitPro =>
+      'Karar gereği tutar yarı yarıya bölüştürüldü: yarısı müşteriye iade edildi, yarısı sana aktarıldı.';
+
+  @override
+  String get journeyNodeCard => 'Kart';
+
+  @override
+  String get journeyNodeCardPro => 'Müşteri';
+
+  @override
+  String get journeyNodeVault => 'Güvence kasası';
+
+  @override
+  String get journeyNodePro => 'Usta';
+
+  @override
+  String get journeyNodeProPro => 'Sen';
+
+  @override
+  String get journeyCountdownTitle => 'Otomatik aktarıma kalan süre';
+
+  @override
+  String journeyCountdownValue(int hours, int minutes) {
+    return '$hours sa $minutes dk';
+  }
+
+  @override
+  String get journeyCountdownNote =>
+      '48 saat içinde onaylamazsan tutar ustaya otomatik aktarılır.';
+
+  @override
+  String get journeyCountdownNotePro =>
+      'Müşteri 48 saat içinde onaylamazsa tutar sana otomatik aktarılır.';
+
+  @override
+  String get journeyCountdownDue => 'Otomatik aktarım işleniyor.';
+
+  @override
+  String get journeyEventsTitle => 'Hareketler';
+
+  @override
+  String get journeyEvtInitialized => 'Ödeme başlatıldı';
+
+  @override
+  String get journeyEvtThreeds => 'Banka doğrulaması başladı';
+
+  @override
+  String get journeyEvtLocked => 'Tutar güvence kasasına alındı';
+
+  @override
+  String get journeyEvtDelivered => 'Usta işi bitirdi';
+
+  @override
+  String get journeyEvtScheduled => '48 saatlik otomatik aktarım planlandı';
+
+  @override
+  String get journeyEvtDispute => 'Şikayet açıldı, tutar donduruldu';
+
+  @override
+  String get journeyEvtApproved => 'İşi onayladın';
+
+  @override
+  String get journeyEvtApprovedPro => 'Müşteri işi onayladı';
+
+  @override
+  String get journeyEvtAutoApproved => '48 saat doldu, sistem onayladı';
+
+  @override
+  String get journeyEvtRefundRequested => 'İade talep edildi';
+
+  @override
+  String get journeyEvtReleased => 'Tutar ustaya aktarıldı';
+
+  @override
+  String get journeyEvtReleasedPro => 'Tutar sana aktarıldı';
+
+  @override
+  String get journeyEvtRefunded => 'Tutar kartına iade edildi';
+
+  @override
+  String get journeyEvtRefundedPro => 'Tutar müşteriye iade edildi';
+
+  @override
+  String get journeyEvtSplit =>
+      'Karar uygulandı: tutar yarı yarıya bölüştürüldü';
+
+  @override
+  String get journeyEvtReview => 'Destek inceliyor';
+
+  @override
+  String get journeyEvtFailed => 'Ödeme alınamadı';
+
+  @override
+  String get journeyEvtUnknown => 'Ödeme hareketi';
+
+  @override
+  String get journeyNoteLateSuccess => 'Banka onayı geç geldi';
+
+  @override
+  String get journeyNoteAlreadyRefunded => 'İade bankada daha önce yapılmıştı';
+
+  @override
+  String get journeyNotePayoutReview => 'Aktarım destek incelemesinde';
+
+  @override
+  String get journeyNoteRefundReview => 'İade destek incelemesinde';
+
+  @override
+  String get journeyNoteDeclined => 'Banka reddetti';
+
+  @override
+  String get journeyNoteThreedsAbandoned => 'Banka doğrulaması tamamlanmadı';
+
+  @override
+  String get journeyNoteUncertain => 'Sonuç kesinleşmedi';
+
+  @override
+  String get journeySandboxChip => 'Sandbox (test)';
+
+  @override
+  String get journeyCardLabel => 'Kart';
+
+  @override
+  String get journeyViewReceipt => 'Makbuzu gör';
+
+  @override
+  String get journeyOpenDetails => 'Hareketleri gör';
+
+  @override
+  String get journeyAmountsTitle => 'Tutarlar';
+
+  @override
+  String get receiptTitle => 'Makbuz';
+
+  @override
+  String get receiptNo => 'Makbuz no';
+
+  @override
+  String get receiptDate => 'Tarih';
+
+  @override
+  String get receiptJob => 'İş';
+
+  @override
+  String get receiptPro => 'Usta';
+
+  @override
+  String get receiptCustomer => 'Müşteri';
+
+  @override
+  String get receiptItems => 'Kalemler';
+
+  @override
+  String get receiptNetPaid => 'Net ödenen';
+
+  @override
+  String get receiptCard => 'Ödeme kartı';
+
+  @override
+  String get receiptStatus => 'Durum';
+
+  @override
+  String get receiptSandboxTitle => 'Sandbox (test) ödemesi';
+
+  @override
+  String get receiptSandboxBody =>
+      'Kartından gerçek para çekilmedi. Bu makbuz yalnız deneme amaçlıdır.';
+
+  @override
+  String receiptItemQty(String qty, String price) {
+    return '$qty × $price';
+  }
+
+  @override
+  String get paymentsTitle => 'Ödemelerim';
+
+  @override
+  String get paymentsEmptyTitle => 'Henüz ödemen yok';
+
+  @override
+  String get paymentsEmptyBody =>
+      'Bir teklifi kabul edip ödeme yaptığında burada görünür.';
+
+  @override
+  String paymentsMoneyLine(String where) {
+    return 'Para: $where';
+  }
+
+  @override
+  String get paymentsLoadMore => 'Daha fazla göster';
+
+  @override
+  String get paymentsMoreFailed => 'Daha fazlası yüklenemedi. Tekrar dene.';
+
+  @override
+  String get paymentsNoJob => 'Bağlı iş yok';
 }

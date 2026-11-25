@@ -24,7 +24,10 @@ import '../features/customer/wizard_screen.dart';
 import '../features/jobs/customer_jobs.dart';
 import '../features/jobs/pro_jobs.dart';
 import '../features/notifications/notifications_screen.dart';
+import '../features/payment/payment_history_screen.dart';
+import '../features/payment/payment_journey.dart';
 import '../features/payment/payment_screens.dart';
+import '../features/payment/receipt_screen.dart';
 import '../features/pro/pro_apply.dart';
 import '../features/pro/pro_feed.dart';
 import '../features/pro/pro_profile.dart';
@@ -236,9 +239,23 @@ final routerProvider = Provider<GoRouter>((ref) {
             PaymentResultScreen(paymentRef: state.pathParameters['ref']!),
       ),
       appRoute(
+        path: '/c/payments',
+        builder: (_, _) => const PaymentHistoryScreen(),
+      ),
+      appRoute(
         path: '/c/jobs/:id',
         builder: (_, state) =>
             CustomerJobScreen(id: state.pathParameters['id']!),
+      ),
+      appRoute(
+        path: '/c/jobs/:id/payment',
+        builder: (_, state) =>
+            PaymentJourneyScreen(jobId: state.pathParameters['id']!),
+      ),
+      appRoute(
+        path: '/c/jobs/:id/receipt',
+        builder: (_, state) =>
+            ReceiptScreen(jobId: state.pathParameters['id']!),
       ),
       appRoute(
         path: '/c/jobs/:id/appointment',
@@ -293,6 +310,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       appRoute(
         path: '/p/jobs/:id',
         builder: (_, state) => ProJobScreen(id: state.pathParameters['id']!),
+      ),
+      appRoute(
+        path: '/p/jobs/:id/payment',
+        builder: (_, state) =>
+            PaymentJourneyScreen(jobId: state.pathParameters['id']!, pro: true),
       ),
       appRoute(
         path: '/p/jobs/:id/appointment',

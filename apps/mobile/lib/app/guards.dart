@@ -42,11 +42,14 @@ final List<RegExp> _wave2Routes = [
 
 /// Dalga 3 rotaları (ödeme, iş, şikayet, kazanç).
 final List<RegExp> _wave3Routes = [
+  RegExp(r'^/c/payments$'),
   RegExp(r'^/c/payments/[^/]+/(3ds|result)$'),
-  RegExp(r'^/c/jobs/[^/]+(/(appointment|cancel|complete|review|complaint))?$'),
+  RegExp(
+    r'^/c/jobs/[^/]+(/(appointment|cancel|complete|review|complaint|payment|receipt))?$',
+  ),
   RegExp(r'^/c/complaints/[^/]+$'),
   RegExp(
-    r'^/p/jobs/[^/]+(/(appointment|cancel|cancelled|finish|finished|note))?$',
+    r'^/p/jobs/[^/]+(/(appointment|cancel|cancelled|finish|finished|note|payment))?$',
   ),
   RegExp(r'^/p/earnings$'),
 ];
@@ -103,13 +106,13 @@ bool isProMode(Me me) =>
 /// korumalar `/p/application` ya da `/p/apply`'a yönlendirir.
 String homeFor(Me me) => me.lastMode == UserMode.pro ? '/p/feed' : '/c/home';
 
-final RegExp _customerJobRe = RegExp(r'^/c/jobs/([^/]+)$');
-final RegExp _proJobRe = RegExp(r'^/p/jobs/([^/]+)$');
+final RegExp _customerJobRe = RegExp(r'^/c/jobs/([^/]+)(/payment)?$');
+final RegExp _proJobRe = RegExp(r'^/p/jobs/([^/]+)(/payment)?$');
 
 /// Müşteri rotasının usta moduna ait eşdeğeri (NAVIGATION_RULES §2).
 String _toPro(String path) {
   final job = _customerJobRe.firstMatch(path);
-  if (job != null) return '/p/jobs/${job.group(1)}';
+  if (job != null) return '/p/jobs/${job.group(1)}${job.group(2) ?? ''}';
   return switch (path) {
     '/c/requests' => '/p/jobs',
     '/c/messages' => '/p/messages',
@@ -120,7 +123,7 @@ String _toPro(String path) {
 
 String _toCustomer(String path) {
   final job = _proJobRe.firstMatch(path);
-  if (job != null) return '/c/jobs/${job.group(1)}';
+  if (job != null) return '/c/jobs/${job.group(1)}${job.group(2) ?? ''}';
   return switch (path) {
     '/p/jobs' => '/c/requests',
     '/p/messages' => '/c/messages',
