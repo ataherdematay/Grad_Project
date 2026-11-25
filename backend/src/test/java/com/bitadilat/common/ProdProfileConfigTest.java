@@ -42,22 +42,35 @@ class ProdProfileConfigTest {
         }
     }
 
+    /**
+     * İmza anahtarı base ve prod'da varsayılansızdır. MEDIA_DIR: base'te geliştirme kolaylığı olarak ./data/media
+     * varsayılanı vardır ama prod bunu ezer ve boş varsayılan verir; boşsa MEDIA_STORAGE=local iken
+     * ProdConfigValidator uygulamayı açmaz (prod'da gerçek varsayılan yoktur), supabase iken gerekmez.
+     */
     @Test
-    void mediaSigningKeyAndDirHaveNoDefaultInBaseAndProd() throws Exception {
+    void mediaSigningKeyHasNoDefaultAndProdMediaDirHasNoRealDefault() throws Exception {
         for (String file : new String[] {"application.properties", "application-prod.properties"}) {
-            Properties p = load(file);
-            assertThat(p.getProperty("bitadilat.media.signing-key")).as(file).isEqualTo("${MEDIA_SIGNING_KEY}");
-            assertThat(p.getProperty("bitadilat.media.dir")).as(file).isEqualTo("${MEDIA_DIR}");
+            assertThat(load(file).getProperty("bitadilat.media.signing-key")).as(file).isEqualTo("${MEDIA_SIGNING_KEY}");
         }
+        assertThat(load("application.properties").getProperty("bitadilat.media.dir")).isEqualTo("${MEDIA_DIR:./data/media}");
+        assertThat(load("application.properties").getProperty("bitadilat.media.storage")).isEqualTo("${MEDIA_STORAGE:local}");
+        assertThat(load("application-prod.properties").getProperty("bitadilat.media.dir")).isEqualTo("${MEDIA_DIR:}");
         assertThat(load("application-dev.properties").getProperty("bitadilat.media.signing-key"))
                 .startsWith("${MEDIA_SIGNING_KEY:");
         org.assertj.core.api.Assertions.assertThatThrownBy(
                 () -> new com.bitadilat.media.MediaSigner("kisa-anahtar")).isInstanceOf(IllegalStateException.class);
+        org.assertj.core.api.Assertions.assertThatThrownBy(
+                () -> new ProdConfigValidator("", "key", "https://api.example.test", "local", "", "k"))
+                .hasMessageContaining("MEDIA_DIR");
+        org.assertj.core.api.Assertions.assertThatCode(
+                () -> new ProdConfigValidator("", "key", "https://api.example.test", "supabase", "", "k"))
+                .doesNotThrowAnyException();
     }
 
     @Test
     void devOnlyBeansAreDevOnly() {
-        for (Class<?> type : new Class<?>[] {DevDataService.class, DevSeeder.class, DevResetController.class}) {
+        for (Class<?> type : new Class<?>[] {DevDataService.class, DevSeeder.class, DevResetController.class,
+                com.bitadilat.dev.DevPaymentClockController.class, com.bitadilat.dev.DevPaymentClock.class}) {
             assertThat(type.getAnnotation(Profile.class).value()).as(type.getSimpleName()).containsExactly("dev");
         }
         assertThat(LoggingEmailSender.class.getAnnotation(Profile.class).value()).containsExactly("!prod");

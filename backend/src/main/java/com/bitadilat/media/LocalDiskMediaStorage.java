@@ -18,7 +18,10 @@ public class LocalDiskMediaStorage implements MediaStorage {
 
     private final Path root;
 
-    public LocalDiskMediaStorage(@Value("${bitadilat.media.dir}") String dir) {
+    public LocalDiskMediaStorage(@Value("${bitadilat.media.dir:}") String dir) {
+        if (dir == null || dir.isBlank()) {
+            throw new IllegalStateException("MEDIA_STORAGE=local iken MEDIA_DIR zorunludur.");
+        }
         this.root = Path.of(dir).toAbsolutePath().normalize();
     }
 

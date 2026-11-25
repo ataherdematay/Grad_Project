@@ -58,16 +58,53 @@ class ProdReadinessUnitTest {
 
     @Test
     void validatorRequiresCallbackKeyAndRejectsWildcardCors() {
-        assertThatCode(() -> new ProdConfigValidator("https://admin.example.test", "key", "https://api.example.test"))
+        assertThatCode(() -> validator("https://admin.example.test", "key", "https://api.example.test", "local", "/m", "k"))
                 .doesNotThrowAnyException();
-        assertThatThrownBy(() -> new ProdConfigValidator("https://admin.example.test", "", "https://api.example.test"))
+        assertThatThrownBy(() -> validator("https://admin.example.test", "", "https://api.example.test", "local", "/m", "k"))
                 .hasMessageContaining("CRAFTGATE_CALLBACK_KEY");
-        assertThatThrownBy(() -> new ProdConfigValidator("*", "key", "https://api.example.test"))
+        assertThatThrownBy(() -> validator("*", "key", "https://api.example.test", "local", "/m", "k"))
                 .hasMessageContaining("joker");
-        assertThatThrownBy(() -> new ProdConfigValidator("https://a.test,https://*.example.test", "key", "https://x"))
+        assertThatThrownBy(() -> validator("https://a.test,https://*.example.test", "key", "https://x", "local", "/m", "k"))
                 .hasMessageContaining("joker");
-        assertThatThrownBy(() -> new ProdConfigValidator("", "key", ""))
+        assertThatThrownBy(() -> validator("", "key", "", "local", "/m", "k"))
                 .hasMessageContaining("APP_PUBLIC_BASE_URL");
+    }
+
+    private static ProdConfigValidator validator(String cors, String callbackKey, String baseUrl, String storage,
+                                                 String dir, String apiKey) {
+        return new ProdConfigValidator(cors, callbackKey, baseUrl, storage, dir, apiKey);
+    }
+
+    /** Prod'da MEDIA_STORAGE=local iken MEDIA_DIR zorunlu (varsayılan yok); supabase iken gerekmez. */
+    @Test
+    void validatorRequiresMediaDirOnlyForLocalStorage() {
+        for (String dir : new String[] {"", "  ", null}) {
+            assertThatThrownBy(() -> validator("", "key", "https://api.example.test", "local", dir, "k"))
+                    .isInstanceOf(IllegalStateException.class).hasMessageContaining("MEDIA_DIR");
+            assertThatThrownBy(() -> validator("", "key", "https://api.example.test", null, dir, "k"))
+                    .hasMessageContaining("MEDIA_DIR");
+            assertThatCode(() -> validator("", "key", "https://api.example.test", "supabase", dir, "k"))
+                    .doesNotThrowAnyException();
+        }
+        assertThatCode(() -> validator("", "key", "https://api.example.test", "local", "/var/media", "k"))
+                .doesNotThrowAnyException();
+    }
+
+    /** Sahte "sandbox-demo" ödeme kipi prod'da açılamaz: uygulama açılışta durur. */
+    @Test
+    void validatorRejectsFakeDemoPaymentModeInProd() {
+        for (String key : new String[] {"sandbox-demo", "sandbox-demo-123", " Sandbox-Demo-x"}) {
+            assertThatThrownBy(() -> validator("", "key", "https://api.example.test", "supabase", "", key))
+                    .isInstanceOf(IllegalStateException.class).hasMessageContaining("sahte ödeme");
+        }
+        assertThatCode(() -> validator("", "key", "https://api.example.test", "supabase", "", "real-key"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    void localDiskStorageRefusesBlankDir() {
+        assertThatThrownBy(() -> new com.bitadilat.media.LocalDiskMediaStorage(""))
+                .isInstanceOf(IllegalStateException.class).hasMessageContaining("MEDIA_DIR");
     }
 
     @SuppressWarnings("unused")
