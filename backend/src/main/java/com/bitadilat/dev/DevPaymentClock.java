@@ -1,0 +1,90 @@
+package com.bitadilat.dev;
+
+import com.bitadilat.common.ApiException;
+import com.bitadilat.job.JobScheduler;
+import com.bitadilat.payment.domain.EscrowPayment;
+import com.bitadilat.payment.domain.EscrowPaymentRepository;
+import com.bitadilat.payment.domain.EscrowStatus;
+import com.bitadilat.payment.dto.PaymentDemoDtos.FastForwardResult;
+import com.bitadilat.payment.service.PaymentTimelineService;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
+
+/**
+ * İşin {@code auto_complete_at} zamanını şimdiye çeker ve otomatik tamamlamayı hemen çalıştırır. Aktarım normal
+ * yoldan gider ({@code JobScheduler -> JobSettlement -> EscrowService.releaseChecked}): Craftgate'te iade kontrolü,
+ * {@code PAYOUT_NEEDS_REVIEW} ve bekleyen aktarım (outbox) güvenceleri aynen geçerlidir; hiçbiri atlanmaz.
+ */
+@Slf4j
+@Service
+@Profile("dev")
+public class DevPaymentClock {
+
+    private final JdbcTemplate jdbc;
+    private final JobScheduler scheduler;
+    private final EscrowPaymentRepository escrows;
+    private final TransactionTemplate tx;
+
+    public DevPaymentClock(JdbcTemplate jdbc, JobScheduler scheduler, EscrowPaymentRepository escrows,
+                           TransactionTemplate tx) {
+        this.jdbc = jdbc;
+        this.scheduler = scheduler;
+        this.escrows = escrows;
+        this.tx = tx;
+    }
+
+    /**
+     * Tek işlemde: iş satırı kilitlenir, kontroller yapılır, {@code auto_complete_at} geri alınır ve otomatik
+     * tamamlama aynı işlemde çalışır. Tamamlama yapılamazsa (hata veya 409) zaman geri alma da geri alınır; böylece
+     * başarısız bir çağrı, zamanlayıcının işi sonradan habersizce tamamlamasına yol açmaz. Eşzamanlı ikinci çağrı
+     * kilidi bekler ve iş artık WORK_FINISHED olmadığı için 409 alır (çifte aktarım yok).
+     */
+    public FastForwardResult fastForward(UUID userId, boolean admin, UUID jobId) {
+        return tx.execute(s -> run(userId, admin, jobId));
+    }
+
+    private FastForwardResult run(UUID userId, boolean admin, UUID jobId) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "select customer_id, pro_id, status from jobs where id = ? for update", jobId);
+        if (rows.isEmpty()) {
+            throw ApiException.notFound("İş bulunamadı.");
+        }
+        Map<String, Object> job = rows.get(0);
+        if (!admin && !userId.equals(job.get("customer_id")) && !userId.equals(job.get("pro_id"))) {
+            throw ApiException.notFound("İş bulunamadı.");
+        }
+        if (!"WORK_FINISHED".equals(job.get("status"))) {
+            throw ApiException.illegalState("Demo saati yalnızca teslim edilmiş (WORK_FINISHED) işte kullanılabilir.");
+        }
+        Integer open = jdbc.queryForObject(
+                "select count(*) from complaints where job_id = ? and status in ('OPEN', 'IN_REVIEW')", Integer.class,
+                jobId);
+        if (open != null && open > 0) {
+            throw ApiException.illegalState("Açık şikayeti olan işte otomatik aktarım yapılmaz.");
+        }
+        EscrowPayment before = escrows.findByJobId(jobId)
+                .orElseThrow(() -> ApiException.notFound("Bu işin ödeme kaydı bulunamadı."));
+        if (before.getStatus() != EscrowStatus.LOCKED || before.getPendingAction() != null || before.needsReview()) {
+            throw ApiException.illegalState("Kasada aktarılmayı bekleyen (LOCKED) bir ödeme yok.");
+        }
+        Instant now = Instant.now();
+        jdbc.update("update jobs set auto_complete_at = ? where id = ?", Timestamp.from(now.minusSeconds(1)), jobId);
+        if (!scheduler.completeOne(jobId, now)) {
+            throw ApiException.illegalState("Otomatik tamamlama çalıştırılamadı; iş durumu değişmiş olabilir.");
+        }
+        log.info("Demo saati: otomatik tamamlama tetiklendi. jobId={}", jobId);
+        String status = jdbc.queryForObject("select status from jobs where id = ?", String.class, jobId);
+        EscrowPayment p = escrows.findByJobId(jobId)
+                .orElseThrow(() -> ApiException.notFound("Bu işin ödeme kaydı bulunamadı."));
+        return new FastForwardResult(jobId, status, p.getStatus(), PaymentTimelineService.locationOf(p.getStatus()),
+                p.getStatus() == EscrowStatus.RELEASED_TO_PRO, p.getPendingAction(), p.getErrorCode());
+    }
+}

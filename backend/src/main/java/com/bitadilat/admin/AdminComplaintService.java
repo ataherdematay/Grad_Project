@@ -240,7 +240,7 @@ public class AdminComplaintService {
 
         // Para hareketi en sonda: GatewayException tüm işlemi geri alır (502), emanet ve iş değişmez.
         switch (decision) {
-            case FULL_REFUND -> escrow.refundFully(payment);
+            case FULL_REFUND -> escrow.refundFully(payment, "ADMIN");
             case SPLIT_50_50 -> escrow.settleSplit(payment);
             default -> escrow.releaseAfterDispute(payment);
         }

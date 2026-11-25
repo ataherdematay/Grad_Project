@@ -132,7 +132,7 @@ public class AdminPaymentReviewService {
         audit.record(adminId, ACTION, TARGET, ref, resolution.name() + ": " + note);
         switch (resolution) {
             case MARK_REFUNDED -> {
-                escrow.recordRefundAlreadyDone(p);
+                escrow.recordRefundAlreadyDone(p, "ADMIN");
                 p.clearReview();
                 repository.saveAndFlush(p);
                 notifications.refundCompleted(p);
@@ -140,7 +140,7 @@ public class AdminPaymentReviewService {
             case RETRY_REFUND -> {
                 p.clearReview();
                 // Yeniden Craftgate'e sorar ve yalnızca kalanı iade eder; hata işlemi geri alır.
-                escrow.refundFully(p);
+                escrow.refundFully(p, "ADMIN");
                 notifications.refundCompleted(p);
             }
             case RELEASE -> {

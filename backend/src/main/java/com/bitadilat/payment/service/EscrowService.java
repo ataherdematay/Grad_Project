@@ -1,6 +1,7 @@
 package com.bitadilat.payment.service;
 
 import com.bitadilat.common.ApiException;
+import com.bitadilat.payment.domain.EscrowEventType;
 import com.bitadilat.payment.domain.EscrowPayment;
 import com.bitadilat.payment.domain.EscrowPaymentRepository;
 import com.bitadilat.payment.exception.GatewayException;
@@ -38,9 +39,11 @@ public class EscrowService {
     private final PaymentGateway gateway;
     private final JdbcTemplate jdbc;
     private final Environment environment;
+    private final EscrowEvents events;
 
     public EscrowService(EscrowPaymentRepository repository, PaymentGateway gateway, JdbcTemplate jdbc,
-                         Environment environment) {
+                         Environment environment, EscrowEvents events) {
+        this.events = events;
         this.repository = repository;
         this.gateway = gateway;
         this.jdbc = jdbc;
@@ -105,6 +108,7 @@ public class EscrowService {
                 }
                 boolean exhausted = payment.recordRefundFailure(now);
                 if (exhausted) {
+                    events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
                     log.error("Ustaya aktarım öncesi iade kontrolü {} denemede yapılamadı; elle incelenmeli. ref={}",
                             payment.getRefundAttempts(), payment.getRef());
                 } else {
@@ -120,6 +124,7 @@ public class EscrowService {
                 }
                 payment.sendToPayoutReview(now);
                 repository.saveAndFlush(payment);
+                events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
                 log.error("Craftgate'te iade görünen ödeme ustaya aktarılmadı; elle incelenmeli. ref={} iade={}",
                         payment.getRef(), money(already).toPlainString());
                 return ReleaseOutcome.REVIEW;
@@ -132,15 +137,17 @@ public class EscrowService {
     /**
      * İş iptali: tam iade niyeti kaydedilir (outbox), Craftgate'e bu işlemde gidilmez. İade işlem kesinleştikten sonra
      * {@link #refundPending} ile yapılır. SEED kaydı dev dışında reddedilir (409) ve iptal de geri alınır.
+     * {@code actor}: iptali yapan taraf (CUSTOMER, PRO veya ADMIN); olay kaydına yazılır.
      */
     @Transactional(propagation = Propagation.MANDATORY)
-    public void queueRefund(EscrowPayment payment, Instant now) {
+    public void queueRefund(EscrowPayment payment, Instant now, String actor) {
         payment.requireRefundable();
         if (payment.isSeed()) {
             requireDevForSeed();
         }
         payment.queueRefund(now);
         repository.saveAndFlush(payment);
+        events.record(payment, EscrowEventType.REFUND_REQUESTED, payment.getTotalAmount(), actor);
     }
 
     /**
@@ -157,6 +164,7 @@ public class EscrowService {
             return true;
         } catch (GatewayException e) {
             if (payment.recordRefundFailure(now)) {
+                events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
                 log.error("İptal iadesi {} denemede yapılamadı, elle incelenmeli. ref={} paymentId={}",
                         payment.getRefundAttempts(), payment.getRef(), payment.getCraftgatePaymentId());
             } else {
@@ -167,6 +175,7 @@ public class EscrowService {
             log.error("İptal iadesi güvenle yapılamadı, elle incelenmeli. ref={} neden={}", payment.getRef(),
                     e.getMessage());
             payment.sendToRefundReview(now);
+            events.record(payment, EscrowEventType.REVIEW_REQUIRED, null, "SYSTEM", payment.getErrorCode());
         }
         repository.saveAndFlush(payment);
         return false;
@@ -179,6 +188,7 @@ public class EscrowService {
         repository.saveAndFlush(payment);
         ledger(payment, payment.getProPayout(), "PAYOUT");
         ledger(payment, payment.getCommission(), "COMMISSION");
+        events.record(payment, EscrowEventType.RELEASED_TO_PRO, payment.getProPayout(), "SYSTEM");
         log.info("Emanet serbest bırakıldı. ref={} usta={} komisyon={}", payment.getRef(), payment.getProPayout(),
                 payment.getCommission());
     }
@@ -197,6 +207,12 @@ public class EscrowService {
      */
     @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
     public void refundFully(EscrowPayment payment) {
+        refundFully(payment, "SYSTEM");
+    }
+
+    /** {@link #refundFully(EscrowPayment)}; {@code actor} (SYSTEM veya ADMIN) olay kaydına yazılır. */
+    @Transactional(propagation = Propagation.MANDATORY, noRollbackFor = GatewayException.class)
+    public void refundFully(EscrowPayment payment, String actor) {
         payment.requireRefundable();
         BigDecimal amount = payment.getTotalAmount();
         if (payment.isSeed()) {
@@ -207,6 +223,7 @@ public class EscrowService {
         payment.refundFully();
         repository.saveAndFlush(payment);
         ledger(payment, amount, "REFUND");
+        events.record(payment, EscrowEventType.REFUNDED, amount, actor);
     }
 
     /**
@@ -241,6 +258,7 @@ public class EscrowService {
         repository.saveAndFlush(payment);
         ledger(payment, refund, "REFUND");
         ledger(payment, payment.getProPayout(), "PAYOUT");
+        events.record(payment, EscrowEventType.SPLIT_SETTLED, refund, "ADMIN");
     }
 
     /**
@@ -248,12 +266,13 @@ public class EscrowService {
      * düzeltir.
      */
     @Transactional(propagation = Propagation.MANDATORY)
-    public void recordRefundAlreadyDone(EscrowPayment payment) {
+    public void recordRefundAlreadyDone(EscrowPayment payment, String actor) {
         payment.requireRefundable();
         BigDecimal amount = payment.getTotalAmount();
         payment.refundFully();
         repository.saveAndFlush(payment);
         ledger(payment, amount, "REFUND");
+        events.record(payment, EscrowEventType.REFUNDED, amount, actor, "ALREADY_REFUNDED_AT_GATEWAY");
     }
 
     /** Şikayet: emanet DISPUTED olur. */
@@ -261,6 +280,7 @@ public class EscrowService {
     public void dispute(EscrowPayment payment) {
         payment.dispute();
         repository.saveAndFlush(payment);
+        events.record(payment, EscrowEventType.DISPUTE_OPENED, null, "CUSTOMER");
     }
 
     /**

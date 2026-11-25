@@ -74,6 +74,10 @@ public class EscrowPayment {
 
     private String cardLast4;
 
+    /** VISA, MASTERCARD, TROY, AMEX veya null (bilinmiyor). Yalnızca marka; numara saklanmaz. */
+    @Column(length = 16)
+    private String cardBrand;
+
     private String errorMessage;
 
     @Column(nullable = false)
@@ -157,6 +161,33 @@ public class EscrowPayment {
         p.channel = EscrowChannel.APP;
         p.provider = provider;
         return p;
+    }
+
+    public void attachCardBrand(String brand) {
+        this.cardBrand = brand;
+    }
+
+    /** Kart numarasının ön ekinden marka (yalnızca marka tutulur); tanınmazsa null. */
+    public static String brandOf(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 4) {
+            return null;
+        }
+        if (cardNumber.startsWith("9792")) {
+            return "TROY";
+        }
+        if (cardNumber.startsWith("34") || cardNumber.startsWith("37")) {
+            return "AMEX";
+        }
+        char first = cardNumber.charAt(0);
+        if (first == '4') {
+            return "VISA";
+        }
+        int two = Integer.parseInt(cardNumber.substring(0, 2));
+        int four = Integer.parseInt(cardNumber.substring(0, 4));
+        if ((two >= 51 && two <= 55) || (four >= 2221 && four <= 2720)) {
+            return "MASTERCARD";
+        }
+        return null;
     }
 
     public void attachJob(UUID jobId) {

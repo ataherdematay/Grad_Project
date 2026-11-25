@@ -400,6 +400,7 @@ class DevJobSeeder {
     private EscrowPayment escrow(ServiceRequest r, Offer offer, Job job, User customer) {
         EscrowPayment p = EscrowPayment.startApp(offer.getId(), r.getPublicCode(), offer.getTotalAmount(), r.getId(),
                 customer.getId(), offer.getProId(), UUID.randomUUID().toString(), "4242", EscrowProvider.SEED);
+        p.attachCardBrand("VISA");
         p.lock();
         p.attachJob(job.getId());
         return escrows.saveAndFlush(p);

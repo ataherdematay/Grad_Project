@@ -86,6 +86,15 @@ public class JobScheduler {
         return new Result(completed, reminded);
     }
 
+    /**
+     * Tek bir işi, vadesi geldiyse, kendi işleminde otomatik tamamlar (dev demo saati kullanır). Her zamanki
+     * kilit ve kontroller geçerlidir: açık şikayet veya WORK_FINISHED dışı durum false döner. Craftgate iade
+     * kontrolü ({@code EscrowService#releaseChecked}) atlanmaz.
+     */
+    public boolean completeOne(UUID id, Instant now) {
+        return Boolean.TRUE.equals(tx.execute(s -> complete(id, now)));
+    }
+
     private List<UUID> dueForCompletion(Instant now) {
         return jdbc.queryForList("""
                 select j.id from jobs j

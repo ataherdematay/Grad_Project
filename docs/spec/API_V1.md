@@ -75,6 +75,9 @@ Mobil ve admin istemcilerinin konuşacağı uç noktalar. Uygulandıkça springd
 |---|---|---|
 | POST | `/payments/3ds/init` | `{offerId, attemptKey, card…}` → `{ref, htmlContent}`; kanal `APP` |
 | GET | `/payments/{ref}` | Sonuç; yalnız müşteri, usta (kendi payı) ve admin |
+| GET | `/jobs/{jobId}/payment/timeline` | Ödeme zaman çizelgesi; müşteri, usta, admin (payment demo) |
+| GET | `/jobs/{jobId}/payment/receipt` | Makbuz; müşteri ve admin (payment demo) |
+| GET | `/me/payments?cursor=&limit=` | Müşterinin ödeme geçmişi (payment demo) |
 | POST | `/api/payments/3ds/callback` | Banka dönüşü (mevcut adres değişmez) |
 | GET | `/api/payments/3ds/done?ref=` | APP kanalı için bitiş sayfası; WebView bunu yakalayıp kapanır |
 
@@ -140,6 +143,8 @@ Eski `/api/offers/{id}` ve `/api/payments/*` uç noktaları yalnızca `dev` prof
 | GET | `/admin/users?q=&role=&status=&district=` | Hesaplar |
 | POST | `/admin/users/{id}/suspend` · `/reactivate` | Hesap durumu |
 | GET | `/admin/payments?status=` | Emanet defteri |
+| GET | `/admin/payments/summary` | Kasa özeti: kasada bekleyen, aktarılan, iade, komisyon, sayılar (payment demo) |
+| GET | `/admin/payments/{ref}/timeline` | Bir ödemenin zaman çizelgesi, iş uç noktasıyla aynı DTO (payment demo) |
 | GET | `/admin/payments/review` · `/admin/payments/{ref}/review` | İncelemedeki ödemeler, Craftgate kontrolü (follow-up) |
 | POST | `/admin/payments/{ref}/resolve` | İncelemeyi çöz: `MARK_REFUNDED` / `RETRY_REFUND` / `RELEASE`, not |
 
@@ -148,6 +153,7 @@ Eski `/api/offers/{id}` ve `/api/payments/*` uç noktaları yalnızca `dev` prof
 | Yöntem | Yol | Amaç |
 |---|---|---|
 | POST | `/dev/reset` | Seed'i yeniden yükle (yalnız `dev`, yalnız 127.0.0.1) |
+| POST | `/dev/jobs/{jobId}/payment/fast-forward` | Demo saati: 48 saatlik otomatik aktarımı hemen çalıştırır (yalnız `dev`, yalnız 127.0.0.1, kimlik ister) |
 
 
 ## Ayrıntılı sözleşme (wave 2)
@@ -860,3 +866,198 @@ Binding for backend, the mobile app and the admin web app. Earlier contracts sti
 - Şema: `V8__account_feedback_email_change.sql` (`account_deletion_feedback`, `email_change_codes`).
 - Kod: `admin/AdminPaymentReviewService`, `job/EscrowNotifications` (gecikmeli hareket bildirimleri), `job/PendingEscrowActions.processAfterCommit` (iptal sonrası ilk deneme; bildirim yok) ve `process` (zamanlayıcı; gecikmeli sayılır), `user/EmailChangeService`.
 
+## Ayrıntılı sözleşme (payment demo, Kasım 2026)
+
+### Payment demo contract: timeline, receipt, history, admin vault summary, demo clock
+
+Binding for backend, the mobile app and the admin web app. Earlier contracts still apply (base `/api/v1`, camelCase, ISO 8601 UTC, TRY with 2 decimals, errors `{code, message, field?}`). All endpoints need a Bearer token. They are read-only and never call Craftgate. Null fields are always present (`null`), never omitted.
+
+#### Shared enums and shapes
+
+- `status`: `EscrowStatus` (`LOCKED`, `DISPUTED`, `RELEASED_TO_PRO`, `REFUNDED_TO_CUSTOMER`, `SPLIT_SETTLED`; `INITIALIZED`/`FAILED` only appear in the admin by-ref timeline of an orphan payment).
+- `moneyLocation` (where the money is now): `CUSTOMER_CARD` (not taken yet / failed), `BITADILAT_VAULT` ("güvence kasası": `LOCKED` and `DISPUTED`), `PRO` (`RELEASED_TO_PRO`), `CUSTOMER_REFUNDED` (`REFUNDED_TO_CUSTOMER`), `SPLIT` (`SPLIT_SETTLED`: half back to the customer, half to the pro).
+- `provider`: `CRAFTGATE` (real sandbox call), `SEED` (dev seed: ledger only, no gateway call), `DEMO` (fake in-memory gateway, API key starts with `sandbox-demo`, dev only).
+- `sandbox` (boolean): true when `provider` is `SEED`/`DEMO` or the Craftgate endpoint is a sandbox host (today always true). When true the receipt carries `sandboxNotice`.
+- `card` = `{brand, last4, masked}`: `brand` is `VISA`, `MASTERCARD`, `TROY`, `AMEX` or `null` (unknown; payments made before this feature have no brand); `masked` is `"**** **** **** 0001"`. Never a full number, expiry or CVC.
+
+#### `GET /jobs/{jobId}/payment/timeline`
+
+Visible to the job's customer, the job's pro and admins. Anyone else, an unknown job, or a job with no payment record: 404 `NOT_FOUND`.
+
+```json
+{
+  "paymentRef": "5b0f0a3e-2b0c-4c58-9d7a-0a1a5f3c9b11",
+  "jobId": "0b1d2f4e-6f77-4b8e-a0c1-3d9a6c1f2e55",
+  "jobPublicCode": "BD-88421",
+  "jobTitle": "Banyo lavabo altı su kaçağı",
+  "status": "RELEASED_TO_PRO",
+  "moneyLocation": "PRO",
+  "provider": "CRAFTGATE",
+  "sandbox": true,
+  "craftgatePaymentId": 50001,
+  "card": { "brand": "MASTERCARD", "last4": "0001", "masked": "**** **** **** 0001" },
+  "amounts": { "gross": 1200.00, "commission": null, "proNet": null, "refunded": 0.00 },
+  "autoReleaseAt": null,
+  "pendingAction": null,
+  "errorCode": null,
+  "events": [
+    { "type": "PAYMENT_INITIALIZED", "at": "2026-11-26T09:00:00Z", "amount": 1200.00, "actor": "CUSTOMER", "note": null },
+    { "type": "THREEDS_STARTED", "at": "2026-11-26T09:00:00Z", "amount": null, "actor": "CUSTOMER", "note": null },
+    { "type": "PAYMENT_LOCKED", "at": "2026-11-26T09:01:12Z", "amount": 1200.00, "actor": "SYSTEM", "note": null },
+    { "type": "WORK_DELIVERED", "at": "2026-11-27T14:00:00Z", "amount": null, "actor": "PRO", "note": null },
+    { "type": "AUTO_RELEASE_SCHEDULED", "at": "2026-11-27T14:00:00Z", "amount": null, "actor": "SYSTEM", "note": "autoReleaseAt=2026-11-29T14:00:00Z" },
+    { "type": "CUSTOMER_APPROVED", "at": "2026-11-27T15:10:00Z", "amount": null, "actor": "CUSTOMER", "note": null },
+    { "type": "RELEASED_TO_PRO", "at": "2026-11-27T15:10:01Z", "amount": null, "actor": "SYSTEM", "note": null }
+  ]
+}
+```
+
+Rules:
+- **Role-dependent fields.** Customer: `amounts.commission` and `amounts.proNet` are `null`, and the `amount` of `RELEASED_TO_PRO` and `AUTO_RELEASE_SCHEDULED` is `null` (the service fee and the pro's share are not shown to customers, per GLOSSARY). Pro: `card` is `null`; `commission`, `proNet` and those two event amounts are filled (`proNet` is the expected net before release, 0 after a full refund). Admin: everything. The example above is the customer's view; a pro would see `"commission": 120.00, "proNet": 1080.00` and `"amount": 1080.00` on `RELEASED_TO_PRO`.
+- `amounts.gross` is the paid total, `amounts.refunded` the amount sent back to the customer (full refund: the total; split: half, HALF_UP).
+- `autoReleaseAt`: the moment the 48-hour automatic payout runs; non-null only while the job is `WORK_FINISHED` and the escrow is `LOCKED`, else `null`. Drive a countdown from it.
+- `pendingAction` (`REFUND` or `RELEASE` or null) and `errorCode` (`REFUND_NEEDS_REVIEW`, `PAYOUT_NEEDS_REVIEW`, `PAYMENT_DECLINED`, `THREEDS_ABANDONED`, `REQUEST_ALREADY_ASSIGNED`, `OFFER_EXPIRED`, or null) mirror the escrow row, same meaning as in `JobDetail.payment`.
+- `events` are sorted by `at` ascending (ties in the order of the list below). `at` is ISO 8601 UTC. Event `type` values:
+
+| `type` | Meaning | `amount` | `actor` | `note` |
+|---|---|---|---|---|
+| `PAYMENT_INITIALIZED` | Payment record created, card form submitted | gross | CUSTOMER | |
+| `THREEDS_STARTED` | 3D Secure started at the bank | | CUSTOMER | |
+| `PAYMENT_LOCKED` | Money taken and placed in the vault ("kasaya alındı") | gross | SYSTEM | `LATE_SUCCESS` when the bank confirmed after the attempt was abandoned |
+| `WORK_DELIVERED` | Pro marked the work finished | | PRO | |
+| `AUTO_RELEASE_SCHEDULED` | 48-hour automatic payout scheduled | pro net (pro/admin only; null for customers) | SYSTEM | `autoReleaseAt=<ISO time>` |
+| `DISPUTE_OPENED` | Customer filed a complaint; money frozen | | CUSTOMER | |
+| `CUSTOMER_APPROVED` | Customer confirmed delivery | | CUSTOMER | |
+| `AUTO_APPROVED` | 48 hours passed, system confirmed delivery | | SYSTEM | |
+| `REFUND_REQUESTED` | Job cancelled, full refund queued | gross | CUSTOMER, PRO or ADMIN (who cancelled) | |
+| `RELEASED_TO_PRO` | Pro's share paid out | pro net (pro/admin only) | SYSTEM | |
+| `REFUNDED` | Full refund done | refunded amount | SYSTEM or ADMIN | `ALREADY_REFUNDED_AT_GATEWAY` when Craftgate had already refunded |
+| `SPLIT_SETTLED` | Admin decision 50/50 applied | refund half | ADMIN | |
+| `REVIEW_REQUIRED` | Payout/refund stopped, support reviews it | | SYSTEM | `PAYOUT_NEEDS_REVIEW` or `REFUND_NEEDS_REVIEW` |
+| `FAILED` | Payment not taken | | SYSTEM | error code (`PAYMENT_DECLINED`, `THREEDS_ABANDONED`, `RESULT_UNCERTAIN`) |
+
+  Clients must tolerate unknown `type` values (show a generic row) and map `type` to localized text themselves; `note` is a machine code, not display text.
+- Events come from the new `escrow_event` table (V10, written together with every escrow transition) plus job facts (`job_events`). Payments created before V10 or by the dev seed have no stored events: the server derives the same types from the escrow row's timestamps, so the shape does not change.
+
+#### `GET /jobs/{jobId}/payment/receipt`
+
+Customer of the job and admins. The job's pro: 403 `FORBIDDEN`. Anyone else or unknown job: 404. Payment not taken (cannot happen once a job exists): 409 `ILLEGAL_STATE`.
+
+```json
+{
+  "receiptNo": "BT-20261126-5B0F0A",
+  "issuedAt": "2026-11-26T09:01:12Z",
+  "paymentRef": "5b0f0a3e-2b0c-4c58-9d7a-0a1a5f3c9b11",
+  "jobId": "0b1d2f4e-6f77-4b8e-a0c1-3d9a6c1f2e55",
+  "jobPublicCode": "BD-88421",
+  "jobTitle": "Banyo lavabo altı su kaçağı",
+  "proName": "Test Tesisat",
+  "customerName": "Ali Yılmaz",
+  "items": [
+    { "kind": "LABOR", "label": "İşçilik", "quantity": 1.00, "unitPrice": 900.00, "amount": 900.00 },
+    { "kind": "MATERIAL", "label": "Malzeme", "quantity": 1.00, "unitPrice": 300.00, "amount": 300.00 }
+  ],
+  "total": 1200.00,
+  "refundedTotal": 0.00,
+  "netPaid": 1200.00,
+  "currency": "TRY",
+  "card": { "brand": "MASTERCARD", "last4": "0001", "masked": "**** **** **** 0001" },
+  "status": "LOCKED",
+  "moneyLocation": "BITADILAT_VAULT",
+  "provider": "CRAFTGATE",
+  "sandbox": true,
+  "sandboxNotice": "Bu bir sandbox (deneme) ödemesidir; kartınızdan gerçek para çekilmemiştir."
+}
+```
+
+- `items` are the offer's line items in order (`kind` `LABOR`/`MATERIAL`); an offer without lines yields one `İşçilik` line and, if above 0, one `Malzeme` line. The sum of `amount` equals `total`.
+- `receiptNo` is stable for a payment: `BT-<yyyyMMdd of issuedAt (UTC)>-<first 6 hex of paymentRef, upper case>`. `issuedAt` is the time the money was taken.
+- `netPaid = total - refundedTotal`. No service-fee breakdown on the customer receipt.
+- `sandboxNotice` is a Turkish sentence when `sandbox` is true, otherwise `null`; show your own localized text keyed on `sandbox`.
+
+#### `GET /me/payments?cursor=&limit=`
+
+The caller's own payments as a customer, newest first (by the time the money was taken), standard paging (`limit` default 20, max 50, 0 or negative: 400 `VALIDATION_FAILED` on `limit`; cursor is opaque). Only payments that reached the vault or later are listed (`LOCKED`, `DISPUTED`, `RELEASED_TO_PRO`, `REFUNDED_TO_CUSTOMER`, `SPLIT_SETTLED`); abandoned or failed attempts are not. A user with no payments gets an empty list, not 404.
+
+```json
+{
+  "items": [
+    {
+      "ref": "5b0f0a3e-2b0c-4c58-9d7a-0a1a5f3c9b11",
+      "jobId": "0b1d2f4e-6f77-4b8e-a0c1-3d9a6c1f2e55",
+      "jobPublicCode": "BD-88421",
+      "jobTitle": "Banyo lavabo altı su kaçağı",
+      "proName": "Test Tesisat",
+      "totalAmount": 1200.00,
+      "refundedAmount": 0.00,
+      "status": "LOCKED",
+      "moneyLocation": "BITADILAT_VAULT",
+      "provider": "CRAFTGATE",
+      "sandbox": true,
+      "paidAt": "2026-11-26T09:01:12Z",
+      "createdAt": "2026-11-26T09:00:00Z"
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+`jobId` is null for a payment that never opened a job (race refund); then open `/c/payments/<ref>/result`. Use `jobId` with the two job endpoints above for the timeline and receipt.
+
+#### Admin: `GET /admin/payments/summary`
+
+Admin only (403 otherwise). Counts only app-channel payments; `INITIALIZED` is never counted.
+
+```json
+{
+  "vaultTotal": 400.00,
+  "paidToProsTotal": 1080.00,
+  "refundedToCustomersTotal": 600.00,
+  "commissionEarnedTotal": 120.00,
+  "counts": {
+    "total": 3, "vault": 1, "locked": 1, "disputed": 0, "released": 1, "refunded": 1, "split": 0,
+    "failed": 0, "pendingAction": 0, "needsReview": 0, "seed": 0
+  },
+  "generatedAt": "2026-11-26T12:00:00Z"
+}
+```
+
+- `vaultTotal`: sum of `totalAmount` of `LOCKED` + `DISPUTED`. `paidToProsTotal`: sum of the pro's share of `RELEASED_TO_PRO` + `SPLIT_SETTLED`. `refundedToCustomersTotal`: refunded amount of `REFUNDED_TO_CUSTOMER` + `SPLIT_SETTLED`. `commissionEarnedTotal`: the 10% commission of `RELEASED_TO_PRO` (none on refunds or splits).
+- `counts.total` = payments in `LOCKED`, `DISPUTED`, `RELEASED_TO_PRO`, `REFUNDED_TO_CUSTOMER`, `SPLIT_SETTLED`; `vault` = `locked` + `disputed`; `failed` = `FAILED` attempts; `pendingAction` = vault payments with a queued refund/payout; `needsReview` = vault payments with `REFUND_NEEDS_REVIEW`/`PAYOUT_NEEDS_REVIEW`; `seed` = payments with provider `SEED`.
+- The existing `GET /admin/payments` ledger (`{items, totals}`) stays unchanged.
+
+#### Admin: `GET /admin/payments/{ref}/timeline`
+
+Admin only. Same DTO as the job timeline, with the admin view (all amounts and the card). Unknown ref or a non-app payment: 404. Works for a payment without a job (`jobId` null, `jobPublicCode` from the payment, `jobTitle` null).
+
+#### Dev demo clock: `POST /dev/jobs/{jobId}/payment/fast-forward`
+
+**dev profile only** (the controller bean does not exist in prod: 404), only from 127.0.0.1 (else 403), needs a Bearer token of the job's customer, the job's pro or an admin (others 404). No body.
+
+What it does: sets the job's `autoCompleteAt` to just before now and runs the normal 48-hour auto-completion for this one job immediately (`JobScheduler` -> `JobSettlement` -> `EscrowService.releaseChecked`). It does **not** bypass any money safety: the Craftgate refund check, `PAYOUT_NEEDS_REVIEW` and the retry outbox (`pendingAction = RELEASE`) behave exactly as in production; `SEED` payments are released ledger-only.
+
+```json
+{
+  "jobId": "0b1d2f4e-6f77-4b8e-a0c1-3d9a6c1f2e55",
+  "jobStatus": "COMPLETED",
+  "escrowStatus": "RELEASED_TO_PRO",
+  "moneyLocation": "PRO",
+  "released": true,
+  "pendingAction": null,
+  "errorCode": null
+}
+```
+
+- `released` false means the payout did not happen yet: `pendingAction = "RELEASE"` (Craftgate did not answer; the sweeper retries) or `errorCode = "PAYOUT_NEEDS_REVIEW"` (Craftgate shows a refund; support reviews). The job is `COMPLETED` in both cases.
+- 409 `ILLEGAL_STATE`: job is not `WORK_FINISHED` (including a second call), it has an open complaint, or its payment is not waiting in the vault (`LOCKED` with no `pendingAction` and no review code). A refused or failed call changes nothing (the clock rewind runs in the same transaction as the auto-completion). 404: unknown job or not a participant.
+- After the call the job's timeline shows `AUTO_APPROVED` (actor `SYSTEM`) followed by `RELEASED_TO_PRO`, and the pro gets the usual `PAYOUT_RELEASED` notification.
+
+#### Demo (fake) payment mode
+
+If `CRAFTGATE_API_KEY` starts with `sandbox-demo`, `CraftgateGateway` runs an in-memory fake: `init3ds` returns a local HTML page that posts a success callback, refunds are recorded in memory, and Craftgate is never called. Timelines then show `provider: "DEMO"`. State is lost on restart (a restart between payment and refund breaks that payment). The prod profile refuses to start with such a key (`ProdConfigValidator`).
+
+#### Uygulama notları (backend, payment demo)
+
+- Şema: `V10__escrow_event.sql` (`escrow_event` tablosu, `escrow_payment.card_brand`). Olay kaydının tek yazma noktası `payment/service/EscrowEvents`; çağıranlar `EscrowService` (serbest bırakma, iade, bölme, itiraz, inceleme) ve `PaymentService` (başlatma, 3DS, kilit, başarısızlık, terk).
+- Okuma: `payment/service/PaymentTimelineService`, uç noktalar `payment/controller/PaymentDemoController` ve `admin/AdminController`. Demo saati: `dev/DevPaymentClock*` (`@Profile("dev")`).
+- Bearer çözümleyici artık yalnızca `/api/v1/dev/reset` için jetonu yok sayar; diğer `/api/v1/dev/**` uç noktaları kimlik ister.

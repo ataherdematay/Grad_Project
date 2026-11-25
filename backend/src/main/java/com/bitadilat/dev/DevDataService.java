@@ -146,7 +146,7 @@ public class DevDataService {
     @Transactional
     public void resetAndSeed() {
         // login_attempts users'a bağlı değil (yalnız tanımlayıcı özeti); açıkça boşaltılmazsa giriş kilidi taşınır.
-        jdbc.execute("TRUNCATE TABLE users, media, escrow_payment, payout_ledger, admin_actions, login_attempts "
+        jdbc.execute("TRUNCATE TABLE users, media, escrow_payment, escrow_event, payout_ledger, admin_actions, login_attempts "
                 + "RESTART IDENTITY CASCADE");
         // Herkese gösterilen kod dizileri: seed sabit kodları (BD-88412, T-10001..3) kullanır, sonrası dizidendir.
         jdbc.execute("ALTER SEQUENCE request_code_seq RESTART WITH 88413");
