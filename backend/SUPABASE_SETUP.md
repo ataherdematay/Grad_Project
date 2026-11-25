@@ -18,14 +18,15 @@ DB_PASSWORD=<the database password>
 JWT_SECRET=<random, 32+ bytes>
 ADDRESS_KEY=<base64 32 bytes>
 MEDIA_SIGNING_KEY=<random, 32+ bytes>
-MEDIA_DIR=<a folder that survives restarts>
+MEDIA_STORAGE=supabase
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service_role secret key from Supabase Project Settings -> API>
+SUPABASE_STORAGE_BUCKET=bitadilat-media
 APP_PUBLIC_BASE_URL=<public https address of the API>
 CORS_ALLOWED_ORIGINS=<admin web address>
 CRAFTGATE_API_KEY / CRAFTGATE_SECRET_KEY / CRAFTGATE_CALLBACK_KEY
-RESEND_API_KEY=<optional Resend API key for password reset emails in prod>
-MAIL_FROM=<optional sender, defaults to BiTadilat <onboarding@resend.dev>>
 ```
-The `service_role` key and the anon key are **not** needed anywhere.
+The public `anon` key is **not** needed anywhere. `SUPABASE_SERVICE_ROLE_KEY` is required only when `MEDIA_STORAGE=supabase` so the backend can store and load private job photos and pro verification documents in Supabase Storage.
 
 ## 3. First start
 The API runs Flyway: 31 tables, 8 categories, 39 Istanbul districts. `V7__supabase_lockdown.sql` turns on row level security
@@ -39,7 +40,7 @@ ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;
 
 ## 4. Limits to know
 - Free plan: 500 MB database; the project **pauses after about 7 days without activity** (resume it in the dashboard before a demo).
-- Uploaded files go to `MEDIA_DIR` (local disk), not to Supabase Storage. On a free host with a temporary disk they disappear on redeploy; use a persistent disk or move media to Supabase Storage later.
+- Uploaded files go to **Supabase Storage** when `MEDIA_STORAGE=supabase` (`SupabaseMediaStorage`, private bucket `bitadilat-media`), or to `MEDIA_DIR` (local disk) when `MEDIA_STORAGE=local` (the default). To enable cloud media storage in Supabase: create a **private** bucket named `bitadilat-media` in the Supabase Dashboard (Storage → New bucket → keep *Public bucket* off) and set `MEDIA_STORAGE=supabase`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY`.
 - Phone + SMS login is not implemented in the backend (it uses email + password). Needs a team decision.
 
 ## 5. Tested on Supabase (2026-11-19)

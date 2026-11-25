@@ -13,7 +13,11 @@ What `prod` turns off: `DevSeeder`, `DevJobSeeder`, `/api/v1/dev/**`, the loggin
 | `JWT_SECRET` | yes | `<random, at least 32 bytes>` | HS256 signing key for access tokens. Shorter than 32 bytes fails startup. |
 | `ADDRESS_KEY` | yes | `<base64 of 32 random bytes>` | AES-GCM key that encrypts stored addresses. |
 | `MEDIA_SIGNING_KEY` | yes | `<random, at least 32 bytes>` | HMAC key for signed media URLs. |
-| `MEDIA_DIR` | yes | `/var/lib/bitadilat/media` | Folder for uploaded files. |
+| `MEDIA_STORAGE` | no | `local` or `supabase` | Storage backend for job photos & pro documents (default `local`). Set to `supabase` on stateless cloud hosts. |
+| `MEDIA_DIR` | when `MEDIA_STORAGE=local` | `/var/lib/bitadilat/media` | Folder for uploaded files when using local disk storage. |
+| `SUPABASE_URL` | when `MEDIA_STORAGE=supabase` | `https://<project-ref>.supabase.co` | Supabase project URL for cloud object storage. |
+| `SUPABASE_SERVICE_ROLE_KEY` | when `MEDIA_STORAGE=supabase` | `<supabase-service-role-key>` | Server-only Supabase `service_role` key used by `SupabaseMediaStorage`. |
+| `SUPABASE_STORAGE_BUCKET` | no | `bitadilat-media` | Private Supabase Storage bucket name (default `bitadilat-media`). |
 | `APP_PUBLIC_BASE_URL` | yes | `https://api.example.com` | Public base URL; used for signed media links and the bank 3DS return. |
 | `BITADILAT_CORS_ORIGINS` | no (recommended) | `https://admin.example.com` | Comma-separated exact origins allowed by CORS. A `*` anywhere fails startup. Empty means CORS is closed. `CORS_ALLOWED_ORIGINS` is still read as a fallback. The dev profile reads the same names (default `http://localhost:*,http://127.0.0.1:*`). |
 | `BITADILAT_BIND` | no | `0.0.0.0` | Bind address (default `0.0.0.0`). |

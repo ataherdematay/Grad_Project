@@ -8,10 +8,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /** Yerel disk. Kök klasör {@code bitadilat.media.dir}; klasör ilk yazmada oluşturulur. Anahtar kökün dışına çıkamaz. */
 @Component
+@ConditionalOnProperty(name = "bitadilat.media.storage", havingValue = "local", matchIfMissing = true)
 public class LocalDiskMediaStorage implements MediaStorage {
 
     private final Path root;
