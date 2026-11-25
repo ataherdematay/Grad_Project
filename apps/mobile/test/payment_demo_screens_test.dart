@@ -452,7 +452,8 @@ void main() {
       expect(find.text('₺300'), findsOneWidget);
       expect(find.text('₺1.200'), findsOneWidget);
       expect(find.text('MASTERCARD **** **** **** 0001'), findsOneWidget);
-      expect(find.text('Güvence havuzunda'), findsOneWidget);
+      // Durum rozeti (escrowLocked) ve para yeri (moneyLocVault) aynı terimi kullanır.
+      expect(find.text('Güvence havuzunda'), findsNWidgets(2));
       // Komisyon dökümü müşteri makbuzunda yok.
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsNothing);
     });
