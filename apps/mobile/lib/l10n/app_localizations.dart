@@ -5209,7 +5209,7 @@ abstract class AppLocalizations {
   /// No description provided for @moneyLocVault.
   ///
   /// In tr, this message translates to:
-  /// **'Güvence kasasında'**
+  /// **'Güvence havuzunda'**
   String get moneyLocVault;
 
   /// No description provided for @moneyLocPro.
@@ -5257,7 +5257,7 @@ abstract class AppLocalizations {
   /// No description provided for @journeyExplainVault.
   ///
   /// In tr, this message translates to:
-  /// **'Tutar güvence kasasında bekliyor. İş bitip onayladığında ustaya aktarılır.'**
+  /// **'Tutar güvence havuzunda bekliyor. İş bitip onayladığında ustaya aktarılır.'**
   String get journeyExplainVault;
 
   /// No description provided for @journeyExplainPro.
@@ -5287,7 +5287,7 @@ abstract class AppLocalizations {
   /// No description provided for @journeyExplainVaultPro.
   ///
   /// In tr, this message translates to:
-  /// **'Tutar güvence kasasında bekliyor. Müşteri işi onayladığında sana aktarılır.'**
+  /// **'Tutar güvence havuzunda bekliyor. Müşteri işi onayladığında sana aktarılır.'**
   String get journeyExplainVaultPro;
 
   /// No description provided for @journeyExplainProPro.
@@ -5323,7 +5323,7 @@ abstract class AppLocalizations {
   /// No description provided for @journeyNodeVault.
   ///
   /// In tr, this message translates to:
-  /// **'Güvence kasası'**
+  /// **'Güvence havuzu'**
   String get journeyNodeVault;
 
   /// No description provided for @journeyNodePro.
@@ -5389,7 +5389,7 @@ abstract class AppLocalizations {
   /// No description provided for @journeyEvtLocked.
   ///
   /// In tr, this message translates to:
-  /// **'Tutar güvence kasasına alındı'**
+  /// **'Tutar güvence havuzuna alındı'**
   String get journeyEvtLocked;
 
   /// No description provided for @journeyEvtDelivered.

@@ -2871,7 +2871,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moneyLocCustomerCard => 'Kartında';
 
   @override
-  String get moneyLocVault => 'Güvence kasasında';
+  String get moneyLocVault => 'Güvence havuzunda';
 
   @override
   String get moneyLocPro => 'Ustada';
@@ -2896,7 +2896,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get journeyExplainVault =>
-      'Tutar güvence kasasında bekliyor. İş bitip onayladığında ustaya aktarılır.';
+      'Tutar güvence havuzunda bekliyor. İş bitip onayladığında ustaya aktarılır.';
 
   @override
   String get journeyExplainPro => 'Tutar ustaya aktarıldı.';
@@ -2914,7 +2914,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get journeyExplainVaultPro =>
-      'Tutar güvence kasasında bekliyor. Müşteri işi onayladığında sana aktarılır.';
+      'Tutar güvence havuzunda bekliyor. Müşteri işi onayladığında sana aktarılır.';
 
   @override
   String get journeyExplainProPro => 'Tutar sana aktarıldı.';
@@ -2933,7 +2933,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get journeyNodeCardPro => 'Müşteri';
 
   @override
-  String get journeyNodeVault => 'Güvence kasası';
+  String get journeyNodeVault => 'Güvence havuzu';
 
   @override
   String get journeyNodePro => 'Usta';
@@ -2970,7 +2970,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get journeyEvtThreeds => 'Banka doğrulaması başladı';
 
   @override
-  String get journeyEvtLocked => 'Tutar güvence kasasına alındı';
+  String get journeyEvtLocked => 'Tutar güvence havuzuna alındı';
 
   @override
   String get journeyEvtDelivered => 'Usta işi bitirdi';

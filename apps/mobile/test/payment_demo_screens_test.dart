@@ -182,7 +182,7 @@ void main() {
     test('para yeri etiketi ve usta farkı, TR ve EN', () {
       expect(
         tr((l) => moneyLocationLabel(l, MoneyLocation.vault)),
-        'Güvence kasasında',
+        'Güvence havuzunda',
       );
       expect(
         tr((l) => moneyLocationLabel(l, MoneyLocation.customerCard)),
@@ -203,7 +203,7 @@ void main() {
       );
       expect(
         en((l) => moneyLocationLabel(l, MoneyLocation.vault)),
-        'In the secure vault',
+        'In secure hold',
       );
     });
 
@@ -239,9 +239,9 @@ void main() {
       });
       expect(find.text('Paranın yolculuğu'), findsOneWidget);
       expect(find.text('Para şu an'), findsOneWidget);
-      expect(find.text('Güvence kasasında'), findsOneWidget);
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
       expect(find.text('Kart'), findsNWidgets(2)); // düğüm + kart satırı
-      expect(find.text('Güvence kasası'), findsOneWidget);
+      expect(find.text('Güvence havuzu'), findsOneWidget);
       expect(find.text('Usta'), findsOneWidget);
       expect(find.text('Sandbox (test)'), findsOneWidget);
       expect(find.text('Otomatik aktarıma kalan süre'), findsOneWidget);
@@ -253,7 +253,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Ödeme başlatıldı'), findsOneWidget);
-      expect(find.text('Tutar güvence kasasına alındı'), findsOneWidget);
+      expect(find.text('Tutar güvence havuzuna alındı'), findsOneWidget);
       expect(find.text('Ödeme hareketi'), findsOneWidget);
       expect(find.text('MASTERCARD **** **** **** 0001'), findsOneWidget);
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsNothing);
@@ -328,8 +328,8 @@ void main() {
         'GET /jobs/j1/payment/timeline': (_) => json(200, timelineJson()),
       }, locale: 'en');
       expect(find.text('Money journey'), findsOneWidget);
-      expect(find.text('In the secure vault'), findsOneWidget);
-      expect(find.text('Secure vault'), findsOneWidget);
+      expect(find.text('In secure hold'), findsOneWidget);
+      expect(find.text('Secure hold'), findsOneWidget);
       expect(find.text('Payment started'), findsOneWidget);
       expect(btn('View receipt'), findsOneWidget);
     });
@@ -347,7 +347,7 @@ void main() {
       expect(find.text('Bir sorun oluştu'), findsOneWidget);
       await t.tap(find.text('Tekrar dene'));
       await t.pumpAndSettle();
-      expect(find.text('Güvence kasasında'), findsOneWidget);
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
       expect(calls, 2);
     });
 
@@ -400,7 +400,7 @@ void main() {
         ),
       }, pro: true);
       expect(find.text('Müşterinin kartında'), findsNothing);
-      expect(find.text('Güvence kasasında'), findsOneWidget);
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
       expect(find.text('Müşteri'), findsOneWidget); // 1. düğüm
       expect(find.text('Sen'), findsOneWidget); // 3. düğüm
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsOneWidget);
@@ -452,7 +452,7 @@ void main() {
       expect(find.text('₺300'), findsOneWidget);
       expect(find.text('₺1.200'), findsOneWidget);
       expect(find.text('MASTERCARD **** **** **** 0001'), findsOneWidget);
-      expect(find.text('Güvence kasasında'), findsOneWidget);
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
       // Komisyon dökümü müşteri makbuzunda yok.
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsNothing);
     });
@@ -523,7 +523,7 @@ void main() {
       expect(find.text('Ödemelerim'), findsOneWidget);
       expect(find.text('İş A1'), findsOneWidget);
       expect(find.text('₺1.200'), findsNWidgets(2));
-      expect(find.text('Para: Güvence kasasında'), findsOneWidget);
+      expect(find.text('Para: Güvence havuzunda'), findsOneWidget);
       expect(find.text('Para: Bölüşüldü'), findsOneWidget);
       expect(find.text('İade edilen: ₺600'), findsOneWidget);
       expect(find.text('Sandbox (test)'), findsNWidgets(2));
@@ -649,7 +649,7 @@ void main() {
     testWidgets('EN', (t) async {
       await open(t, '/c/payments', history([historyItem('A1')]), locale: 'en');
       expect(find.text('My payments'), findsOneWidget);
-      expect(find.text('Money: In the secure vault'), findsOneWidget);
+      expect(find.text('Money: In secure hold'), findsOneWidget);
     });
   });
 
@@ -667,7 +667,7 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('Para şu an: Güvence kasasında'), findsOneWidget);
+      expect(find.text('Para şu an: Güvence havuzunda'), findsOneWidget);
       await t.scrollUntilVisible(
         btn('Makbuzu gör'),
         300,
@@ -697,7 +697,7 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('Para şu an: Güvence kasasında'), findsOneWidget);
+      expect(find.text('Para şu an: Güvence havuzunda'), findsOneWidget);
       expect(btn('Makbuzu gör'), findsNothing);
     });
 

@@ -231,7 +231,7 @@ List<_NodeState> _nodeStates(MoneyLocation loc) => switch (loc) {
   MoneyLocation.unknown => [_NodeState.idle, _NodeState.idle, _NodeState.idle],
 };
 
-/// Kart → Güvence kasası → Usta. Paranın bulunduğu düğüm vurgulanır, geçtiği
+/// Kart → Güvence havuzu → Usta. Paranın bulunduğu düğüm vurgulanır, geçtiği
 /// düğümler onaylı gösterilir. Renk tek başına anlam taşımaz: etkin düğümde
 /// ikon dolu daire, geçilenlerde onay işareti olur.
 class MoneyFlowDiagram extends StatelessWidget {

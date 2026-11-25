@@ -2937,7 +2937,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moneyLocCustomerCard => 'On your card';
 
   @override
-  String get moneyLocVault => 'In the secure vault';
+  String get moneyLocVault => 'In secure hold';
 
   @override
   String get moneyLocPro => 'With the pro';
@@ -2963,7 +2963,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get journeyExplainVault =>
-      'The amount is held in the secure vault. It goes to the pro once the work is done and you confirm.';
+      'The amount is in secure hold. It goes to the pro once the work is done and you confirm.';
 
   @override
   String get journeyExplainPro => 'The amount has been paid out to the pro.';
@@ -2982,7 +2982,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get journeyExplainVaultPro =>
-      'The amount is held in the secure vault. It is paid out to you once the customer confirms the work.';
+      'The amount is in secure hold. It is paid out to you once the customer confirms the work.';
 
   @override
   String get journeyExplainProPro => 'The amount has been paid out to you.';
@@ -3002,7 +3002,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get journeyNodeCardPro => 'Customer';
 
   @override
-  String get journeyNodeVault => 'Secure vault';
+  String get journeyNodeVault => 'Secure hold';
 
   @override
   String get journeyNodePro => 'Pro';
@@ -3039,7 +3039,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get journeyEvtThreeds => 'Bank verification started';
 
   @override
-  String get journeyEvtLocked => 'Amount placed in the secure vault';
+  String get journeyEvtLocked => 'Amount placed in secure hold';
 
   @override
   String get journeyEvtDelivered => 'The pro finished the work';
