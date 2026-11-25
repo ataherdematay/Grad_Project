@@ -2,6 +2,8 @@
 library;
 
 export 'src/admin.dart';
+export 'src/admin_payment_demo/admin_payment_demo_api.dart';
+export 'src/admin_payment_demo/admin_payment_demo_models.dart';
 export 'src/api/auth_api.dart';
 export 'src/api/catalog_api.dart';
 export 'src/api/chat_api.dart';

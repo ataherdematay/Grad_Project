@@ -935,4 +935,256 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get filterDistrict => 'İlçe';
+
+  @override
+  String get vaultTitle => 'Güvence havuzu özeti';
+
+  @override
+  String get vaultSubtitle =>
+      'Havuzda bekleyen, ustalara aktarılan ve iade edilen tutarlar.';
+
+  @override
+  String get vaultRefresh => 'Özeti yenile';
+
+  @override
+  String get vaultCardPending => 'Güvence havuzunda bekleyen';
+
+  @override
+  String get vaultCardPendingHint => 'Kilitli + itirazlı';
+
+  @override
+  String get vaultCardPaid => 'Ustalara aktarılan';
+
+  @override
+  String get vaultCardRefunded => 'Müşterilere iade edilen';
+
+  @override
+  String get vaultCardCommission => 'Kazanılan hizmet bedeli';
+
+  @override
+  String get vaultCountTotal => 'Toplam ödeme';
+
+  @override
+  String get vaultCountVault => 'Havuzda';
+
+  @override
+  String get vaultCountLocked => 'Kilitli';
+
+  @override
+  String get vaultCountDisputed => 'İtirazlı';
+
+  @override
+  String get vaultCountReleased => 'Aktarılan';
+
+  @override
+  String get vaultCountRefunded => 'İade';
+
+  @override
+  String get vaultCountSplit => 'Bölünen';
+
+  @override
+  String get vaultCountFailed => 'Başarısız';
+
+  @override
+  String get vaultCountPending => 'Bekleyen işlem';
+
+  @override
+  String get vaultCountReview => 'İncelemede';
+
+  @override
+  String get vaultCountSeed => 'Tohum veri';
+
+  @override
+  String vaultUpdatedAt(String time) {
+    return 'Güncellendi: $time';
+  }
+
+  @override
+  String get tlTitle => 'Ödeme zaman çizelgesi';
+
+  @override
+  String get tlLoadFailed => 'Zaman çizelgesi yüklenemedi';
+
+  @override
+  String get tlClose => 'Paneli kapat';
+
+  @override
+  String get tlMoneyNow => 'Para şu an';
+
+  @override
+  String get tlStageCard => 'Kart';
+
+  @override
+  String get tlStageVault => 'Güvence havuzu';
+
+  @override
+  String get tlStagePro => 'Usta';
+
+  @override
+  String get tlStageRefund => 'İade';
+
+  @override
+  String get tlStageSplit => 'Usta + iade';
+
+  @override
+  String get tlStageRefundOrPro => 'Usta / İade';
+
+  @override
+  String get tlWhereCard =>
+      'Müşterinin kartında (henüz alınmadı ya da başarısız)';
+
+  @override
+  String get tlWhereVault => 'Güvence havuzunda';
+
+  @override
+  String get tlWherePro => 'Ustaya aktarıldı';
+
+  @override
+  String get tlWhereRefunded => 'Müşteriye iade edildi';
+
+  @override
+  String get tlWhereSplit => 'Yarısı müşteriye iade, yarısı ustaya';
+
+  @override
+  String tlWhereUnknown(String value) {
+    return 'Bilinmiyor ($value)';
+  }
+
+  @override
+  String get tlAmounts => 'Tutarlar';
+
+  @override
+  String get tlGross => 'Brüt tutar';
+
+  @override
+  String get tlServiceFee => 'Hizmet bedeli';
+
+  @override
+  String get tlProNet => 'Usta net';
+
+  @override
+  String get tlRefunded => 'İade';
+
+  @override
+  String get tlDetails => 'Ayrıntılar';
+
+  @override
+  String get tlProvider => 'Sağlayıcı';
+
+  @override
+  String get tlCraftgateId => 'Craftgate ödeme no';
+
+  @override
+  String get tlCard => 'Kart';
+
+  @override
+  String get tlAutoRelease => 'Otomatik aktarım';
+
+  @override
+  String get tlPaymentRef => 'Ödeme referansı';
+
+  @override
+  String get tlJob => 'İş';
+
+  @override
+  String get tlPending => 'Bekleyen işlem';
+
+  @override
+  String get tlPendingRefund => 'İade kuyrukta';
+
+  @override
+  String get tlPendingRelease => 'Aktarım kuyrukta';
+
+  @override
+  String get tlEvents => 'Olaylar';
+
+  @override
+  String get tlNoEvents => 'Bu ödeme için olay kaydı yok.';
+
+  @override
+  String get tlProviderCraftgate => 'Craftgate';
+
+  @override
+  String get tlProviderSeed => 'Tohum veri';
+
+  @override
+  String get tlProviderDemo => 'Demo';
+
+  @override
+  String get tlSandbox => 'Sandbox';
+
+  @override
+  String get tlEvPaymentInitialized => 'Ödeme başlatıldı';
+
+  @override
+  String get tlEvThreeds => '3D Secure başladı';
+
+  @override
+  String get tlEvLocked => 'Para güvence havuzuna alındı';
+
+  @override
+  String get tlEvWorkDelivered => 'Usta işi teslim etti';
+
+  @override
+  String get tlEvAutoReleaseScheduled =>
+      '48 saatlik otomatik aktarım planlandı';
+
+  @override
+  String get tlEvDispute => 'Şikayet açıldı, para donduruldu';
+
+  @override
+  String get tlEvCustomerApproved => 'Müşteri onayladı';
+
+  @override
+  String get tlEvAutoApproved => '48 saat doldu, sistem onayladı';
+
+  @override
+  String get tlEvRefundRequested => 'Tam iade kuyruğa alındı';
+
+  @override
+  String get tlEvReleased => 'Usta payı aktarıldı';
+
+  @override
+  String get tlEvRefunded => 'İade yapıldı';
+
+  @override
+  String get tlEvSplit => 'Karar uygulandı: 50/50';
+
+  @override
+  String get tlEvReview => 'İnceleme gerekiyor';
+
+  @override
+  String get tlEvFailed => 'Ödeme alınamadı';
+
+  @override
+  String tlEvUnknown(String type) {
+    return 'Olay: $type';
+  }
+
+  @override
+  String get tlNoteLateSuccess =>
+      'Banka, deneme terk edildikten sonra onayladı';
+
+  @override
+  String get tlNoteAlreadyRefunded => 'Craftgate zaten iade etmişti';
+
+  @override
+  String get tlNotePayoutReview => 'Aktarım incelemeye alındı';
+
+  @override
+  String get tlNoteRefundReview => 'İade incelemeye alındı';
+
+  @override
+  String get tlNoteDeclined => 'Kart reddedildi';
+
+  @override
+  String get tlNote3dsAbandoned => '3D Secure yarıda bırakıldı';
+
+  @override
+  String get tlNoteUncertain => 'Sonuç belirsiz';
+
+  @override
+  String tlNoteAutoRelease(String time) {
+    return 'Aktarım zamanı: $time';
+  }
 }

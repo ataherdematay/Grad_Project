@@ -10,6 +10,8 @@ import '../../l10n/app_localizations.dart';
 import '../common/labels.dart';
 import '../common/widgets.dart';
 import 'payment_review_section.dart';
+import 'payment_timeline_panel.dart';
+import 'vault_summary_section.dart';
 
 const _statuses = [
   'LOCKED',
@@ -42,6 +44,10 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
       title: l.paymentsTitle,
       subtitle: l.paymentsSubtitle,
       children: [
+        VaultSummarySection(
+          onRefresh: () => ref.invalidate(paymentsProvider(_status)),
+        ),
+        const SizedBox(height: AppSpacing.lg),
         PaymentReviewSection(
           onResolved: () => ref.invalidate(paymentsProvider(_status)),
         ),
@@ -72,6 +78,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
                 )
               else
                 ResponsiveTable<AdminPaymentRow>(
+                  onTap: (r) => showPaymentTimelinePanel(context, r.ref),
                   minWidth: 1180,
                   stackBelow: 1180,
                   rowKey: (r) => Key('payment-${r.ref}'),
@@ -114,7 +121,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
                     TableColumn(
                       header: l.colProvider,
                       flex: 2,
-                      cell: (r) => Text(r.provider),
+                      cell: (r) => providerBadge(l, r.provider),
                     ),
                     TableColumn(
                       header: l.colParties,
