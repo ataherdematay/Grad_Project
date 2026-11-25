@@ -18,3 +18,7 @@ open docs/sunum/en/1-payment-flow.html
 ```
 
 Fonts (Manrope, IBM Plex Mono) load from Google Fonts; offline the pages fall back to system fonts and still work. / Yazı tipleri Google Fonts'tan yüklenir; çevrimdışıyken sistem yazı tipine dönülür, sayfalar yine çalışır.
+
+## Live demo / Canlı demo
+
+Step-by-step live demo with the real Craftgate sandbox, the mobile app and the admin panel: / Gerçek Craftgate sandbox, mobil uygulama ve admin paneliyle adım adım canlı demo: [../demo/PAYMENT_DEMO.md](../demo/PAYMENT_DEMO.md) (TR), [../demo/PAYMENT_DEMO.en.md](../demo/PAYMENT_DEMO.en.md) (EN).

@@ -971,7 +971,7 @@ Customer of the job and admins. The job's pro: 403 `FORBIDDEN`. Anyone else or u
 ```
 
 - `items` are the offer's line items in order (`kind` `LABOR`/`MATERIAL`); an offer without lines yields one `İşçilik` line and, if above 0, one `Malzeme` line. The sum of `amount` equals `total`.
-- `receiptNo` is stable for a payment: `BT-<yyyyMMdd of issuedAt (UTC)>-<first 6 hex of paymentRef, upper case>`. `issuedAt` is the time the money was taken.
+- `receiptNo` is stable for a payment: `BT-<yyyyMMdd of issuedAt in Europe/Istanbul>-<first 6 hex of paymentRef, upper case>` (Istanbul day so it matches the date shown on the receipt; changed after the Nov 2026 e2e run, was UTC). `issuedAt` is the time the money was taken.
 - `netPaid = total - refundedTotal`. No service-fee breakdown on the customer receipt.
 - `sandboxNotice` is a Turkish sentence when `sandbox` is true, otherwise `null`; show your own localized text keyed on `sandbox`.
 
