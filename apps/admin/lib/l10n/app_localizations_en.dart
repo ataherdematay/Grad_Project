@@ -937,4 +937,254 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterDistrict => 'District';
+
+  @override
+  String get vaultTitle => 'Secure hold summary';
+
+  @override
+  String get vaultSubtitle =>
+      'Amounts waiting in the hold, paid out to pros and refunded.';
+
+  @override
+  String get vaultRefresh => 'Refresh summary';
+
+  @override
+  String get vaultCardPending => 'Waiting in secure hold';
+
+  @override
+  String get vaultCardPendingHint => 'Locked + under complaint';
+
+  @override
+  String get vaultCardPaid => 'Paid out to pros';
+
+  @override
+  String get vaultCardRefunded => 'Refunded to customers';
+
+  @override
+  String get vaultCardCommission => 'Service fee earned';
+
+  @override
+  String get vaultCountTotal => 'Total payments';
+
+  @override
+  String get vaultCountVault => 'In hold';
+
+  @override
+  String get vaultCountLocked => 'Locked';
+
+  @override
+  String get vaultCountDisputed => 'Under complaint';
+
+  @override
+  String get vaultCountReleased => 'Paid out';
+
+  @override
+  String get vaultCountRefunded => 'Refunded';
+
+  @override
+  String get vaultCountSplit => 'Split';
+
+  @override
+  String get vaultCountFailed => 'Failed';
+
+  @override
+  String get vaultCountPending => 'Queued action';
+
+  @override
+  String get vaultCountReview => 'In review';
+
+  @override
+  String get vaultCountSeed => 'Seed data';
+
+  @override
+  String vaultUpdatedAt(String time) {
+    return 'Updated: $time';
+  }
+
+  @override
+  String get tlTitle => 'Payment timeline';
+
+  @override
+  String get tlLoadFailed => 'Could not load the timeline';
+
+  @override
+  String get tlClose => 'Close panel';
+
+  @override
+  String get tlMoneyNow => 'Money right now';
+
+  @override
+  String get tlStageCard => 'Card';
+
+  @override
+  String get tlStageVault => 'Secure hold';
+
+  @override
+  String get tlStagePro => 'Pro';
+
+  @override
+  String get tlStageRefund => 'Refund';
+
+  @override
+  String get tlStageSplit => 'Pro + refund';
+
+  @override
+  String get tlStageRefundOrPro => 'Pro / Refund';
+
+  @override
+  String get tlWhereCard => 'On the customer\'s card (not taken yet or failed)';
+
+  @override
+  String get tlWhereVault => 'In the secure hold';
+
+  @override
+  String get tlWherePro => 'Paid out to the pro';
+
+  @override
+  String get tlWhereRefunded => 'Refunded to the customer';
+
+  @override
+  String get tlWhereSplit => 'Half refunded to the customer, half to the pro';
+
+  @override
+  String tlWhereUnknown(String value) {
+    return 'Unknown ($value)';
+  }
+
+  @override
+  String get tlAmounts => 'Amounts';
+
+  @override
+  String get tlGross => 'Gross amount';
+
+  @override
+  String get tlServiceFee => 'Service fee';
+
+  @override
+  String get tlProNet => 'Pro net';
+
+  @override
+  String get tlRefunded => 'Refunded';
+
+  @override
+  String get tlDetails => 'Details';
+
+  @override
+  String get tlProvider => 'Provider';
+
+  @override
+  String get tlCraftgateId => 'Craftgate payment ID';
+
+  @override
+  String get tlCard => 'Card';
+
+  @override
+  String get tlAutoRelease => 'Automatic payout';
+
+  @override
+  String get tlPaymentRef => 'Payment reference';
+
+  @override
+  String get tlJob => 'Job';
+
+  @override
+  String get tlPending => 'Queued action';
+
+  @override
+  String get tlPendingRefund => 'Refund queued';
+
+  @override
+  String get tlPendingRelease => 'Payout queued';
+
+  @override
+  String get tlEvents => 'Events';
+
+  @override
+  String get tlNoEvents => 'No events recorded for this payment.';
+
+  @override
+  String get tlProviderCraftgate => 'Craftgate';
+
+  @override
+  String get tlProviderSeed => 'Seed data';
+
+  @override
+  String get tlProviderDemo => 'Demo';
+
+  @override
+  String get tlSandbox => 'Sandbox';
+
+  @override
+  String get tlEvPaymentInitialized => 'Payment started';
+
+  @override
+  String get tlEvThreeds => '3D Secure started';
+
+  @override
+  String get tlEvLocked => 'Money placed in the secure hold';
+
+  @override
+  String get tlEvWorkDelivered => 'Pro delivered the work';
+
+  @override
+  String get tlEvAutoReleaseScheduled => '48-hour automatic payout scheduled';
+
+  @override
+  String get tlEvDispute => 'Complaint filed, money frozen';
+
+  @override
+  String get tlEvCustomerApproved => 'Customer approved';
+
+  @override
+  String get tlEvAutoApproved => '48 hours passed, system approved';
+
+  @override
+  String get tlEvRefundRequested => 'Full refund queued';
+
+  @override
+  String get tlEvReleased => 'Pro\'s share paid out';
+
+  @override
+  String get tlEvRefunded => 'Refund done';
+
+  @override
+  String get tlEvSplit => 'Decision applied: 50/50';
+
+  @override
+  String get tlEvReview => 'Review required';
+
+  @override
+  String get tlEvFailed => 'Payment not taken';
+
+  @override
+  String tlEvUnknown(String type) {
+    return 'Event: $type';
+  }
+
+  @override
+  String get tlNoteLateSuccess =>
+      'The bank confirmed after the attempt was abandoned';
+
+  @override
+  String get tlNoteAlreadyRefunded => 'Craftgate had already refunded';
+
+  @override
+  String get tlNotePayoutReview => 'Payout sent to review';
+
+  @override
+  String get tlNoteRefundReview => 'Refund sent to review';
+
+  @override
+  String get tlNoteDeclined => 'Card declined';
+
+  @override
+  String get tlNote3dsAbandoned => '3D Secure abandoned';
+
+  @override
+  String get tlNoteUncertain => 'Result uncertain';
+
+  @override
+  String tlNoteAutoRelease(String time) {
+    return 'Payout time: $time';
+  }
 }

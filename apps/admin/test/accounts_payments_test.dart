@@ -298,7 +298,12 @@ void main() {
 
     testWidgets('durum süzgeci sunucuya gider', (tester) async {
       final fake = FakeApi();
-      await pumpAdmin(tester, fake: fake, initial: '/payments');
+      await pumpAdmin(
+        tester,
+        fake: fake,
+        initial: '/payments',
+        size: const Size(1280, 2800),
+      );
       expect(fake.last('GET', '/admin/payments').queryParameters, isEmpty);
       await tester.tap(find.widgetWithText(ChoiceChip, 'Ustaya aktarıldı'));
       await tester.pumpAndSettle();
@@ -318,7 +323,12 @@ void main() {
             'refundedTotal': 0,
           },
         });
-      await pumpAdmin(tester, fake: fake, initial: '/payments');
+      await pumpAdmin(
+        tester,
+        fake: fake,
+        initial: '/payments',
+        size: const Size(1280, 2800),
+      );
       expect(find.text('Bu durumda ödeme yok'), findsOneWidget);
       expect(find.byKey(const Key('total-locked')), findsOneWidget);
     });
@@ -333,7 +343,12 @@ void main() {
               ? apiError(500, 'INTERNAL_ERROR')
               : json(200, paymentsJson()),
         );
-      await pumpAdmin(tester, fake: fake, initial: '/payments');
+      await pumpAdmin(
+        tester,
+        fake: fake,
+        initial: '/payments',
+        size: const Size(1280, 2800),
+      );
       expect(find.text('Liste yüklenemedi'), findsOneWidget);
       fail = false;
       await tester.tap(find.text('Tekrar dene'));

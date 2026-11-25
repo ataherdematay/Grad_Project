@@ -1807,6 +1807,486 @@ abstract class AppLocalizations {
   /// In tr, this message translates to:
   /// **'İlçe'**
   String get filterDistrict;
+
+  /// No description provided for @vaultTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence havuzu özeti'**
+  String get vaultTitle;
+
+  /// No description provided for @vaultSubtitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Havuzda bekleyen, ustalara aktarılan ve iade edilen tutarlar.'**
+  String get vaultSubtitle;
+
+  /// No description provided for @vaultRefresh.
+  ///
+  /// In tr, this message translates to:
+  /// **'Özeti yenile'**
+  String get vaultRefresh;
+
+  /// No description provided for @vaultCardPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence havuzunda bekleyen'**
+  String get vaultCardPending;
+
+  /// No description provided for @vaultCardPendingHint.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kilitli + itirazlı'**
+  String get vaultCardPendingHint;
+
+  /// No description provided for @vaultCardPaid.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustalara aktarılan'**
+  String get vaultCardPaid;
+
+  /// No description provided for @vaultCardRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşterilere iade edilen'**
+  String get vaultCardRefunded;
+
+  /// No description provided for @vaultCardCommission.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kazanılan hizmet bedeli'**
+  String get vaultCardCommission;
+
+  /// No description provided for @vaultCountTotal.
+  ///
+  /// In tr, this message translates to:
+  /// **'Toplam ödeme'**
+  String get vaultCountTotal;
+
+  /// No description provided for @vaultCountVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Havuzda'**
+  String get vaultCountVault;
+
+  /// No description provided for @vaultCountLocked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kilitli'**
+  String get vaultCountLocked;
+
+  /// No description provided for @vaultCountDisputed.
+  ///
+  /// In tr, this message translates to:
+  /// **'İtirazlı'**
+  String get vaultCountDisputed;
+
+  /// No description provided for @vaultCountReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarılan'**
+  String get vaultCountReleased;
+
+  /// No description provided for @vaultCountRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade'**
+  String get vaultCountRefunded;
+
+  /// No description provided for @vaultCountSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bölünen'**
+  String get vaultCountSplit;
+
+  /// No description provided for @vaultCountFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Başarısız'**
+  String get vaultCountFailed;
+
+  /// No description provided for @vaultCountPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bekleyen işlem'**
+  String get vaultCountPending;
+
+  /// No description provided for @vaultCountReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'İncelemede'**
+  String get vaultCountReview;
+
+  /// No description provided for @vaultCountSeed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tohum veri'**
+  String get vaultCountSeed;
+
+  /// No description provided for @vaultUpdatedAt.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güncellendi: {time}'**
+  String vaultUpdatedAt(String time);
+
+  /// No description provided for @tlTitle.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme zaman çizelgesi'**
+  String get tlTitle;
+
+  /// No description provided for @tlLoadFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Zaman çizelgesi yüklenemedi'**
+  String get tlLoadFailed;
+
+  /// No description provided for @tlClose.
+  ///
+  /// In tr, this message translates to:
+  /// **'Paneli kapat'**
+  String get tlClose;
+
+  /// No description provided for @tlMoneyNow.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para şu an'**
+  String get tlMoneyNow;
+
+  /// No description provided for @tlStageCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kart'**
+  String get tlStageCard;
+
+  /// No description provided for @tlStageVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence havuzu'**
+  String get tlStageVault;
+
+  /// No description provided for @tlStagePro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta'**
+  String get tlStagePro;
+
+  /// No description provided for @tlStageRefund.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade'**
+  String get tlStageRefund;
+
+  /// No description provided for @tlStageSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta + iade'**
+  String get tlStageSplit;
+
+  /// No description provided for @tlStageRefundOrPro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta / İade'**
+  String get tlStageRefundOrPro;
+
+  /// No description provided for @tlWhereCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşterinin kartında (henüz alınmadı ya da başarısız)'**
+  String get tlWhereCard;
+
+  /// No description provided for @tlWhereVault.
+  ///
+  /// In tr, this message translates to:
+  /// **'Güvence havuzunda'**
+  String get tlWhereVault;
+
+  /// No description provided for @tlWherePro.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ustaya aktarıldı'**
+  String get tlWherePro;
+
+  /// No description provided for @tlWhereRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteriye iade edildi'**
+  String get tlWhereRefunded;
+
+  /// No description provided for @tlWhereSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Yarısı müşteriye iade, yarısı ustaya'**
+  String get tlWhereSplit;
+
+  /// No description provided for @tlWhereUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bilinmiyor ({value})'**
+  String tlWhereUnknown(String value);
+
+  /// No description provided for @tlAmounts.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tutarlar'**
+  String get tlAmounts;
+
+  /// No description provided for @tlGross.
+  ///
+  /// In tr, this message translates to:
+  /// **'Brüt tutar'**
+  String get tlGross;
+
+  /// No description provided for @tlServiceFee.
+  ///
+  /// In tr, this message translates to:
+  /// **'Hizmet bedeli'**
+  String get tlServiceFee;
+
+  /// No description provided for @tlProNet.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta net'**
+  String get tlProNet;
+
+  /// No description provided for @tlRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade'**
+  String get tlRefunded;
+
+  /// No description provided for @tlDetails.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ayrıntılar'**
+  String get tlDetails;
+
+  /// No description provided for @tlProvider.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sağlayıcı'**
+  String get tlProvider;
+
+  /// No description provided for @tlCraftgateId.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate ödeme no'**
+  String get tlCraftgateId;
+
+  /// No description provided for @tlCard.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kart'**
+  String get tlCard;
+
+  /// No description provided for @tlAutoRelease.
+  ///
+  /// In tr, this message translates to:
+  /// **'Otomatik aktarım'**
+  String get tlAutoRelease;
+
+  /// No description provided for @tlPaymentRef.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme referansı'**
+  String get tlPaymentRef;
+
+  /// No description provided for @tlJob.
+  ///
+  /// In tr, this message translates to:
+  /// **'İş'**
+  String get tlJob;
+
+  /// No description provided for @tlPending.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bekleyen işlem'**
+  String get tlPending;
+
+  /// No description provided for @tlPendingRefund.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade kuyrukta'**
+  String get tlPendingRefund;
+
+  /// No description provided for @tlPendingRelease.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarım kuyrukta'**
+  String get tlPendingRelease;
+
+  /// No description provided for @tlEvents.
+  ///
+  /// In tr, this message translates to:
+  /// **'Olaylar'**
+  String get tlEvents;
+
+  /// No description provided for @tlNoEvents.
+  ///
+  /// In tr, this message translates to:
+  /// **'Bu ödeme için olay kaydı yok.'**
+  String get tlNoEvents;
+
+  /// No description provided for @tlProviderCraftgate.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate'**
+  String get tlProviderCraftgate;
+
+  /// No description provided for @tlProviderSeed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tohum veri'**
+  String get tlProviderSeed;
+
+  /// No description provided for @tlProviderDemo.
+  ///
+  /// In tr, this message translates to:
+  /// **'Demo'**
+  String get tlProviderDemo;
+
+  /// No description provided for @tlSandbox.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sandbox'**
+  String get tlSandbox;
+
+  /// No description provided for @tlEvPaymentInitialized.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme başlatıldı'**
+  String get tlEvPaymentInitialized;
+
+  /// No description provided for @tlEvThreeds.
+  ///
+  /// In tr, this message translates to:
+  /// **'3D Secure başladı'**
+  String get tlEvThreeds;
+
+  /// No description provided for @tlEvLocked.
+  ///
+  /// In tr, this message translates to:
+  /// **'Para güvence havuzuna alındı'**
+  String get tlEvLocked;
+
+  /// No description provided for @tlEvWorkDelivered.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta işi teslim etti'**
+  String get tlEvWorkDelivered;
+
+  /// No description provided for @tlEvAutoReleaseScheduled.
+  ///
+  /// In tr, this message translates to:
+  /// **'48 saatlik otomatik aktarım planlandı'**
+  String get tlEvAutoReleaseScheduled;
+
+  /// No description provided for @tlEvDispute.
+  ///
+  /// In tr, this message translates to:
+  /// **'Şikayet açıldı, para donduruldu'**
+  String get tlEvDispute;
+
+  /// No description provided for @tlEvCustomerApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'Müşteri onayladı'**
+  String get tlEvCustomerApproved;
+
+  /// No description provided for @tlEvAutoApproved.
+  ///
+  /// In tr, this message translates to:
+  /// **'48 saat doldu, sistem onayladı'**
+  String get tlEvAutoApproved;
+
+  /// No description provided for @tlEvRefundRequested.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tam iade kuyruğa alındı'**
+  String get tlEvRefundRequested;
+
+  /// No description provided for @tlEvReleased.
+  ///
+  /// In tr, this message translates to:
+  /// **'Usta payı aktarıldı'**
+  String get tlEvReleased;
+
+  /// No description provided for @tlEvRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade yapıldı'**
+  String get tlEvRefunded;
+
+  /// No description provided for @tlEvSplit.
+  ///
+  /// In tr, this message translates to:
+  /// **'Karar uygulandı: 50/50'**
+  String get tlEvSplit;
+
+  /// No description provided for @tlEvReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'İnceleme gerekiyor'**
+  String get tlEvReview;
+
+  /// No description provided for @tlEvFailed.
+  ///
+  /// In tr, this message translates to:
+  /// **'Ödeme alınamadı'**
+  String get tlEvFailed;
+
+  /// No description provided for @tlEvUnknown.
+  ///
+  /// In tr, this message translates to:
+  /// **'Olay: {type}'**
+  String tlEvUnknown(String type);
+
+  /// No description provided for @tlNoteLateSuccess.
+  ///
+  /// In tr, this message translates to:
+  /// **'Banka, deneme terk edildikten sonra onayladı'**
+  String get tlNoteLateSuccess;
+
+  /// No description provided for @tlNoteAlreadyRefunded.
+  ///
+  /// In tr, this message translates to:
+  /// **'Craftgate zaten iade etmişti'**
+  String get tlNoteAlreadyRefunded;
+
+  /// No description provided for @tlNotePayoutReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarım incelemeye alındı'**
+  String get tlNotePayoutReview;
+
+  /// No description provided for @tlNoteRefundReview.
+  ///
+  /// In tr, this message translates to:
+  /// **'İade incelemeye alındı'**
+  String get tlNoteRefundReview;
+
+  /// No description provided for @tlNoteDeclined.
+  ///
+  /// In tr, this message translates to:
+  /// **'Kart reddedildi'**
+  String get tlNoteDeclined;
+
+  /// No description provided for @tlNote3dsAbandoned.
+  ///
+  /// In tr, this message translates to:
+  /// **'3D Secure yarıda bırakıldı'**
+  String get tlNote3dsAbandoned;
+
+  /// No description provided for @tlNoteUncertain.
+  ///
+  /// In tr, this message translates to:
+  /// **'Sonuç belirsiz'**
+  String get tlNoteUncertain;
+
+  /// No description provided for @tlNoteAutoRelease.
+  ///
+  /// In tr, this message translates to:
+  /// **'Aktarım zamanı: {time}'**
+  String tlNoteAutoRelease(String time);
 }
 
 class _AppLocalizationsDelegate

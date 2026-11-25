@@ -104,8 +104,100 @@ class FakeApi implements HttpClientAdapter {
     onJson('GET', '/admin/complaints/c1', complaintDetailJson());
     onJson('GET', '/admin/users', {'items': usersJson()});
     onJson('GET', '/admin/payments', paymentsJson());
+    onJson('GET', '/admin/payments/summary', vaultSummaryJson());
+    onJson('GET', '/admin/payments/PAY-1001/timeline', timelineJson());
+    onJson(
+      'GET',
+      '/admin/payments/PAY-1002/timeline',
+      timelineJson(
+        ref: 'PAY-1002',
+        status: 'REFUNDED_TO_CUSTOMER',
+        location: 'CUSTOMER_REFUNDED',
+        provider: 'SEED',
+      ),
+    );
   }
 }
+
+Map<String, dynamic> vaultSummaryJson() => {
+  'vaultTotal': 400.00,
+  'paidToProsTotal': 1080.00,
+  'refundedToCustomersTotal': 600.00,
+  'commissionEarnedTotal': 120.00,
+  'counts': {
+    'total': 3,
+    'vault': 1,
+    'locked': 1,
+    'disputed': 0,
+    'released': 1,
+    'refunded': 1,
+    'split': 0,
+    'failed': 0,
+    'pendingAction': 0,
+    'needsReview': 0,
+    'seed': 0,
+  },
+  'generatedAt': '2026-11-11T11:00:00Z',
+};
+
+Map<String, dynamic> timelineJson({
+  String ref = 'PAY-1001',
+  String status = 'LOCKED',
+  String location = 'BITADILAT_VAULT',
+  String provider = 'CRAFTGATE',
+  bool sandbox = true,
+  Object? autoReleaseAt = '2026-11-13T14:00:00Z',
+  List<Map<String, dynamic>>? events,
+}) => {
+  'paymentRef': ref,
+  'jobId': 'j1',
+  'jobPublicCode': 'BD-88409',
+  'jobTitle': 'Musluk tamiri',
+  'status': status,
+  'moneyLocation': location,
+  'provider': provider,
+  'sandbox': sandbox,
+  'craftgatePaymentId': provider == 'CRAFTGATE' ? 50001 : null,
+  'card': {
+    'brand': 'MASTERCARD',
+    'last4': '0001',
+    'masked': '**** **** **** 0001',
+  },
+  'amounts': {
+    'gross': 2200.00,
+    'commission': 220.00,
+    'proNet': 1980.00,
+    'refunded': status == 'REFUNDED_TO_CUSTOMER' ? 2200.00 : 0.00,
+  },
+  'autoReleaseAt': autoReleaseAt,
+  'pendingAction': null,
+  'errorCode': null,
+  'events':
+      events ??
+      [
+        {
+          'type': 'PAYMENT_INITIALIZED',
+          'at': '2026-11-10T09:00:00Z',
+          'amount': 2200.00,
+          'actor': 'CUSTOMER',
+          'note': null,
+        },
+        {
+          'type': 'PAYMENT_LOCKED',
+          'at': '2026-11-10T09:01:12Z',
+          'amount': 2200.00,
+          'actor': 'SYSTEM',
+          'note': null,
+        },
+        {
+          'type': 'AUTO_RELEASE_SCHEDULED',
+          'at': '2026-11-11T14:00:00Z',
+          'amount': 1980.00,
+          'actor': 'SYSTEM',
+          'note': 'autoReleaseAt=2026-11-13T14:00:00Z',
+        },
+      ],
+};
 
 // --- Fixture'lar ---------------------------------------------------------------
 

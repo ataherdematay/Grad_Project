@@ -123,6 +123,20 @@ final usersProvider = FutureProvider.autoDispose
       retry: noRetry,
     );
 
+/// Kasa özeti (`GET /admin/payments/summary`).
+final vaultSummaryProvider = FutureProvider.autoDispose<AdminVaultSummary>(
+  (ref) => ref.watch(apiClientProvider).adminPaymentVaultSummary(),
+  retry: noRetry,
+);
+
+/// Bir ödemenin zaman çizelgesi (`GET /admin/payments/{ref}/timeline`).
+final paymentTimelineProvider = FutureProvider.autoDispose
+    .family<AdminPaymentTimeline, String>(
+      (ref, paymentRef) =>
+          ref.watch(apiClientProvider).adminPaymentTimeline(paymentRef),
+      retry: noRetry,
+    );
+
 /// `null`: tüm durumlar.
 final paymentsProvider = FutureProvider.autoDispose
     .family<AdminPayments, String?>(
