@@ -39,9 +39,9 @@ public class SupabaseMediaStorage implements MediaStorage {
     private final String bucket;
 
     public SupabaseMediaStorage(
-            @Value("${bitadilat.media.supabase.url:}") String supabaseUrl,
-            @Value("${bitadilat.media.supabase.service-key:}") String serviceKey,
-            @Value("${bitadilat.media.supabase.bucket:bitadilat-media}") String bucket) {
+            @Value("${bitadilat.media.supabase.url:${SUPABASE_URL:}}") String supabaseUrl,
+            @Value("${bitadilat.media.supabase.service-key:${SUPABASE_SERVICE_ROLE_KEY:}}") String serviceKey,
+            @Value("${bitadilat.media.supabase.bucket:${SUPABASE_STORAGE_BUCKET:bitadilat-media}}") String bucket) {
         if (supabaseUrl == null || supabaseUrl.isBlank()) {
             throw new IllegalStateException("MEDIA_STORAGE=supabase iken SUPABASE_URL zorunludur.");
         }
