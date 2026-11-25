@@ -246,7 +246,15 @@ void main() {
 
   group('Ödemeler', () {
     testWidgets('toplam kartları ve tablo', (tester) async {
-      await pumpAdmin(tester, initial: '/payments');
+      await pumpAdmin(
+        tester,
+        initial: '/payments',
+        size: const Size(1280, 2800),
+      );
+      // Süzgeçsiz: toplamlar yalnız üstteki özette, defter toplamı tekrar yok.
+      expect(find.byKey(const Key('total-locked')), findsNothing);
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Ustaya aktarıldı'));
+      await tester.pumpAndSettle();
       expect(
         tester.widget<Text>(find.byKey(const Key('total-locked'))).data,
         '₺2.200',
@@ -329,6 +337,8 @@ void main() {
         initial: '/payments',
         size: const Size(1280, 2800),
       );
+      await tester.tap(find.widgetWithText(ChoiceChip, 'Ustaya aktarıldı'));
+      await tester.pumpAndSettle();
       expect(find.text('Bu durumda ödeme yok'), findsOneWidget);
       expect(find.byKey(const Key('total-locked')), findsOneWidget);
     });

@@ -17,6 +17,23 @@ import '../jobs/job_ui.dart';
 // Metin ve ikon eşlemeleri (saf işlevler)
 // =============================================================================
 
+/// Kart satırı: "Mastercard •••• 0001". Tam maskeli numara ("**** **** ****
+/// 0001") dar ekranda iki satıra kırılıyordu; son 4 hane yeterli.
+String cardDisplay(PaymentCard c) {
+  final brand = switch (c.brand) {
+    'VISA' => 'Visa',
+    'MASTERCARD' => 'Mastercard',
+    'TROY' => 'Troy',
+    'AMEX' => 'American Express',
+    _ => null,
+  };
+  final last4 = c.last4.isNotEmpty
+      ? c.last4
+      : c.masked.replaceAll(RegExp(r'[^0-9]'), '');
+  // Bölünmez boşluk: dar ekranda "0001" tek başına alt satıra düşmez.
+  return [?brand, '••••\u00A0$last4'].join('\u00A0');
+}
+
 /// "Para şu an:" değeri. Usta görünümünde kart müşterinindir.
 String moneyLocationLabel(
   AppLocalizations l,
@@ -721,7 +738,8 @@ class _JourneyBody extends ConsumerWidget {
                 if (!pro && t.card != null)
                   InfoRow(
                     l.journeyCardLabel,
-                    [?t.card!.brand, t.card!.masked].join(' '),
+                    cardDisplay(t.card!),
+                    valueFlex: 2,
                   ),
               ],
             ),

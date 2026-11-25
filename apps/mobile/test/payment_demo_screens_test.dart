@@ -80,47 +80,50 @@ Map<String, dynamic> timelineJson({
       ],
 };
 
-Map<String, dynamic> receiptJson({bool sandbox = true, double refunded = 0}) =>
+Map<String, dynamic> receiptJson({
+  bool sandbox = true,
+  double refunded = 0,
+  String status = 'LOCKED',
+}) => {
+  'receiptNo': 'BT-20261109-5B0F0A',
+  'issuedAt': '2026-11-09T09:01:12Z',
+  'paymentRef': 'ref-1',
+  'jobId': 'j1',
+  'jobPublicCode': 'BD-88421',
+  'jobTitle': 'Banyo lavabo altı su kaçağı',
+  'proName': 'Test Tesisat',
+  'customerName': 'Ayşe Yılmaz',
+  'items': [
     {
-      'receiptNo': 'BT-20261109-5B0F0A',
-      'issuedAt': '2026-11-09T09:01:12Z',
-      'paymentRef': 'ref-1',
-      'jobId': 'j1',
-      'jobPublicCode': 'BD-88421',
-      'jobTitle': 'Banyo lavabo altı su kaçağı',
-      'proName': 'Test Tesisat',
-      'customerName': 'Ayşe Yılmaz',
-      'items': [
-        {
-          'kind': 'LABOR',
-          'label': 'İşçilik',
-          'quantity': 1.0,
-          'unitPrice': 900.0,
-          'amount': 900.0,
-        },
-        {
-          'kind': 'MATERIAL',
-          'label': 'Malzeme',
-          'quantity': 1.0,
-          'unitPrice': 300.0,
-          'amount': 300.0,
-        },
-      ],
-      'total': 1200.0,
-      'refundedTotal': refunded,
-      'netPaid': 1200.0 - refunded,
-      'currency': 'TRY',
-      'card': {
-        'brand': 'MASTERCARD',
-        'last4': '0001',
-        'masked': '**** **** **** 0001',
-      },
-      'status': 'LOCKED',
-      'moneyLocation': 'BITADILAT_VAULT',
-      'provider': 'DEMO',
-      'sandbox': sandbox,
-      'sandboxNotice': sandbox ? 'sunucu metni' : null,
-    };
+      'kind': 'LABOR',
+      'label': 'İşçilik',
+      'quantity': 1.0,
+      'unitPrice': 900.0,
+      'amount': 900.0,
+    },
+    {
+      'kind': 'MATERIAL',
+      'label': 'Malzeme',
+      'quantity': 1.0,
+      'unitPrice': 300.0,
+      'amount': 300.0,
+    },
+  ],
+  'total': 1200.0,
+  'refundedTotal': refunded,
+  'netPaid': 1200.0 - refunded,
+  'currency': 'TRY',
+  'card': {
+    'brand': 'MASTERCARD',
+    'last4': '0001',
+    'masked': '**** **** **** 0001',
+  },
+  'status': status,
+  'moneyLocation': 'BITADILAT_VAULT',
+  'provider': 'DEMO',
+  'sandbox': sandbox,
+  'sandboxNotice': sandbox ? 'sunucu metni' : null,
+};
 
 Map<String, dynamic> historyItem(
   String ref, {
@@ -168,6 +171,25 @@ Future<Harness> open(
 
 void main() {
   group('Mantık', () {
+    test('cardDisplay: marka + son 4 hane, tek satırlık kısa metin', () {
+      expect(
+        cardDisplay(
+          const PaymentCard(
+            brand: 'MASTERCARD',
+            last4: '0001',
+            masked: '**** **** **** 0001',
+          ),
+        ),
+        'Mastercard\u00A0••••\u00A00001',
+      );
+      expect(
+        cardDisplay(
+          const PaymentCard(last4: '', masked: '**** **** **** 4242'),
+        ),
+        '••••\u00A04242',
+      );
+    });
+
     test('countdownParts: kalan süre, yukarı yuvarlama, süresi dolmuş', () {
       final now = DateTime.utc(2026, 11, 10, 9);
       final at = now.add(const Duration(hours: 47, minutes: 12, seconds: 10));
@@ -255,7 +277,7 @@ void main() {
       expect(find.text('Ödeme başlatıldı'), findsOneWidget);
       expect(find.text('Tutar güvence havuzuna alındı'), findsOneWidget);
       expect(find.text('Ödeme hareketi'), findsOneWidget);
-      expect(find.text('MASTERCARD **** **** **** 0001'), findsOneWidget);
+      expect(find.text('Mastercard\u00A0••••\u00A00001'), findsOneWidget);
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsNothing);
       expect(btn('Makbuzu gör'), findsOneWidget);
     });
@@ -451,9 +473,17 @@ void main() {
       expect(find.text('₺900'), findsOneWidget);
       expect(find.text('₺300'), findsOneWidget);
       expect(find.text('₺1.200'), findsOneWidget);
-      expect(find.text('MASTERCARD **** **** **** 0001'), findsOneWidget);
-      // Durum rozeti (escrowLocked) ve para yeri (moneyLocVault) aynı terimi kullanır.
-      expect(find.text('Güvence havuzunda'), findsNWidgets(2));
+      expect(find.text('Mastercard\u00A0••••\u00A00001'), findsOneWidget);
+      // 390 pt telefonda kart satırı iki satıra kırılmaz.
+      expect(
+        t.getSize(find.text('Mastercard\u00A0••••\u00A00001')).height,
+        t.getSize(find.text('Ödeme kartı')).height,
+      );
+      // Durum satırı para yeri satırını tekrar etmez: "Güvence havuzunda" bir kez.
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
+      expect(find.text('Durum'), findsNothing);
+      // Makbuz tarihi göreli değil, kalıcı: "9 Kasım 2026, HH:mm".
+      expect(find.textContaining('9 Kasım 2026, '), findsOneWidget);
       // Komisyon dökümü müşteri makbuzunda yok.
       expect(find.text(tr((l) => l.serviceFeeLabel)), findsNothing);
     });
@@ -468,6 +498,18 @@ void main() {
       expect(find.text('Sandbox (test) ödemesi'), findsNothing);
       expect(find.text('Net ödenen'), findsOneWidget);
       expect(find.text('₺600'), findsWidgets);
+    });
+
+    testWidgets('şikayette: durum satırı para yerine ek bilgi olarak görünür', (
+      t,
+    ) async {
+      await open(t, '/c/jobs/j1/receipt', {
+        'GET /jobs/j1/payment/receipt': (_) =>
+            json(200, receiptJson(status: 'DISPUTED')),
+      });
+      expect(find.text('Durum'), findsOneWidget);
+      expect(find.text('Şikayet nedeniyle bekliyor'), findsOneWidget);
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
     });
 
     testWidgets('EN', (t) async {
@@ -524,7 +566,10 @@ void main() {
       expect(find.text('Ödemelerim'), findsOneWidget);
       expect(find.text('İş A1'), findsOneWidget);
       expect(find.text('₺1.200'), findsNWidgets(2));
-      expect(find.text('Para: Güvence havuzunda'), findsOneWidget);
+      // LOCKED: çip "Güvence havuzunda" der; aynı metin "Para:" satırında
+      // tekrar edilmez. Farklıysa (bölüşüldü) satır görünür.
+      expect(find.text('Güvence havuzunda'), findsOneWidget);
+      expect(find.text('Para: Güvence havuzunda'), findsNothing);
       expect(find.text('Para: Bölüşüldü'), findsOneWidget);
       expect(find.text('İade edilen: ₺600'), findsOneWidget);
       expect(find.text('Sandbox (test)'), findsNWidgets(2));
@@ -650,7 +695,8 @@ void main() {
     testWidgets('EN', (t) async {
       await open(t, '/c/payments', history([historyItem('A1')]), locale: 'en');
       expect(find.text('My payments'), findsOneWidget);
-      expect(find.text('Money: In secure hold'), findsOneWidget);
+      expect(find.text('In secure hold'), findsOneWidget);
+      expect(find.text('Money: In secure hold'), findsNothing);
     });
   });
 

@@ -205,6 +205,12 @@ class PaymentDemoTest extends AdminTestBase {
         String jobId = payAndOpenJob(s);
         JsonNode r = ok(get(s.customer(), "/jobs/" + jobId + "/payment/receipt"));
         assertThat(r.get("receiptNo").asString()).matches("BT-\\d{8}-[0-9A-F]{6}");
+        // Numaradaki gün İstanbul saatine göredir: 21:30 UTC = ertesi gün 00:30.
+        jdbc.update("update escrow_payment set locked_at = timestamptz '2026-11-25 21:30:00+00' where job_id = ?::uuid",
+                jobId);
+        JsonNode late = ok(get(s.customer(), "/jobs/" + jobId + "/payment/receipt"));
+        assertThat(late.get("receiptNo").asString()).startsWith("BT-20261126-");
+        assertThat(late.get("issuedAt").asString()).isEqualTo("2026-11-25T21:30:00Z");
         assertThat(r.get("jobPublicCode").asString()).isEqualTo(s.publicCode());
         assertThat(r.get("jobTitle").asString()).isEqualTo("Banyo lavabo altı su kaçağı");
         assertThat(r.get("proName").asString()).startsWith("Test Usta");

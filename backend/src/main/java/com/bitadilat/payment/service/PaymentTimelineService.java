@@ -25,7 +25,7 @@ import java.math.RoundingMode;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,6 +49,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class PaymentTimelineService {
+
+    private static final DateTimeFormatter RECEIPT_DAY =
+            DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneId.of("Europe/Istanbul"));
 
     /** Bu rol, görüntüleyenin rolüdür; alan görünürlüğünü belirler. */
     public enum Viewer { CUSTOMER, PRO, ADMIN }
@@ -139,7 +142,9 @@ public class PaymentTimelineService {
                     }, p.getOfferId()).stream().flatMap(List::stream).toList());
         }
         Instant issued = p.getLockedAt() != null ? p.getLockedAt() : p.getCreatedAt();
-        String no = "BT-" + DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC).format(issued) + "-"
+        // Makbuz numarasındaki gün, makbuzda yazan tarihle aynı olsun diye İstanbul saatine göre
+        // (UTC ile 21:00'den sonra alınan ödemede gün bir sonraki gündür).
+        String no = "BT-" + RECEIPT_DAY.format(issued) + "-"
                 + p.getRef().replace("-", "").substring(0, 6).toUpperCase();
         boolean sandbox = sandbox(p);
         return new PaymentReceipt(no, issued, p.getRef(), job.id(), job.publicCode(), job.title(),

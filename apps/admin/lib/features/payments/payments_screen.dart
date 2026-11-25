@@ -68,8 +68,13 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
           data: (data) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Totals(totals: data.totals),
-              const SizedBox(height: AppSpacing.lg),
+              // Süzgeçsizken aynı dört toplam üstteki güvence havuzu özetinde
+              // zaten var; ikinci kez gösterilmez. Süzgeç seçilince o durumun
+              // toplamları görünür.
+              if (_status != null) ...[
+                _Totals(totals: data.totals),
+                const SizedBox(height: AppSpacing.lg),
+              ],
               if (data.items.isEmpty)
                 EmptyState(
                   title: l.paymentsEmptyTitle,

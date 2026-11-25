@@ -47,7 +47,6 @@ class _ReceiptBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final r = receipt;
-    final now = ref.read(nowProvider)();
     String m(Money v) => formatMoney(v, l.localeName);
     return RefreshIndicator(
       onRefresh: () async => ref.refresh(paymentReceiptProvider(jobId).future),
@@ -64,7 +63,11 @@ class _ReceiptBody extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InfoRow(l.receiptNo, r.receiptNo, bold: true),
-                InfoRow(l.receiptDate, formatDayTime(l, r.issuedAt, now)),
+                // Makbuzda göreli tarih ("Bugün") değil, kalıcı tarih yazılır.
+                InfoRow(
+                  l.receiptDate,
+                  formatDateTimeFull(r.issuedAt, l.localeName),
+                ),
                 if ((r.jobTitle ?? '').isNotEmpty)
                   InfoRow(
                     l.receiptJob,
@@ -104,14 +107,15 @@ class _ReceiptBody extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (r.card != null)
+                  InfoRow(l.receiptCard, cardDisplay(r.card!), valueFlex: 2),
+                // Durum satırı çoğu durumda "Para şu an" satırının aynısı ya da
+                // eş anlamlısıdır ("Güvence havuzunda" iki kez). Yalnız şikayet
+                // (DISPUTED) ek bilgi taşır: para havuzda ama donduruldu.
+                if (r.status == EscrowStatus.disputed)
                   InfoRow(
-                    l.receiptCard,
-                    [?r.card!.brand, r.card!.masked].join(' '),
+                    l.receiptStatus,
+                    escrowLabel(l, r.status, PartyRole.customer),
                   ),
-                InfoRow(
-                  l.receiptStatus,
-                  escrowLabel(l, r.status, PartyRole.customer),
-                ),
                 InfoRow(
                   l.journeyNowLabel,
                   moneyLocationLabel(l, r.moneyLocation),

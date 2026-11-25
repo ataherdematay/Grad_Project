@@ -126,6 +126,8 @@ class PaymentHistoryTile extends ConsumerWidget {
       ?item.jobPublicCode,
       if (when != null) formatDay(l, when, now),
     ].join(' · ');
+    final statusLabel = escrowLabel(l, item.status, PartyRole.customer);
+    final moneyLabel = moneyLocationLabel(l, item.moneyLocation);
     final title = (item.jobTitle ?? '').isNotEmpty
         ? item.jobTitle!
         : l.paymentsNoJob;
@@ -156,7 +158,7 @@ class PaymentHistoryTile extends ConsumerWidget {
             runSpacing: AppSpacing.xs,
             children: [
               StatusChip(
-                label: escrowLabel(l, item.status, PartyRole.customer),
+                label: statusLabel,
                 icon: _statusIcon(item.status),
                 tone: _statusTone(item.status),
               ),
@@ -164,10 +166,10 @@ class PaymentHistoryTile extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            l.paymentsMoneyLine(moneyLocationLabel(l, item.moneyLocation)),
-            style: AppTypography.label,
-          ),
+          // "Para: …" satırı çipteki metnin aynısıysa (LOCKED: "Güvence
+          // havuzunda") tekrar yazılmaz.
+          if (moneyLabel != statusLabel)
+            Text(l.paymentsMoneyLine(moneyLabel), style: AppTypography.label),
           if (item.refundedAmount.isPositive)
             Text(
               '${l.refundedLabel}: ${m(item.refundedAmount)}',

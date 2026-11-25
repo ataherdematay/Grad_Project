@@ -55,6 +55,11 @@ String formatWindow(
 String formatDayTime(AppLocalizations l, DateTime utc, DateTime now) =>
     '${formatDay(l, utc, now)}, ${_hm(utc.toLocal())}';
 
+/// Kalıcı tarih ve saat: "26 Kasım 2026, 00:31" (makbuz gibi belgeler için;
+/// "Bugün" ertesi gün yanlış olur).
+String formatDateTimeFull(DateTime utc, String locale) =>
+    DateFormat('d MMMM y, HH:mm', locale).format(utc.toLocal());
+
 /// Yalnız tarih (göreli): bitiş tarihi gibi alanlar için.
 String formatDateOnly(AppLocalizations l, DateTime utc, DateTime now) =>
     formatDay(l, utc, now);

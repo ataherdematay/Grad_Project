@@ -156,11 +156,21 @@ Widget sectionTitle(String text) => Padding(
 );
 
 class InfoRow extends StatelessWidget {
-  const InfoRow(this.label, this.value, {super.key, this.bold = false});
+  const InfoRow(
+    this.label,
+    this.value, {
+    super.key,
+    this.bold = false,
+    this.valueFlex = 1,
+  });
 
   final String label;
   final String value;
   final bool bold;
+
+  /// Değer sütununun payı (etiket 1). Uzun ama bölünmemesi gereken değerler
+  /// (ör. "Mastercard •••• 0001") için 2 verilir.
+  final int valueFlex;
 
   @override
   Widget build(BuildContext context) {
@@ -180,6 +190,7 @@ class InfoRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.xs),
           Flexible(
+            flex: valueFlex,
             child: Text(value, textAlign: TextAlign.end, style: style),
           ),
         ],
