@@ -14,6 +14,7 @@ import '../../core/support.dart';
 import '../../l10n/app_localizations.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
+import '../payment/payment_journey.dart';
 import 'customer_jobs.dart' show complaintStatusLabel;
 import 'job_ui.dart';
 
@@ -342,6 +343,8 @@ class _ProJobBodyState extends ConsumerState<_ProJobBody> {
           OfferSummaryCard(job: job),
           const SizedBox(height: AppSpacing.sm),
           PaymentSummaryCard(job: job),
+          const SizedBox(height: AppSpacing.sm),
+          MoneyJourneyCard(jobId: job.id, pro: true),
           TimelineView(job: job),
           const SizedBox(height: AppSpacing.md),
           if (job.can(JobAction.cancel))
@@ -871,6 +874,12 @@ class EarningsScreen extends ConsumerWidget {
                             EarningStatus.pending => StatusTone.info,
                             _ => StatusTone.neutral,
                           },
+                        ),
+                        TextButton.icon(
+                          onPressed: () =>
+                              context.push('/p/jobs/${it.jobId}/payment'),
+                          icon: const Icon(Icons.route_outlined, size: 18),
+                          label: Text(l.journeyTitle),
                         ),
                       ],
                     ),

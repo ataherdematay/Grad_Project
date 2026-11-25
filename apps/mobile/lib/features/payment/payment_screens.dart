@@ -732,6 +732,20 @@ class _ResultState extends ConsumerState<PaymentResultScreen> {
                 r.jobId != null ? '/c/jobs/${r.jobId}' : '/c/requests',
               ),
             ),
+            if (r.jobId != null) ...[
+              AppButton(
+                label: l.journeyViewReceipt,
+                icon: Icons.receipt_long_outlined,
+                variant: AppButtonVariant.secondary,
+                onPressed: () => context.push('/c/jobs/${r.jobId}/receipt'),
+              ),
+              AppButton(
+                label: l.journeyTitle,
+                icon: Icons.route_outlined,
+                variant: AppButtonVariant.tertiary,
+                onPressed: () => context.push('/c/jobs/${r.jobId}/payment'),
+              ),
+            ],
           ],
         ),
       };

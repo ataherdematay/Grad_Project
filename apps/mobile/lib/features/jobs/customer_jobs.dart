@@ -11,6 +11,7 @@ import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../common/ui.dart';
 import '../common/widgets.dart';
+import '../payment/payment_journey.dart';
 import 'job_ui.dart';
 
 // =============================================================================
@@ -187,6 +188,8 @@ class _CustomerJobBodyState extends ConsumerState<_CustomerJobBody> {
           OfferSummaryCard(job: job),
           const SizedBox(height: AppSpacing.sm),
           PaymentSummaryCard(job: job),
+          const SizedBox(height: AppSpacing.sm),
+          MoneyJourneyCard(jobId: job.id),
           if (job.review != null) ...[
             sectionTitle(l.yourReview),
             AppCard(

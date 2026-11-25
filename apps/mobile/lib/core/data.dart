@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show VoidCallback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderOrFamily;
 
+import 'payment_data.dart';
 import 'providers.dart';
 
 /// Ödemeler açık. `false` yapılırsa "Teklifi kabul et" hiç görünmez.
@@ -238,6 +239,9 @@ List<ProviderOrFamily> get _jobData => [
   jobsProvider,
   jobProvider,
   paymentProvider,
+  paymentTimelineProvider,
+  paymentReceiptProvider,
+  paymentHistoryProvider,
   complaintProvider,
   conversationsProvider,
   earningsProvider,

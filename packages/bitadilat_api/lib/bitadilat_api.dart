@@ -37,3 +37,5 @@ export 'src/models/pro_summary.dart';
 export 'src/models/requests.dart';
 export 'src/models/service_request.dart';
 export 'src/notifications.dart';
+export 'src/payment_demo/payment_demo_api.dart';
+export 'src/payment_demo/payment_demo_models.dart';

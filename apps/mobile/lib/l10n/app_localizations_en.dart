@@ -2926,4 +2926,267 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get payFailAbandoned =>
       'The bank verification was not completed and your card was not charged. You can try again.';
+
+  @override
+  String get journeyTitle => 'Money journey';
+
+  @override
+  String get journeyNowLabel => 'Money right now';
+
+  @override
+  String get moneyLocCustomerCard => 'On your card';
+
+  @override
+  String get moneyLocVault => 'In the secure vault';
+
+  @override
+  String get moneyLocPro => 'With the pro';
+
+  @override
+  String get moneyLocRefunded => 'Refunded to you';
+
+  @override
+  String get moneyLocSplit => 'Split';
+
+  @override
+  String get moneyLocCustomerCardPro => 'On the customer\'s card';
+
+  @override
+  String get moneyLocProPro => 'With you';
+
+  @override
+  String get moneyLocRefundedPro => 'Refunded to the customer';
+
+  @override
+  String get journeyExplainCard =>
+      'The amount has not been taken from your card yet.';
+
+  @override
+  String get journeyExplainVault =>
+      'The amount is held in the secure vault. It goes to the pro once the work is done and you confirm.';
+
+  @override
+  String get journeyExplainPro => 'The amount has been paid out to the pro.';
+
+  @override
+  String get journeyExplainRefunded =>
+      'The amount has been refunded to your card.';
+
+  @override
+  String get journeyExplainSplit =>
+      'By decision the amount was split in half: half refunded to you, half paid to the pro.';
+
+  @override
+  String get journeyExplainCardPro =>
+      'The amount has not been taken from the customer\'s card yet.';
+
+  @override
+  String get journeyExplainVaultPro =>
+      'The amount is held in the secure vault. It is paid out to you once the customer confirms the work.';
+
+  @override
+  String get journeyExplainProPro => 'The amount has been paid out to you.';
+
+  @override
+  String get journeyExplainRefundedPro =>
+      'The amount was refunded to the customer.';
+
+  @override
+  String get journeyExplainSplitPro =>
+      'By decision the amount was split in half: half refunded to the customer, half paid out to you.';
+
+  @override
+  String get journeyNodeCard => 'Card';
+
+  @override
+  String get journeyNodeCardPro => 'Customer';
+
+  @override
+  String get journeyNodeVault => 'Secure vault';
+
+  @override
+  String get journeyNodePro => 'Pro';
+
+  @override
+  String get journeyNodeProPro => 'You';
+
+  @override
+  String get journeyCountdownTitle => 'Time until automatic payout';
+
+  @override
+  String journeyCountdownValue(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String get journeyCountdownNote =>
+      'If you do not confirm within 48 hours, the amount is paid out to the pro automatically.';
+
+  @override
+  String get journeyCountdownNotePro =>
+      'If the customer does not confirm within 48 hours, the amount is paid out to you automatically.';
+
+  @override
+  String get journeyCountdownDue => 'Automatic payout is being processed.';
+
+  @override
+  String get journeyEventsTitle => 'Activity';
+
+  @override
+  String get journeyEvtInitialized => 'Payment started';
+
+  @override
+  String get journeyEvtThreeds => 'Bank verification started';
+
+  @override
+  String get journeyEvtLocked => 'Amount placed in the secure vault';
+
+  @override
+  String get journeyEvtDelivered => 'The pro finished the work';
+
+  @override
+  String get journeyEvtScheduled => '48-hour automatic payout scheduled';
+
+  @override
+  String get journeyEvtDispute => 'Complaint opened, amount frozen';
+
+  @override
+  String get journeyEvtApproved => 'You confirmed the work';
+
+  @override
+  String get journeyEvtApprovedPro => 'The customer confirmed the work';
+
+  @override
+  String get journeyEvtAutoApproved => '48 hours passed, the system confirmed';
+
+  @override
+  String get journeyEvtRefundRequested => 'Refund requested';
+
+  @override
+  String get journeyEvtReleased => 'Amount paid out to the pro';
+
+  @override
+  String get journeyEvtReleasedPro => 'Amount paid out to you';
+
+  @override
+  String get journeyEvtRefunded => 'Amount refunded to your card';
+
+  @override
+  String get journeyEvtRefundedPro => 'Amount refunded to the customer';
+
+  @override
+  String get journeyEvtSplit => 'Decision applied: amount split in half';
+
+  @override
+  String get journeyEvtReview => 'Support is reviewing';
+
+  @override
+  String get journeyEvtFailed => 'Payment was not taken';
+
+  @override
+  String get journeyEvtUnknown => 'Payment activity';
+
+  @override
+  String get journeyNoteLateSuccess => 'The bank confirmed late';
+
+  @override
+  String get journeyNoteAlreadyRefunded =>
+      'The refund had already been made at the bank';
+
+  @override
+  String get journeyNotePayoutReview => 'Payout is under support review';
+
+  @override
+  String get journeyNoteRefundReview => 'Refund is under support review';
+
+  @override
+  String get journeyNoteDeclined => 'The bank declined';
+
+  @override
+  String get journeyNoteThreedsAbandoned =>
+      'Bank verification was not completed';
+
+  @override
+  String get journeyNoteUncertain => 'The result is not final';
+
+  @override
+  String get journeySandboxChip => 'Sandbox (test)';
+
+  @override
+  String get journeyCardLabel => 'Card';
+
+  @override
+  String get journeyViewReceipt => 'View receipt';
+
+  @override
+  String get journeyOpenDetails => 'See activity';
+
+  @override
+  String get journeyAmountsTitle => 'Amounts';
+
+  @override
+  String get receiptTitle => 'Receipt';
+
+  @override
+  String get receiptNo => 'Receipt no.';
+
+  @override
+  String get receiptDate => 'Date';
+
+  @override
+  String get receiptJob => 'Job';
+
+  @override
+  String get receiptPro => 'Pro';
+
+  @override
+  String get receiptCustomer => 'Customer';
+
+  @override
+  String get receiptItems => 'Items';
+
+  @override
+  String get receiptNetPaid => 'Net paid';
+
+  @override
+  String get receiptCard => 'Payment card';
+
+  @override
+  String get receiptStatus => 'Status';
+
+  @override
+  String get receiptSandboxTitle => 'Sandbox (test) payment';
+
+  @override
+  String get receiptSandboxBody =>
+      'No real money was taken from your card. This receipt is for testing only.';
+
+  @override
+  String receiptItemQty(String qty, String price) {
+    return '$qty × $price';
+  }
+
+  @override
+  String get paymentsTitle => 'My payments';
+
+  @override
+  String get paymentsEmptyTitle => 'No payments yet';
+
+  @override
+  String get paymentsEmptyBody =>
+      'Once you accept an offer and pay, it shows up here.';
+
+  @override
+  String paymentsMoneyLine(String where) {
+    return 'Money: $where';
+  }
+
+  @override
+  String get paymentsLoadMore => 'Show more';
+
+  @override
+  String get paymentsMoreFailed => 'Could not load more. Try again.';
+
+  @override
+  String get paymentsNoJob => 'No linked job';
 }
