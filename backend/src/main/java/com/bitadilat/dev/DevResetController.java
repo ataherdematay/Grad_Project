@@ -33,7 +33,7 @@ public class DevResetController {
     }
 
     // X-Forwarded-For dikkate alınmaz; yalnızca doğrudan bağlantının adresine bakılır.
-    private static boolean isLoopback(String remoteAddr) {
+    static boolean isLoopback(String remoteAddr) {
         try {
             return remoteAddr != null && InetAddress.getByName(remoteAddr).isLoopbackAddress();
         } catch (UnknownHostException e) {

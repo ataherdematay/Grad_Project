@@ -66,6 +66,11 @@ public class CraftgateGateway implements PaymentGateway {
     }
 
     @Override
+    public boolean isDemo() {
+        return localDemoMode;
+    }
+
+    @Override
     public ThreeDsSession init3ds(ThreeDsRequest request) {
         if (localDemoMode) {
             long pid = localSeq.incrementAndGet();

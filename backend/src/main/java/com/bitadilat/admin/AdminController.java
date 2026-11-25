@@ -16,6 +16,9 @@ import com.bitadilat.admin.AdminDtos.UserItem;
 import com.bitadilat.admin.AdminDtos.UserList;
 import com.bitadilat.common.ApiException;
 import com.bitadilat.common.security.AuthPrincipal;
+import com.bitadilat.payment.dto.PaymentDemoDtos.PaymentSummary;
+import com.bitadilat.payment.dto.PaymentDemoDtos.PaymentTimeline;
+import com.bitadilat.payment.service.PaymentTimelineService;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,10 +43,12 @@ public class AdminController {
     private final AdminComplaintService complaints;
     private final AdminAccountService accounts;
     private final AdminPaymentReviewService paymentReviews;
+    private final PaymentTimelineService timelines;
 
     public AdminController(AdminReportService reports, AdminApplicationService applications,
                            AdminComplaintService complaints, AdminAccountService accounts,
-                           AdminPaymentReviewService paymentReviews) {
+                           AdminPaymentReviewService paymentReviews, PaymentTimelineService timelines) {
+        this.timelines = timelines;
         this.paymentReviews = paymentReviews;
         this.reports = reports;
         this.applications = applications;
@@ -154,6 +159,20 @@ public class AdminController {
                                   @RequestParam(required = false) String status) {
         admin(me);
         return reports.payments(status);
+    }
+
+    /** Kasa özeti: kasada bekleyen, ustalara aktarılan, iade edilen, kazanılan komisyon ve sayılar. */
+    @GetMapping("/payments/summary")
+    public PaymentSummary paymentSummary(@AuthenticationPrincipal AuthPrincipal me) {
+        admin(me);
+        return timelines.summary();
+    }
+
+    /** Bir ödemenin zaman çizelgesi (iş uç noktasıyla aynı DTO). */
+    @GetMapping("/payments/{ref}/timeline")
+    public PaymentTimeline paymentTimeline(@AuthenticationPrincipal AuthPrincipal me, @PathVariable String ref) {
+        admin(me);
+        return timelines.timelineForRef(ref);
     }
 
     // ─── İncelemedeki ödemeler ──────────────────────────────────────────────

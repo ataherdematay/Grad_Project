@@ -6,6 +6,7 @@ import com.bitadilat.job.JobOpening;
 import com.bitadilat.offer.OfferRepository;
 import com.bitadilat.offer.OfferStatus;
 import com.bitadilat.payment.domain.EscrowChannel;
+import com.bitadilat.payment.domain.EscrowEventType;
 import com.bitadilat.payment.domain.EscrowPayment;
 import com.bitadilat.payment.domain.EscrowPaymentRepository;
 import com.bitadilat.payment.domain.EscrowProvider;
@@ -87,6 +88,7 @@ public class PaymentService {
     private final EscrowService escrow;
     private final TransactionTemplate tx;
     private final EscrowNotifications escrowNotifications;
+    private final EscrowEvents events;
 
     public PaymentService(
             EscrowPaymentRepository repository,
@@ -98,7 +100,9 @@ public class PaymentService {
             JobOpening jobOpening,
             EscrowService escrow,
             TransactionTemplate tx,
-            EscrowNotifications escrowNotifications) {
+            EscrowNotifications escrowNotifications,
+            EscrowEvents events) {
+        this.events = events;
         this.tx = tx;
         this.escrowNotifications = escrowNotifications;
         this.repository = repository;
@@ -203,9 +207,12 @@ public class PaymentService {
         }
         EscrowPayment payment;
         try {
-            payment = repository.saveAndFlush(EscrowPayment.startApp(offer.getId(), r.getPublicCode(),
+            EscrowPayment started = EscrowPayment.startApp(offer.getId(), r.getPublicCode(),
                     offer.getTotalAmount(), r.getId(), customerId, offer.getProId(), key,
-                    card.number().substring(card.number().length() - 4), EscrowProvider.CRAFTGATE));
+                    card.number().substring(card.number().length() - 4), EscrowProvider.CRAFTGATE);
+            started.attachCardBrand(EscrowPayment.brandOf(card.number()));
+            payment = repository.saveAndFlush(started);
+            events.record(payment, EscrowEventType.PAYMENT_INITIALIZED, payment.getTotalAmount(), "CUSTOMER");
         } catch (DataIntegrityViolationException e) {
             // ux_escrow_one_initialized_per_request (yarış) veya aynı attemptKey'in eşzamanlı kullanımı.
             if (repository.existsByAttemptKey(key)) {
@@ -227,6 +234,7 @@ public class PaymentService {
             // Banka sayfası istemciye ulaşmadı: 3DS başlamadı, para çekilemez; kayıt kapanır ve talep serbest kalır.
             payment.fail(e.getMessage());
             repository.save(payment);
+            events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
             if (e.isConnectionProblem()) {
                 throw e; // Craftgate'e ulaşılamadı: kart reddi değil, 502 GATEWAY_ERROR (sözleşme)
             }
@@ -234,6 +242,7 @@ public class PaymentService {
         }
         payment.attachCraftgatePayment(session.paymentId());
         repository.save(payment);
+        events.record(payment, EscrowEventType.THREEDS_STARTED, null, "CUSTOMER");
         return new AppInitResponse(payment.getRef(), session.htmlContent());
     }
 
@@ -331,6 +340,7 @@ public class PaymentService {
         }
         if (payment.getCraftgatePaymentId() == null) {
             payment.fail("Ödeme oturumu açılamadı.");
+            events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
             return;
         }
         GatewayPayment actual = retrieveOrNull(payment.getCraftgatePaymentId());
@@ -345,6 +355,7 @@ public class PaymentService {
             // başarı gelirse handleCallback onu yarış iadesi yoluna sokar.
             log.info("Terk edilmiş 3DS ödemesi kapatıldı. ref={}", ref);
             payment.abandon(THREEDS_ABANDONED_MESSAGE);
+            events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
             return;
         }
         applyResult(payment, actual); // null (Craftgate yanıt vermedi): kayıt değişmez
@@ -381,6 +392,7 @@ public class PaymentService {
             log.info("Müşteri yeniden denedi; bankada bitmemiş önceki 3DS denemesi terk edildi. ref={}", ref);
             old.abandon(THREEDS_ABANDONED_MESSAGE);
             repository.saveAndFlush(old);
+            events.record(old, EscrowEventType.FAILED, null, "SYSTEM", old.getErrorCode());
         }
         return true;
     }
@@ -529,6 +541,7 @@ public class PaymentService {
                 payment.getRef());
         payment.lockLateSuccess();
         repository.saveAndFlush(payment);
+        events.record(payment, EscrowEventType.PAYMENT_LOCKED, payment.getTotalAmount(), "SYSTEM", "LATE_SUCCESS");
         acceptIfLocked(payment);
     }
 
@@ -545,6 +558,7 @@ public class PaymentService {
         }
         String group = actual == null ? null : actual.errorGroup();
         payment.fail(group == null ? BANK_DECLINED_MESSAGE : PaymentErrorMessages.forGroup(group));
+        events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
     }
 
     private GatewayPayment completeOrRetrieve(Long paymentId) {
@@ -576,6 +590,7 @@ public class PaymentService {
         }
         if (result.status() == Status.FAILURE) {
             payment.fail(PaymentErrorMessages.forGroup(result.errorGroup()));
+            events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
             return;
         }
         boolean amountMatches = result.paidPrice() != null
@@ -585,9 +600,11 @@ public class PaymentService {
             log.error("Craftgate yanıtı kayıtla uyuşmuyor, elle incelenmeli. ref={} paymentId={} tutarUyumlu={} conversationUyumlu={}",
                     payment.getRef(), result.paymentId(), amountMatches, conversationMatches);
             payment.failUnverified(UNVERIFIED_MESSAGE);
+            events.record(payment, EscrowEventType.FAILED, null, "SYSTEM", payment.getErrorCode());
             return;
         }
         payment.lock();
+        events.record(payment, EscrowEventType.PAYMENT_LOCKED, payment.getTotalAmount(), "SYSTEM");
     }
 
     private static CallbackOutcome outcomeOf(EscrowPayment payment) {

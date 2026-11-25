@@ -108,4 +108,23 @@ class CraftgateGatewayTest {
         org.assertj.core.api.Assertions.assertThatThrownBy(() -> gateway.refundedTotal(PAYMENT_ID))
                 .hasMessage(CraftgateGateway.REFUND_STATUS_UNKNOWN);
     }
+
+    /**
+     * "sandbox-demo" API anahtarı önekli sahte (bellek içi) kip: Craftgate'e hiç gitmez, timeline'da DEMO görünür.
+     * Prod'da bu önek ProdConfigValidator ile reddedilir (ProdReadinessUnitTest).
+     */
+    @Test
+    void demoModeIsOnlyEnabledByTheSandboxDemoKeyPrefixAndNeverCallsCraftgate() {
+        Craftgate craftgate = mock(Craftgate.class);
+        assertThat(new CraftgateGateway(craftgate, "", "real-key").isDemo()).isFalse();
+        assertThat(new CraftgateGateway(craftgate, "", "").isDemo()).isFalse();
+        CraftgateGateway demo = new CraftgateGateway(craftgate, "", "sandbox-demo-local");
+        assertThat(demo.isDemo()).isTrue();
+        PaymentGateway.ThreeDsSession session = demo.init3ds(new PaymentGateway.ThreeDsRequest(
+                new java.math.BigDecimal("100.00"), "conv-1", "ref-1", "item", "http://localhost/cb",
+                new PaymentGateway.CardDetails("A B", "5258640000000001", "12", "2044", "000")));
+        assertThat(session.htmlContent()).contains("conv-1");
+        assertThat(demo.retrieve(session.paymentId()).status()).isEqualTo(Status.SUCCESS);
+        org.mockito.Mockito.verifyNoInteractions(craftgate);
+    }
 }

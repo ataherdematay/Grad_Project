@@ -61,6 +61,11 @@ public interface PaymentGateway {
         }
     }
 
+    /** Sahte (bellek içi) yerel demo kipi mi? Yalnızca dev'de açılabilir; prod'da ProdConfigValidator engeller. */
+    default boolean isDemo() {
+        return false;
+    }
+
     ThreeDsSession init3ds(ThreeDsRequest request);
 
     GatewayPayment complete3ds(Long paymentId);

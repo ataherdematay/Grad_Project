@@ -87,7 +87,7 @@ public class SecurityConfig {
             String path = request.getRequestURI();
             boolean publicPath = !path.startsWith("/api/v1/")
                     || path.startsWith("/api/v1/auth/")
-                    || path.startsWith("/api/v1/dev/")
+                    || path.equals("/api/v1/dev/reset")
                     || (HttpMethod.GET.matches(request.getMethod()) && path.matches("/api/v1/media/[^/]+/content"))
                     || (HttpMethod.GET.matches(request.getMethod())
                     && (path.startsWith("/api/v1/categories") || path.equals("/api/v1/districts")));

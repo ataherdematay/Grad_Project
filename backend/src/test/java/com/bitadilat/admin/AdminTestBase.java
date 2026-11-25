@@ -22,7 +22,7 @@ public abstract class AdminTestBase extends Wave3TestBase {
     /** Defter ve denetim toplamları testten teste taşınmasın (prototip emanetleri talebe bağlı olmadığı için kalır). */
     @BeforeEach
     void cleanAdminData() {
-        jdbc.execute("TRUNCATE TABLE admin_actions, escrow_payment, payout_ledger");
+        jdbc.execute("TRUNCATE TABLE admin_actions, escrow_payment, escrow_event, payout_ledger");
     }
 
     protected Account admin() throws Exception {
